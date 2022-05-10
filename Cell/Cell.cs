@@ -25,8 +25,5 @@ public class Cell : Spatial
 
         var newColor = Color.FromHsv(h, s, v);
         material.AlbedoColor = newColor;
-
-
-        string m = "this is mock message";
 	}	
 }
