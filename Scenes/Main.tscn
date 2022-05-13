@@ -14,12 +14,13 @@ data = PoolVector3Array( 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0,
 
 [node name="Grid" type="Spatial" parent="."]
 script = ExtResource( 1 )
+CellsRowsAmount = 10
+CellsColsAmount = 10
 
 [node name="CamBase" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.31042 )
+transform = Transform( 1, 0, 0, 0, 0.379198, 0.925316, 0, -0.925316, 0.379198, 4.46197, 8.15359, 9.08978 )
 
 [node name="PlayerCamera" type="Camera" parent="CamBase"]
-transform = Transform( 1, 0, 0, 0, 0.950808, 0.30978, 0, -0.30978, 0.950808, 0, 3.76876, 6.83324 )
 current = true
 
 [node name="Navigation" type="Navigation" parent="."]
