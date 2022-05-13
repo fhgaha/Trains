@@ -1,4 +1,5 @@
 using Godot;
+using Trains.Scripts.Common;
 
 namespace Trains.Scripts
 {
@@ -18,6 +19,7 @@ namespace Trains.Scripts
 			timer = new Timer();
 			AddChild(timer);
 			Build();
+			DbGenerator.GenerateProducts(Cells);
 			timer.Start(1.0f);
 		}
 
@@ -29,6 +31,7 @@ namespace Trains.Scripts
 				for (int j = 0; j < CellsColsAmount; j++)
 				{
 					var cell = cellScene.Instance<Cell>();
+					cell.Id = i + "_" + j;
 					cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 					timer.Connect("timeout", cell, "SetColor");
 					Cells[i, j] = cell;

@@ -1,10 +1,20 @@
 using Godot;
 using System.Collections.Generic;
+using System;
 
 namespace Trains.Scripts
 {
 	public class Cell : Spatial
 	{
+		public string Id
+		{
+			get => id;
+			set
+			{
+				if (!string.IsNullOrEmpty(id)) throw new ArgumentException("You allowed to set Id only once");
+				id = value;
+			}
+		}
 		//hue represents as fraction of degrees
 		float maxHueValue_green = 113f / 360f;    //0.36f
 		float minHueValue_red = 0f;
@@ -13,10 +23,11 @@ namespace Trains.Scripts
 		public Color Color { get; private set; }
 
 		private List<Product> products;
-		private Dictionary<Product, float> demandRate;
+		public Dictionary<Product, float> DemandRate { get; private set; }
 
 		private RandomNumberGenerator random = new RandomNumberGenerator();
 		private Timer timer;
+		private string id;
 
 		public override void _Ready() { }
 
@@ -35,7 +46,7 @@ namespace Trains.Scripts
 			this.Color = Color.FromHsv(h, s, v);
 			material.AlbedoColor = this.Color;
 
-			GD.Print(this + ": prev color: " + color + ", new color: " + this.Color);
+			// GD.Print(this + ": prev color: " + color + ", new color: " + this.Color);
 		}
 
 		private float GetHueBasedOfDemand(float h)

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Trains.Common
+namespace Trains.Scripts.Common
 {
 	public class Enums : Node
 	{

@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using static Trains.Common.Enums;
+using static Trains.Scripts.Common.Enums;
 
 namespace Trains
 {
