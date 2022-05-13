@@ -1,29 +1,42 @@
 using Godot;
-using System;
-using System.Collections.Generic;
 
 namespace Trains.Scripts
 {
 	public class Grid : Spatial
 	{
+		public int CellsRowsAmount {get; set;} = 2;
+		public int CellsColsAmount {get; set;} = 2;
+		public Cell[,] Cells;
+		private Timer timer;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 
 		public override void _Ready()
 		{
-			//build grid
-			for (int i = 0; i < 1 ; i++)
+			Cells = new Cell[2,2];
+			timer = new Timer();
+			AddChild(timer);
+			Build();
+			//timer.Start(1.0f);
+		}
+
+		public override void _Process(float delta) 
+		{ 
+			//var children = GetChildren();
+			var cell = GetChild<Cell>(1);
+			cell.SetColor();
+		}
+
+		private void Build()
+		{
+			for (int i = 0; i < CellsRowsAmount; i++)
+			for (int j = 0; j < CellsColsAmount; j++)
 			{
-				for (int j = 0; j < 1 ; j++)
-				{
-					var cell = cellScene.Instance<Cell>();
-					cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
+				var cell = cellScene.Instance<Cell>();
+				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
+				timer.Connect("timeout", cell, "SetColor");
+				Cells[i, j] = cell;
 
-					MeshInstance mesh = cell.GetNode<MeshInstance>(@"MeshInstance");
-					var material = (SpatialMaterial)mesh.GetSurfaceMaterial(0);
-					var color = material.AlbedoColor;
-
-					AddChild(cell);
-				}
+				AddChild(cell);
 			}
 		}
 	}

@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
 namespace Trains.Scripts
@@ -19,25 +18,13 @@ namespace Trains.Scripts
 		private RandomNumberGenerator random = new RandomNumberGenerator();
 		private Timer timer;
 
-		public override void _Ready()
-		{
-			timer = new Timer();
-			AddChild(timer);
+		public override void _Ready() { }
 
-			timer.Connect("timeout", this, "SetColor");
-			timer.Start(1.0f);
-		}
+		public override void _Process(float delta) { }
 
-		public override void _Process(float delta)
+		public void SetColor()
 		{
-			//set color to mesh instance
-			//SetColorToMeshInstance();
-		}
-
-		private float d = 0.01f;
-		private void SetColor()
-		{
-			MeshInstance mesh = (MeshInstance)GetNode(@"MeshInstance");
+			MeshInstance mesh = GetNode<MeshInstance>("MeshInstance");
 			var material = (SpatialMaterial)mesh.GetSurfaceMaterial(0);
 			var color = material.AlbedoColor;
 			float h, s, v;
@@ -45,13 +32,10 @@ namespace Trains.Scripts
 			random.Randomize();
 			h += GetHueBasedOfDemand(h);
 			h = Mathf.Clamp(h, minHueValue_red, maxHueValue_green);
+			this.Color = Color.FromHsv(h, s, v);
+			material.AlbedoColor = this.Color;
 
-			var newColor = Color.FromHsv(h, s, v);
-			material.AlbedoColor = newColor;
-
-			// GD.Print(this.ToString() + ", color RGB: " + newColor);
-			// GD.Print("color HSV: " + h + "; " + s + "; " + v);
-			// GD.Print();
+			GD.Print(this + ": prev color: " + color + ", new color: " + this.Color);
 		}
 
 		private float GetHueBasedOfDemand(float h)
