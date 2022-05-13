@@ -1,7 +1,8 @@
 using Godot;
 using Trains.Scripts.Common;
+using Trains.Scripts.Cells;
 
-namespace Trains.Scripts.Grids
+namespace Trains.Scripts
 {
 	public class Grid : Spatial
 	{

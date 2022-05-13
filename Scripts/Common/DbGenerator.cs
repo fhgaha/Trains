@@ -6,7 +6,7 @@ namespace Trains.Scripts.Common
 {
 	public class DbGenerator : Node
 	{
-		public static void GenerateProducts(Cell[,] cells)
+		public static void GenerateProductsDb(int rows, int cols)
 		{
 			Godot.File file = new Godot.File();
 
@@ -15,25 +15,25 @@ namespace Trains.Scripts.Common
 
 			file.Open("res://Databases/products.json", Godot.File.ModeFlags.Write);
 
-			List<string> content = new List<string>();
+			List<string> text = new List<string>();
 
-			foreach (Cell cell in cells)
-			{
-				string json = GenerateJSONFromCell(cell);
-				content.Add(json);
-			}
+			for (int i = 0; i < rows; i++)
+				for (int j = 0; j < cols; j++)
+				{
+					string json = GenerateJSONFromCell(i, j);
+					text.Add(json);
+				}
+			var content = JsonConvert.SerializeObject(text);
 
-			var con = JsonConvert.SerializeObject(content);
-
-			file.StoreString(con);
+			file.StoreString(content);
 			file.Close();
 		}
 
-		private static string GenerateJSONFromCell(Cell cell)
+		private static string GenerateJSONFromCell(int row, int col)
 		{
 			var cellForJSON = new CellForJSON
 			{
-				Id = cell.Id, 
+				Id = row + "_" + col,
 				Demand = new Dictionary<Enums.ProductType, float>
 				{
 					[Enums.ProductType.Lumber] = 50,

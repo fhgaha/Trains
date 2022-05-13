@@ -2,7 +2,7 @@ using Godot;
 using System;
 using static Trains.Scripts.Common.Enums;
 
-namespace Trains
+namespace Trains.Scripts.Products
 {
 	public struct Product
 	{

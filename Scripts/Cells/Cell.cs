@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using Trains.Scripts.Products;
 
-namespace Trains.Scripts.Cells
+namespace Trains.Scripts
 {
 	public class Cell : Spatial
 	{
@@ -22,9 +22,8 @@ namespace Trains.Scripts.Cells
 
 		public int Size { get; set; } = 1;
 		public Color Color { get; private set; }
+
 		private List<Product> products;
-		
-		//buy price in $, the higher it is the more red cell should be
 		public Dictionary<Product, float> DemandRate { get; private set; }
 
 		private RandomNumberGenerator random = new RandomNumberGenerator();
