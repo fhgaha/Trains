@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Godot;
 using Newtonsoft.Json;
 
@@ -8,25 +9,21 @@ namespace Trains.Scripts.Common
 	{
 		public static void GenerateProductsDb(int rows, int cols)
 		{
-			Godot.File file = new Godot.File();
+			string path = @"Databases\products.json";
+			
+			// if (System.IO.File.Exists(path) && new FileInfo(path).Length != 0) return;
 
-			//if no error return
-			//file.Open("/Databases/products.json", File.ModeFlags.Read)
-
-			file.Open("res://Databases/products.json", Godot.File.ModeFlags.Write);
-
-			List<string> text = new List<string>();
+			List<string> jsonList = new List<string>();
 
 			for (int i = 0; i < rows; i++)
 				for (int j = 0; j < cols; j++)
 				{
 					string json = GenerateJSONFromCell(i, j);
-					text.Add(json);
+					jsonList.Add(json);
 				}
-			var content = JsonConvert.SerializeObject(text);
+			var content = JsonConvert.SerializeObject(jsonList);
 
-			file.StoreString(content);
-			file.Close();
+			System.IO.File.WriteAllText(path, content);
 		}
 
 		private static string GenerateJSONFromCell(int row, int col)
