@@ -22,6 +22,12 @@ namespace Trains.Scripts.MainCamera
 		[Export]
 		public bool RotationAllowed { get; set; } = true;
 
+		[Export]
+		public bool InvertRotationHorizontal {get; set;} = false;
+
+		[Export]
+		public bool InvertRotationVertical { get; set; } = false;
+
 		private Vector2 lastMousePos = new Vector2();
 		private bool isRotating = false;
 		private Spatial elevation;
@@ -77,8 +83,8 @@ namespace Trains.Scripts.MainCamera
 			if (!isRotating || !RotationAllowed) return;
 
 			Vector2 displacement = GetMouseDisplacement();
-			RotateLeftRight(delta, displacement.x);
-			Elevate(delta, displacement.y); //rotate up down
+			RotateLeftRight(delta, displacement.x, InvertRotationHorizontal);
+			Elevate(delta, displacement.y, InvertRotationVertical); //rotate up down
 		}
 
 		private Vector2 GetMouseDisplacement()
