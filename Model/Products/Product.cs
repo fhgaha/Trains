@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
-using Trains.Model.Common;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Products
@@ -18,9 +17,9 @@ namespace Trains.Model.Products
 		{
 			return new List<Product>
 			{
-				new Product{productType = Enums.ProductType.Lumber, Price = 20},
-				new Product{productType = Enums.ProductType.Grain, Price = 30},
-				new Product{productType = Enums.ProductType.Dairy, Price = 50}
+				new Product{productType = ProductType.Lumber, Price = 20},
+				new Product{productType = ProductType.Grain, Price = 30},
+				new Product{productType = ProductType.Dairy, Price = 50}
 			};
 		}
 
