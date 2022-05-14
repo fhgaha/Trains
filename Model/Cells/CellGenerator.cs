@@ -1,9 +1,9 @@
 using Godot;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using static Trains.Scripts.Common.DbGenerator;
+using static Trains.Model.Common.DbGenerator;
 
-namespace Trains.Scripts.Cells
+namespace Trains.Model.Cells
 {
 	public class CellGenerator : Node
 	{
@@ -13,21 +13,22 @@ namespace Trains.Scripts.Cells
 			var source = System.IO.File.ReadAllText(path);
 			var lines = JsonConvert.DeserializeObject<List<string>>(source);
 
-			List<LisTo2dArrayHelper> elements = new List<LisTo2dArrayHelper>();
+			List<ListTo2dArrayHelper> elements = new List<ListTo2dArrayHelper>();
 
 			int maxRow = 0; int maxCol = 0;
-			
+
 			FillElements(lines, elements, ref maxRow, ref maxCol);
 
 			Cell[,] cells = new Cell[maxRow + 1, maxCol + 1];
 
-			foreach (LisTo2dArrayHelper element in elements)
+			foreach (ListTo2dArrayHelper element in elements)
 				cells[element.Row, element.Col] = element.Cell;
 
 			return cells;
 		}
 
-		private static void FillElements(List<string> lines, List<LisTo2dArrayHelper> elements, ref int maxRow, ref int maxCol)
+		private static void FillElements(List<string> lines, List<ListTo2dArrayHelper> elements,
+			ref int maxRow, ref int maxCol)
 		{
 			foreach (string line in lines)
 			{
@@ -40,12 +41,12 @@ namespace Trains.Scripts.Cells
 				if (row > maxRow) maxRow = row;
 				if (col > maxCol) maxCol = col;
 
-				LisTo2dArrayHelper element = new LisTo2dArrayHelper { Row = row, Col = col, Cell = cell };
+				ListTo2dArrayHelper element = new ListTo2dArrayHelper { Row = row, Col = col, Cell = cell };
 				elements.Add(element);
 			}
 		}
 
-		class LisTo2dArrayHelper
+		class ListTo2dArrayHelper
 		{
 			public int Row;
 			public int Col;

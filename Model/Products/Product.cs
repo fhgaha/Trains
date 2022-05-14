@@ -1,10 +1,10 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
-using Trains.Scripts.Common;
-using static Trains.Scripts.Common.Enums;
+using Trains.Model.Common;
+using static Trains.Model.Common.Enums;
 
-namespace Trains.Scripts.Products
+namespace Trains.Model.Products
 {
 	public struct Product
 	{

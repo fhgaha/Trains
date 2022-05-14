@@ -1,9 +1,9 @@
 using Godot;
 using System.Collections.Generic;
 using System;
-using Trains.Scripts.Products;
+using Trains.Model.Products;
 
-namespace Trains.Scripts.Cells
+namespace Trains.Model.Cells
 {
 	public class Cell : Spatial
 	{

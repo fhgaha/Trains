@@ -1,19 +1,16 @@
 using System.Collections.Generic;
 using Godot;
-using Trains.Scripts.Cells;
+using Trains.Model.Cells;
 using Newtonsoft.Json;
-using Trains.Scripts.Products;
+using Trains.Model.Products;
 
-namespace Trains.Scripts.Common
+namespace Trains.Model.Common
 {
 	public class DbGenerator : Node
 	{
 		public static void GenerateProductsDb(int rows, int cols)
 		{
 			string path = @"Databases\products.json";
-			
-			// if (System.IO.File.Exists(path) && new FileInfo(path).Length != 0) return;
-
 			List<string> jsonList = new List<string>();
 
 			for (int i = 0; i < rows; i++)

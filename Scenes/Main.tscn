@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Scripts/Grids/Grid.cs" type="Script" id=1]
+[ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -37,3 +37,9 @@ material/0 = SubResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/MeshInstance/StaticBody"]
 shape = SubResource( 3 )
+
+[node name="RtsCameraController" type="Spatial" parent="."]
+
+[node name="Elevation" type="Spatial" parent="RtsCameraController"]
+
+[node name="Camera" type="Camera" parent="RtsCameraController/Elevation"]
