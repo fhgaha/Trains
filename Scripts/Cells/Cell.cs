@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System;
 using Trains.Scripts.Products;
 
-namespace Trains.Scripts
+namespace Trains.Scripts.Cells
 {
 	public class Cell : Spatial
 	{
+		private string id;
 		public string Id
 		{
 			get => id;
@@ -17,22 +18,34 @@ namespace Trains.Scripts
 			}
 		}
 		//hue represents as fraction of degrees
-		float maxHueValue_green = 113f / 360f;    //0.36f
-		float minHueValue_red = 0f;
+		const float maxHueValue_green = 113f / 360f;    //0.36f
+		const float minHueValue_red = 0f;
 
-		public int Size { get; set; } = 1;
-		public Color Color { get; private set; }
+		public int Size { get; } = 1;
+		private Color color;
 
-		private List<Product> products;
-		public Dictionary<Product, float> DemandRate { get; private set; }
+		public List<Product> Products {get; set;}
+		public Dictionary<Product, float> Prices { get
+		{
+			var dict = new Dictionary<Product, float>();
+			foreach (var product in Products)
+				dict.Add(product, product.Price);
+			return dict;
+		}}
 
 		private RandomNumberGenerator random = new RandomNumberGenerator();
 		private Timer timer;
-		private string id;
 
 		public override void _Ready() { }
 
 		public override void _Process(float delta) { }
+
+		public void Init(string id = null)
+		{
+			if (string.IsNullOrEmpty(Id)) Id = id;
+			Products = new List<Product>();
+			Products.AddRange(Product.GetBuildList());
+		}
 
 		public void SetColor()
 		{
@@ -44,8 +57,8 @@ namespace Trains.Scripts
 			random.Randomize();
 			h += GetHueBasedOfDemand(h);
 			h = Mathf.Clamp(h, minHueValue_red, maxHueValue_green);
-			this.Color = Color.FromHsv(h, s, v);
-			material.AlbedoColor = this.Color;
+			this.color = Color.FromHsv(h, s, v);
+			material.AlbedoColor = this.color;
 
 			// GD.Print(this + ": prev color: " + color + ", new color: " + this.Color);
 		}

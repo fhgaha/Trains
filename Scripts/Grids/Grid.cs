@@ -1,8 +1,8 @@
 using Godot;
-using Trains.Scripts.Common;
 using Trains.Scripts.Cells;
+using Trains.Scripts.Common;
 
-namespace Trains.Scripts
+namespace Trains.Scripts.Grids
 {
 	public class Grid : Spatial
 	{
@@ -16,10 +16,11 @@ namespace Trains.Scripts
 
 		public override void _Ready()
 		{
-			Cells = new Cell[CellsRowsAmount, CellsColsAmount];
+			//generate db then parse cells from db
 			timer = new Timer();
 			AddChild(timer);
 			DbGenerator.GenerateProductsDb(CellsRowsAmount, CellsColsAmount);
+			Cells = CellGenerator.Generate();
 			Build();
 			timer.Start(1.0f);
 		}
