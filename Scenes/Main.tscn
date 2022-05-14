@@ -36,6 +36,8 @@ shape = SubResource( 3 )
 [node name="MainCameraController" type="Spatial" parent="."]
 script = ExtResource( 2 )
 RotationSpeed = 20.0
+ZoomSpeed = 50.0
+ZoomSpeedDamp = 0.6
 
 [node name="Elevation" type="Spatial" parent="MainCameraController"]
 transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
