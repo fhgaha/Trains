@@ -5,6 +5,7 @@ using Trains.Model.Products;
 
 namespace Trains.Model.Cells
 {
+	[Tool]
 	public class Cell : Spatial
 	{
 		private string id;
