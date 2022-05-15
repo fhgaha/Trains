@@ -7,19 +7,29 @@ namespace Trains.Model.Products
 {
 	public struct Product
 	{
+
 		[JsonConverter(typeof(StringEnumConverter))]
-		public ProductType productType { get; set; }
-		public float Price { get; set; }
+		public ProductType productType { get; private set; }
+		private float price;
+
+		public float GetPrice() => price;
+		public void SetPrice(float value) => price = value;
 
 		//list of factories
+
+		public Product(ProductType type, float price)
+		{
+			productType = type;
+			this.price = price;
+		}
 
 		public static List<Product> GetBuildList()
 		{
 			return new List<Product>
 			{
-				new Product{productType = ProductType.Lumber, Price = 20},
-				new Product{productType = ProductType.Grain, Price = 30},
-				new Product{productType = ProductType.Dairy, Price = 50}
+				new Product{productType = ProductType.Lumber, price = 20},
+				new Product{productType = ProductType.Grain, price = 30},
+				new Product{productType = ProductType.Dairy, price = 50}
 			};
 		}
 

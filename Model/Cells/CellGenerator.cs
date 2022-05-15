@@ -1,7 +1,12 @@
 using Godot;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Trains.Model.Common;
+using Trains.Model.Products;
 using static Trains.Model.Common.DbGenerator;
+using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Cells
 {
@@ -51,6 +56,66 @@ namespace Trains.Model.Cells
 			public int Row;
 			public int Col;
 			public Cell Cell;
+		}
+
+		//generate cells, smothify, return to Grid.cs and generate db
+		internal static Cell[,] Generate(int rows, int cols)
+		{
+			var rng = new RandomNumberGenerator();	
+			Cell[,] cells = new Cell[rows, cols];
+
+			for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+			{
+				Cell cell = new Cell{Id = i + "_" + j};
+				cell.Init();
+
+				//set spike price for a random cell
+
+				cells[i, j] = cell;
+			}
+
+			//temporarily set some values for cells			
+			var product = new Product(Enums.ProductType.Lumber, 400f);
+			cells[0, 0].Products[0] = product;
+
+			SmothifyPrices(cells);
+
+			return cells;
+		}
+
+		private static void SmothifyPrices(Cell[,] cells)
+		{
+			for (int i = 0; i < cells.GetLength(0); i++)
+			for (int j = 0; j < cells.GetLength(1); j++)
+			{
+				List<Cell> neighbours = GetNeighbours(cells, i, j);
+				neighbours.Add(cells[i, j]);
+
+				//average?
+
+
+
+				neighbours.Clear();
+			}
+		}
+
+		private static List<Cell> GetNeighbours(Cell[,] cells, int i, int j)
+		{
+			List<Cell> neighbours = new List<Cell>();
+
+			for (var dy = -1; dy <= 1; dy++)
+			for (var dx = -1; dx <= 1; dx++)
+			{
+				if (dx == 0 && dy == 0) continue;
+				if (i + dx < 0 || j + dy < 0) continue;
+				if (i + dx > cells.GetLength(0) - 1 || j + dy > cells.GetLength(1) - 1) continue;
+
+				Cell neighbour = cells[i + dx, j + dy];
+				neighbours.Add(neighbour);
+			}
+
+			return neighbours;
 		}
 	}
 }

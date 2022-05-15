@@ -15,8 +15,6 @@ data = PoolVector3Array( 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0,
 
 [node name="Grid" type="Spatial" parent="."]
 script = ExtResource( 1 )
-CellsRowsAmount = 6
-CellsColsAmount = 7
 
 [node name="Navigation" type="Navigation" parent="."]
 visible = false

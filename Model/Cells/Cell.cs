@@ -30,12 +30,9 @@ namespace Trains.Model.Cells
 		{
 			var dict = new Dictionary<Product, float>();
 			foreach (var product in Products)
-				dict.Add(product, product.Price);
+				dict.Add(product, product.GetPrice());
 			return dict;
 		}}
-
-		private RandomNumberGenerator random = new RandomNumberGenerator();
-		private Timer timer;
 
 		public override void _Ready() { }
 
@@ -55,7 +52,6 @@ namespace Trains.Model.Cells
 			var color = material.AlbedoColor;
 			float h, s, v;
 			color.ToHsv(out h, out s, out v);
-			random.Randomize();
 			h += GetHueBasedOfDemand(h);
 			h = Mathf.Clamp(h, minHueValue_red, maxHueValue_green);
 			this.color = Color.FromHsv(h, s, v);
