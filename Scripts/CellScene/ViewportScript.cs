@@ -19,7 +19,7 @@ namespace Trains.Scripts.CellScene
 		// 	this.Size = GetNode<Label>("Label").RectSize;
 		// }
 
-		public void SetText(string text)
+		public void onSetText(string text)
 		{
 			label.Text = text;
 			Size = label.RectSize;

@@ -26,8 +26,8 @@ namespace Trains.Model.Common
 
 		private static string GenerateCellJSON(int row, int col)
 		{
-			Cell cell = new Cell{Id = row + "_" + col};
-			cell.Init();
+			Cell cell = new Cell();
+			cell.Init(row, col);
 
 			CellForJson cellForJson = new CellForJson{Id = cell.Id, Products = cell.Products};
 

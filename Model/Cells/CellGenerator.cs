@@ -57,18 +57,18 @@ namespace Trains.Model.Cells
 			public int Col;
 			public Cell Cell;
 		}
-
+		
 		//generate cells, smothify, return to Grid.cs and generate db
-		internal static Cell[,] Generate(int rows, int cols)
+		internal static Cell[,] Generate(int rows, int cols, PackedScene cellScene)
 		{
-			var rng = new RandomNumberGenerator();	
 			Cell[,] cells = new Cell[rows, cols];
 
 			for (int i = 0; i < rows; i++)
 			for (int j = 0; j < cols; j++)
 			{
-				Cell cell = new Cell{Id = i + "_" + j};
-				cell.Init();
+				var cell = cellScene.Instance<Cell>();
+				cell.Init(i, j);
+				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
 				//set spike price for a random cell
 
@@ -76,8 +76,8 @@ namespace Trains.Model.Cells
 			}
 
 			//temporarily set some values for cells			
-			var product = new Product(Enums.ProductType.Lumber, 400f);
-			cells[0, 0].Products[0] = product;
+			var _productLumber = cells[0, 0].Products.First(p => p.ProductType == Enums.ProductType.Lumber);
+			_productLumber.Price = 400f;
 
 			SmothifyPrices(cells);
 
@@ -93,8 +93,6 @@ namespace Trains.Model.Cells
 				neighbours.Add(cells[i, j]);
 
 				//average?
-
-
 
 				neighbours.Clear();
 			}

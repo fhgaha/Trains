@@ -30,7 +30,7 @@ namespace Trains.Model.Cells
 		{
 			var dict = new Dictionary<Product, float>();
 			foreach (var product in Products)
-				dict.Add(product, product.GetPrice());
+				dict.Add(product, product.Price);
 			return dict;
 		}}
 
@@ -38,9 +38,9 @@ namespace Trains.Model.Cells
 
 		public override void _Process(float delta) { }
 
-		public void Init(string id = null)
+		public void Init(int row, int col)
 		{
-			if (string.IsNullOrEmpty(Id)) Id = id;
+			if (string.IsNullOrEmpty(Id)) Id = row + "_" + col;
 			Products = new List<Product>();
 			Products.AddRange(Product.GetBuildList());
 		}

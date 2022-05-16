@@ -2,6 +2,7 @@
 
 [ext_resource path="res://Model/Cells/Cell.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/CellScene/ViewportScript.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/CellScene/Sprite3D/Sprite3DScript.cs" type="Script" id=3]
 
 [sub_resource type="PlaneMesh" id=3]
 resource_local_to_scene = true
@@ -10,10 +11,6 @@ size = Vector2( 1, 1 )
 [sub_resource type="SpatialMaterial" id=2]
 resource_local_to_scene = true
 albedo_color = Color( 0.0536591, 0.817383, 0.057497, 1 )
-
-[sub_resource type="ViewportTexture" id=4]
-flags = 4
-viewport_path = NodePath("Sprite3D/Viewport")
 
 [node name="Cell" type="Spatial"]
 script = ExtResource( 1 )
@@ -24,7 +21,7 @@ material/0 = SubResource( 2 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11072, 0 )
-texture = SubResource( 4 )
+script = ExtResource( 3 )
 
 [node name="Viewport" type="Viewport" parent="Sprite3D"]
 size = Vector2( 75, 14 )

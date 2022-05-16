@@ -33,21 +33,19 @@ namespace Trains.Model.Grids
 			}
 		}
 		public Cell[,] Cells;
-		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
+		PackedScene cellScene;
 
 
 		public override void _Ready()
 		{
+			cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 			Update();
 		}
 
 		public void Update()
 		{
 			//generate db then parse cells from db
-			//this.RemoveAllChildren();
-			//DbGenerator.GenerateProductsDb(CellsRowsAmount, CellsColsAmount);
-			Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount);
-
+			Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount, cellScene);
 			Build();
 		}
 
@@ -56,15 +54,7 @@ namespace Trains.Model.Grids
 			//build from db
 			for (int i = 0; i < CellsRowsAmount; i++)
 				for (int j = 0; j < CellsColsAmount; j++)
-				{
-					var cell = cellScene.Instance<Cell>();
-					cell.Id = i + "_" + j;
-					cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
-					Cells[i, j] = cell;
-					cell.SetColor();
-
-					AddChild(cell);
-				}
+					AddChild(Cells[i, j]);
 		}
 	}
 }

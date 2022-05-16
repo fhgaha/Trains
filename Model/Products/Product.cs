@@ -1,3 +1,4 @@
+using Godot;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
@@ -5,31 +6,39 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Products
 {
-	public struct Product
+	delegate void MyDelegate();
+
+	public class Product
 	{
-
 		[JsonConverter(typeof(StringEnumConverter))]
-		public ProductType productType { get; private set; }
-		private float price;
+		public ProductType ProductType { get; private set; }
 
-		public float GetPrice() => price;
-		public void SetPrice(float value) => price = value;
+		private float price;
+		public float Price
+		{
+			get => price;
+			set
+			{
+				price = value;
+				
+			}
+		}
 
 		//list of factories
 
 		public Product(ProductType type, float price)
 		{
-			productType = type;
-			this.price = price;
+			ProductType = type;
+			this.Price = price;
 		}
 
 		public static List<Product> GetBuildList()
 		{
 			return new List<Product>
 			{
-				new Product{productType = ProductType.Lumber, price = 20},
-				new Product{productType = ProductType.Grain, price = 30},
-				new Product{productType = ProductType.Dairy, price = 50}
+				new Product(ProductType.Lumber, 20),
+				new Product(ProductType.Grain, 30),
+				new Product(ProductType.Dairy, 50)
 			};
 		}
 
