@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System;
 using Trains.Model.Products;
+using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Cells
 {
@@ -25,17 +26,8 @@ namespace Trains.Model.Cells
 		public int Size { get; } = 1;
 		private Color color;
 
-		public List<Product> Products { get; set; }
-		public Dictionary<Product, float> Prices
-		{
-			get
-			{
-				var dict = new Dictionary<Product, float>();
-				foreach (var product in Products)
-					dict.Add(product, product.Price);
-				return dict;
-			}
-		}
+		public List<Product> ProductList { get; set; }
+		public Dictionary<ProductType, float> Products { get; set; }
 
 		public override void _Ready() { }
 
@@ -44,7 +36,11 @@ namespace Trains.Model.Cells
 		public void Init(int row, int col)
 		{
 			if (string.IsNullOrEmpty(Id)) Id = row + "_" + col;
-			Products = Product.BuildList();
+			ProductList = Product.BuildList();
+			
+			Products = new Dictionary<ProductType, float>();
+			foreach (var p in ProductList)
+				Products[p.ProductType] = p.Price;
 		}
 
 		public void SetColor()

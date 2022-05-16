@@ -1,15 +1,11 @@
 using Godot;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Trains.Model.Common;
-using Trains.Model.Products;
+using Trains.Model.Cells;
 using Trains.Scripts.CellScene;
 using static Trains.Model.Common.DbGenerator;
-using static Trains.Model.Common.Enums;
 
-namespace Trains.Model.Cells
+namespace Trains.Model.Common
 {
 	public class CellGenerator : Node
 	{
@@ -39,7 +35,7 @@ namespace Trains.Model.Cells
 			foreach (string line in lines)
 			{
 				CellForJson cellForJson = JsonConvert.DeserializeObject<CellForJson>(line);
-				Cell cell = new Cell() { Id = cellForJson.Id, Products = cellForJson.Products };
+				Cell cell = new Cell() { Id = cellForJson.Id, ProductList = cellForJson.Products };
 
 				int row = int.Parse(cellForJson.Id.Split("_")[0]);
 				int col = int.Parse(cellForJson.Id.Split("_")[1]);
@@ -77,23 +73,23 @@ namespace Trains.Model.Cells
 				cell.Init(i, j);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
-				cell.Products[0].Price = noise.GetNoise2d(i, j) * 50 + 50;
-
-				var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
+				//set prices
+				cell.ProductList[0].Price = noise.GetNoise2d(i, j) * 50 + 50;
 				
-				//temporary to set price to labels
-				viewport.GetNode<Label>("Label").Text = cell.Products[0].Price.ToString();
-
-				cell.Products[0].PriceChangedEvent += viewport.OnSetText;
-
-				//set spike price for a random cell
+				LabelInit(cell);
 
 				cells[i, j] = cell;
 			}
 
-			//SmothifyPrices(cells);
-
 			return cells;
+		}
+
+		private static void LabelInit(Cell cell)
+		{
+			var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
+			//temporary to set price to labels
+			viewport.GetNode<Label>("Label").Text = cell.ProductList[0].Price.ToString();
+			cell.ProductList[0].PriceChangedEvent += viewport.OnSetText;
 		}
 
 		private static void SmothifyPrices(Cell[,] cells)

@@ -42,15 +42,8 @@ namespace Trains.Model.Grids
 			cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 			Update();
 
-			// var noise = new OpenSimplexNoise();
-			// for (int i = 0; i < Cells.GetLength(0); i++)
-			// for (int j = 0; j < Cells.GetLength(1); j++)
-			// {
-			// 	Cells[i, j].Products[0].Price = noise.GetNoise2d(i, j) * 50 + 50;
-			// }
-
-			//set value for each cell
-			var _productLumber = Cells[0, 0].Products.First(p => p.ProductType == Enums.ProductType.Lumber);
+			//set value for a cell
+			var _productLumber = Cells[0, 0].ProductList.First(p => p.ProductType == Enums.ProductType.Lumber);
 			_productLumber.Price = 400f;
 		}
 
