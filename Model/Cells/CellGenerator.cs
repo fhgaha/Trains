@@ -62,6 +62,12 @@ namespace Trains.Model.Cells
 		//generate cells, smothify, return to Grid.cs and generate db
 		internal static Cell[,] Generate(int rows, int cols, PackedScene cellScene)
 		{
+			var noise = new OpenSimplexNoise();
+			noise.Period = 8f;	//distance to next value
+			noise.Octaves = 4;	//layers
+			noise.Persistence = 0.9f;	//the effect that layers have
+			noise.Lacunarity = 1.5f;	//detail per layer
+
 			Cell[,] cells = new Cell[rows, cols];
 
 			for (int i = 0; i < rows; i++)
@@ -71,18 +77,21 @@ namespace Trains.Model.Cells
 				cell.Init(i, j);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
-				var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
-				cell.Products[0].PriceChangedEvent += viewport.OnSetText;
+				cell.Products[0].Price = noise.GetNoise2d(i, j) * 50 + 50;
 
-				//temporary to set text
+				var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
+				
+				//temporary to set price to labels
 				viewport.GetNode<Label>("Label").Text = cell.Products[0].Price.ToString();
+
+				cell.Products[0].PriceChangedEvent += viewport.OnSetText;
 
 				//set spike price for a random cell
 
 				cells[i, j] = cell;
 			}
 
-			SmothifyPrices(cells);
+			//SmothifyPrices(cells);
 
 			return cells;
 		}
