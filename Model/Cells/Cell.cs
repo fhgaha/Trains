@@ -25,14 +25,17 @@ namespace Trains.Model.Cells
 		public int Size { get; } = 1;
 		private Color color;
 
-		public List<Product> Products {get; set;}
-		public Dictionary<Product, float> Prices { get
+		public List<Product> Products { get; set; }
+		public Dictionary<Product, float> Prices
 		{
-			var dict = new Dictionary<Product, float>();
-			foreach (var product in Products)
-				dict.Add(product, product.Price);
-			return dict;
-		}}
+			get
+			{
+				var dict = new Dictionary<Product, float>();
+				foreach (var product in Products)
+					dict.Add(product, product.Price);
+				return dict;
+			}
+		}
 
 		public override void _Ready() { }
 
@@ -41,8 +44,7 @@ namespace Trains.Model.Cells
 		public void Init(int row, int col)
 		{
 			if (string.IsNullOrEmpty(Id)) Id = row + "_" + col;
-			Products = new List<Product>();
-			Products.AddRange(Product.GetBuildList());
+			Products = Product.BuildList();
 		}
 
 		public void SetColor()

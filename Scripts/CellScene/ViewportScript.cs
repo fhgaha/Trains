@@ -10,8 +10,8 @@ namespace Trains.Scripts.CellScene
 
 		public override void _Ready()
 		{
-		    label = GetNode<Label>("Label");   
-		    Size = label.RectSize;
+			label = GetNode<Label>("Label");
+			Size = label.RectSize;
 		}
 
 		// public override void _Process(float delta)
@@ -19,9 +19,11 @@ namespace Trains.Scripts.CellScene
 		// 	this.Size = GetNode<Label>("Label").RectSize;
 		// }
 
-		public void onSetText(string text)
+		public void OnSetText(float value)
 		{
-			label.Text = text;
+			if (label is null) throw new Exception("label is null");
+
+			label.Text = value.ToString();
 			Size = label.RectSize;
 		}
 	}

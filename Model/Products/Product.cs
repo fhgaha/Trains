@@ -6,10 +6,13 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Products
 {
-	delegate void MyDelegate();
 
 	public class Product
 	{
+		public delegate void PriceChanged(float value);
+		public event PriceChanged PriceChangedEvent;
+		
+		
 		[JsonConverter(typeof(StringEnumConverter))]
 		public ProductType ProductType { get; private set; }
 
@@ -20,7 +23,7 @@ namespace Trains.Model.Products
 			set
 			{
 				price = value;
-				
+				PriceChangedEvent?.Invoke(value);
 			}
 		}
 
@@ -32,7 +35,7 @@ namespace Trains.Model.Products
 			this.Price = price;
 		}
 
-		public static List<Product> GetBuildList()
+		public static List<Product> BuildList()
 		{
 			return new List<Product>
 			{

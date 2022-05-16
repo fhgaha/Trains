@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Trains.Model.Common;
 using Trains.Model.Products;
+using Trains.Scripts.CellScene;
 using static Trains.Model.Common.DbGenerator;
 using static Trains.Model.Common.Enums;
 
@@ -70,14 +71,16 @@ namespace Trains.Model.Cells
 				cell.Init(i, j);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
+				var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
+				cell.Products[0].PriceChangedEvent += viewport.OnSetText;
+
+				//temporary to set text
+				viewport.GetNode<Label>("Label").Text = cell.Products[0].Price.ToString();
+
 				//set spike price for a random cell
 
 				cells[i, j] = cell;
 			}
-
-			//temporarily set some values for cells			
-			var _productLumber = cells[0, 0].Products.First(p => p.ProductType == Enums.ProductType.Lumber);
-			_productLumber.Price = 400f;
 
 			SmothifyPrices(cells);
 

@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Trains.Model.Cells;
 using Trains.Model.Common;
@@ -40,6 +41,10 @@ namespace Trains.Model.Grids
 		{
 			cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 			Update();
+
+			//set value for each cell
+			var _productLumber = Cells[0, 0].Products.First(p => p.ProductType == Enums.ProductType.Lumber);
+			_productLumber.Price = 400f;
 		}
 
 		public void Update()

@@ -33,5 +33,5 @@ script = ExtResource( 2 )
 [node name="Label" type="Label" parent="Sprite3D/Viewport"]
 margin_right = 40.0
 margin_bottom = 14.0
-text = "ass eating"
+text = "no data"
 uppercase = true
