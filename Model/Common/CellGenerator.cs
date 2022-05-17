@@ -73,7 +73,6 @@ namespace Trains.Model.Common
 				cell.Init(i, j);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
-				//set prices
 				cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
 				
 				LabelInit(cell);

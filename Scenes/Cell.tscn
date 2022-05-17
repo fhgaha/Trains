@@ -37,3 +37,12 @@ margin_right = 40.0
 margin_bottom = 14.0
 text = "no data"
 uppercase = true
+
+[node name="Node" type="Node" parent="."]
+
+[node name="Label" type="Label" parent="Node"]
+margin_right = 85.0
+margin_bottom = 43.0
+text = "label2"
+align = 1
+valign = 1

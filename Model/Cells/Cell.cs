@@ -4,6 +4,7 @@ using System;
 using Trains.Model.Products;
 using static Trains.Model.Common.Enums;
 using System.Linq;
+using Trains.Scripts.CellScene;
 
 namespace Trains.Model.Cells
 {
@@ -28,6 +29,11 @@ namespace Trains.Model.Cells
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
 			Products = Product.BuildList();
+
+			// var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
+			// //temporary to set price to labels
+			// viewport.GetNode<Label>("Label").Text = Products[0].Price.ToString();
+			// Products[0].PriceChangedEvent += viewport.OnSetText;
 
 			Products[0].PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
 		}
