@@ -3,22 +3,15 @@ using System.Collections.Generic;
 using System;
 using Trains.Model.Products;
 using static Trains.Model.Common.Enums;
+using System.Linq;
 
 namespace Trains.Model.Cells
 {
 	[Tool]
 	public class Cell : Spatial
 	{
-		private string id;
-		public string Id
-		{
-			get => id;
-			set
-			{
-				if (!string.IsNullOrEmpty(id)) throw new ArgumentException("You allowed to set Id only once");
-				id = value;
-			}
-		}
+		public string Id { get; set; }
+
 		//hue represents as fraction of degrees
 		const float maxHueValue_green = 113f / 360f;    //0.36f
 		const float minHueValue_red = 0f;
@@ -26,8 +19,10 @@ namespace Trains.Model.Cells
 		public int Size { get; } = 1;
 		private Color color;
 
-		public List<Product> ProductList { get; set; }
-		public Dictionary<ProductType, float> Products { get; set; }
+		public List<Product> Products { get; set; }
+
+		public float GetPrice(ProductType type) => Products.First(p => p.ProductType == type).Price;
+		public void SetPrice(ProductType type, float price) => Products.First(p => p.ProductType == type).Price = price;
 
 		public override void _Ready() { }
 
@@ -35,12 +30,9 @@ namespace Trains.Model.Cells
 
 		public void Init(int row, int col)
 		{
-			if (string.IsNullOrEmpty(Id)) Id = row + "_" + col;
-			ProductList = Product.BuildList();
-			
-			Products = new Dictionary<ProductType, float>();
-			foreach (var p in ProductList)
-				Products[p.ProductType] = p.Price;
+			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
+			Id = row + "_" + col;
+			Products = Product.BuildList();
 		}
 
 		public void SetColor()

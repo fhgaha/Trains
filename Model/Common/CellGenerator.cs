@@ -35,7 +35,7 @@ namespace Trains.Model.Common
 			foreach (string line in lines)
 			{
 				CellForJson cellForJson = JsonConvert.DeserializeObject<CellForJson>(line);
-				Cell cell = new Cell() { Id = cellForJson.Id, ProductList = cellForJson.Products };
+				Cell cell = new Cell() { Id = cellForJson.Id, Products = cellForJson.Products };
 
 				int row = int.Parse(cellForJson.Id.Split("_")[0]);
 				int col = int.Parse(cellForJson.Id.Split("_")[1]);
@@ -74,7 +74,7 @@ namespace Trains.Model.Common
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
 				//set prices
-				cell.ProductList[0].Price = noise.GetNoise2d(i, j) * 50 + 50;
+				cell.Products[0].Price = noise.GetNoise2d(i, j) * 50 + 50;
 				
 				LabelInit(cell);
 
@@ -88,8 +88,8 @@ namespace Trains.Model.Common
 		{
 			var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
 			//temporary to set price to labels
-			viewport.GetNode<Label>("Label").Text = cell.ProductList[0].Price.ToString();
-			cell.ProductList[0].PriceChangedEvent += viewport.OnSetText;
+			viewport.GetNode<Label>("Label").Text = cell.Products[0].Price.ToString();
+			cell.Products[0].PriceChangedEvent += viewport.OnSetText;
 		}
 
 		private static void SmothifyPrices(Cell[,] cells)

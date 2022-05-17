@@ -43,7 +43,7 @@ namespace Trains.Model.Grids
 			Update();
 
 			//set value for a cell
-			var _productLumber = Cells[0, 0].ProductList.First(p => p.ProductType == Enums.ProductType.Lumber);
+			var _productLumber = Cells[0, 0].Products.First(p => p.ProductType == Enums.ProductType.Lumber);
 			_productLumber.Price = 400f;
 		}
 

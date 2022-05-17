@@ -29,7 +29,7 @@ namespace Trains.Model.Common
 			Cell cell = new Cell();
 			cell.Init(row, col);
 
-			CellForJson cellForJson = new CellForJson{Id = cell.Id, Products = cell.ProductList};
+			CellForJson cellForJson = new CellForJson{Id = cell.Id, Products = cell.Products};
 
 			string json = JsonConvert.SerializeObject(cellForJson, Formatting.Indented);
 			return json;
