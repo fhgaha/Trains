@@ -22,7 +22,7 @@ material/0 = SubResource( 2 )
 script = ExtResource( 4 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11072, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.0156255, -6.83013e-10 )
 script = ExtResource( 3 )
 
 [node name="Viewport" type="Viewport" parent="Sprite3D"]
@@ -37,12 +37,3 @@ margin_right = 40.0
 margin_bottom = 14.0
 text = "no data"
 uppercase = true
-
-[node name="Node" type="Node" parent="."]
-
-[node name="Label" type="Label" parent="Node"]
-margin_right = 85.0
-margin_bottom = 43.0
-text = "label2"
-align = 1
-valign = 1
