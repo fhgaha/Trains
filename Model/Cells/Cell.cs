@@ -15,10 +15,22 @@ namespace Trains.Model.Cells
 
 		public int Size { get; } = 1;
 
-		public List<Product> Products { get; set; }
+		public Node Products { get; set; }
 
-		public float GetPrice(ProductType type) => Products.First(p => p.ProductType == type).Price;
-		public void SetPrice(ProductType type, float price) => Products.First(p => p.ProductType == type).Price = price;
+		public float GetPrice(ProductType type)
+		{
+			foreach (Product p in Products.GetChildren())
+				if (p.ProductType == type)
+					return p.Price;
+			return -1;
+		}
+		
+		public void SetPrice(ProductType type, float price)
+		{
+			foreach (Product p in Products.GetChildren())
+				if (p.ProductType == type)
+					p.Price = price;
+		}
 
 		public override void _Ready() { }
 
@@ -28,14 +40,18 @@ namespace Trains.Model.Cells
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
-			Products = Product.BuildList();
 
-			// var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
-			// //temporary to set price to labels
-			// viewport.GetNode<Label>("Label").Text = Products[0].Price.ToString();
-			// Products[0].PriceChangedEvent += viewport.OnSetText;
+			Products = new Node();
 
-			Products[0].PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
+			var lumber = new Product(ProductType.Lumber, 20f);
+			var grain = new Product(ProductType.Grain, 30f);
+			var dairy = new Product(ProductType.Dairy, 40f);
+
+			Products.AddChild(lumber);
+			Products.AddChild(grain);
+			Products.AddChild(dairy);
+
+			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
 		}
 	}
 }

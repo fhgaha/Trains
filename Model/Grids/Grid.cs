@@ -5,7 +5,7 @@ using Trains.Model.Common;
 
 namespace Trains.Model.Grids
 {
-	//[Tool]
+	[Tool]
 	public class Grid : Spatial
 	{
 		private int cellsRowsAmount = 10;
@@ -43,8 +43,7 @@ namespace Trains.Model.Grids
 			Update();
 
 			//set value for a cell
-			var _productLumber = Cells[0, 0].Products.First(p => p.ProductType == Enums.ProductType.Lumber);
-			_productLumber.Price = 400f;
+			Cells[0, 0].SetPrice(Enums.ProductType.Lumber, 400f);
 		}
 
 		public void Update()

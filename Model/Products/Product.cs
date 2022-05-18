@@ -7,7 +7,7 @@ using static Trains.Model.Common.Enums;
 namespace Trains.Model.Products
 {
 
-	public class Product
+	public class Product : Node
 	{
 		public delegate void PriceChanged(float value);
 		public event PriceChanged PriceChangedEvent;
