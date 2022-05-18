@@ -34,16 +34,17 @@ material/0 = SubResource( 2 )
 shape = SubResource( 3 )
 
 [node name="MainCameraController" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5.01859 )
 script = ExtResource( 2 )
 RotationSpeed = 20.0
 ZoomSpeed = 50.0
 ZoomSpeedDamp = 0.6
 
 [node name="Elevation" type="Spatial" parent="MainCameraController"]
-transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 0.261044, 0.965327, 0, -0.965327, 0.261044, 0, 0, 0 )
 
 [node name="Camera" type="Camera" parent="MainCameraController/Elevation"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10 )
+transform = Transform( 1, 0, 0, 0, 1, 4.58009e-08, 0, -4.58009e-08, 1, 0, -1.9462e-07, 5.05318 )
 
 [node name="Test" type="MeshInstance" parent="."]
 visible = false

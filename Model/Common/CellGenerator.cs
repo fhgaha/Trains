@@ -71,10 +71,10 @@ namespace Trains.Model.Common
 			for (int j = 0; j < cols; j++)
 			{
 				var cell = cellScene.Instance<Cell>();
-				cell.Init(i, j);
+				cell.Init(i, j, noise.GetNoise2d(i, j) * 50 + 50);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
-				cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
+				//cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
 				
 				LabelInit(cell);
 

@@ -36,9 +36,10 @@ namespace Trains.Model.Cells
 
 		public override void _Process(float delta) { }
 
-		public void Init(int row, int col)
+		public void Init(int row, int col, float price)
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
+			
 			Id = row + "_" + col;
 
 			Products = new Node();
@@ -52,6 +53,9 @@ namespace Trains.Model.Cells
 			Products.AddChild(dairy);
 
 			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
+			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
+			
+			SetPrice(ProductType.Lumber, price);
 		}
 	}
 }
