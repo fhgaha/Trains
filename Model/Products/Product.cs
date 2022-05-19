@@ -36,15 +36,15 @@ namespace Trains.Model.Products
 			this.Price = price;
 		}
 
-		public static List<Product> BuildList()
-		{
-			return new List<Product>
-			{
-				new Product(ProductType.Lumber, 20),
-				new Product(ProductType.Grain, 30),
-				new Product(ProductType.Dairy, 50)
-			};
-		}
+		// public static List<Product> BuildList()
+		// {
+		// 	return new List<Product>
+		// 	{
+		// 		new Product(ProductType.Lumber, 20),
+		// 		new Product(ProductType.Grain, 30),
+		// 		new Product(ProductType.Dairy, 50)
+		// 	};
+		// }
 
 		// public override string ToString()
 		// {

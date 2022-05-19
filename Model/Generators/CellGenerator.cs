@@ -1,9 +1,12 @@
 using Godot;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using Trains.Model.Cells;
+using Trains.Model.Generators.Noises;
 using Trains.Model.Products;
 using Trains.Scripts.CellScene;
+using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Generators
 {
@@ -58,11 +61,12 @@ namespace Trains.Model.Generators
 		//generate cells, smothify, return to Grid.cs and generate db
 		internal static Cell[,] Generate(int rows, int cols, PackedScene cellScene)
 		{
-			var noise = new OpenSimplexNoise();
-			noise.Period = 8f;	//distance to next value
-			noise.Octaves = 4;	//layers
-			noise.Persistence = 0.9f;	//the effect that layers have
-			noise.Lacunarity = 1.5f;	//detail per layer
+			var noises = new Dictionary<ProductType, OpenSimplexNoise>
+			{
+				[ProductType.Lumber] = new LumberNoise(),
+				[ProductType.Grain] = new GrainNoise(),
+				[ProductType.Dairy] = new DairyNoise()
+			};
 
 			Cell[,] cells = new Cell[rows, cols];
 
@@ -70,7 +74,8 @@ namespace Trains.Model.Generators
 			for (int j = 0; j < cols; j++)
 			{
 				var cell = cellScene.Instance<Cell>();
-				cell.Init(i, j, noise.GetNoise2d(i, j) * 50 + 50);
+				cell.Init(i, j, noises);
+				//cell.Init(i, j, lumberNoise.GetNoise2d(i, j) * 50 + 50);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
 				//cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
