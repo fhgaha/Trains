@@ -63,6 +63,7 @@ namespace Trains.Model.Generators
 		{
 			var noises = new Dictionary<ProductType, OpenSimplexNoise>
 			{
+				//noises should be different
 				[ProductType.Lumber] = new LumberNoise(),
 				[ProductType.Grain] = new GrainNoise(),
 				[ProductType.Dairy] = new DairyNoise()

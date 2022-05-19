@@ -6,7 +6,6 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Products
 {
-
 	public class Product : Node
 	{
 		public delegate void PriceChanged(float value);
@@ -35,23 +34,5 @@ namespace Trains.Model.Products
 			ProductType = type;
 			this.Price = price;
 		}
-
-		// public static List<Product> BuildList()
-		// {
-		// 	return new List<Product>
-		// 	{
-		// 		new Product(ProductType.Lumber, 20),
-		// 		new Product(ProductType.Grain, 30),
-		// 		new Product(ProductType.Dairy, 50)
-		// 	};
-		// }
-
-		// public override string ToString()
-		// {
-		// 	return "{Product{"
-		// 		+ "ProductType: " + productType.ToString()
-		// 		+ ", Price: " + Price
-		// 		+ "}}";
-		// }
 	}
 }

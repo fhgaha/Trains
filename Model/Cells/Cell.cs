@@ -39,42 +39,35 @@ namespace Trains.Model.Cells
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
-
 			Id = row + "_" + col;
-
 			Products = new Node();
 
-			var lumber = new Product(ProductType.Lumber, 20f);
-			var grain = new Product(ProductType.Grain, 30f);
-			var dairy = new Product(ProductType.Dairy, 40f);
-
-			Products.AddChild(lumber);
-			Products.AddChild(grain);
-			Products.AddChild(dairy);
-
-			//If I want to build cell grid in editor I have comment this.There will be no price numbers and no colors.
-			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
-			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
-
-			foreach (Product product in Products.GetChildren())
+			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
 			{
-				product.Price = GetPriceFromNoise(row, col, noises, product);;
+				Product product = new Product(type, -1);
+				Products.AddChild(product);
+				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);;
 			}
 
+			//If I want to build cell grid in editor I have comment this.There will be no price numbers and no colors.
+			//should subscribe and unsubscribe to these events when sertain product button is pressed
+			Product lumber = Products.GetChild<Product>(0);
+			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
+			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
 		}
 
-		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, Product product)
+		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
 		{
-			Type noiseType = GetNoiseType(product);
-			var noise = noises[product.ProductType];
+			Type noiseType = GetNoiseType(productType);
+			var noise = noises[productType];
 			object[] getMyNoiseArguments = new object[] { row, col, 100f };
 
 			var price = (float)noiseType.GetMethod("GetMyNoise").Invoke(noise, getMyNoiseArguments);
 			return price;
 			
-			Type GetNoiseType(Product product_)
+			Type GetNoiseType(ProductType productType_)
 			{
-				switch (product_.ProductType)
+				switch (productType_)
 				{
 					case ProductType.Lumber: return typeof(LumberNoise);
 					case ProductType.Grain: return typeof(GrainNoise);
@@ -84,7 +77,5 @@ namespace Trains.Model.Cells
 				return null;
 			}
 		}
-
-		
 	}
 }
