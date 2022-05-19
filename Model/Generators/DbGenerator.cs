@@ -4,7 +4,7 @@ using Trains.Model.Cells;
 using Newtonsoft.Json;
 using Trains.Model.Products;
 
-namespace Trains.Model.Common
+namespace Trains.Model.Generators
 {
 	public class DbGenerator : Node
 	{

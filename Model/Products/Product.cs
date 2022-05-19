@@ -16,7 +16,6 @@ namespace Trains.Model.Products
 		[JsonConverter(typeof(StringEnumConverter))]
 		public ProductType ProductType { get; private set; }
 
-		private float price;
 		public float Price
 		{
 			get => price;
@@ -27,7 +26,9 @@ namespace Trains.Model.Products
 			}
 		}
 
-		//list of factories
+		public float Amount { get; set; }
+
+		private float price;
 
 		public Product(ProductType type, float price)
 		{

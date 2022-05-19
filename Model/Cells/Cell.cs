@@ -1,9 +1,7 @@
 using Godot;
-using System.Collections.Generic;
 using System;
 using Trains.Model.Products;
 using static Trains.Model.Common.Enums;
-using System.Linq;
 using Trains.Scripts.CellScene;
 
 namespace Trains.Model.Cells
@@ -52,8 +50,13 @@ namespace Trains.Model.Cells
 			Products.AddChild(grain);
 			Products.AddChild(dairy);
 
-			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
-			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
+			//If I want to build cell grid in editor I have comment this.There will be no price numbers and no colors.
+
+			var mesh = GetNode("MeshInstance") as MeshInstanceScript;
+			var viewport = GetNode("Sprite3D/Viewport") as ViewportScript;
+
+			lumber.PriceChangedEvent += mesh.SetColor;
+			lumber.PriceChangedEvent += viewport.OnSetText;
 			
 			SetPrice(ProductType.Lumber, price);
 		}

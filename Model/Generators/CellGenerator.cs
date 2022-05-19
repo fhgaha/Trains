@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using Trains.Model.Cells;
 using Trains.Model.Products;
 using Trains.Scripts.CellScene;
-using static Trains.Model.Common.DbGenerator;
 
-namespace Trains.Model.Common
+namespace Trains.Model.Generators
 {
 	public class CellGenerator : Node
 	{

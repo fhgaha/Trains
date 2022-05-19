@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using Trains.Model.Cells;
 using Trains.Model.Common;
+using Trains.Model.Generators;
 
 namespace Trains.Model.Grids
 {
@@ -34,12 +35,11 @@ namespace Trains.Model.Grids
 			}
 		}
 		public Cell[,] Cells;
-		PackedScene cellScene;
+		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 
 
 		public override void _Ready()
 		{
-			cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 			Update();
 
 			//set value for a cell
