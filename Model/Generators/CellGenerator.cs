@@ -94,7 +94,7 @@ namespace Trains.Model.Generators
 			var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
 			//temporary to set price to labels
 			var lumber = cell.Products.GetChildren()[0] as Product;
-			viewport.GetNode<Label>("Label").Text = lumber.Price.ToString();
+			//viewport.GetNode<Label>("Label").Text = lumber.Price.ToString();
 			lumber.PriceChangedEvent += viewport.OnSetText;
 		}
 

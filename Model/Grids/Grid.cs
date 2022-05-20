@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Godot;
 using Trains.Model.Cells;
@@ -38,13 +39,12 @@ namespace Trains.Model.Grids
 
 		public override void _Ready()
 		{
-			events = GetNode<Events>("/root/Events");
 			Update();
+			events = GetNode<Events>("/root/Events");
+			events.Connect(nameof(Events.LumberButtonPressed), this, nameof(onLumberButtonPressed));
 
 			//set value for a cell
-			Cells[0, 0].SetPrice(Enums.ProductType.Lumber, 400f);
-
-			events.Connect(nameof(Events.LumberButtonPressed), this, nameof(onLumberButtonPressed));
+			//Cells[0, 0].SetPrice(Enums.ProductType.Lumber, 400f);
 		}
 
 		public void Update()
@@ -65,6 +65,16 @@ namespace Trains.Model.Grids
 		public void onLumberButtonPressed()
 		{
 			GD.Print("onLumberButtonPressed from Grid");
+			ShowLumber();
+		}
+
+		private void ShowLumber()
+		{
+			for (int i = 0; i < Cells.GetLength(0); i++)
+			for (int j = 0; j < Cells.GetLength(1); j++)
+			{
+				Cells[i, j].ShowLumber();
+			}
 		}
 	}
 }

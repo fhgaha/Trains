@@ -8,6 +8,8 @@ namespace Trains.Model.Products
 {
 	public class Product : Node
 	{
+		//used by Cell/Sprite3D/Viewport to set label text
+		//used by Cell/MeshInstance to set color 
 		public delegate void PriceChanged(float value);
 		public event PriceChanged PriceChangedEvent;
 		

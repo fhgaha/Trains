@@ -2,9 +2,9 @@ using Godot;
 using System;
 using Trains.Model.Products;
 using static Trains.Model.Common.Enums;
-using Trains.Scripts.CellScene;
 using System.Collections.Generic;
 using Trains.Model.Generators.Noises;
+using Trains.Scripts.CellScene;
 
 namespace Trains.Model.Cells
 {
@@ -49,11 +49,11 @@ namespace Trains.Model.Cells
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);;
 			}
 
-			//If I want to build cell grid in editor I have comment this.There will be no price numbers and no colors.
+			//If I want to build cell grid in editor I have to comment this. There will be no price numbers and no colors.
 			//should subscribe and unsubscribe to these events when sertain product button is pressed
-			Product lumber = Products.GetChild<Product>(0);
-			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
-			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
+			// Product lumber = Products.GetChild<Product>(0);
+			// lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
+			// lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -76,6 +76,33 @@ namespace Trains.Model.Cells
 
 				return null;
 			}
+		}
+		
+		internal void ShowLumber()
+		{
+			//show price and color then subscribe in case value changes
+			Product lumber = null;
+
+			foreach (Product p in Products.GetChildren())
+				if (p.ProductType == ProductType.Lumber) lumber = p;
+
+			if (lumber == null) throw new Exception("Products do not contain lumber");
+
+			// var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
+			// viewport.OnSetText(lumber.Price);
+			// var label = viewport.GetNode<Label>("Label");
+			// //viewport.GetNode<Label>("Label").Text = lumber.Price.ToString();
+			// GetNode<MeshInstanceScript>("MeshInstance").SetColor(lumber.Price);
+
+			// lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
+			// lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
+
+			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
+			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
+
+			lumber.Price = lumber.Price;
+			//lumber.EmitSignal(nameof(Product.PriceChanged), lumber.Price);
+
 		}
 	}
 }
