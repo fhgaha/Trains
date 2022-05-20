@@ -16,7 +16,7 @@ data = PoolVector3Array( 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0,
 
 [node name="World" type="Spatial"]
 
-[node name="Control" parent="." instance=ExtResource( 3 )]
+[node name="GUI" parent="." instance=ExtResource( 3 )]
 
 [node name="Grid" type="Spatial" parent="."]
 script = ExtResource( 1 )

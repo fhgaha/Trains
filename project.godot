@@ -14,6 +14,10 @@ config/name="Trains"
 run/main_scene="res://Scenes/Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Events="*res://Model/Common/Events.cs"
+
 [display]
 
 window/size/always_on_top=true

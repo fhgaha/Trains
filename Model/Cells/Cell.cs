@@ -52,8 +52,8 @@ namespace Trains.Model.Cells
 			//If I want to build cell grid in editor I have comment this.There will be no price numbers and no colors.
 			//should subscribe and unsubscribe to these events when sertain product button is pressed
 			Product lumber = Products.GetChild<Product>(0);
-			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
 			lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
+			lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
