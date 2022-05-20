@@ -9,6 +9,4 @@ public class Events : Node
 	// Emitted when lumber button is pressed. 
 	// Grid uses this to show lumber prices and colors
 	[Signal] public delegate void LumberButtonPressed();
-
-
 }

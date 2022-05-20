@@ -10,6 +10,5 @@ namespace Trains.Scripts.CellScene
 		{
 			Texture = GetNode<Viewport>("Viewport").GetTexture();
 		}
-
 	}
 }

@@ -1,9 +1,10 @@
 using Godot;
 using System;
+using Trains.Model.Cells;
+using Trains.Model.Products;
 
 namespace Trains.Scripts.CellScene
 {
-	[Tool]
 	public class ViewportScript : Viewport
 	{
 		public void OnSetText(float value)

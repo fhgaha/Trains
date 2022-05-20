@@ -8,7 +8,7 @@ using Trains.Scripts.CellScene;
 
 namespace Trains.Model.Cells
 {
-	[Tool]
+	//[Tool]
 	public class Cell : Spatial
 	{
 		public string Id { get; set; }
@@ -55,6 +55,9 @@ namespace Trains.Model.Cells
 				Products.AddChild(product);
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);;
 			}
+
+			var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
+			var sprite3D = GetNode<Sprite3DScript>("Sprite3D");
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -91,13 +94,15 @@ namespace Trains.Model.Cells
 
 			var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+
 			//should i check who is sender of signal?
 			if (!lumber.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.OnSetText)))
 				lumber.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.OnSetText));
+
 			if (!lumber.IsConnected(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor)))
 				lumber.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
 
-			lumber.Price = lumber.Price;
+			lumber.Price += 0f;
 		}
 	}
 }
