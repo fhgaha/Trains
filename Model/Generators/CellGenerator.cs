@@ -80,22 +80,11 @@ namespace Trains.Model.Generators
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 
 				//cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
-				
-				LabelInit(cell);
 
 				cells[i, j] = cell;
 			}
 
 			return cells;
-		}
-
-		private static void LabelInit(Cell cell)
-		{
-			var viewport = cell.GetNode<ViewportScript>("Sprite3D/Viewport");
-			//temporary to set price to labels
-			var lumber = cell.Products.GetChildren()[0] as Product;
-			//viewport.GetNode<Label>("Label").Text = lumber.Price.ToString();
-			lumber.PriceChangedEvent += viewport.OnSetText;
 		}
 
 		private static void SmothifyPrices(Cell[,] cells)

@@ -10,8 +10,9 @@ namespace Trains.Model.Products
 	{
 		//used by Cell/Sprite3D/Viewport to set label text
 		//used by Cell/MeshInstance to set color 
+		[Signal]
 		public delegate void PriceChanged(float value);
-		public event PriceChanged PriceChangedEvent;
+		//public event PriceChanged PriceChangedEvent;
 		
 		
 		[JsonConverter(typeof(StringEnumConverter))]
@@ -23,7 +24,8 @@ namespace Trains.Model.Products
 			set
 			{
 				price = value;
-				PriceChangedEvent?.Invoke(value);
+				EmitSignal(nameof(PriceChanged), value);
+				//PriceChangedEvent?.Invoke(value);
 			}
 		}
 

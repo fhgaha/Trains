@@ -64,7 +64,6 @@ namespace Trains.Model.Grids
 
 		public void onLumberButtonPressed()
 		{
-			GD.Print("onLumberButtonPressed from Grid");
 			ShowLumber();
 		}
 
