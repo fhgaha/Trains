@@ -31,11 +31,14 @@ namespace Trains.Model.Grids
 				Update();
 			}
 		}
+		
 		public Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		private int cellsColsAmount = 10;
 		private int cellsRowsAmount = 10;
 		private Events events;
+
+		//set cell size in editor: Cell/MeshInstance/Mesh/Size
 
 		public override void _Ready()
 		{

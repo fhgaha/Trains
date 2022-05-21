@@ -5,6 +5,7 @@ using static Trains.Model.Common.Enums;
 using System.Collections.Generic;
 using Trains.Model.Generators.Noises;
 using Trains.Scripts.CellScene;
+using Trains.Model.Cells.Factories;
 
 namespace Trains.Model.Cells
 {
@@ -16,6 +17,7 @@ namespace Trains.Model.Cells
 		public int Size { get; } = 1;
 
 		public Node Products { get; set; }
+		public IFactory Factory { get; set; }
 
 		public float GetPrice(ProductType type)
 		{
@@ -47,6 +49,7 @@ namespace Trains.Model.Cells
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
+			GetNode<ViewportScript>("Price/Viewport").Init(Id);
 			Products = new Node();
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
@@ -55,9 +58,6 @@ namespace Trains.Model.Cells
 				Products.AddChild(product);
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);;
 			}
-
-			var viewport = GetNode<ViewportScript>("Price/Viewport");
-			var sprite3D = GetNode<Sprite3DScript>("Price");
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -87,21 +87,16 @@ namespace Trains.Model.Cells
 			//show price and color then subscribe in case value changes
 			Product product = GetProduct(productType);
 
-			//If I want to build cell grid in editor I have to comment this. There will be no price numbers and no colors.
-			//should subscribe and unsubscribe to these events when sertain product button is pressed
-			// lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
-			// lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
-
 			var viewport = GetNode<ViewportScript>("Price/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 
-			//should i check who is sender of signal?
-			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetText)))
-				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetText));
+			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText)))
+				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
 
 			if (!product.IsConnected(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor)))
 				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
 
+			//to call PriceChanged signal with no value change
 			product.Price += 0f;
 		}
 	}

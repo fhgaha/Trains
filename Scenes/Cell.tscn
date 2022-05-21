@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Model/Cells/Cell.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/CellScene/ViewportScript.cs" type="Script" id=2]
@@ -14,6 +14,9 @@ size = Vector2( 1, 1 )
 resource_local_to_scene = true
 albedo_color = Color( 0.0536591, 0.817383, 0.057497, 1 )
 
+[sub_resource type="ViewportTexture" id=4]
+viewport_path = NodePath("Price/Viewport")
+
 [node name="Cell" type="Spatial"]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0, -0.5 )
 script = ExtResource( 1 )
@@ -24,18 +27,31 @@ material/0 = SubResource( 2 )
 script = ExtResource( 4 )
 
 [node name="Price" type="Sprite3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0455974, 0 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.0455974, 0 )
 flip_v = true
 axis = 1
+texture = SubResource( 4 )
 script = ExtResource( 3 )
 
 [node name="Viewport" type="Viewport" parent="Price"]
-size = Vector2( 107, 14 )
+size = Vector2( 107, 40 )
 script = ExtResource( 2 )
 
-[node name="Label" type="Label" parent="Price/Viewport"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="VBoxContainer" type="VBoxContainer" parent="Price/Viewport"]
+margin_right = 56.0
+margin_bottom = 40.0
+
+[node name="Id" type="Label" parent="Price/Viewport/VBoxContainer"]
+margin_right = 56.0
+margin_bottom = 14.0
+text = "00_00"
+align = 1
+valign = 1
+
+[node name="Price" type="Label" parent="Price/Viewport/VBoxContainer"]
+margin_top = 18.0
+margin_right = 56.0
+margin_bottom = 38.0
 rect_min_size = Vector2( 0, 20 )
 text = "no data"
 align = 1
@@ -43,3 +59,4 @@ valign = 1
 clip_text = true
 
 [node name="Amount" parent="." instance=ExtResource( 6 )]
+visible = false

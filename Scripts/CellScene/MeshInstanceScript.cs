@@ -4,6 +4,7 @@ using Trains.Model.Products;
 
 namespace Trains.Scripts.CellScene
 {
+	[Tool]
 	public class MeshInstanceScript : MeshInstance
 	{
 		//hue represents as fraction of degrees
