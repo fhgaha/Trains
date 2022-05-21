@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Scripts/GUI/ProductButtons/SpecificProductButtons/SpecificProductButton.cs" type="Script" id=1]
 
-[node name="Lumber" type="Button"]
+[node name="Button" type="Button"]
 margin_right = 89.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
