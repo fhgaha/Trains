@@ -49,7 +49,6 @@ namespace Trains.Model.Cells
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
-			GetNode<ViewportScript>("Price/Viewport").Init(Id);
 			Products = new Node();
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))

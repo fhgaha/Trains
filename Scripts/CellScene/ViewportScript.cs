@@ -7,10 +7,10 @@ namespace Trains.Scripts.CellScene
 {
 	public class ViewportScript : Viewport
 	{
-		public void Init(string value)
+		public override void _Ready()
 		{
-			GetNode<VBoxContainer>("VBoxContainer").GetNode<Label>("Id").Text = value;
-			Size = GetNode<VBoxContainer>("VBoxContainer").RectSize;
+			string id = GetParent().GetParent<Cell>().Id;
+			GetNode<VBoxContainer>("VBoxContainer").GetNode<Label>("Id").Text = id;
 		}
 
 		public void SetPriceText(float value)
