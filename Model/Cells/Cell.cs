@@ -56,8 +56,8 @@ namespace Trains.Model.Cells
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);;
 			}
 
-			var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
-			var sprite3D = GetNode<Sprite3DScript>("Sprite3D");
+			var viewport = GetNode<ViewportScript>("Price/Viewport");
+			var sprite3D = GetNode<Sprite3DScript>("Price");
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -92,7 +92,7 @@ namespace Trains.Model.Cells
 			// lumber.PriceChangedEvent += GetNode<ViewportScript>("Sprite3D/Viewport").OnSetText;
 			// lumber.PriceChangedEvent += GetNode<MeshInstanceScript>("MeshInstance").SetColor;
 
-			var viewport = GetNode<ViewportScript>("Sprite3D/Viewport");
+			var viewport = GetNode<ViewportScript>("Price/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 
 			//should i check who is sender of signal?
