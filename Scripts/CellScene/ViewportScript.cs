@@ -7,7 +7,7 @@ namespace Trains.Scripts.CellScene
 {
 	public class ViewportScript : Viewport
 	{
-		public void OnSetText(float value)
+		public void SetText(float value)
 		{
 			GetNode<Label>("Label").Text = value.ToString("#.#");
 			Size = GetNode<Label>("Label").RectSize;

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Trains.Model.Common;
 
 namespace Trains.Scripts.GUI.ProductButtons
 {
@@ -15,7 +16,7 @@ namespace Trains.Scripts.GUI.ProductButtons
 
 		private void onButtonPressed()
 		{
-			events.EmitSignal(nameof(Events.LumberButtonPressed));
+			events.EmitSignal(nameof(Events.SpecificProductButtonPressed), Enums.ProductType.Lumber);
 		}
 	}
 }

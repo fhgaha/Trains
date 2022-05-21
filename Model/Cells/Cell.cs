@@ -82,10 +82,10 @@ namespace Trains.Model.Cells
 			}
 		}
 		
-		internal void ShowLumber()
+		internal void DisplayProductData(ProductType productType)
 		{
 			//show price and color then subscribe in case value changes
-			Product lumber = GetProduct(ProductType.Lumber);
+			Product product = GetProduct(productType);
 
 			//If I want to build cell grid in editor I have to comment this. There will be no price numbers and no colors.
 			//should subscribe and unsubscribe to these events when sertain product button is pressed
@@ -96,13 +96,13 @@ namespace Trains.Model.Cells
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 
 			//should i check who is sender of signal?
-			if (!lumber.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.OnSetText)))
-				lumber.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.OnSetText));
+			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetText)))
+				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetText));
 
-			if (!lumber.IsConnected(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor)))
-				lumber.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
+			if (!product.IsConnected(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor)))
+				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
 
-			lumber.Price += 0f;
+			product.Price += 0f;
 		}
 	}
 }
