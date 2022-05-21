@@ -32,8 +32,9 @@ size = Vector2( 107, 14 )
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="Sprite3D/Viewport"]
-margin_right = 40.0
-margin_bottom = 14.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 text = "no data"
 align = 1
 valign = 1
+percent_visible = -0.166667

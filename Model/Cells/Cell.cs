@@ -8,7 +8,7 @@ using Trains.Scripts.CellScene;
 
 namespace Trains.Model.Cells
 {
-	//[Tool]
+	[Tool]
 	public class Cell : Spatial
 	{
 		public string Id { get; set; }

@@ -9,7 +9,7 @@ namespace Trains.Scripts.CellScene
 	{
 		public void OnSetText(float value)
 		{
-			GetNode<Label>("Label").Text = value.ToString();
+			GetNode<Label>("Label").Text = value.ToString("#.#");
 			Size = GetNode<Label>("Label").RectSize;
 		}
 	}
