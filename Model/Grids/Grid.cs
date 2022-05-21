@@ -33,8 +33,8 @@ namespace Trains.Model.Grids
 		}
 		public Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
-		private int cellsColsAmount = 2;
-		private int cellsRowsAmount = 3;
+		private int cellsColsAmount = 10;
+		private int cellsRowsAmount = 10;
 		private Events events;
 
 		public override void _Ready()
