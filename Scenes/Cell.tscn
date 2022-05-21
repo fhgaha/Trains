@@ -43,4 +43,3 @@ valign = 1
 clip_text = true
 
 [node name="Amount" parent="." instance=ExtResource( 6 )]
-visible = false
