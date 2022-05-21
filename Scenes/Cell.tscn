@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Model/Cells/Cell.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/CellScene/ViewportScript.cs" type="Script" id=2]
-[ext_resource path="res://Scripts/CellScene/Sprite3DScript.cs" type="Script" id=3]
 [ext_resource path="res://Scripts/CellScene/MeshInstanceScript.cs" type="Script" id=4]
 [ext_resource path="res://Scenes/Factories/SupplyBar.tscn" type="PackedScene" id=6]
 
@@ -15,7 +14,7 @@ resource_local_to_scene = true
 albedo_color = Color( 0.0536591, 0.817383, 0.057497, 1 )
 
 [sub_resource type="ViewportTexture" id=4]
-viewport_path = NodePath("Price/Viewport")
+viewport_path = NodePath("Info/Viewport")
 
 [node name="Cell" type="Spatial"]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0, -0.5 )
@@ -26,29 +25,29 @@ mesh = SubResource( 3 )
 material/0 = SubResource( 2 )
 script = ExtResource( 4 )
 
-[node name="Price" type="Sprite3D" parent="."]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.0455974, 0 )
-flip_v = true
-axis = 1
-texture = SubResource( 4 )
-script = ExtResource( 3 )
+[node name="Amount" parent="." instance=ExtResource( 6 )]
+visible = false
 
-[node name="Viewport" type="Viewport" parent="Price"]
+[node name="Info" type="Spatial" parent="."]
+
+[node name="Viewport" type="Viewport" parent="Info"]
 size = Vector2( 50, 40 )
 script = ExtResource( 2 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Price/Viewport"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Info/Viewport"]
 margin_right = 56.0
 margin_bottom = 40.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="Id" type="Label" parent="Price/Viewport/VBoxContainer"]
+[node name="Id" type="Label" parent="Info/Viewport/VBoxContainer"]
 margin_right = 56.0
 margin_bottom = 14.0
 text = "00_00"
 align = 1
 valign = 1
 
-[node name="Price" type="Label" parent="Price/Viewport/VBoxContainer"]
+[node name="Price" type="Label" parent="Info/Viewport/VBoxContainer"]
 margin_top = 18.0
 margin_right = 56.0
 margin_bottom = 38.0
@@ -58,5 +57,8 @@ align = 1
 valign = 1
 clip_text = true
 
-[node name="Amount" parent="." instance=ExtResource( 6 )]
-visible = false
+[node name="Sprite3D" type="Sprite3D" parent="Info"]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.94662e-09, 0.0455974, 2.18557e-08 )
+flip_v = true
+axis = 1
+texture = SubResource( 4 )

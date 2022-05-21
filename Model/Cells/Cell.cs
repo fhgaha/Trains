@@ -41,10 +41,6 @@ namespace Trains.Model.Cells
 			throw new Exception("Products do not contain " + productType);
 		}
 
-		public override void _Ready() { }
-
-		public override void _Process(float delta) { }
-
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
@@ -86,7 +82,7 @@ namespace Trains.Model.Cells
 			//show price and color then subscribe in case value changes
 			Product product = GetProduct(productType);
 
-			var viewport = GetNode<ViewportScript>("Price/Viewport");
+			var viewport = GetNode<ViewportScript>("Info/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 
 			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText)))
