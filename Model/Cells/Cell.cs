@@ -18,6 +18,11 @@ namespace Trains.Model.Cells
 
 		public int Size { get; } = 1;
 
+		public override void _Ready()
+		{
+			
+		}
+
 		public float GetPrice(ProductType type)
 		{
 			foreach (Product p in Products.GetChildren())
@@ -45,14 +50,19 @@ namespace Trains.Model.Cells
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
 			Products = new Node();
-			AddChild(Products);
+			//AddChild(Products);
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
 			{
 				Product product = new Product(type, -1);
 				Products.AddChild(product);
-				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);;
+				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
+
+				var amountBar = GetNode<ProductAmountBar>("Amount");
+				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
 			}
+
+			
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -88,6 +98,7 @@ namespace Trains.Model.Cells
 			GetNode<Spatial>("Info").Visible = true;
 			mesh.Visible = true;
 
+			//should be in init
 			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText)))
 				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
 
@@ -114,5 +125,7 @@ namespace Trains.Model.Cells
 			Factory = building;
 			AddChild(building);
 		}
+		
+
 	}
 }

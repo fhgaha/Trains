@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using Godot;
 using Trains.Model.Cells;
-using Trains.Model.Cells.Buildings;
 using Trains.Model.Common;
 using Trains.Model.Generators;
 
@@ -68,7 +65,6 @@ namespace Trains.Model.Grids
 				{
 					AddChild(Cells[i, j]);
 
-					//demand should be cells parameter
 					//add soucre
 					if (i == 0 && j == 2)
 						Cells[i, j].AddBuilding(source, Enums.ProductType.Lumber, 20f);

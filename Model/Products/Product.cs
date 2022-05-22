@@ -12,6 +12,9 @@ namespace Trains.Model.Products
 		//used by Cell/MeshInstance to set cell color 
 		[Signal] public delegate void PriceChanged(float value);
 
+		//Used by res://Scenes/Buildings/ProductAmountBar.tscn to set TextureProgress bar value
+		[Signal] public delegate void AmountChanged(float value);
+
 		//[JsonConverter(typeof(StringEnumConverter))]
 		[Export(PropertyHint.Enum)]
 		public ProductType ProductType { get; private set; }
@@ -28,9 +31,18 @@ namespace Trains.Model.Products
 		}
 
 		[Export]
-		public float Amount { get; set; }
+		public float Amount
+		{
+			get => amount;
+			set
+			{
+				amount = value;
+				EmitSignal(nameof(AmountChanged), value);
+			}
+		}
 
 		private float price;
+		private float amount;
 
 		public Product(ProductType type, float price)
 		{

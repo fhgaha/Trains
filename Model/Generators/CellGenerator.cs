@@ -76,11 +76,7 @@ namespace Trains.Model.Generators
 			{
 				var cell = cellScene.Instance<Cell>();
 				cell.Init(i, j, noises);
-				//cell.Init(i, j, lumberNoise.GetNoise2d(i, j) * 50 + 50);
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
-
-				//cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
-
 				cells[i, j] = cell;
 			}
 
