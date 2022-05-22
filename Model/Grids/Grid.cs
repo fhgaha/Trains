@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using Godot;
 using Trains.Model.Cells;
+using Trains.Model.Cells.Buildings;
 using Trains.Model.Common;
 using Trains.Model.Generators;
 
 namespace Trains.Model.Grids
 {
-	[Tool]
 	public class Grid : Spatial
 	{
 		[Export]
@@ -34,6 +34,7 @@ namespace Trains.Model.Grids
 		
 		public Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
+		PackedScene source = GD.Load<PackedScene>("res://Scenes/ConsChainParticipants/Source.tscn");
 		private int cellsColsAmount = 10;
 		private int cellsRowsAmount = 10;
 		private Events events;
@@ -43,6 +44,7 @@ namespace Trains.Model.Grids
 		public override void _Ready()
 		{
 			Update();
+
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButton));
 
@@ -62,7 +64,14 @@ namespace Trains.Model.Grids
 			//build from db
 			for (int i = 0; i < CellsRowsAmount; i++)
 				for (int j = 0; j < CellsColsAmount; j++)
+				{
 					AddChild(Cells[i, j]);
+
+					//demand should be cells parameter
+					//add soucre
+					if (i == 0 && j == 2)
+						Cells[i, j].AddChild(source.Instance<Source>());
+				}
 		}
 
 		public void onSpecificProductButton(Enums.ProductType productType)

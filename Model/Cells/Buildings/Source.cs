@@ -1,11 +1,10 @@
 using Godot;
 using System;
-using Trains.Model.Cells.ConsChainParticipants;
 using static Trains.Model.Common.Enums;
 
-namespace Trains.Model.Cells.Factories
+namespace Trains.Model.Cells.Buildings
 {
-	public class Stock : Spatial, IConsChainParticipant
+	public class Source : Spatial, IBuilding
 	{
 		public ProductType Type { get; set; }
         public float Amount { get; set; }

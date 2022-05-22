@@ -3,7 +3,7 @@
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/GUI/GUI.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/ConsChainParticipants/Source.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Buildings/Source.tscn" type="PackedScene" id=4]
 
 [node name="World" type="Spatial"]
 
@@ -27,4 +27,4 @@ transform = Transform( 1, 0, 0, 0, 1, 4.58009e-08, 0, -4.58009e-08, 1, 0, -1.946
 current = true
 
 [node name="Source" parent="." instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5022, -5.0664e-07, -1.54675 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.33803, -5.0664e-07, -1.90372 )
