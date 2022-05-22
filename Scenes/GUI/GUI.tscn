@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes/GUI/ProductButtons/SpecificProductButtons/Button.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Scenes/GUI/AllProductsButton.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/GUI/ProductButtons/AllProductsButton.cs" type="Script" id=2]
 
 [node name="Control" type="Control"]
 anchor_top = 1.0

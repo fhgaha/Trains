@@ -58,8 +58,7 @@ namespace Trains.Model.Cells
 				Products.AddChild(product);
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
 
-				var amountBar = GetNode<ProductAmountBar>("Amount");
-				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
+				
 			}
 
 			
@@ -94,11 +93,15 @@ namespace Trains.Model.Cells
 
 			var viewport = GetNode<ViewportScript>("Info/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+			var amountBar = GetNode<ProductAmountBar>("Amount");
 			
 			GetNode<Spatial>("Info").Visible = true;
 			mesh.Visible = true;
 
 			//should be in init
+			if (!product.IsConnected(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount)))
+				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
+
 			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText)))
 				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
 
@@ -107,6 +110,7 @@ namespace Trains.Model.Cells
 
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
+			product.Amount += 0f;
 		}
 
 		internal void HideProductData()
