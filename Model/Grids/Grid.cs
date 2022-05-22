@@ -46,7 +46,8 @@ namespace Trains.Model.Grids
 			Update();
 
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButton));
+			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
+			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
 			//set value for a cell
 			//Cells[0, 0].SetPrice(Enums.ProductType.Lumber, 400f);
@@ -74,7 +75,7 @@ namespace Trains.Model.Grids
 				}
 		}
 
-		public void onSpecificProductButton(Enums.ProductType productType)
+		public void onSpecificProductButtonPressed(Enums.ProductType productType)
 		{
 			DisplayProductDataAll(productType);
 		}
@@ -87,5 +88,15 @@ namespace Trains.Model.Grids
 				Cells[i, j].DisplayProductData(productType);
 			}
 		}
+		
+		private void onAllProductsButtonPressed()
+		{
+			for (int i = 0; i < Cells.GetLength(0); i++)
+			for (int j = 0; j < Cells.GetLength(1); j++)
+			{
+				Cells[i, j].HideProductData();
+			}
+		}
+
 	}
 }

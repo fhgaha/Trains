@@ -84,6 +84,9 @@ namespace Trains.Model.Cells
 
 			var viewport = GetNode<ViewportScript>("Info/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+			
+			GetNode<Spatial>("Info").Visible = true;
+			mesh.Visible = true;
 
 			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText)))
 				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
@@ -93,6 +96,15 @@ namespace Trains.Model.Cells
 
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
+		}
+
+		internal void HideProductData()
+		{
+			var viewport = GetNode<Spatial>("Info");
+			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+
+			viewport.Visible = false;
+			mesh.Visible = false;
 		}
 
 		public void AddBuilding(PackedScene scene, ProductType productType, float amount)

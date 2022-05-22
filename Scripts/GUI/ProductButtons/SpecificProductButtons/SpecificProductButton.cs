@@ -15,6 +15,7 @@ namespace Trains.Scripts.GUI.ProductButtons
 			events = GetNode<Events>("/root/Events");
 			Connect("pressed", this, nameof(onButtonPressed));
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButton));
+			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButton));
 		}
 
 		private void onButtonPressed()
@@ -40,12 +41,19 @@ namespace Trains.Scripts.GUI.ProductButtons
 			}
 		}
 
+		private void onAllProductsButton() => Unpress();
+
 		private void onSpecificProductButton(ProductType productType)
 		{
 			if (GetProductType(Text) == productType) return;
+			Unpress();
+		}
 
+		private void Unpress()
+		{
 			wasPressed = false;
 			Pressed = false;
 		}
+
 	}
 }

@@ -10,8 +10,12 @@ namespace Trains.Model.Common
 {
 	public class Events : Node
 	{
-		// Emitted when lumber button is pressed. 
-		// Grid uses this to show lumber prices and colors
+		// Emitted when specific product button is pressed. 
+		// Grid uses this to display product prices and colors
 		[Signal] public delegate void SpecificProductButtonPressed(ProductType productType);
+
+		// Emitted when AllProducts button is pressed. 
+		// Grid uses this to hide prices and colors
+		[Signal] public delegate void AllProductButtonPressed();
 	}
 }
