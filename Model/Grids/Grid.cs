@@ -7,28 +7,8 @@ namespace Trains.Model.Grids
 {
 	public class Grid : Spatial
 	{
-		[Export]
-		public int CellsRowsAmount
-		{
-			get => cellsRowsAmount;
-			set
-			{
-				cellsRowsAmount = value;
-				Update();
-			}
-		}
-
-		[Export]
-		public int CellsColsAmount
-		{
-			get => cellsColsAmount;
-			set
-			{
-				cellsColsAmount = value;
-				Update();
-			}
-		}
-		
+		public int CellsRowsAmount {get; set;} = 10;
+		public int CellsColsAmount {get; set;} = 10;
 		public Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
@@ -40,7 +20,8 @@ namespace Trains.Model.Grids
 
 		public override void _Ready()
 		{
-			Update();
+			Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount, cellScene);
+			Build();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
@@ -48,13 +29,6 @@ namespace Trains.Model.Grids
 
 			//set value for a cell
 			//Cells[0, 0].SetPrice(Enums.ProductType.Lumber, 400f);
-		}
-
-		public void Update()
-		{
-			//generate db then parse cells from db
-			Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount, cellScene);
-			Build();
 		}
 
 		private void Build()

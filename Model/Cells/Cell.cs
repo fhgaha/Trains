@@ -20,7 +20,7 @@ namespace Trains.Model.Cells
 
 		public override void _Ready()
 		{
-			
+
 		}
 
 		public float GetPrice(ProductType type)
@@ -58,10 +58,17 @@ namespace Trains.Model.Cells
 				Products.AddChild(product);
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
 
-				
+				//connect product button to product
+				var viewport = GetNode<ViewportScript>("Info/Viewport");
+				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+				var amountBar = GetNode<ProductAmountBar>("Amount");
+
+				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
+				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
+				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
 			}
 
-			
+
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -72,7 +79,7 @@ namespace Trains.Model.Cells
 
 			var price = (float)noiseType.GetMethod("GetMyNoise").Invoke(noise, getMyNoiseArguments);
 			return price;
-			
+
 			Type GetNoiseType(ProductType productType_)
 			{
 				switch (productType_)
@@ -85,7 +92,7 @@ namespace Trains.Model.Cells
 				return null;
 			}
 		}
-		
+
 		internal void DisplayProductData(ProductType productType)
 		{
 			//show price and color then subscribe in case value changes
@@ -94,23 +101,13 @@ namespace Trains.Model.Cells
 			var viewport = GetNode<ViewportScript>("Info/Viewport");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 			var amountBar = GetNode<ProductAmountBar>("Amount");
-			
+
 			GetNode<Spatial>("Info").Visible = true;
 			mesh.Visible = true;
 
-			//should be in init
-			if (!product.IsConnected(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount)))
-				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
-
-			if (!product.IsConnected(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText)))
-				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
-
-			if (!product.IsConnected(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor)))
-				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
-
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
-			product.Amount += 0f;
+			// product.Amount += 0f;
 		}
 
 		internal void HideProductData()
@@ -125,11 +122,12 @@ namespace Trains.Model.Cells
 		public void AddBuilding(PackedScene scene, ProductType productType, float amount)
 		{
 			var building = scene.Instance<Source>();
-			building.Init(productType, amount);
+			var product = GetProduct(productType);
+			building.Init(product, amount);
 			Factory = building;
 			AddChild(building);
 		}
-		
+
 
 	}
 }

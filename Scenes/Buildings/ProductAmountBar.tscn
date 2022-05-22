@@ -16,7 +16,6 @@ transparent_bg = true
 [node name="TextureProgress" type="TextureProgress" parent="Viewport"]
 margin_right = 30.0
 margin_bottom = 600.0
-value = 2.0
 texture_progress = ExtResource( 1 )
 fill_mode = 3
 

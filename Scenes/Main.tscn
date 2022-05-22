@@ -27,3 +27,5 @@ transform = Transform( 1, 0, 0, 0, 1, 4.58009e-08, 0, -4.58009e-08, 1, 0, -1.946
 current = true
 
 [node name="Source" parent="." instance=ExtResource( 4 )]
+
+[node name="Timer" type="Timer" parent="."]
