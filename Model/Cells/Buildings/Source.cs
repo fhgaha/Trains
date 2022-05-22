@@ -6,11 +6,18 @@ namespace Trains.Model.Cells.Buildings
 {
 	public class Source : Spatial, IBuilding
 	{
-		public ProductType Type { get; set; }
-        public float Amount { get; set; }
+		[Export(PropertyHint.Enum)] public ProductType ProductType { get; set; }
+        [Export] public float Amount { get; set; }
+		private PackedScene scene = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
 		public override void _Ready()
 		{
 			
+		}
+
+		internal void Init(ProductType productType, float amount)
+		{
+			ProductType = productType;
+			Amount = amount;
 		}
 	}
 }

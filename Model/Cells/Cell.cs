@@ -12,12 +12,11 @@ namespace Trains.Model.Cells
 	[Tool]
 	public class Cell : Spatial
 	{
-		public string Id { get; set; }
-
-		public int Size { get; } = 1;
-
+		[Export] public string Id { get; set; }
 		public Node Products { get; set; }
 		public IBuilding Factory { get; set; }
+
+		public int Size { get; } = 1;
 
 		public float GetPrice(ProductType type)
 		{
@@ -46,6 +45,7 @@ namespace Trains.Model.Cells
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
 			Products = new Node();
+			AddChild(Products);
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
 			{
@@ -93,6 +93,14 @@ namespace Trains.Model.Cells
 
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
+		}
+
+		public void AddBuilding(PackedScene scene, ProductType productType, float amount)
+		{
+			var building = scene.Instance<Source>();
+			building.Init(productType, amount);
+			Factory = building;
+			AddChild(building);
 		}
 	}
 }

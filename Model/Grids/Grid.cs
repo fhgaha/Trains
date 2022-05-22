@@ -34,7 +34,7 @@ namespace Trains.Model.Grids
 		
 		public Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
-		PackedScene source = GD.Load<PackedScene>("res://Scenes/ConsChainParticipants/Source.tscn");
+		PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
 		private int cellsColsAmount = 10;
 		private int cellsRowsAmount = 10;
 		private Events events;
@@ -70,7 +70,7 @@ namespace Trains.Model.Grids
 					//demand should be cells parameter
 					//add soucre
 					if (i == 0 && j == 2)
-						Cells[i, j].AddChild(source.Instance<Source>());
+						Cells[i, j].AddBuilding(source, Enums.ProductType.Lumber, 20f);
 				}
 		}
 

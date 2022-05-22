@@ -12,9 +12,11 @@ namespace Trains.Model.Products
 		//used by Cell/MeshInstance to set cell color 
 		[Signal] public delegate void PriceChanged(float value);
 
-		[JsonConverter(typeof(StringEnumConverter))]
+		//[JsonConverter(typeof(StringEnumConverter))]
+		[Export(PropertyHint.Enum)]
 		public ProductType ProductType { get; private set; }
 
+		[Export]
 		public float Price
 		{
 			get => price;
@@ -25,6 +27,7 @@ namespace Trains.Model.Products
 			}
 		}
 
+		[Export]
 		public float Amount { get; set; }
 
 		private float price;
