@@ -7,14 +7,15 @@ namespace Trains.Scripts.GUI.ProductButtons
 {
 	public class SpecificProductButton : Button
 	{
-		private Events events;
+		[Export] public Events Events { get; set; }
+		//private Events Events;
 		private bool wasPressed = false;
 
 		public override void _Ready()
 		{
-			events = GetNode<Events>("/root/Events");
+			Events = GetNode<Events>("/root/Events");
 			Connect("pressed", this, nameof(onButtonPressed));
-			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButton));
+			Events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButton));
 		}
 
 		private void onButtonPressed()
@@ -27,7 +28,7 @@ namespace Trains.Scripts.GUI.ProductButtons
 
 			wasPressed = true;
 			var productType = GetProductType(Text);
-			events.EmitSignal(nameof(Events.SpecificProductButtonPressed), productType);
+			Events.EmitSignal(nameof(Events.SpecificProductButtonPressed), productType);
 		}
 
 		private ProductType GetProductType(string text)

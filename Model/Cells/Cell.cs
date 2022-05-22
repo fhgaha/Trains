@@ -55,13 +55,14 @@ namespace Trains.Model.Cells
 			}
 		}
 
-		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
+		private static float GetPriceFromNoise(
+			int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
 		{
 			Type noiseType = GetNoiseType(productType);
 			var noise = noises[productType];
-			object[] getMyNoiseArguments = new object[] { row, col, 100f };
+			object[] args = new object[] { row, col, 100f };
 
-			var price = (float)noiseType.GetMethod("GetMyNoise").Invoke(noise, getMyNoiseArguments);
+			var price = (float)noiseType.GetMethod("GetMyNoise").Invoke(noise, args);
 			return price;
 			
 			Type GetNoiseType(ProductType productType_)

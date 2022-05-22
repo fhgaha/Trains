@@ -31,8 +31,8 @@ namespace Trains.Model.Grids
 				Update();
 			}
 		}
-		
-		public Cell[,] Cells;
+
+		public static Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		private int cellsColsAmount = 10;
 		private int cellsRowsAmount = 10;
@@ -52,9 +52,23 @@ namespace Trains.Model.Grids
 
 		public void Update()
 		{
-			//generate db then parse cells from db
-			Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount, cellScene);
-			Build();
+			// Code to execute in editor.
+			if (Engine.EditorHint)
+			{
+				if (GetChildCount() > 0) return;
+
+				Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount, cellScene);
+				Build();
+			}
+
+			// Code to execute in game.
+			if (!Engine.EditorHint)
+			{
+				var children = GetChildren().Cast<Cell>();
+				Cells = CellGenerator.GetFromCollection(CellsRowsAmount, CellsColsAmount, children);
+			}
+
+			// Code to execute both in editor and in game.
 		}
 
 		private void Build()
@@ -62,7 +76,12 @@ namespace Trains.Model.Grids
 			//build from db
 			for (int i = 0; i < CellsRowsAmount; i++)
 				for (int j = 0; j < CellsColsAmount; j++)
+				{
 					AddChild(Cells[i, j]);
+					Cells[i, j].Owner = GetTree().EditedSceneRoot;
+				}
+
+			if (GetChildCount() > CellsRowsAmount * CellsColsAmount) throw new Exception("too many cells");
 		}
 
 		public void onSpecificProductButton(Enums.ProductType productType)
@@ -73,10 +92,10 @@ namespace Trains.Model.Grids
 		private void DisplayProductDataAll(Enums.ProductType productType)
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
-			for (int j = 0; j < Cells.GetLength(1); j++)
-			{
-				Cells[i, j].DisplayProductData(productType);
-			}
+				for (int j = 0; j < Cells.GetLength(1); j++)
+				{
+					Cells[i, j].DisplayProductData(productType);
+				}
 		}
 	}
 }

@@ -2,6 +2,7 @@ using Godot;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Trains.Model.Cells;
 using Trains.Model.Generators.Noises;
 using Trains.Model.Products;
@@ -87,6 +88,59 @@ namespace Trains.Model.Generators
 			return cells;
 		}
 
+		
+		internal static Cell[,] Generate_(int rows, int cols, PackedScene cellScene)
+		{
+			var noises = new Dictionary<ProductType, OpenSimplexNoise>
+			{
+				//noises should be different
+				[ProductType.Lumber] = new LumberNoise(),
+				[ProductType.Grain] = new GrainNoise(),
+				[ProductType.Dairy] = new DairyNoise()
+			};
+
+			Cell[,] cells = new Cell[rows, cols];
+
+			for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+			{
+				var cell = cellScene.Instance<Cell>();
+				cell.Init(i, j, noises);
+				//cell.Init(i, j, lumberNoise.GetNoise2d(i, j) * 50 + 50);
+				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
+
+				//cell.SetPrice(Enums.ProductType.Lumber, noise.GetNoise2d(i, j) * 50 + 50);
+
+				cells[i, j] = cell;
+			}
+
+			return cells;
+		}
+
+		internal static Cell[,] GetFromCollection(int rows, int cols, IEnumerable<Cell> children)
+		{
+			var noises = new Dictionary<ProductType, OpenSimplexNoise>
+			{
+				//noises should be different
+				[ProductType.Lumber] = new LumberNoise(),
+				[ProductType.Grain] = new GrainNoise(),
+				[ProductType.Dairy] = new DairyNoise()
+			};
+
+			Cell[,] cells = new Cell[rows, cols];
+			int index = 0;
+			for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+			{
+				var child = (Cell)(children.ElementAt(index));
+				child.Init(i, j, noises);
+				cells[i, j] = child;
+				index++;
+			}
+
+			return cells;
+		}
+
 		private static void SmothifyPrices(Cell[,] cells)
 		{
 			for (int i = 0; i < cells.GetLength(0); i++)
@@ -118,5 +172,7 @@ namespace Trains.Model.Generators
 
 			return neighbours;
 		}
+
+
 	}
 }
