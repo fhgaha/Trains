@@ -3,7 +3,7 @@
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/GUI/GUI.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/Factories/Source.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/ConsChainParticipants/Source.tscn" type="PackedScene" id=4]
 
 [node name="World" type="Spatial"]
 

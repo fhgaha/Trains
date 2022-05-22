@@ -5,7 +5,7 @@ using static Trains.Model.Common.Enums;
 using System.Collections.Generic;
 using Trains.Model.Generators.Noises;
 using Trains.Scripts.CellScene;
-using Trains.Model.Cells.Factories;
+using Trains.Model.Cells.ConsChainParticipants;
 
 namespace Trains.Model.Cells
 {
@@ -17,7 +17,7 @@ namespace Trains.Model.Cells
 		public int Size { get; } = 1;
 
 		public Node Products { get; set; }
-		public IFactory Factory { get; set; }
+		public IConsChainParticipant Factory { get; set; }
 
 		public float GetPrice(ProductType type)
 		{
