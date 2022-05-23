@@ -3,9 +3,12 @@ using System;
 
 namespace Trains.Model.Common
 {
-	public static class Global 
+
+	public class Global : Node
 	{
         //Colors
         
+		//product travel cost
+		public float travelCost = 0.1f;	//0.01f * Product.Price
 	}
 }

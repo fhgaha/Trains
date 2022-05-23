@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Events="*res://Model/Common/Events.cs"
+Global="*res://Model/Common/Global.cs"
 
 [display]
 
