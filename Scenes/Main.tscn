@@ -3,9 +3,15 @@
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/GUI/GUI.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/Buildings/Source.tscn" type="PackedScene" id=4]
+
+[sub_resource type="CubeMesh" id=1]
 
 [node name="World" type="Spatial"]
+
+[node name="Beacon" type="MeshInstance" parent="."]
+transform = Transform( 0.0288087, 0, 0, 0, 1, 0, 0, 0, 0.189718, 0, 1, 0 )
+mesh = SubResource( 1 )
+material/0 = null
 
 [node name="GUI" parent="." instance=ExtResource( 3 )]
 
@@ -25,7 +31,5 @@ transform = Transform( 1, 0, 0, 0, 0.261044, 0.965327, 0, -0.965327, 0.261044, 0
 [node name="Camera" type="Camera" parent="MainCameraController/Elevation"]
 transform = Transform( 1, 0, 0, 0, 1, 4.58009e-08, 0, -4.58009e-08, 1, 0, -1.9462e-07, 5.05318 )
 current = true
-
-[node name="Source" parent="." instance=ExtResource( 4 )]
 
 [node name="Timer" type="Timer" parent="."]

@@ -20,8 +20,10 @@ namespace Trains.Model.Grids
 
 		public override void _Ready()
 		{
-			Cells = CellGenerator.Generate(CellsRowsAmount, CellsColsAmount, cellScene);
-			Build();
+			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
+			//Build();
+			Cells[0, 2].AddBuilding(source, Enums.ProductType.Lumber, 20f);
+
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
@@ -36,13 +38,7 @@ namespace Trains.Model.Grids
 			//build from db
 			for (int i = 0; i < CellsRowsAmount; i++)
 				for (int j = 0; j < CellsColsAmount; j++)
-				{
 					AddChild(Cells[i, j]);
-
-					//add soucre
-					if (i == 0 && j == 2)
-						Cells[i, j].AddBuilding(source, Enums.ProductType.Lumber, 20f);
-				}
 		}
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)

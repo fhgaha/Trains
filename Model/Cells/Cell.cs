@@ -126,6 +126,8 @@ namespace Trains.Model.Cells
 			building.Init(product, amount);
 			Factory = building;
 			AddChild(building);
+			MoveChild(building, 0);
+			building.Translate(new Vector3(-0.03f, 0, 0));
 		}
 
 

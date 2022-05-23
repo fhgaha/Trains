@@ -27,6 +27,7 @@ texture = ExtResource( 1 )
 offset = Vector2( 20, 20 )
 
 [node name="Sprite3D" type="Sprite3D" parent="TriangleUpBar"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.604497, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.335379, 0 )
 flip_v = true
+billboard = 1
 texture = SubResource( 2 )
