@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Trains.Model.Generators.Noises;
 using Trains.Scripts.CellScene;
 using Trains.Model.Cells.Buildings;
+using Trains.Model.Cells.Buildings.Sources;
 
 namespace Trains.Model.Cells
 {
@@ -14,7 +15,7 @@ namespace Trains.Model.Cells
 	{
 		[Export] public string Id { get; set; }
 		public Node Products { get; set; }
-		public IBuilding Factory { get; set; }
+		public IBuilding Building { get; set; }
 
 		public int Size { get; } = 1;
 
@@ -66,6 +67,8 @@ namespace Trains.Model.Cells
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
 				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
 				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
+
+
 			}
 
 
@@ -119,15 +122,18 @@ namespace Trains.Model.Cells
 			mesh.Visible = false;
 		}
 
-		public void AddBuilding(PackedScene scene, ProductType productType, float amount)
+		public void AddBuilding(PackedScene scene, ProductType productType, float startAmount)
 		{
 			var building = scene.Instance<Source>();
 			var product = GetProduct(productType);
-			building.Init(product, amount);
-			Factory = building;
+			building.Init(product, startAmount);
+			Building = building;
 			AddChild(building);
 			MoveChild(building, 0);
 			building.Translate(new Vector3(-0.03f, 0, 0));
+
+			if (building is Source)
+				product.Connect(nameof(Product.PriceChanged), building, nameof(Source.SetTriangleBar));
 		}
 
 
