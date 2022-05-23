@@ -4,6 +4,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Compile Remove="script_templates/*.cs" />
     <!-- My libraries-->
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
