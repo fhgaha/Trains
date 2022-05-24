@@ -21,7 +21,7 @@ namespace Trains.Model.Common
 		/// <summary>
 		///the amount that moves per tick between cells 
 		/// </summary>
-		public static float TravelAmount = 3f;
+		public static float TravelAmount = 1f;
 
 
 	}

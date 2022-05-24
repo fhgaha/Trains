@@ -157,5 +157,21 @@ namespace Trains.Model.Cells
 
 			return neighbours;
 		}
+
+		// override object.Equals
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+			
+			Cell cell = (Cell)obj;
+			return Id == cell.Id;
+		}
+		
+		// override object.GetHashCode
+		public override int GetHashCode()
+		{
+			return Row * 3 + Col * 4 + 5;
+		}
 	}
 }

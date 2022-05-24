@@ -40,24 +40,24 @@ namespace Trains.Model
 			Cell target = null;
 			foreach (Cell c in cells)
 			{
-				if (c.Id == cell.Id) continue;
+				if (c == cell) continue;
 				if (c.GetPrice(product.ProductType) > product.Price)
 					target = c;
 			}
 			return target;
 		}
 
-		private void MoveProduct(Product product, Cell from, Cell to, Cell[,] cells)
+		private void MoveProduct(Product product, Cell from, Cell farTarget, Cell[,] cells)
 		{
 			//get neighbours, move to closest cell to target
 			var neighbours = from.GetNeighbours(cells);
 
-			Cell target = neighbours
-				.OrderBy(c => Math.Sqrt(Math.Pow(c.Row - to.Row, 2) + Math.Pow(c.Col - to.Col, 2)))
+			Cell to = neighbours
+				.OrderBy(c => Math.Sqrt(Math.Pow(c.Row - farTarget.Row, 2) + Math.Pow(c.Col - farTarget.Col, 2)))
 				.First();
 
 			from.GetProduct(product.ProductType).Amount -= Global.TravelAmount;
-			from.GetProduct(product.ProductType).Amount += Global.TravelAmount;
+			to.GetProduct(product.ProductType).Amount += Global.TravelAmount;
 		}
 	}
 }

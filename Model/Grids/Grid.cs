@@ -37,8 +37,8 @@ namespace Trains.Model.Grids
 		{
 			//build from db
 			for (int i = 0; i < CellsRowsAmount; i++)
-				for (int j = 0; j < CellsColsAmount; j++)
-					AddChild(Cells[i, j]);
+			for (int j = 0; j < CellsColsAmount; j++)
+				AddChild(Cells[i, j]);
 		}
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)
@@ -50,19 +50,20 @@ namespace Trains.Model.Grids
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
 			for (int j = 0; j < Cells.GetLength(1); j++)
-			{
 				Cells[i, j].DisplayProductData(productType);
-			}
 		}
 		
 		private void onAllProductsButtonPressed()
 		{
-			for (int i = 0; i < Cells.GetLength(0); i++)
-			for (int j = 0; j < Cells.GetLength(1); j++)
-			{
-				Cells[i, j].HideProductData();
-			}
+			//should show only amount
+			HideProductDataAll();
 		}
 
+		private void HideProductDataAll()
+		{
+			for (int i = 0; i < Cells.GetLength(0); i++)
+			for (int j = 0; j < Cells.GetLength(1); j++)
+				Cells[i, j].HideProductData();
+		}
 	}
 }
