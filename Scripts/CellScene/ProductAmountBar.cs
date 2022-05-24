@@ -7,7 +7,7 @@ namespace Trains.Scripts.CellScene
 	{
         public void SetAmount(float value)
         {
-            var bar = GetNode("Viewport").GetNode<TextureProgress>("TextureProgress");
+            var bar = GetNode<TextureProgress>("Viewport/TextureProgress");
             bar.Value = value;
         }
 	}

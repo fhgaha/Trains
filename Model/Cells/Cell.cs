@@ -19,7 +19,7 @@ namespace Trains.Model.Cells
 		public int Col { get; private set; }
 		public Node Products { get; set; }
 		public List<Product> ProductList { get; set; }
-		public IBuilding Building { get; set; }
+		public Building Building { get; set; }
 
 		public int Size { get; } = 1;
 
@@ -38,6 +38,8 @@ namespace Trains.Model.Cells
 			Products = new Node();
 			ProductList = new List<Product>();
 			//AddChild(Products);
+
+			GetNode<Info>("Info").SetId(Id);
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
 			{
@@ -80,15 +82,20 @@ namespace Trains.Model.Cells
 
 		internal void DisplayProductData(ProductType productType)
 		{
-			//show price and color then subscribe in case value changes
+			//show price, color and amount
 			Product product = GetProduct(productType);
 
 			var info = GetNode<Info>("Info");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 			var amountBar = GetNode<ProductAmountBar>("Amount");
 
-			GetNode<Spatial>("Info").Visible = true;
 			mesh.Visible = true;
+			amountBar.Visible = true;
+			amountBar.SetAmount(product.Amount);
+
+			if (Building != null)
+				if (Building.ProductType == productType) Building.DisplayData();
+				else Building.HideData();
 
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
@@ -97,16 +104,17 @@ namespace Trains.Model.Cells
 
 		internal void HideProductData()
 		{
-			var viewport = GetNode<Spatial>("Info");
+			var info = GetNode<Info>("Info");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
-
-			viewport.Visible = false;
+			var amountBar = GetNode<ProductAmountBar>("Amount");
+			//info.Visible = false;
 			mesh.Visible = false;
+			amountBar.Visible = true;
 		}
 
 		public void AddBuilding(PackedScene scene, ProductType productType, float startAmount)
 		{
-			var building = scene.Instance<Source>();
+			var building = scene.Instance<SourceTierI>();
 			var product = GetProduct(productType);
 			building.Init(product, startAmount);
 			Building = building;
@@ -114,8 +122,8 @@ namespace Trains.Model.Cells
 			MoveChild(building, 0);
 			building.Translate(new Vector3(-0.03f, 0, 0));
 
-			if (building is Source)
-				product.Connect(nameof(Product.PriceChanged), building, nameof(Source.SetTriangleBar));
+			if (building is SourceTierI)
+				product.Connect(nameof(Product.PriceChanged), building, nameof(SourceTierI.SetTriangleBar));
 		}
 
 		public List<Cell> GetNeighbours(Cell[,] cells)

@@ -6,9 +6,8 @@ namespace Trains.Scripts.CellScene
 {
 	public class Info : Spatial
 	{
-		public override void _Ready()
+		public void SetId(string id)
 		{
-			 string id = GetParent<Cell>().Id;
 			 GetNode<Label>("Viewport/VBoxContainer/Id").Text = id;
 		}
 

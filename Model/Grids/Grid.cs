@@ -2,6 +2,7 @@ using Godot;
 using Trains.Model.Cells;
 using Trains.Model.Common;
 using Trains.Model.Generators;
+using Trains.Scripts.CellScene;
 
 namespace Trains.Model.Grids
 {
@@ -21,24 +22,11 @@ namespace Trains.Model.Grids
 		public override void _Ready()
 		{
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
-			//Build();
 			Cells[0, 2].AddBuilding(source, Enums.ProductType.Lumber, 20f);
-
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
-
-			//set value for a cell
-			//Cells[0, 0].SetPrice(Enums.ProductType.Lumber, 400f);
-		}
-
-		private void Build()
-		{
-			//build from db
-			for (int i = 0; i < CellsRowsAmount; i++)
-			for (int j = 0; j < CellsColsAmount; j++)
-				AddChild(Cells[i, j]);
 		}
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)
@@ -48,6 +36,7 @@ namespace Trains.Model.Grids
 
 		private void DisplayProductDataAll(Enums.ProductType productType)
 		{
+			//display amount only for certain product type
 			for (int i = 0; i < Cells.GetLength(0); i++)
 			for (int j = 0; j < Cells.GetLength(1); j++)
 				Cells[i, j].DisplayProductData(productType);

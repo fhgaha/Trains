@@ -5,9 +5,10 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Cells.Buildings
 {
-	public class Building : Node
+	public class Building : Spatial
 	{
-		[Export(PropertyHint.Enum)] public ProductType ProductType { get; set; }
+		[Export(PropertyHint.Enum)] 
+		public ProductType ProductType { get; set; }
 
 		//Producing/consuming amount per tick
 		public float DeltaAmount { get; set; } = 2;
@@ -24,5 +25,9 @@ namespace Trains.Model.Cells.Buildings
 			var bar = GetNode<Spatial>("TriangleUpBar");
 			bar.Scale = new Vector3(0, price, 0);
 		}
+
+		public void DisplayData() => GetNode<Spatial>("TriangleUpBar").Visible = true;
+
+		public void HideData() => GetNode<Spatial>("TriangleUpBar").Visible = false;
 	}
 }
