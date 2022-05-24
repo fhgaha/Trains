@@ -29,5 +29,10 @@ namespace Trains.Model.Common
 		// Emitted when main timer ticks
 
 		[Signal] public delegate void Tick();
+
+		public override void _Ready()
+		{
+			GD.Print("Events is ready");
+		}
 	}
 }

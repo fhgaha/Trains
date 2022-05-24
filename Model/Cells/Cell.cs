@@ -14,6 +14,8 @@ namespace Trains.Model.Cells
 	public class Cell : Spatial
 	{
 		[Export] public string Id { get; set; }
+		public int Row { get => int.Parse(Id.Split('_')[0]); }
+		public int Col { get => int.Parse(Id.Split('_')[1]); }
 		public Node Products { get; set; }
 		public IBuilding Building { get; set; }
 
@@ -136,6 +138,24 @@ namespace Trains.Model.Cells
 				product.Connect(nameof(Product.PriceChanged), building, nameof(Source.SetTriangleBar));
 		}
 
+		public List<Cell> GetNeighbours(Cell[,] cells)
+		{
+			int row = int.Parse(Id.Split('_')[0]);
+			int col = int.Parse(Id.Split('_')[1]);
+			List<Cell> neighbours = new List<Cell>();
 
+			for (var dy = -1; dy <= 1; dy++)
+				for (var dx = -1; dx <= 1; dx++)
+				{
+					if (dx == 0 && dy == 0) continue;
+					if (row + dx < 0 || col + dy < 0) continue;
+					if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
+
+					Cell neighbour = cells[row + dx, col + dy];
+					neighbours.Add(neighbour);
+				}
+
+			return neighbours;
+		}
 	}
 }
