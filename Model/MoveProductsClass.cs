@@ -21,7 +21,7 @@ namespace Trains.Model
 			//move *amount* of product one cell closer to the end
 			foreach (Cell cell in cells)
 			{
-				foreach (Product product in cell.Products.GetChildren())
+				foreach (Product product in cell.ProductList)
 				{
 					bool isReady = product.Amount > Global.TresholdAmount;
 					if (isReady)

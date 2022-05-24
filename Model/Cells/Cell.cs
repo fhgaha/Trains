@@ -7,6 +7,7 @@ using Trains.Model.Generators.Noises;
 using Trains.Scripts.CellScene;
 using Trains.Model.Cells.Buildings;
 using Trains.Model.Cells.Buildings.Sources;
+using System.Linq;
 
 namespace Trains.Model.Cells
 {
@@ -14,66 +15,46 @@ namespace Trains.Model.Cells
 	public class Cell : Spatial
 	{
 		[Export] public string Id { get; set; }
-		public int Row { get => int.Parse(Id.Split('_')[0]); }
-		public int Col { get => int.Parse(Id.Split('_')[1]); }
+		public int Row { get; private set; }
+		public int Col { get; private set; }
 		public Node Products { get; set; }
+		public List<Product> ProductList { get; set; }
 		public IBuilding Building { get; set; }
 
 		public int Size { get; } = 1;
 
-		public override void _Ready()
-		{
+		public float GetPrice(ProductType type) => ProductList.First(p => p.ProductType == type).Price;
 
-		}
+		public void SetPrice(ProductType type, float price) => ProductList.First(p => p.ProductType == type).Price = price;
 
-		public float GetPrice(ProductType type)
-		{
-			foreach (Product p in Products.GetChildren())
-				if (p.ProductType == type)
-					return p.Price;
-			return -1;
-		}
-
-		public void SetPrice(ProductType type, float price)
-		{
-			foreach (Product p in Products.GetChildren())
-				if (p.ProductType == type)
-					p.Price = price;
-		}
-
-		public Product GetProduct(ProductType productType)
-		{
-			foreach (Product p in Products.GetChildren())
-				if (p.ProductType == productType) return p;
-			throw new Exception("Products do not contain " + productType);
-		}
+		public Product GetProduct(ProductType type) => ProductList.First(p => p.ProductType == type);
 
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
+			Row = row; Col = col;
+
 			Products = new Node();
+			ProductList = new List<Product>();
 			//AddChild(Products);
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
 			{
 				Product product = new Product(type, -1);
 				Products.AddChild(product);
+				ProductList.Add(product);
 				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
 
 				//connect product button to product
-				var viewport = GetNode<ViewportScript>("Info/Viewport");
+				var info = GetNode<Info>("Info");
 				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
 
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
-				product.Connect(nameof(Product.PriceChanged), viewport, nameof(ViewportScript.SetPriceText));
+				product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
 				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
-
-
 			}
-
-
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
@@ -93,7 +74,6 @@ namespace Trains.Model.Cells
 					case ProductType.Grain: return typeof(GrainNoise);
 					case ProductType.Dairy: return typeof(DairyNoise);
 				}
-
 				return null;
 			}
 		}
@@ -103,7 +83,7 @@ namespace Trains.Model.Cells
 			//show price and color then subscribe in case value changes
 			Product product = GetProduct(productType);
 
-			var viewport = GetNode<ViewportScript>("Info/Viewport");
+			var info = GetNode<Info>("Info");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 			var amountBar = GetNode<ProductAmountBar>("Amount");
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Model/Cells/Cell.cs" type="Script" id=1]
-[ext_resource path="res://Scripts/CellScene/ViewportScript.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/CellScene/Info.cs" type="Script" id=2]
 [ext_resource path="res://Scripts/CellScene/MeshInstanceScript.cs" type="Script" id=4]
 [ext_resource path="res://Scenes/Buildings/ProductAmountBar.tscn" type="PackedScene" id=6]
 
@@ -28,10 +28,10 @@ script = ExtResource( 4 )
 [node name="Amount" parent="." instance=ExtResource( 6 )]
 
 [node name="Info" type="Spatial" parent="."]
+script = ExtResource( 2 )
 
 [node name="Viewport" type="Viewport" parent="Info"]
 size = Vector2( 50, 40 )
-script = ExtResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Info/Viewport"]
 margin_right = 56.0
