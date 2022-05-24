@@ -77,6 +77,7 @@ namespace Trains.Model.Generators
 				var cell = cellScene.Instance<Cell>();
 				grid.AddChild(cell);
 				cell.Init(i, j, noises);
+				cell.Name = "Cell_" + cell.Id;
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 				cells[i, j] = cell;
 			}

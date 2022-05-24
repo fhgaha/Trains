@@ -20,17 +20,15 @@ namespace Trains.Model
 			//find cell where price for that product is the highest (end)
 			//move *amount* of product one cell closer to the end
 			foreach (Cell cell in cells)
+			foreach (Product product in cell.ProductList)
 			{
-				foreach (Product product in cell.ProductList)
+				bool isReady = product.Amount > Global.TresholdAmount;
+				if (isReady)
 				{
-					bool isReady = product.Amount > Global.TresholdAmount;
-					if (isReady)
-					{
-						Cell target = GetHighestPriceCell(product, cell, cells);
+					Cell target = GetHighestPriceCell(product, cell, cells);
 
-						if (target != null)
-							MoveProduct(product, cell, target, cells);
-					}
+					if (target != null)
+						MoveProduct(product, cell, target, cells);
 				}
 			}
 		}

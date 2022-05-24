@@ -52,8 +52,8 @@ namespace Trains.Model.Cells
 				var info = GetNode<Info>("Info");
 				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
-
-				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.SetAmount));
+				
+				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
 				product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
 				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
 			}
@@ -82,7 +82,7 @@ namespace Trains.Model.Cells
 
 		internal void DisplayProductData(ProductType productType)
 		{
-			//show price, color and amount
+			//show price, color and amount for selected product
 			Product product = GetProduct(productType);
 
 			var info = GetNode<Info>("Info");
@@ -91,14 +91,15 @@ namespace Trains.Model.Cells
 
 			mesh.Visible = true;
 			amountBar.Visible = true;
-			amountBar.SetAmount(product.Amount);
+			amountBar.ActiveProductType = product.ProductType;
+			amountBar.DisplayValue(product.ProductType, product.Amount);
 
 			if (Building != null)
 				if (Building.ProductType == productType) Building.DisplayData();
 				else Building.HideData();
 
 			//to call PriceChanged signal with no value change
-			product.Price += 0f;
+			//product.Price += 0f;
 			// product.Amount += 0f;
 		}
 
@@ -110,6 +111,7 @@ namespace Trains.Model.Cells
 			//info.Visible = false;
 			mesh.Visible = false;
 			amountBar.Visible = true;
+			Building?.DisplayData();
 		}
 
 		public void AddBuilding(PackedScene scene, ProductType productType, float startAmount)

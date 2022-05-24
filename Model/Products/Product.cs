@@ -13,7 +13,7 @@ namespace Trains.Model.Products
 		[Signal] public delegate void PriceChanged(float value);
 
 		//Used by res://Scenes/Buildings/ProductAmountBar.tscn to set TextureProgress bar value
-		[Signal] public delegate void AmountChanged(float value);
+		[Signal] public delegate void AmountChanged(ProductType productType, float value);
 
 		//[JsonConverter(typeof(StringEnumConverter))]
 		[Export(PropertyHint.Enum)]
@@ -37,7 +37,7 @@ namespace Trains.Model.Products
 			set
 			{
 				amount = value;
-				EmitSignal(nameof(AmountChanged), value);
+				EmitSignal(nameof(AmountChanged), ProductType, value);
 			}
 		}
 
