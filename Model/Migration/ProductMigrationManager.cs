@@ -4,6 +4,7 @@ using Trains.Model.Cells;
 using Trains.Model.Common;
 using Trains.Model.Products;
 using System.Linq;
+using Trains.Model.Cells.Buildings.Stocks;
 
 namespace Trains.Model.Migration
 {
@@ -42,8 +43,8 @@ namespace Trains.Model.Migration
 			Cell target = cell;
 			foreach (Cell c in cells)
 			{
-				//if (c == cell) continue;
-				if (c.GetPrice(product.ProductType) > target.GetPrice(product.ProductType))
+				//if (c.GetPrice(product.ProductType) > target.GetPrice(product.ProductType))
+				if (c.Building != null && c.Building is Stock && c.Building.ProductType == product.ProductType)
 					target = c;
 			}
 			return target;

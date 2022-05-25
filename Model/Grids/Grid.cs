@@ -13,6 +13,7 @@ namespace Trains.Model.Grids
 		public Cell[,] Cells;
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
+		PackedScene stock = GD.Load<PackedScene>("res://Scenes/Buildings/Stock.tscn");
 		private Events events;
 
 		//set cell size in editor: Cell/MeshInstance/Mesh/Size
@@ -21,6 +22,7 @@ namespace Trains.Model.Grids
 		{
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
 			Cells[0, 1].AddBuilding(source, Enums.ProductType.Lumber, 20f);
+			Cells[3, 2].AddBuilding(stock, Enums.ProductType.Lumber, 3f);
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
