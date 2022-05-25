@@ -5,9 +5,9 @@ using Trains.Model.Common;
 using Trains.Model.Products;
 using System.Linq;
 
-namespace Trains.Model
+namespace Trains.Model.Migration
 {
-	public class MoveProductsClass : Node
+	public class ProductMigrationManager : Node
 	{
 
 		public void MoveProducts(Cell[,] cells)
@@ -16,22 +16,23 @@ namespace Trains.Model
 			//find cell where price for that product is the highest (end)
 			//move *amount* of product one cell closer to the end
 			foreach (Cell cell in cells)
-				foreach (Product product in cell.ProductList)
+			foreach (Product product in cell.ProductList)
+			{
+				bool isReady = product.Amount > Global.MoveTreshold;
+				if (isReady)
 				{
-					bool isReady = product.Amount > Global.MoveTreshold;
-					if (isReady)
-					{
-						//Cell target = GetHighestPriceCell(product, cell, cells);
-						Cell target = GetProfitableCell(product, cell, cells);
-						if (target == null) continue;
-
-						MoveProduct(product, cell, target, cells);
-					}
+					//Cell target = GetHighestPriceCell(product, cell, cells);
+					Cell target = GetProfitableCell(product, cell, cells);
+					if (target == null || target == cell) continue;
+					MoveProduct(product, cell, target, cells);
 				}
+			}
 		}
 
 		private Cell GetProfitableCell(Product product, Cell cell, Cell[,] cells)
 		{
+
+
 			//temp
 			return GetHighestPriceCell(product, cell, cells);
 		}
@@ -41,7 +42,7 @@ namespace Trains.Model
 			Cell target = cell;
 			foreach (Cell c in cells)
 			{
-				if (c == cell) continue;
+				//if (c == cell) continue;
 				if (c.GetPrice(product.ProductType) > target.GetPrice(product.ProductType))
 					target = c;
 			}
