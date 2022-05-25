@@ -50,7 +50,7 @@ namespace Trains.Model.Grids
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
 			for (int j = 0; j < Cells.GetLength(1); j++)
-				Cells[i, j].HideProductData();
+				Cells[i, j].DisplayProductDataAllProductsMode();
 		}
 	}
 }

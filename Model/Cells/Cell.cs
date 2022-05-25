@@ -103,11 +103,17 @@ namespace Trains.Model.Cells
 			product.Price += 0f;
 		}
 
-		internal void HideProductData()
+		internal void DisplayProductDataAllProductsMode()
 		{
 			var info = GetNode<Info>("Info");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 			var amountBar = GetNode<ProductAmountBar>("Amount");
+
+			//display sum of all products amounts
+			var someProduct = ProductList.First();
+			var amountSum = ProductList.Sum(p => p.Amount);
+			amountBar.ActiveProductType = someProduct.ProductType;
+			amountBar.DisplayValue(someProduct.ProductType, amountSum);
 
 			mesh.Visible = false;
 			Building?.HideData();
