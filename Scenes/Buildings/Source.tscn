@@ -17,17 +17,20 @@ mesh = SubResource( 1 )
 material/0 = null
 
 [node name="TriangleUpBar" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.282838, 0 )
 
 [node name="Viewport" type="Viewport" parent="TriangleUpBar"]
-size = Vector2( 40, 40 )
+size = Vector2( 40, 100 )
 transparent_bg = true
 
 [node name="Sprite" type="Sprite" parent="TriangleUpBar/Viewport"]
 texture = ExtResource( 1 )
-offset = Vector2( 20, 20 )
+centered = false
+flip_v = true
 
 [node name="Sprite3D" type="Sprite3D" parent="TriangleUpBar"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.335379, 0 )
-flip_v = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.167089, 0 )
+centered = false
+offset = Vector2( -20, 0 )
 billboard = 1
 texture = SubResource( 2 )

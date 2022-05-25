@@ -7,23 +7,36 @@ namespace Trains.Model.Cells.Buildings
 {
 	public class Building : Spatial
 	{
-		[Export(PropertyHint.Enum)] 
+
+		[Export(PropertyHint.Enum)]
 		public ProductType ProductType { get; set; }
 
 		//Producing/consuming amount per tick
-		public float DeltaAmount { get; set; } = 2;
+		public float DeltaAmount
+		{
+			get => deltaAmount;
+			set
+			{
+				deltaAmount = value;
+				SetTriangleBar();
+			}
+		}
+
+		private float deltaAmount = 2;
 
 		internal void Init(Product product, float startAmount)
 		{
 			ProductType = product.ProductType;
 			product.Amount += startAmount;
+			SetTriangleBar();
 		}
 
-		//the bigger/lower price the larger triangle is
-		public void SetTriangleBar(float price)
+		//the bigger producing speed the larger triangle is
+		public void SetTriangleBar()
 		{
-			var bar = GetNode<Spatial>("TriangleUpBar");
-			bar.Scale = new Vector3(1, price, 1);
+			var bar = GetNode<Sprite3D>("TriangleUpBar/Sprite3D");
+			var scaleYValue = DeltaAmount * 0.8f;
+			bar.Scale = new Vector3(1, scaleYValue, 1);
 		}
 
 		public void DisplayData() => GetNode<Spatial>("TriangleUpBar").Visible = true;
