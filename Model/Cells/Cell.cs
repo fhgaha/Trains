@@ -121,7 +121,7 @@ namespace Trains.Model.Cells
 
 		public void AddBuilding(PackedScene scene, ProductType productType, float startAmount)
 		{
-			var building = scene.Instance<SourceTierI>();
+			var building = scene.Instance<Building>();
 			var product = GetProduct(productType);
 			building.Init(product, startAmount);
 			Building = building;

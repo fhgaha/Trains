@@ -7,7 +7,8 @@ namespace Trains.Model.Generators.Noises
 	{
 		public LumberNoise()
 		{
-			Seed = (int)GD.Randi();
+			//Seed = (int)GD.Randi();
+			Seed = 1;
 			Period = 8f;	//distance to next value
 			Octaves = 4;	//layers
 			Persistence = 0.9f;	//the effect that layers have

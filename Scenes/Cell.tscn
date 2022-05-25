@@ -3,7 +3,7 @@
 [ext_resource path="res://Model/Cells/Cell.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/CellScene/Info.cs" type="Script" id=2]
 [ext_resource path="res://Scripts/CellScene/MeshInstanceScript.cs" type="Script" id=4]
-[ext_resource path="res://Scenes/Buildings/ProductAmountBar.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/GUI/ProductAmountBar.tscn" type="PackedScene" id=6]
 
 [sub_resource type="PlaneMesh" id=3]
 resource_local_to_scene = true

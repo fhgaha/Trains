@@ -9,49 +9,52 @@ namespace Trains.Model
 {
 	public class MoveProductsClass : Node
 	{
-		//private Global global;
 
 		public void MoveProducts(Cell[,] cells)
 		{
-			//if (global is null) global = GetNode<Global>("/root/Global");
-			//var tr = global.TresholdAmount;
-
-			//if cell has more than trashold amount of products (start)
+			//if cell has more than treshold amount of products (start)
 			//find cell where price for that product is the highest (end)
 			//move *amount* of product one cell closer to the end
 			foreach (Cell cell in cells)
-			foreach (Product product in cell.ProductList)
-			{
-				bool isReady = product.Amount > Global.TresholdAmount;
-				if (isReady)
+				foreach (Product product in cell.ProductList)
 				{
-					Cell target = GetHighestPriceCell(product, cell, cells);
+					bool isReady = product.Amount > Global.MoveTreshold;
+					if (isReady)
+					{
+						//Cell target = GetHighestPriceCell(product, cell, cells);
+						Cell target = GetProfitableCell(product, cell, cells);
+						if (target == null) continue;
 
-					if (target != null)
 						MoveProduct(product, cell, target, cells);
+					}
 				}
-			}
+		}
+
+		private Cell GetProfitableCell(Product product, Cell cell, Cell[,] cells)
+		{
+			//temp
+			return GetHighestPriceCell(product, cell, cells);
 		}
 
 		private Cell GetHighestPriceCell(Product product, Cell cell, Cell[,] cells)
 		{
-			Cell target = null;
+			Cell target = cell;
 			foreach (Cell c in cells)
 			{
 				if (c == cell) continue;
-				if (c.GetPrice(product.ProductType) > product.Price)
+				if (c.GetPrice(product.ProductType) > target.GetPrice(product.ProductType))
 					target = c;
 			}
 			return target;
 		}
 
-		private void MoveProduct(Product product, Cell from, Cell farTarget, Cell[,] cells)
+		private void MoveProduct(Product product, Cell from, Cell target, Cell[,] cells)
 		{
 			//get neighbours, move to closest cell to target
 			var neighbours = from.GetNeighbours(cells);
 
 			Cell to = neighbours
-				.OrderBy(c => Math.Sqrt(Math.Pow(c.Row - farTarget.Row, 2) + Math.Pow(c.Col - farTarget.Col, 2)))
+				.OrderBy(c => Math.Sqrt(Math.Pow(c.Row - target.Row, 2) + Math.Pow(c.Col - target.Col, 2)))
 				.First();
 
 			from.GetProduct(product.ProductType).Amount -= Global.TravelAmount;
