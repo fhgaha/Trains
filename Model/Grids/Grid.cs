@@ -32,9 +32,9 @@ namespace Trains.Model.Grids
 			DisplayProductDataAll(productType);
 		}
 
+		//show amount, prices, colors for selecte product
 		private void DisplayProductDataAll(Enums.ProductType productType)
 		{
-			//display amount only for certain product type
 			for (int i = 0; i < Cells.GetLength(0); i++)
 			for (int j = 0; j < Cells.GetLength(1); j++)
 				Cells[i, j].DisplayProductData(productType);
@@ -42,10 +42,10 @@ namespace Trains.Model.Grids
 		
 		private void onAllProductsButtonPressed()
 		{
-			//should show only amount
 			HideProductDataAll();
 		}
 
+		//should show sum amount of all products and no color, no prices
 		private void HideProductDataAll()
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)

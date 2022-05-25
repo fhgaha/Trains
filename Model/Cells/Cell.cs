@@ -90,17 +90,17 @@ namespace Trains.Model.Cells
 			var amountBar = GetNode<ProductAmountBar>("Amount");
 
 			mesh.Visible = true;
-			amountBar.Visible = true;
 			amountBar.ActiveProductType = product.ProductType;
 			amountBar.DisplayValue(product.ProductType, product.Amount);
 
 			if (Building != null)
-				if (Building.ProductType == productType) Building.DisplayData();
-				else Building.HideData();
+				if (Building.ProductType == productType) 
+					Building.DisplayData();
+				else 
+					Building.HideData();
 
 			//to call PriceChanged signal with no value change
-			//product.Price += 0f;
-			// product.Amount += 0f;
+			product.Price += 0f;
 		}
 
 		internal void HideProductData()
@@ -108,10 +108,9 @@ namespace Trains.Model.Cells
 			var info = GetNode<Info>("Info");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 			var amountBar = GetNode<ProductAmountBar>("Amount");
-			//info.Visible = false;
+
 			mesh.Visible = false;
-			amountBar.Visible = true;
-			Building?.DisplayData();
+			Building?.HideData();
 		}
 
 		public void AddBuilding(PackedScene scene, ProductType productType, float startAmount)
@@ -124,8 +123,9 @@ namespace Trains.Model.Cells
 			MoveChild(building, 0);
 			building.Translate(new Vector3(-0.03f, 0, 0));
 
-			if (building is SourceTierI)
-				product.Connect(nameof(Product.PriceChanged), building, nameof(SourceTierI.SetTriangleBar));
+			//show building triangle as producing amount
+			// if (building is SourceTierI)
+			// 	product.Connect(nameof(Product.PriceChanged), building, nameof(SourceTierI.SetTriangleBar));
 		}
 
 		public List<Cell> GetNeighbours(Cell[,] cells)

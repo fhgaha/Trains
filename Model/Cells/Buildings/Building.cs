@@ -23,7 +23,7 @@ namespace Trains.Model.Cells.Buildings
 		public void SetTriangleBar(float price)
 		{
 			var bar = GetNode<Spatial>("TriangleUpBar");
-			bar.Scale = new Vector3(0, price, 0);
+			bar.Scale = new Vector3(1, price, 1);
 		}
 
 		public void DisplayData() => GetNode<Spatial>("TriangleUpBar").Visible = true;
