@@ -31,7 +31,7 @@ namespace Trains.Model.Cells
 
 		public Product GetProduct(ProductType type) => ProductList.First(p => p.ProductType == type);
 
-		public static float GetDistance(Cell first, Cell second) 
+		public static float GetDistance(Cell first, Cell second)
 		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
 		private Events events;
 
@@ -61,7 +61,7 @@ namespace Trains.Model.Cells
 				var info = GetNode<Info>("Info");
 				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
-				
+
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
 				product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
 				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
@@ -104,17 +104,17 @@ namespace Trains.Model.Cells
 
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
-			
+
 			//carefull! building can be source, stock or source for one prtoduct and stock for other product
 			if (Building == null) return;
 			if (Building.SourceProductType == productType)
 				Building.DisplaySourceData();
-			else 
+			else
 				Building.HideSourceData();
 
 			if (Building.StockProductType == productType)
 				Building.DisplayStockData();
-			else 
+			else
 				Building.HideStockData();
 		}
 
@@ -135,21 +135,54 @@ namespace Trains.Model.Cells
 			Building?.HideStockData();
 		}
 
-		public void AddBuilding(BuildingType buildingType, PackedScene scene, ProductType productType, float startAmount)
+		//add building with both source and stock functions
+		public void AddBuilding(BuildingType buildingType, PackedScene scene,
+			ProductType sourceProductType, float sourceStartAmount,
+			ProductType stockProductType, float stockStartAmount)
 		{
+			if (buildingType != BuildingType.Both) throw new ArgumentException("buildingType should be \"both\"");
+
 			var building = scene.Instance<Building>();
-			var product = GetProduct(productType);
-			
+			Product sourceProduct = null;
+			Product stockProduct = null;
+
 			switch (buildingType)
 			{
-				case BuildingType.Source: 
-					building.InitSource(product, startAmount);
+				case BuildingType.Source:
+					sourceProduct = GetProduct(sourceProductType);
+					building.InitSource(sourceProduct, sourceStartAmount);
 					break;
 				case BuildingType.Stock:
-					building.InitStock(product, startAmount);
+					stockProduct = GetProduct(stockProductType);
+					building.InitStock(stockProduct, stockStartAmount);
+					break;
+				case BuildingType.Both:
+					sourceProduct = GetProduct(sourceProductType);
+					building.InitSource(sourceProduct, sourceStartAmount);
+					stockProduct = GetProduct(stockProductType);
+					building.InitStock(stockProduct, stockStartAmount);
 					break;
 			}
-			
+
+			Building = building;
+			AddChild(building);
+			MoveChild(building, 0);
+			building.Translate(new Vector3(-0.03f, 0, 0));
+		}
+
+		//add source or stock
+		public void AddBuilding(BuildingType buildingType, PackedScene scene,
+			ProductType productType, float startAmount)
+		{
+			if (buildingType == BuildingType.Both) throw new ArgumentException("buildingType should not be \"both\"");
+
+			var building = scene.Instance<Building>();
+			var product = GetProduct(productType);
+			switch (buildingType)
+			{
+				case BuildingType.Source: building.InitSource(product, startAmount); break;
+				case BuildingType.Stock: building.InitStock(product, startAmount); break;
+			}
 			Building = building;
 			AddChild(building);
 			MoveChild(building, 0);
@@ -163,15 +196,15 @@ namespace Trains.Model.Cells
 			List<Cell> neighbours = new List<Cell>();
 
 			for (var dy = -1; dy <= 1; dy++)
-			for (var dx = -1; dx <= 1; dx++)
-			{
-				if (dx == 0 && dy == 0) continue;
-				if (row + dx < 0 || col + dy < 0) continue;
-				if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
+				for (var dx = -1; dx <= 1; dx++)
+				{
+					if (dx == 0 && dy == 0) continue;
+					if (row + dx < 0 || col + dy < 0) continue;
+					if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
 
-				Cell neighbour = cells[row + dx, col + dy];
-				neighbours.Add(neighbour);
-			}
+					Cell neighbour = cells[row + dx, col + dy];
+					neighbours.Add(neighbour);
+				}
 			return neighbours;
 		}
 
@@ -198,7 +231,7 @@ namespace Trains.Model.Cells
 		{
 			if (obj == null || GetType() != obj.GetType())
 				return false;
-			
+
 			Cell cell = (Cell)obj;
 			return Id == cell.Id;
 		}
