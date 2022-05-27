@@ -30,6 +30,9 @@ namespace Trains.Model.Cells
 
 		public Product GetProduct(ProductType type) => ProductList.First(p => p.ProductType == type);
 
+		public static float GetDistance(Cell first, Cell second) 
+		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
+
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
 		{
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");

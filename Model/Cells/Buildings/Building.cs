@@ -7,11 +7,8 @@ namespace Trains.Model.Cells.Buildings
 {
 	public class Building : Spatial
 	{
-		[Export(PropertyHint.Enum)]
-		public ProductType? SourceProductType { get; set; }
-
-		[Export(PropertyHint.Enum)]
-		public ProductType? StockProductType { get; set; }
+		public ProductType? SourceProductType { get; set; } = null;
+		public ProductType? StockProductType { get; set; } = null;
 
 		//Producing amount per tick
 		public float SourceDeltaAmount

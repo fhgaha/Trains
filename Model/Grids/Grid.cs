@@ -22,12 +22,20 @@ namespace Trains.Model.Grids
 		public override void _Ready()
 		{
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
-			Cells[0, 1].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
-			Cells[8, 4].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
+			AddBuildings();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
+		}
+
+		private void AddBuildings()
+		{
+			Cells[0, 1].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
+			Cells[8, 4].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
+
+			//Cells[0, 1].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
+			Cells[5, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
 		}
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)
@@ -46,6 +54,7 @@ namespace Trains.Model.Grids
 		private void onAllProductsButtonPressed()
 		{
 			HideProductDataAll();
+			
 		}
 
 		//should show sum amount of all products and no color, no prices

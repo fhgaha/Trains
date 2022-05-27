@@ -11,7 +11,7 @@ namespace Trains.Model.Common
 		/// <summary>
 		///product travel cost
 		/// </summary>
-		public static float TravelCost = 0.1f; //0.01f * Product.Price
+		public static float TransportationCost = 0.1f; //0.01f * Product.Price
 
 		/// <summary>
 		///amount above which product is ready to move
@@ -21,7 +21,7 @@ namespace Trains.Model.Common
 		/// <summary>
 		///the amount that moves per tick between cells 
 		/// </summary>
-		public static float TravelAmount = 0.2f;
+		public static float TransportationAmount = 0.2f;
 
 
 	}

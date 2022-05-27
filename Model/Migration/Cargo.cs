@@ -41,9 +41,9 @@ namespace Trains.Model.Migration
 		}
 
 		//get neighbours, move to closest cell to target
-		private static Cell GetNextCell(Cell from, Cell destiantion, Cell[,] cells) =>
+		private static Cell GetNextCell(Cell from, Cell destination, Cell[,] cells) =>
 			from.GetNeighbours(cells)
-				.OrderBy(c => Math.Sqrt(Math.Pow(c.Row - destiantion.Row, 2) + Math.Pow(c.Col - destiantion.Col, 2)))
+				.OrderBy(c => Cell.GetDistance(c, destination))
 				.First();
 
 		public override bool Equals(object obj)

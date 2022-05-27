@@ -1,19 +1,15 @@
 using Godot;
-using System;
 using Trains.Model.Cells;
-using Trains.Model.Common;
 using Trains.Model.Products;
-using System.Linq;
-using Trains.Model.Cells.Buildings.Stocks;
-using Trains.Model.Cells.Buildings.Sources;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
+using Trains.Model.Common;
 
 namespace Trains.Model.Migration
 {
 	public class ProductMigrationManager : Node
 	{
-		public List<Cargo> Cargos { get; set; } = new List<Cargo>();
+		private List<Cargo> cargos = new List<Cargo>();
 		private RandomNumberGenerator rnd = new RandomNumberGenerator();
 
 		public void MoveProducts(Cell[,] cells)
@@ -24,17 +20,17 @@ namespace Trains.Model.Migration
 			foreach (Product product in cell.ProductList)
 				BuildCargo(cell, product, cells);
 
-			//remove cargos reached their destinations
+			//remove the cargos that have reached their destination
 			var cargosToRemove = new List<Cargo>();
-			foreach (Cargo cargo in Cargos)
+			foreach (Cargo cargo in cargos)
 			{
 				cargo.Move(cells);
 				if (cargo.CurrentCell != cargo.Destination) continue;
-				//reached destination
+				//have reached destination
 				cargo.Unload();
 				cargosToRemove.Add(cargo);
 			}
-			cargosToRemove.ForEach(c => Cargos.Remove(c));
+			cargosToRemove.ForEach(c => cargos.Remove(c));
 		}
 
 		public void BuildCargo(Cell cell, Product product, Cell[,] cells)
@@ -56,19 +52,25 @@ namespace Trains.Model.Migration
 
 			Cargo cargo = new Cargo();
 			cargo.Load(cell, product.ProductType, amount, destination);
-			Cargos.Add(cargo);
+			cargos.Add(cargo);
 		}
 
-		private Cell GetProfitableCell(Product product, Cell cell, Cell[,] cells)
+		private Cell GetProfitableCell(Product product, Cell start, Cell[,] cells)
 		{
-			Cell target = null;
+			Dictionary<Cell, float> destinationCostMap = new Dictionary<Cell, float>();
+
 			foreach (Cell c in cells)
 			{
 				if (c.Building is null || c.Building.StockProductType is null 
 				|| c.Building.StockProductType != product.ProductType) continue;
-				target = c;
+				//target = c;
+				var distance = Cell.GetDistance(start, c);
+				var travelCost = distance * Global.TransportationCost;
+				var profitEstimation = c.GetProduct(product.ProductType).Price - travelCost;
+				destinationCostMap.Add(c, profitEstimation);
 			}
-			return target;
+			var bestPiceCandidate = destinationCostMap.OrderByDescending(dc => dc.Value).First().Key;
+			return bestPiceCandidate;
 		}
 	}
 }
