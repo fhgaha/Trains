@@ -17,7 +17,7 @@ namespace Trains.Scripts
 			mover = new ProductMigrationManager();
 			var timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
-			timer.Start(0.1f);
+			timer.Start(1f);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

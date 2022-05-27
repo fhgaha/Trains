@@ -7,7 +7,6 @@ namespace Trains.Model.Cells.Buildings
 {
 	public class Building : Spatial
 	{
-
 		[Export(PropertyHint.Enum)]
 		public ProductType ProductType { get; set; }
 

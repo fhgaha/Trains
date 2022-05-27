@@ -8,6 +8,7 @@ using Trains.Scripts.CellScene;
 using Trains.Model.Cells.Buildings;
 using Trains.Model.Cells.Buildings.Sources;
 using System.Linq;
+using Trains.Model.Migration;
 
 namespace Trains.Model.Cells
 {
@@ -141,15 +142,15 @@ namespace Trains.Model.Cells
 			List<Cell> neighbours = new List<Cell>();
 
 			for (var dy = -1; dy <= 1; dy++)
-				for (var dx = -1; dx <= 1; dx++)
-				{
-					if (dx == 0 && dy == 0) continue;
-					if (row + dx < 0 || col + dy < 0) continue;
-					if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
+			for (var dx = -1; dx <= 1; dx++)
+			{
+				if (dx == 0 && dy == 0) continue;
+				if (row + dx < 0 || col + dy < 0) continue;
+				if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
 
-					Cell neighbour = cells[row + dx, col + dy];
-					neighbours.Add(neighbour);
-				}
+				Cell neighbour = cells[row + dx, col + dy];
+				neighbours.Add(neighbour);
+			}
 
 			return neighbours;
 		}

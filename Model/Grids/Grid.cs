@@ -22,7 +22,7 @@ namespace Trains.Model.Grids
 		{
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
 			Cells[0, 1].AddBuilding(source, Enums.ProductType.Lumber, 20f);
-			Cells[3, 2].AddBuilding(stock, Enums.ProductType.Lumber, 3f);
+			Cells[8, 4].AddBuilding(stock, Enums.ProductType.Lumber, 3f);
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
