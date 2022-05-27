@@ -94,14 +94,20 @@ namespace Trains.Model.Cells
 			amountBar.ActiveProductType = product.ProductType;
 			amountBar.DisplayValue(product.ProductType, product.Amount);
 
-			if (Building != null)
-				if (Building.ProductType == productType) 
-					Building.DisplayData();
-				else 
-					Building.HideData();
-
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
+			
+			//carefull! building can be source, stock or source for one prtoduct and stock for other product
+			if (Building == null) return;
+			if (Building.SourceProductType == productType)
+				Building.DisplaySourceData();
+			else 
+				Building.HideSourceData();
+
+			if (Building.StockProductType == productType)
+				Building.DisplayStockData();
+			else 
+				Building.HideStockData();
 		}
 
 		internal void DisplayProductDataAllProductsMode()
@@ -117,22 +123,29 @@ namespace Trains.Model.Cells
 			amountBar.DisplayValue(someProduct.ProductType, amountSum);
 
 			mesh.Visible = false;
-			Building?.HideData();
+			Building?.HideSourceData();
+			Building?.HideStockData();
 		}
 
-		public void AddBuilding(PackedScene scene, ProductType productType, float startAmount)
+		public void AddBuilding(BuildingType buildingType, PackedScene scene, ProductType productType, float startAmount)
 		{
 			var building = scene.Instance<Building>();
 			var product = GetProduct(productType);
-			building.Init(product, startAmount);
+			
+			switch (buildingType)
+			{
+				case BuildingType.Source: 
+					building.InitSource(product, startAmount);
+					break;
+				case BuildingType.Stock:
+					building.InitStock(product, startAmount);
+					break;
+			}
+			
 			Building = building;
 			AddChild(building);
 			MoveChild(building, 0);
 			building.Translate(new Vector3(-0.03f, 0, 0));
-
-			//show building triangle as producing amount
-			// if (building is SourceTierI)
-			// 	product.Connect(nameof(Product.PriceChanged), building, nameof(SourceTierI.SetTriangleBar));
 		}
 
 		public List<Cell> GetNeighbours(Cell[,] cells)
@@ -151,7 +164,6 @@ namespace Trains.Model.Cells
 				Cell neighbour = cells[row + dx, col + dy];
 				neighbours.Add(neighbour);
 			}
-
 			return neighbours;
 		}
 
@@ -164,11 +176,8 @@ namespace Trains.Model.Cells
 			Cell cell = (Cell)obj;
 			return Id == cell.Id;
 		}
-		
+
 		// override object.GetHashCode
-		public override int GetHashCode()
-		{
-			return Row * 3 + Col * 4 + 5;
-		}
+		public override int GetHashCode() => Row * 3 + Col * 4 + 5;
 	}
 }

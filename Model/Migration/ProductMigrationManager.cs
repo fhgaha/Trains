@@ -40,7 +40,8 @@ namespace Trains.Model.Migration
 		public void BuildCargo(Cell cell, Product product, Cell[,] cells)
 		{
 			//if cell has source and other cell has stock build cargo and ship it
-			if (cell.Building is null || !(cell.Building is Source) || cell.Building.ProductType != product.ProductType) return;
+			if (cell.Building is null || cell.Building.SourceProductType is null 
+			|| cell.Building.SourceProductType != product.ProductType) return;
 
 			Cell destination = GetProfitableCell(product, cell, cells);
 			if (destination is null) return;
@@ -63,7 +64,8 @@ namespace Trains.Model.Migration
 			Cell target = null;
 			foreach (Cell c in cells)
 			{
-				if (c.Building is null || !(c.Building is Stock) || c.Building.ProductType != product.ProductType) continue;
+				if (c.Building is null || c.Building.StockProductType is null 
+				|| c.Building.StockProductType != product.ProductType) continue;
 				target = c;
 			}
 			return target;

@@ -8,38 +8,69 @@ namespace Trains.Model.Cells.Buildings
 	public class Building : Spatial
 	{
 		[Export(PropertyHint.Enum)]
-		public ProductType ProductType { get; set; }
+		public ProductType? SourceProductType { get; set; }
 
-		//Producing/consuming amount per tick
-		public float DeltaAmount
+		[Export(PropertyHint.Enum)]
+		public ProductType? StockProductType { get; set; }
+
+		//Producing amount per tick
+		public float SourceDeltaAmount
 		{
-			get => deltaAmount;
+			get => sourceDeltaAmount;
 			set
 			{
-				deltaAmount = value;
-				SetTriangleBar();
+				sourceDeltaAmount = value;
+				SetTriangleUpBar();
 			}
 		}
 
-		private float deltaAmount = 2;
-
-		internal void Init(Product product, float startAmount)
+		//Consuming amount per tick
+		public float StockDeltaAmount
 		{
-			ProductType = product.ProductType;
+			get => stockDeltaAmount;
+			set
+			{
+				stockDeltaAmount = value;
+				SetTriangleDownBar();
+			}
+		}
+
+		private float sourceDeltaAmount = 2;
+		private float stockDeltaAmount = 2;
+
+		internal void InitSource(Product product, float startAmount)
+		{
+			SourceProductType = product.ProductType;
 			product.Amount += startAmount;
-			SetTriangleBar();
+			SetTriangleUpBar();
+		}
+
+		internal void InitStock(Product product, float startAmount)
+		{
+			StockProductType = product.ProductType;
+			product.Amount += startAmount;
+			SetTriangleDownBar();
 		}
 
 		//the bigger producing speed the larger triangle is
-		public void SetTriangleBar()
+		public void SetTriangleUpBar()
 		{
 			var bar = GetNode<Sprite3D>("TriangleUpBar/Sprite3D");
-			var scaleYValue = DeltaAmount * 0.8f;
+			var scaleYValue = SourceDeltaAmount * 0.8f;
 			bar.Scale = new Vector3(1, scaleYValue, 1);
 		}
 
-		public void DisplayData() => GetNode<Spatial>("TriangleUpBar").Visible = true;
+		public void SetTriangleDownBar()
+		{
+			var bar = GetNode<Sprite3D>("TriangleDownBar/Sprite3D");
+			var scaleYValue = StockDeltaAmount * 0.8f;
+			bar.Scale = new Vector3(1, scaleYValue, 1);
+		}
 
-		public void HideData() => GetNode<Spatial>("TriangleUpBar").Visible = false;
+		public void DisplaySourceData() => GetNode<Spatial>("TriangleUpBar").Visible = true;
+		public void HideSourceData() => GetNode<Spatial>("TriangleUpBar").Visible = false;
+
+		public void DisplayStockData() => GetNode<Spatial>("TriangleDownBar").Visible = true;
+		public void HideStockData() => GetNode<Spatial>("TriangleDownBar").Visible = false;
 	}
 }

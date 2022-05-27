@@ -10,5 +10,12 @@ namespace Trains.Model.Common
 			Grain,
 			Dairy
 		}
+
+		public enum BuildingType
+		{
+			Source,
+			Stock,
+			Both
+		}
 	}
 }
