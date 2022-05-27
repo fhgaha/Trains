@@ -18,10 +18,12 @@ namespace Trains.Scripts.CellScene
 			var color = material.AlbedoColor;
 			float h, s, v;
 			color.ToHsv(out h, out s, out v);
-			//instead of 100 should be max product value
-			h = maxHueValue_green * price / 100;
+			var maxProductPrice = 100f;	
+			h = maxHueValue_green * price / maxProductPrice;
+			h = Mathf.Clamp(h, 0, maxHueValue_green);
 			this.color = Color.FromHsv(h, s, v);
 			material.AlbedoColor = this.color;
+			//GD.Print("old color: " + color + ", new color: " + this.color);
 		}
 	}
 }

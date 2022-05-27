@@ -11,7 +11,7 @@ size = Vector2( 1, 1 )
 
 [sub_resource type="SpatialMaterial" id=2]
 resource_local_to_scene = true
-albedo_color = Color( 0.0536591, 0.817383, 0.057497, 1 )
+albedo_color = Color( 0.054902, 0.815686, 0.0588235, 1 )
 
 [sub_resource type="ViewportTexture" id=4]
 viewport_path = NodePath("Info/Viewport")

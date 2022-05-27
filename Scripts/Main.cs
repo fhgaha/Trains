@@ -39,6 +39,7 @@ namespace Trains.Scripts
 			//for each source find cell with best price, move products there
 			var grid = GetNode<Grid>("Grid");
 			mover.MoveProducts(grid.Cells);
+			grid.Cells[1, 1].GetProduct(Enums.ProductType.Lumber).Price += 5;
 		}
 	}
 }
