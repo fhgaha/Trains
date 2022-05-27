@@ -18,6 +18,10 @@ namespace Trains.Model.Common
 {
 	public class Events : Node
 	{
+		// Emitted when main timer ticks
+		// Cell usies this to update product amount
+		[Signal] public delegate void Tick();
+
 		// Emitted when specific product button is pressed. 
 		// Grid uses this to display product prices and colors
 		[Signal] public delegate void SpecificProductButtonPressed(ProductType productType);
@@ -25,10 +29,6 @@ namespace Trains.Model.Common
 		// Emitted when AllProducts button is pressed. 
 		// Grid uses this to hide prices and colors
 		[Signal] public delegate void AllProductButtonPressed();
-
-		// Emitted when main timer ticks
-
-		[Signal] public delegate void Tick();
 
 		public override void _Ready()
 		{

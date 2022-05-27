@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Trains.Model.Common;
 using Trains.Model.Products;
 using static Trains.Model.Common.Enums;
 
@@ -7,6 +8,7 @@ namespace Trains.Model.Cells.Buildings
 {
 	public class Building : Spatial
 	{
+		//this defines which type of building is this: source, stock or both
 		public ProductType? SourceProductType { get; set; } = null;
 		public ProductType? StockProductType { get; set; } = null;
 
@@ -32,8 +34,8 @@ namespace Trains.Model.Cells.Buildings
 			}
 		}
 
-		private float sourceDeltaAmount = 2;
-		private float stockDeltaAmount = 2;
+		private float sourceDeltaAmount = 0.5f;
+		private float stockDeltaAmount = 0.5f;
 
 		internal void InitSource(Product product, float startAmount)
 		{

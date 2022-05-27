@@ -9,6 +9,7 @@ using Trains.Model.Cells.Buildings;
 using Trains.Model.Cells.Buildings.Sources;
 using System.Linq;
 using Trains.Model.Migration;
+using Trains.Model.Common;
 
 namespace Trains.Model.Cells
 {
@@ -32,9 +33,13 @@ namespace Trains.Model.Cells
 
 		public static float GetDistance(Cell first, Cell second) 
 		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
+		private Events events;
 
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
 		{
+			events = GetNode<Events>("/root/Events");
+			events.Connect(nameof(Events.Tick), this, nameof(onTick));
+
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
 			Row = row; Col = col;
@@ -168,6 +173,24 @@ namespace Trains.Model.Cells
 				neighbours.Add(neighbour);
 			}
 			return neighbours;
+		}
+
+		public void onTick()
+		{
+			UpdateAmount();
+		}
+
+		//increase amount of source product, decrease amount of stock product
+		private void UpdateAmount()
+		{
+			if (Building is null) return;
+
+			if (!(Building.SourceProductType is null))
+				GetProduct((ProductType)Building.SourceProductType).Amount += Building.SourceDeltaAmount;
+
+			//stock amount will be decreased by consuming
+			// if (!(Building.StockProductType is null))
+			// 	GetProduct((ProductType)Building.StockProductType).Amount -= Building.StockDeltaAmount;
 		}
 
 		// override object.Equals
