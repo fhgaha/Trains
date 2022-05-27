@@ -61,12 +61,15 @@ namespace Trains.Model.Cells
 				var info = GetNode<Info>("Info");
 				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
-
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
-				product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
-				product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.SetColor));
+				// product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
+				// product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.onPriceChanged));
+				product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
+
+				events.Connect(nameof(Events.Tick), product, nameof(Product.onTick));
 			}
 		}
+
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
 		{
@@ -107,15 +110,11 @@ namespace Trains.Model.Cells
 
 			//carefull! building can be source, stock or source for one prtoduct and stock for other product
 			if (Building == null) return;
-			if (Building.SourceProductType == productType)
-				Building.DisplaySourceData();
-			else
-				Building.HideSourceData();
+			if (Building.SourceProductType == productType) Building.DisplaySourceData();
+			else Building.HideSourceData();
 
-			if (Building.StockProductType == productType)
-				Building.DisplayStockData();
-			else
-				Building.HideStockData();
+			if (Building.StockProductType == productType) Building.DisplayStockData();
+			else Building.HideStockData();
 		}
 
 		internal void DisplayProductDataAllProductsMode()
@@ -225,8 +224,18 @@ namespace Trains.Model.Cells
 			// if (!(Building.StockProductType is null))
 			// 	GetProduct((ProductType)Building.StockProductType).Amount -= Building.StockDeltaAmount;
 		}
+		
+		private void onPriceChanged(Product sender, float value)
+		{
+			//if mode is the same as sender producttype change color, info
+			if (Global.CurrentDisplayProductMode != sender.ProductType) return;
+			
+			var info = GetNode<Info>("Info");
+			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+			info.SetPriceText(value);
+			mesh.SetColor(value);
+		}
 
-		// override object.Equals
 		public override bool Equals(object obj)
 		{
 			if (obj == null || GetType() != obj.GetType())
@@ -236,7 +245,6 @@ namespace Trains.Model.Cells
 			return Id == cell.Id;
 		}
 
-		// override object.GetHashCode
 		public override int GetHashCode() => Row * 3 + Col * 4 + 5;
 	}
 }

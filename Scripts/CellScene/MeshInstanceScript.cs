@@ -1,6 +1,5 @@
-using Godot;
 using System;
-using Trains.Model.Products;
+using Godot;
 
 namespace Trains.Scripts.CellScene
 {

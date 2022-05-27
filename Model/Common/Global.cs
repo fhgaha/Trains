@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Common
 {
@@ -22,6 +23,12 @@ namespace Trains.Model.Common
 		///the amount that moves per tick between cells 
 		/// </summary>
 		public static float TransportationAmount = 0.2f;
+
+		//decreasing amount per tick
+		public static float PriceDecay = 0.01f;
+
+		public static ProductType? CurrentDisplayProductMode = null;
+
 
 
 	}

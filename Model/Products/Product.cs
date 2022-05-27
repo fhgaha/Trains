@@ -1,7 +1,9 @@
 using Godot;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
+using Trains.Model.Common;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Products
@@ -10,7 +12,7 @@ namespace Trains.Model.Products
 	{
 		//used by Cell/Sprite3D/Viewport to set label text
 		//used by Cell/MeshInstance to set cell color 
-		[Signal] public delegate void PriceChanged(float value);
+		[Signal] public delegate void PriceChanged(Product sender, float value);
 
 		//Used by res://Scenes/Buildings/ProductAmountBar.tscn to set TextureProgress bar value
 		[Signal] public delegate void AmountChanged(ProductType productType, float value);
@@ -26,7 +28,7 @@ namespace Trains.Model.Products
 			set
 			{
 				price = value;
-				EmitSignal(nameof(PriceChanged), value);
+				EmitSignal(nameof(PriceChanged), this, value);
 			}
 		}
 
@@ -48,6 +50,11 @@ namespace Trains.Model.Products
 		{
 			ProductType = type;
 			this.Price = price;
+		}
+
+		public void onTick()
+		{
+			Price -= Global.PriceDecay;
 		}
 	}
 }

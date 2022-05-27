@@ -40,6 +40,7 @@ namespace Trains.Model.Grids
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)
 		{
+			Global.CurrentDisplayProductMode = productType;
 			DisplayProductDataAll(productType);
 		}
 
@@ -53,6 +54,7 @@ namespace Trains.Model.Grids
 		
 		private void onAllProductsButtonPressed()
 		{
+			Global.CurrentDisplayProductMode = null;
 			HideProductDataAll();
 			
 		}
