@@ -54,7 +54,7 @@ namespace Trains.Model.Products
 
 		public void onTick()
 		{
-			Price -= Global.PriceDecay;
+			//Price -= Global.PriceDecay;
 		}
 	}
 }

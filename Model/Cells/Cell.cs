@@ -33,6 +33,20 @@ namespace Trains.Model.Cells
 
 		public static float GetDistance(Cell first, Cell second)
 		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
+
+		//called from cargo
+		internal void CargoArrived(Cargo cargo, ProductType productType, float amount)
+		{
+			Product product = GetProduct(productType);
+			product.Amount += amount;
+			//price change
+			product.Price -= 1 / product.Amount;
+			
+			
+
+			//change neighbours prices
+		}
+
 		private Events events;
 
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
