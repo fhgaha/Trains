@@ -9,6 +9,7 @@ namespace Trains.Scripts
 	{
 		private Events events;
 		private ProductMigrationManager mover;
+		private float timeSec = 0.5f;
 		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
 
 		public override void _Ready()
@@ -17,7 +18,7 @@ namespace Trains.Scripts
 			mover = new ProductMigrationManager();
 			var timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
-			timer.Start(1f);
+			timer.Start(timeSec);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

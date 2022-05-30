@@ -35,9 +35,9 @@ namespace Trains.Model.Migration
 			CurrentCell.GetProduct(ProductType).Amount += this.Amount;
 		}
 
-		public void Unload()
+		public void Unload(Cell[,] cells)
 		{
-			Destination.CargoArrived(this, ProductType, Amount);
+			Destination.CargoArrived(this, ProductType, Amount, cells);
 		}
 
 		//get neighbours, move to closest cell to target

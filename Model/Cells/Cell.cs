@@ -35,16 +35,38 @@ namespace Trains.Model.Cells
 		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
 
 		//called from cargo
-		internal void CargoArrived(Cargo cargo, ProductType productType, float amount)
+		internal void CargoArrived(Cargo cargo, ProductType productType, float amount, Cell[,] cells)
 		{
 			Product product = GetProduct(productType);
 			product.Amount += amount;
 			//price change
-			product.Price -= 1 / product.Amount;
-			
-			
+			//product.Price -= 1 / product.Amount;
+			product.Price += 0.5f;
 
 			//change neighbours prices
+			List<Cell> updated = new List<Cell>();
+			updated.Add(this);
+			var depth = (int)(product.Price / 10) - 1;
+			UpdateNearbyPrices(productType, cells, Mathf.Min(depth, 5), updated);
+		}
+
+		public void UpdateNearbyPrices(
+			ProductType productType, Cell[,] cells, int depth, List<Cell> updated)
+		{
+			if (depth == 0) return;
+			var neighbours = GetNeighbours(cells);
+			var deltaPrice = depth * 0.10f;
+			foreach (Cell n in neighbours)
+			{
+				if (updated.Contains(n)) continue;
+				n.GetProduct(productType).Price += deltaPrice;
+				updated.Add(n);
+			}
+
+			foreach (Cell n in neighbours)
+			{
+				n.UpdateNearbyPrices(productType, cells, depth - 1, updated);
+			}
 		}
 
 		private Events events;
@@ -69,7 +91,8 @@ namespace Trains.Model.Cells
 				Product product = new Product(type, -1);
 				Products.AddChild(product);
 				ProductList.Add(product);
-				product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
+				//product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
+				product.Price = 30f;
 
 				//connect product button to product
 				var info = GetNode<Info>("Info");
@@ -209,15 +232,15 @@ namespace Trains.Model.Cells
 			List<Cell> neighbours = new List<Cell>();
 
 			for (var dy = -1; dy <= 1; dy++)
-				for (var dx = -1; dx <= 1; dx++)
-				{
-					if (dx == 0 && dy == 0) continue;
-					if (row + dx < 0 || col + dy < 0) continue;
-					if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
+			for (var dx = -1; dx <= 1; dx++)
+			{
+				if (dx == 0 && dy == 0) continue;
+				if (row + dx < 0 || col + dy < 0) continue;
+				if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
 
-					Cell neighbour = cells[row + dx, col + dy];
-					neighbours.Add(neighbour);
-				}
+				Cell neighbour = cells[row + dx, col + dy];
+				neighbours.Add(neighbour);
+			}
 			return neighbours;
 		}
 
@@ -238,12 +261,12 @@ namespace Trains.Model.Cells
 			// if (!(Building.StockProductType is null))
 			// 	GetProduct((ProductType)Building.StockProductType).Amount -= Building.StockDeltaAmount;
 		}
-		
+
 		private void onPriceChanged(Product sender, float value)
 		{
 			//if mode is the same as sender producttype change color, info
 			if (Global.CurrentDisplayProductMode != sender.ProductType) return;
-			
+
 			var info = GetNode<Info>("Info");
 			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 			info.SetPriceText(value);

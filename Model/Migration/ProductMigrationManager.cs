@@ -27,10 +27,10 @@ namespace Trains.Model.Migration
 				cargo.Move(cells);
 				if (cargo.CurrentCell != cargo.Destination) continue;
 				//have reached destination
-				cargo.Unload();
+				cargo.Unload(cells);
 				cargosToRemove.Add(cargo);
 			}
-			cargosToRemove.ForEach(c => cargos.Remove(c));
+			cargosToRemove.ForEach(cargo => cargos.Remove(cargo));
 		}
 
 		public void BuildCargo(Cell cell, Product product, Cell[,] cells)
