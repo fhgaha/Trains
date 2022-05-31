@@ -32,10 +32,10 @@ namespace Trains.Model.Grids
 		private void AddBuildings()
 		{
 			Cells[0, 0].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
-			Cells[5, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
-
 			//Cells[0, 1].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
-			//Cells[5, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
+
+			Cells[5, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
+			Cells[8, 4].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
 		}
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)

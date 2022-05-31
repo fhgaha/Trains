@@ -12,24 +12,33 @@ namespace Trains.Model.Common
 		/// <summary>
 		///product travel cost
 		/// </summary>
-		public static float TransportationCost = 0.1f; //0.01f * Product.Price
+		public const float TransportationCost = 0.1f; //0.01f * Product.Price
 
 		/// <summary>
 		///amount above which product is ready to move
 		/// </summary>
-		public static float MoveTreshold = 1f;
+		public const float MoveTreshold = 1f;
 
 		/// <summary>
 		///the amount that moves per tick between cells 
 		/// </summary>
-		public static float TransportationAmount = 0.2f;
+		public const float TransportationAmount = 0.2f;
 
 		//decreasing amount per tick
-		public static float PriceDecay = 0.1f;
+		public const float PriceDecay = 0.1f;
 
 		public static ProductType? CurrentDisplayProductMode = null;
 
 
+		//min max prices
+		public const float LumberMinPrice = 30f;
+		public const float LumberMaxPrice = 100f;
+
+		public const float GrainMinPrice = 50f;
+		public const float GrainMaxPrice = 150f;
+
+		public const float DairyMinPrice = 100f;
+		public const float DairyMaxPrice = 300f;
 
 	}
 }

@@ -10,6 +10,7 @@ using Trains.Model.Cells.Buildings.Sources;
 using System.Linq;
 using Trains.Model.Migration;
 using Trains.Model.Common;
+using Trains.Model.Grids;
 
 namespace Trains.Model.Cells
 {
@@ -41,21 +42,23 @@ namespace Trains.Model.Cells
 			product.Amount += amount;
 			//price change
 			//product.Price -= 1 / product.Amount;
-			product.Price += 0.5f;
-
-			//change neighbours prices
-			List<Cell> updated = new List<Cell>();
-			updated.Add(this);
-			var depth = (int)(product.Price / 10) - 1;
-			UpdateNearbyPrices_(productType, cells, Mathf.Min(depth, 5), updated);
-			//UpdateNearbyPrices_(productType, cells, 2, updated);
+			//delta price should be (newPrice - oldPrice) * 0.25
+			float deltaPrice = -cargo.Amount * 0.5f;
+			product.Price += deltaPrice;
+			//if stock price grows every tick, this goes down when cargo comes
+			//UpdateNearbyPrices(productType, cells, deltaPrice);
 		}
 
-		public void UpdateNearbyPrices_(
-			ProductType productType, Cell[,] cells, int depth, List<Cell> updated)
+		public void UpdateNearbyPrices(ProductType productType, Cell[,] cells, float deltaPrice)
 		{
-			var deltaPrice = depth * 0.10f;
+			//updated grows all the time
+			//price always go down
+			List<Cell> updated = new List<Cell>();
+			updated.Add(this);
+			int depth = 5;
+			deltaPrice *= 0.5f;
 			var neighbours = GetNeighbours(cells);
+
 			foreach (Cell n in neighbours)
 			{
 				if (updated.Contains(n)) continue;
@@ -66,25 +69,24 @@ namespace Trains.Model.Cells
 			while (depth > 0)
 			{
 				depth--;
-				deltaPrice = depth * 0.10f;
-				var newNeighbors = new List<Cell>();
+				deltaPrice *= 0.5f;
+				var nextNeighbours = new List<Cell>();
 				foreach (Cell n in neighbours)
 				{
-					var _neighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
-					newNeighbors.AddRange(_neighbours.Where(_n => !newNeighbors.Contains(_n)));
+					var nNeighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
+					nextNeighbours.AddRange(nNeighbours.Where(_n => !nextNeighbours.Contains(_n)));
 				}
 
-				foreach (Cell n in newNeighbors)
+				foreach (Cell n in nextNeighbours)
 				{
 					n.GetProduct(productType).Price += deltaPrice;
 					updated.Add(n);
 				}
-				neighbours = newNeighbors;
+				neighbours = nextNeighbours;
 			}
 		}
 
-		public void UpdateNearbyPrices(
-			ProductType productType, Cell[,] cells, int depth, List<Cell> updated)
+		public void UpdateNearbyPrices__(ProductType productType, Cell[,] cells, int depth, List<Cell> updated)
 		{
 			if (depth == 0) return;
 			var neighbours = GetNeighbours(cells);
@@ -98,7 +100,7 @@ namespace Trains.Model.Cells
 
 			foreach (Cell n in neighbours)
 			{
-				n.UpdateNearbyPrices(productType, cells, depth - 1, updated);
+				n.UpdateNearbyPrices__(productType, cells, depth - 1, updated);
 			}
 		}
 
@@ -265,15 +267,15 @@ namespace Trains.Model.Cells
 			List<Cell> neighbours = new List<Cell>();
 
 			for (var dy = -1; dy <= 1; dy++)
-			for (var dx = -1; dx <= 1; dx++)
-			{
-				if (dx == 0 && dy == 0) continue;
-				if (row + dx < 0 || col + dy < 0) continue;
-				if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
+				for (var dx = -1; dx <= 1; dx++)
+				{
+					if (dx == 0 && dy == 0) continue;
+					if (row + dx < 0 || col + dy < 0) continue;
+					if (row + dx > cells.GetLength(0) - 1 || col + dy > cells.GetLength(1) - 1) continue;
 
-				Cell neighbour = cells[row + dx, col + dy];
-				neighbours.Add(neighbour);
-			}
+					Cell neighbour = cells[row + dx, col + dy];
+					neighbours.Add(neighbour);
+				}
 			return neighbours;
 		}
 
@@ -287,12 +289,24 @@ namespace Trains.Model.Cells
 		{
 			if (Building is null) return;
 
-			if (!(Building.SourceProductType is null))
-				GetProduct((ProductType)Building.SourceProductType).Amount += Building.SourceDeltaAmount;
+			if (Building.IsSource)
+			{
+				var product = GetProduct((ProductType)Building.SourceProductType);
+				product.Amount += Building.SourceDeltaAmount;
+				product.Price -= Global.PriceDecay;
+				var cells = GetParent<Grid>().Cells;
+				UpdateNearbyPrices(product.ProductType, cells, -Global.PriceDecay * 0.5f);
+			}
 
-			//stock amount will be decreased by consuming
-			// if (!(Building.StockProductType is null))
-			// 	GetProduct((ProductType)Building.StockProductType).Amount -= Building.StockDeltaAmount;
+			if (Building.IsStock)
+			{
+				//stock amount will be decreased by consuming
+				var product = GetProduct((ProductType)Building.StockProductType);
+				//product.Amount -= Building.StockDeltaAmount;
+				product.Price += Global.PriceDecay;
+				var cells = GetParent<Grid>().Cells;
+				UpdateNearbyPrices(product.ProductType, cells, Global.PriceDecay * 0.5f);
+			}
 		}
 
 		private void onPriceChanged(Product sender, float value)

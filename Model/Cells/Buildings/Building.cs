@@ -11,6 +11,8 @@ namespace Trains.Model.Cells.Buildings
 		//this defines which type of building is this: source, stock or both
 		public ProductType? SourceProductType { get; set; } = null;
 		public ProductType? StockProductType { get; set; } = null;
+		public bool IsSource { get => !(SourceProductType is null); }
+		public bool IsStock { get => !(StockProductType is null); }
 
 		//Producing amount per tick
 		public float SourceDeltaAmount
