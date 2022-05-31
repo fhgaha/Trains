@@ -56,7 +56,7 @@ namespace Trains.Model.Cells
 			List<Cell> updated = new List<Cell>();
 			updated.Add(this);
 			int depth = 5;
-			deltaPrice *= 0.5f;
+			deltaPrice *= 1f;
 			var neighbours = GetNeighbours(cells);
 
 			foreach (Cell n in neighbours)
@@ -281,11 +281,11 @@ namespace Trains.Model.Cells
 
 		public void onTick()
 		{
-			UpdateAmount();
+			UpdateAmountAndPrice();
 		}
 
 		//increase amount of source product, decrease amount of stock product
-		private void UpdateAmount()
+		private void UpdateAmountAndPrice()
 		{
 			if (Building is null) return;
 
@@ -294,6 +294,7 @@ namespace Trains.Model.Cells
 				var product = GetProduct((ProductType)Building.SourceProductType);
 				product.Amount += Building.SourceDeltaAmount;
 				product.Price -= Global.PriceDecay;
+
 				var cells = GetParent<Grid>().Cells;
 				UpdateNearbyPrices(product.ProductType, cells, -Global.PriceDecay * 0.5f);
 			}
@@ -304,6 +305,7 @@ namespace Trains.Model.Cells
 				var product = GetProduct((ProductType)Building.StockProductType);
 				//product.Amount -= Building.StockDeltaAmount;
 				product.Price += Global.PriceDecay;
+
 				var cells = GetParent<Grid>().Cells;
 				UpdateNearbyPrices(product.ProductType, cells, Global.PriceDecay * 0.5f);
 			}

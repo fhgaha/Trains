@@ -9,7 +9,7 @@ namespace Trains.Scripts
 	{
 		private Events events;
 		private ProductMigrationManager mover;
-		private float timeSec = 0.5f;
+		private float timeSec = 0.1f;
 		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
 
 		public override void _Ready()
