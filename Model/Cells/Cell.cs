@@ -47,7 +47,40 @@ namespace Trains.Model.Cells
 			List<Cell> updated = new List<Cell>();
 			updated.Add(this);
 			var depth = (int)(product.Price / 10) - 1;
-			UpdateNearbyPrices(productType, cells, Mathf.Min(depth, 5), updated);
+			UpdateNearbyPrices_(productType, cells, Mathf.Min(depth, 5), updated);
+			//UpdateNearbyPrices_(productType, cells, 2, updated);
+		}
+
+		public void UpdateNearbyPrices_(
+			ProductType productType, Cell[,] cells, int depth, List<Cell> updated)
+		{
+			var deltaPrice = depth * 0.10f;
+			var neighbours = GetNeighbours(cells);
+			foreach (Cell n in neighbours)
+			{
+				if (updated.Contains(n)) continue;
+				n.GetProduct(productType).Price += deltaPrice;
+				updated.Add(n);
+			}
+
+			while (depth > 0)
+			{
+				depth--;
+				deltaPrice = depth * 0.10f;
+				var newNeighbors = new List<Cell>();
+				foreach (Cell n in neighbours)
+				{
+					var _neighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
+					newNeighbors.AddRange(_neighbours.Where(_n => !newNeighbors.Contains(_n)));
+				}
+
+				foreach (Cell n in newNeighbors)
+				{
+					n.GetProduct(productType).Price += deltaPrice;
+					updated.Add(n);
+				}
+				neighbours = newNeighbors;
+			}
 		}
 
 		public void UpdateNearbyPrices(
