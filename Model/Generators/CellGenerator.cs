@@ -81,6 +81,7 @@ namespace Trains.Model.Generators
 				cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 				cells[i, j] = cell;
 			}
+			Cell.Cells = cells;
 
 			return cells;
 		}

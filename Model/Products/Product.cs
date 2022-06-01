@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using Trains.Model.Cells;
 using Trains.Model.Common;
 using static Trains.Model.Common.Enums;
 

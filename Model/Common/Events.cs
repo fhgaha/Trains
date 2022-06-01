@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Trains.Model.Cells;
 using static Trains.Model.Common.Enums;
 
 // Event bus for distant nodes to communicate using signals.

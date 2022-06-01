@@ -7,7 +7,7 @@
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -194.0
+margin_top = -172.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -15,7 +15,7 @@ margin_top = -194.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -168.0
+margin_top = -185.0
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -349,8 +349,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="ProductInfo" type="Label" parent="CanvasLayer/VBoxContainer"]
 margin_top = 154.0
 margin_right = 1024.0
-margin_bottom = 168.0
-text = "cell info"
+margin_bottom = 185.0
+text = "Product name
+Product price and amount"
+align = 1

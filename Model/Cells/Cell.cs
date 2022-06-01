@@ -6,17 +6,16 @@ using System.Collections.Generic;
 using Trains.Model.Generators.Noises;
 using Trains.Scripts.CellScene;
 using Trains.Model.Cells.Buildings;
-using Trains.Model.Cells.Buildings.Sources;
 using System.Linq;
 using Trains.Model.Migration;
 using Trains.Model.Common;
-using Trains.Model.Grids;
 
 namespace Trains.Model.Cells
 {
 	[Tool]
 	public class Cell : Spatial
 	{
+		public static Cell[,] Cells { get; set; }
 		[Export] public string Id { get; set; }
 		public int Row { get; private set; }
 		public int Col { get; private set; }
@@ -47,61 +46,6 @@ namespace Trains.Model.Cells
 			product.Price += deltaPrice;
 			//if stock price grows every tick, this goes down when cargo comes
 			//UpdateNearbyPrices(productType, cells, deltaPrice);
-		}
-
-		public void UpdateNearbyPrices(ProductType productType, Cell[,] cells, float deltaPrice)
-		{
-			//updated grows all the time
-			//price always go down
-			List<Cell> updated = new List<Cell>();
-			updated.Add(this);
-			int depth = 5;
-			deltaPrice *= 1f;
-			var neighbours = GetNeighbours(cells);
-
-			foreach (Cell n in neighbours)
-			{
-				if (updated.Contains(n)) continue;
-				n.GetProduct(productType).Price += deltaPrice;
-				updated.Add(n);
-			}
-
-			while (depth > 0)
-			{
-				depth--;
-				deltaPrice *= 0.5f;
-				var nextNeighbours = new List<Cell>();
-				foreach (Cell n in neighbours)
-				{
-					var nNeighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
-					nextNeighbours.AddRange(nNeighbours.Where(_n => !nextNeighbours.Contains(_n)));
-				}
-
-				foreach (Cell n in nextNeighbours)
-				{
-					n.GetProduct(productType).Price += deltaPrice;
-					updated.Add(n);
-				}
-				neighbours = nextNeighbours;
-			}
-		}
-
-		public void UpdateNearbyPrices__(ProductType productType, Cell[,] cells, int depth, List<Cell> updated)
-		{
-			if (depth == 0) return;
-			var neighbours = GetNeighbours(cells);
-			var deltaPrice = depth * 0.10f;
-			foreach (Cell n in neighbours)
-			{
-				if (updated.Contains(n)) continue;
-				n.GetProduct(productType).Price += deltaPrice;
-				updated.Add(n);
-			}
-
-			foreach (Cell n in neighbours)
-			{
-				n.UpdateNearbyPrices__(productType, cells, depth - 1, updated);
-			}
 		}
 
 		private Events events;
@@ -295,8 +239,7 @@ namespace Trains.Model.Cells
 				product.Amount += Building.SourceDeltaAmount;
 				product.Price -= Global.PriceDecay;
 
-				var cells = GetParent<Grid>().Cells;
-				UpdateNearbyPrices(product.ProductType, cells, -Global.PriceDecay * 0.5f);
+				UpdateNearbyPrices(product.ProductType, Cells, -Global.PriceDecay * 0.5f);
 			}
 
 			if (Building.IsStock)
@@ -306,8 +249,44 @@ namespace Trains.Model.Cells
 				//product.Amount -= Building.StockDeltaAmount;
 				product.Price += Global.PriceDecay;
 
-				var cells = GetParent<Grid>().Cells;
-				UpdateNearbyPrices(product.ProductType, cells, Global.PriceDecay * 0.5f);
+				UpdateNearbyPrices(product.ProductType, Cells, Global.PriceDecay * 0.5f);
+			}
+		}
+
+		public void UpdateNearbyPrices(ProductType productType, Cell[,] cells, float deltaPrice)
+		{
+			//updated grows all the time
+			//price always go down
+			List<Cell> updated = new List<Cell>();
+			updated.Add(this);
+			int depth = 5;
+			deltaPrice *= 1f;
+			var neighbours = GetNeighbours(cells);
+
+			foreach (Cell n in neighbours)
+			{
+				if (updated.Contains(n)) continue;
+				n.GetProduct(productType).Price += deltaPrice;
+				updated.Add(n);
+			}
+
+			while (depth > 0)
+			{
+				depth--;
+				deltaPrice *= 0.5f;
+				var nextNeighbours = new List<Cell>();
+				foreach (Cell n in neighbours)
+				{
+					var nNeighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
+					nextNeighbours.AddRange(nNeighbours.Where(_n => !nextNeighbours.Contains(_n)));
+				}
+
+				foreach (Cell n in nextNeighbours)
+				{
+					n.GetProduct(productType).Price += deltaPrice;
+					updated.Add(n);
+				}
+				neighbours = nextNeighbours;
 			}
 		}
 
@@ -324,9 +303,7 @@ namespace Trains.Model.Cells
 
 		public override bool Equals(object obj)
 		{
-			if (obj == null || GetType() != obj.GetType())
-				return false;
-
+			if (obj == null || GetType() != obj.GetType()) return false;
 			Cell cell = (Cell)obj;
 			return Id == cell.Id;
 		}
