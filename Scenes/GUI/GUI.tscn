@@ -13,10 +13,13 @@ margin_top = -188.0
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchor_top = 0.929
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 368.0
-color = Color( 0.501961, 0.486275, 0.376471, 1 )
+margin_left = -1.0
+margin_top = -160.4
+margin_right = 9.0
+color = Color( 0.141176, 0.141176, 0.141176, 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
 anchor_top = 1.0

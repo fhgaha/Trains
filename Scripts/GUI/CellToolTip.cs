@@ -26,7 +26,7 @@ namespace Trains.Scripts.GUI
 
 		private void onMouseHoveredOnCell(Cell cell)
 		{
-			GD.Print("onMouseHoveredOnCell recieved cell");
+			//GD.Print("onMouseHoveredOnCell recieved cell");
 			if (Global.CurrentDisplayProductMode is null)
 			{
 				Erase();
@@ -42,7 +42,7 @@ namespace Trains.Scripts.GUI
 
 		private void onMouseHoveredOffCell(Cell cell)
 		{
-			GD.Print("onMouseHoveredOffCell recieved cell");
+			//GD.Print("onMouseHoveredOffCell recieved cell");
 			Erase();
 		}
 
