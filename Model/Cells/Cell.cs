@@ -77,15 +77,17 @@ namespace Trains.Model.Cells
 				var info = GetNode<Info>("Info");
 				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
+				var staticBody = GetNode<StaticBody>("MeshInstance/StaticBody");
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
 				// product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
 				// product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.onPriceChanged));
 				product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
+				staticBody.Connect("mouse_entered", this, nameof(onMouseEntered));
+				staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
 
 				events.Connect(nameof(Events.Tick), product, nameof(Product.onTick));
 			}
 		}
-
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
 		{
@@ -223,6 +225,9 @@ namespace Trains.Model.Cells
 			return neighbours;
 		}
 
+		////////////////////////////////////////
+		//methods called by signals
+		////////////////////////////////////////
 		public void onTick()
 		{
 			UpdateAmountAndPrice();
@@ -300,6 +305,20 @@ namespace Trains.Model.Cells
 			info.SetPriceText(value);
 			mesh.SetColor(value);
 		}
+
+		
+		private void onMouseEntered()
+		{
+			//GD.Print(Id + ": onMouseEntered");
+			events.EmitSignal(nameof(Events.MouseHoveredOnCell), this);
+		}
+
+		private void onMouseExited()
+		{
+			//GD.Print(Id + ": onMouseExited");
+			events.EmitSignal(nameof(Events.MouseHoveredOffCell), this);
+		}
+
 
 		public override bool Equals(object obj)
 		{

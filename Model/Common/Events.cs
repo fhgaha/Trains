@@ -31,6 +31,14 @@ namespace Trains.Model.Common
 		// Grid uses this to hide prices and colors
 		[Signal] public delegate void AllProductButtonPressed();
 
+		//Emitted when you hover mouse on cell.
+		//GUI uses this to display cell data in bottom section
+		[Signal] public delegate void MouseHoveredOnCell(Cell cell);
+
+		//Emitted when you stoped hover mouse on cell.
+		//GUI uses this to hide cell data in bottom section
+		[Signal] public delegate void MouseHoveredOffCell(Cell cell);
+
 		public override void _Ready()
 		{
 			GD.Print("Events is ready");
