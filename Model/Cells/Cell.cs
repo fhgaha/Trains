@@ -306,7 +306,6 @@ namespace Trains.Model.Cells
 			mesh.SetColor(value);
 		}
 
-		
 		private void onMouseEntered()
 		{
 			//GD.Print(Id + ": onMouseEntered");

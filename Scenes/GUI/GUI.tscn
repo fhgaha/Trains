@@ -33,26 +33,26 @@ size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_right = 1008.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 grow_vertical = 0
 size_flags_vertical = 3
 
 [node name="Minimap" type="ColorRect" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
 margin_right = 200.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 200, 100 )
 color = Color( 0.631373, 0.568627, 0.466667, 1 )
 
 [node name="MainButtons" type="GridContainer" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
 margin_left = 204.0
 margin_right = 354.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 150, 150 )
 columns = 3
 
 [node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_right = 47.0
-margin_bottom = 47.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -60,7 +60,7 @@ size_flags_vertical = 3
 [node name="Button2" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_left = 51.0
 margin_right = 98.0
-margin_bottom = 47.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -68,59 +68,59 @@ size_flags_vertical = 3
 [node name="Button3" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_left = 102.0
 margin_right = 149.0
-margin_bottom = 47.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button4" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
-margin_top = 51.0
+margin_top = 63.0
 margin_right = 47.0
-margin_bottom = 98.0
+margin_bottom = 122.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button5" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_left = 51.0
-margin_top = 51.0
+margin_top = 63.0
 margin_right = 98.0
-margin_bottom = 98.0
+margin_bottom = 122.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button6" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_left = 102.0
-margin_top = 51.0
+margin_top = 63.0
 margin_right = 149.0
-margin_bottom = 98.0
+margin_bottom = 122.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button7" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
-margin_top = 102.0
+margin_top = 126.0
 margin_right = 47.0
-margin_bottom = 149.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button8" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_left = 51.0
-margin_top = 102.0
+margin_top = 126.0
 margin_right = 98.0
-margin_bottom = 149.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button9" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
 margin_left = 102.0
-margin_top = 102.0
+margin_top = 126.0
 margin_right = 149.0
-margin_bottom = 149.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 40, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -130,54 +130,54 @@ text = "9"
 [node name="ProductsMenu" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
 margin_left = 358.0
 margin_right = 1008.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 size_flags_horizontal = 11
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu"]
 margin_right = 70.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 70, 0 )
 size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/VBoxContainer"]
 margin_right = 70.0
-margin_bottom = 26.0
+margin_bottom = 33.0
 rect_min_size = Vector2( 22, 22 )
 size_flags_vertical = 3
 
 [node name="Button2" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/VBoxContainer"]
-margin_top = 30.0
+margin_top = 37.0
 margin_right = 70.0
-margin_bottom = 57.0
+margin_bottom = 71.0
 rect_min_size = Vector2( 22, 22 )
 size_flags_vertical = 3
 
 [node name="Button3" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/VBoxContainer"]
-margin_top = 61.0
+margin_top = 75.0
 margin_right = 70.0
-margin_bottom = 88.0
+margin_bottom = 109.0
 rect_min_size = Vector2( 22, 22 )
 size_flags_vertical = 3
 
 [node name="Button4" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/VBoxContainer"]
-margin_top = 92.0
+margin_top = 113.0
 margin_right = 70.0
-margin_bottom = 119.0
+margin_bottom = 147.0
 rect_min_size = Vector2( 22, 22 )
 size_flags_vertical = 3
 
 [node name="Button5" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/VBoxContainer"]
-margin_top = 123.0
+margin_top = 151.0
 margin_right = 70.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 rect_min_size = Vector2( 22, 22 )
 size_flags_vertical = 3
 
 [node name="ProductButtons" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu"]
 margin_left = 74.0
 margin_right = 650.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -192,13 +192,13 @@ script = ExtResource( 2 )
 [node name="SpecificProductButtons" type="GridContainer" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons"]
 margin_top = 24.0
 margin_right = 576.0
-margin_bottom = 150.0
+margin_bottom = 185.0
 size_flags_vertical = 3
 columns = 5
 
 [node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_right = 112.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
@@ -206,7 +206,7 @@ toggle_mode = true
 [node name="Button2" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 116.0
 margin_right = 228.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
@@ -214,7 +214,7 @@ toggle_mode = true
 [node name="Button3" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 232.0
 margin_right = 344.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
@@ -222,7 +222,7 @@ toggle_mode = true
 [node name="Button4" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 348.0
 margin_right = 460.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
@@ -230,150 +230,145 @@ toggle_mode = true
 [node name="Button5" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 464.0
 margin_right = 576.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button6" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_top = 32.0
+margin_top = 41.0
 margin_right = 112.0
-margin_bottom = 60.0
+margin_bottom = 78.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button7" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 116.0
-margin_top = 32.0
+margin_top = 41.0
 margin_right = 228.0
-margin_bottom = 60.0
+margin_bottom = 78.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button8" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 232.0
-margin_top = 32.0
+margin_top = 41.0
 margin_right = 344.0
-margin_bottom = 60.0
+margin_bottom = 78.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button9" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 348.0
-margin_top = 32.0
+margin_top = 41.0
 margin_right = 460.0
-margin_bottom = 60.0
+margin_bottom = 78.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button10" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 464.0
-margin_top = 32.0
+margin_top = 41.0
 margin_right = 576.0
-margin_bottom = 60.0
+margin_bottom = 78.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button11" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_top = 64.0
+margin_top = 82.0
 margin_right = 112.0
-margin_bottom = 92.0
+margin_bottom = 119.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Grain" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons" instance=ExtResource( 1 )]
 margin_left = 116.0
-margin_top = 64.0
+margin_top = 82.0
 margin_right = 228.0
-margin_bottom = 92.0
+margin_bottom = 119.0
 size_flags_vertical = 3
 text = "Grain"
 
 [node name="Button13" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 232.0
-margin_top = 64.0
+margin_top = 82.0
 margin_right = 344.0
-margin_bottom = 92.0
+margin_bottom = 119.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button14" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 348.0
-margin_top = 64.0
+margin_top = 82.0
 margin_right = 460.0
-margin_bottom = 92.0
+margin_bottom = 119.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Lumber" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons" instance=ExtResource( 1 )]
 margin_left = 464.0
-margin_top = 64.0
+margin_top = 82.0
 margin_right = 576.0
-margin_bottom = 92.0
+margin_bottom = 119.0
 size_flags_vertical = 3
 
 [node name="Button16" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_top = 96.0
+margin_top = 123.0
 margin_right = 112.0
-margin_bottom = 124.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button17" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 116.0
-margin_top = 96.0
+margin_top = 123.0
 margin_right = 228.0
-margin_bottom = 124.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Button18" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 232.0
-margin_top = 96.0
+margin_top = 123.0
 margin_right = 344.0
-margin_bottom = 124.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
 [node name="Dairy" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons" instance=ExtResource( 1 )]
 margin_left = 348.0
-margin_top = 96.0
+margin_top = 123.0
 margin_right = 460.0
-margin_bottom = 124.0
+margin_bottom = 160.0
 text = "Dairy"
 
 [node name="Button20" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_left = 464.0
-margin_top = 96.0
+margin_top = 123.0
 margin_right = 576.0
-margin_bottom = 124.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 toggle_mode = true
 
-[node name="CellToolTip" parent="CanvasLayer/VBoxContainer" instance=ExtResource( 3 )]
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 154.0
-margin_right = 1008.0
-margin_bottom = 184.0
-
-[node name="ProductInfo" type="Label" parent="CanvasLayer/VBoxContainer"]
-margin_top = 188.0
+[node name="Control" type="Control" parent="CanvasLayer/VBoxContainer"]
+margin_top = 189.0
 margin_right = 1008.0
 margin_bottom = 219.0
-text = "
-"
-align = 1
+rect_min_size = Vector2( 0, 30 )
+
+[node name="CellToolTip" parent="CanvasLayer/VBoxContainer/Control" instance=ExtResource( 3 )]
+visible = true
+anchor_top = 0.0
+margin_top = 0.0

@@ -11,6 +11,7 @@ namespace Trains.Scripts.GUI
 		private Events events;
 		private Label productName;
 		private Label priceAndAmount;
+		private Cell cellHoveredOn;
 
 		public override void _Ready()
 		{
@@ -18,32 +19,41 @@ namespace Trains.Scripts.GUI
 
 			events.Connect(nameof(Events.MouseHoveredOnCell), this, nameof(onMouseHoveredOnCell));
 			events.Connect(nameof(Events.MouseHoveredOffCell), this, nameof(onMouseHoveredOffCell));
-			//GD.Print("CellToolTip is ready");
+			events.Connect(nameof(Events.Tick), this, nameof(onTick));
 
 			productName = GetNode<Label>("VBoxContainer/Label");
 			priceAndAmount = GetNode<Label>("VBoxContainer/Label2");
+			GD.Print("CellToolTip is ready");
 		}
 
 		private void onMouseHoveredOnCell(Cell cell)
 		{
 			//GD.Print("onMouseHoveredOnCell recieved cell");
-			if (Global.CurrentDisplayProductMode is null)
-			{
-				Erase();
-				return;
-			}
-			string _productName = Global.CurrentDisplayProductMode.ToString();
-			var price = cell.GetPrice((ProductType)Global.CurrentDisplayProductMode);
-			var amount = cell.GetProduct((ProductType)Global.CurrentDisplayProductMode).Amount;
+			if (Global.CurrentDisplayProductMode is null) { Erase(); return; }
+			cellHoveredOn = cell;
+			productName.Text = ((ProductType)Global.CurrentDisplayProductMode).ToString();
+			SetPriceAndAmount();
 			Popup_();
-			productName.Text = _productName;
-			priceAndAmount.Text = "Price: $" + price + " Available quantity: " + amount;
 		}
 
 		private void onMouseHoveredOffCell(Cell cell)
 		{
 			//GD.Print("onMouseHoveredOffCell recieved cell");
+			cellHoveredOn = null;
 			Erase();
+		}
+
+		private void onTick()
+		{
+			if (cellHoveredOn is null) return;
+			SetPriceAndAmount();
+		}
+
+		private void SetPriceAndAmount()
+		{
+			string price = cellHoveredOn.GetPrice((ProductType)Global.CurrentDisplayProductMode).ToString("0.0");
+			string amount = cellHoveredOn.GetProduct((ProductType)Global.CurrentDisplayProductMode).Amount.ToString("0.0");
+			priceAndAmount.Text = "Price: $" + price + " Available quantity: " + amount;
 		}
 
 		private void Erase()

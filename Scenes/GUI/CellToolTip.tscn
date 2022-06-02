@@ -3,7 +3,6 @@
 [ext_resource path="res://Scripts/GUI/CellToolTip.cs" type="Script" id=1]
 
 [node name="CellToolTip" type="Popup"]
-visible = true
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
