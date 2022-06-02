@@ -30,17 +30,7 @@ namespace Trains.Scripts.GUI
 		private void onMouseHoveredOnCell(Cell cell)
 		{
 			//GD.Print("onMouseHoveredOnCell recieved cell");
-			if (Global.CurrentDisplayProductMode is null) 
-			{ 
-				Erase();
-				string amount = cell.ProductList.Sum(p => p.Amount).ToString("0.0");
-				priceAndAmount.Text = "Total quantity: " + amount;
-				return; 
-			}
-
 			cellHoveredOn = cell;
-			productName.Text = ((ProductType)Global.CurrentDisplayProductMode).ToString();
-			SetPriceAndAmount();
 		}
 
 		private void onMouseHoveredOffCell(Cell cell)
@@ -53,11 +43,19 @@ namespace Trains.Scripts.GUI
 		private void onTick()
 		{
 			if (cellHoveredOn is null) return;
-			SetPriceAndAmount();
+			if (Global.CurrentDisplayProductMode is null) SetAmountOnly();
+			else SetFullInfo();
+		}
+		
+		private void SetAmountOnly()
+		{
+			string amount = cellHoveredOn.ProductList.Sum(p => p.Amount).ToString("0.0");
+			priceAndAmount.Text = "Total quantity: " + amount;
 		}
 
-		private void SetPriceAndAmount()
+		private void SetFullInfo()
 		{
+			productName.Text = ((ProductType)Global.CurrentDisplayProductMode).ToString();
 			string price = cellHoveredOn.GetPrice((ProductType)Global.CurrentDisplayProductMode).ToString("0.0");
 			string amount = cellHoveredOn.GetProduct((ProductType)Global.CurrentDisplayProductMode).Amount.ToString("0.0");
 			priceAndAmount.Text = "Price: $" + price + " Available quantity: " + amount;
