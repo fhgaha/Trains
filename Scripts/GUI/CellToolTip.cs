@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Globalization;
 using System.Linq;
 using Trains.Model.Cells;
 using Trains.Model.Common;
@@ -10,8 +11,8 @@ namespace Trains.Scripts.GUI
 	public class CellToolTip : Control
 	{
 		private Events events;
-		private Label productName;
-		private Label priceAndAmount;
+		private Label labelTop;
+		private Label labelBottom;
 		private Cell cellHoveredOn;
 
 		public override void _Ready()
@@ -22,8 +23,8 @@ namespace Trains.Scripts.GUI
 			events.Connect(nameof(Events.MouseHoveredOffCell), this, nameof(onMouseHoveredOffCell));
 			events.Connect(nameof(Events.Tick), this, nameof(onTick));
 
-			productName = GetNode<Label>("VBoxContainer/Label");
-			priceAndAmount = GetNode<Label>("VBoxContainer/Label2");
+			labelTop = GetNode<Label>("VBoxContainer/Label");
+			labelBottom = GetNode<Label>("VBoxContainer/Label2");
 			GD.Print("CellToolTip is ready");
 		}
 
@@ -50,21 +51,21 @@ namespace Trains.Scripts.GUI
 		private void SetAmountOnly()
 		{
 			string amount = cellHoveredOn.ProductList.Sum(p => p.Amount).ToString("0.0");
-			priceAndAmount.Text = "Total quantity: " + amount;
+			labelTop.Text = "Total quantity: " + amount;
 		}
 
 		private void SetFullInfo()
 		{
-			productName.Text = ((ProductType)Global.CurrentDisplayProductMode).ToString();
+			labelTop.Text = ((ProductType)Global.CurrentDisplayProductMode).ToString();
 			string price = cellHoveredOn.GetPrice((ProductType)Global.CurrentDisplayProductMode).ToString("0.0");
 			string amount = cellHoveredOn.GetProduct((ProductType)Global.CurrentDisplayProductMode).Amount.ToString("0.0");
-			priceAndAmount.Text = "Price: $" + price + " Available quantity: " + amount;
+			labelBottom.Text = "Price: $" + price + "   Available quantity: " + amount;
 		}
 
 		private void Erase()
 		{
-			productName.Text = "";
-			priceAndAmount.Text = "";
+			labelTop.Text = "";
+			labelBottom.Text = "";
 		}
 	}
 }

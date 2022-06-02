@@ -14,6 +14,8 @@ namespace Trains.Scripts
 
 		public override void _Ready()
 		{
+			FloatDisplayDotsInsteadOfCommas();
+
 			events = GetNode<Events>("/root/Events");
 			mover = new ProductMigrationManager();
 			var timer = GetNode<Timer>("MainTimer");
@@ -40,6 +42,14 @@ namespace Trains.Scripts
 			//for each source find cell with best price, move products there
 			var grid = GetNode<Grid>("Grid");
 			mover.MoveProducts(grid.Cells);
+		}
+
+		private static void FloatDisplayDotsInsteadOfCommas()
+		{
+			System.Globalization.CultureInfo customCulture
+				= (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+			customCulture.NumberFormat.NumberDecimalSeparator = ".";
+			System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 		}
 	}
 }

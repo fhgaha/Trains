@@ -147,7 +147,8 @@ namespace Trains.Model.Cells
 			amountBar.ActiveProductType = someProduct.ProductType;
 			amountBar.DisplayValue(someProduct.ProductType, amountSum);
 
-			mesh.Visible = false;
+			//set default color
+			((SpatialMaterial)mesh.GetSurfaceMaterial(0)).AlbedoColor = new Color("0ed00f");
 			Building?.HideSourceData();
 			Building?.HideStockData();
 		}
