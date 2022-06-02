@@ -39,6 +39,11 @@ namespace Trains.Model.Common
 		//GUI uses this to hide cell data in bottom section
 		[Signal] public delegate void MouseHoveredOffCell(Cell cell);
 
+		//Emitted when Build station button was pressed.
+		//
+		[Signal] public delegate void MainButtonPressed(MainButtonType buttonType);
+
+
 		public override void _Ready()
 		{
 			GD.Print("Events is ready");

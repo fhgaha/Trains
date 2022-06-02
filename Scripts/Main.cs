@@ -1,4 +1,5 @@
 using Godot;
+using Trains.Model.Builders;
 using Trains.Model.Common;
 using Trains.Model.Grids;
 using Trains.Model.Migration;
@@ -11,16 +12,22 @@ namespace Trains.Scripts
 		private ProductMigrationManager mover;
 		private float timeSec = 0.1f;
 		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
+		private StationBuilder stationBuilder;
 
 		public override void _Ready()
 		{
 			FloatDisplayDotsInsteadOfCommas();
 
 			events = GetNode<Events>("/root/Events");
+			GD.Print("Main: " + events);
 			mover = new ProductMigrationManager();
 			var timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
 			timer.Start(timeSec);
+
+			stationBuilder = new StationBuilder();
+			AddChild(stationBuilder);
+			stationBuilder.Init(GetNode<Grid>("Grid").Cells);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

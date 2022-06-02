@@ -25,7 +25,7 @@ namespace Trains.Scripts.GUI
 
 			labelTop = GetNode<Label>("VBoxContainer/Label");
 			labelBottom = GetNode<Label>("VBoxContainer/Label2");
-			GD.Print("CellToolTip is ready");
+			//GD.Print("CellToolTip is ready");
 		}
 
 		private void onMouseHoveredOnCell(Cell cell)

@@ -17,5 +17,11 @@ namespace Trains.Model.Common
 			Stock,
 			Both
 		}
+
+		//GUI
+		public enum MainButtonType
+		{
+			BuildStation
+		}
 	}
 }

@@ -23,10 +23,6 @@ Events="*res://Model/Common/Events.cs"
 window/size/always_on_top=true
 window/dpi/allow_hidpi=true
 
-[editor]
-
-main_run_args="--verbose"
-
 [importer_defaults]
 
 texture={
