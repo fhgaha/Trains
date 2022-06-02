@@ -158,6 +158,7 @@ namespace Trains.Model.Cells
 			ProductType sourceProductType, float sourceStartAmount,
 			ProductType stockProductType, float stockStartAmount)
 		{
+			if (!(Building is null)) throw new ArgumentException("Building field is taken. Two buildings in the same cell is not allowed");
 			if (buildingType != BuildingType.Both) throw new ArgumentException("buildingType should be \"both\"");
 
 			var building = scene.Instance<Building>();
@@ -192,6 +193,7 @@ namespace Trains.Model.Cells
 		public void AddBuilding(BuildingType buildingType, PackedScene scene,
 			ProductType productType, float startAmount)
 		{
+			if (!(Building is null)) throw new ArgumentException("Building field is taken. Two buildings in the same cell is not allowed");
 			if (buildingType == BuildingType.Both) throw new ArgumentException("buildingType should not be \"both\"");
 
 			var building = scene.Instance<Building>();

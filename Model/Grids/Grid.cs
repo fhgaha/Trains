@@ -31,11 +31,22 @@ namespace Trains.Model.Grids
 
 		private void AddBuildings()
 		{
+			//sources
 			Cells[0, 0].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
-			//Cells[0, 1].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 20f);
+			Cells[3, 8].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Lumber, 5f);
+			Cells[3, 3].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Grain, 5f);
+			Cells[0, 4].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Grain, 5f);
+			Cells[1, 2].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Grain, 5f);
+			Cells[6, 1].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Dairy, 5f);
+			Cells[9, 3].AddBuilding(Enums.BuildingType.Source, building, Enums.ProductType.Dairy, 5f);
 
-			Cells[5, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
-			Cells[8, 4].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 3f);
+			//stocks
+			Cells[5, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 0f);
+			Cells[8, 4].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Lumber, 0f);
+			Cells[7, 5].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Grain, 0f);
+			Cells[0, 6].AddBuilding(Enums.BuildingType.Stock, building, Enums.ProductType.Dairy, 0f);
+
+			//both
 		}
 
 		public void onSpecificProductButtonPressed(Enums.ProductType productType)
