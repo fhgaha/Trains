@@ -1,12 +1,13 @@
 using Godot;
 using System;
+using System.Linq;
 using Trains.Model.Cells;
 using Trains.Model.Common;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Scripts.GUI
 {
-	public class CellToolTip : Popup
+	public class CellToolTip : Control
 	{
 		private Events events;
 		private Label productName;
@@ -29,11 +30,17 @@ namespace Trains.Scripts.GUI
 		private void onMouseHoveredOnCell(Cell cell)
 		{
 			//GD.Print("onMouseHoveredOnCell recieved cell");
-			if (Global.CurrentDisplayProductMode is null) { Erase(); return; }
+			if (Global.CurrentDisplayProductMode is null) 
+			{ 
+				Erase();
+				string amount = cell.ProductList.Sum(p => p.Amount).ToString("0.0");
+				priceAndAmount.Text = "Total quantity: " + amount;
+				return; 
+			}
+
 			cellHoveredOn = cell;
 			productName.Text = ((ProductType)Global.CurrentDisplayProductMode).ToString();
 			SetPriceAndAmount();
-			Popup_();
 		}
 
 		private void onMouseHoveredOffCell(Cell cell)
