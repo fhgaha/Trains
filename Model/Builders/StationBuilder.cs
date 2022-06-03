@@ -49,6 +49,11 @@ namespace Trains.Model.Builders
 					stations.AddChild(station);
 				}
 			}
+
+			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
+			{
+				blueprint.Rotate(Vector3.Up, Mathf.Pi/2);
+			}
 		}
 
 		private void SetBlueprintPosition()
