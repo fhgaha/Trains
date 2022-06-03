@@ -29,7 +29,7 @@ namespace Trains.Scripts
 			AddChild(stationBuilder);
 			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
-			stationBuilder.Init(cells, camera);
+			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
