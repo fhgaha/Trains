@@ -27,7 +27,7 @@ namespace Trains.Scripts
 
 			stationBuilder = new StationBuilder();
 			AddChild(stationBuilder);
-			var cells = GetNode<Grid>("Grid").Cells;
+			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			stationBuilder.Init(cells, camera);
 		}

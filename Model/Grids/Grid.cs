@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using Trains.Model.Cells;
 using Trains.Model.Common;
@@ -12,6 +13,7 @@ namespace Trains.Model.Grids
 		public int CellsRowsAmount {get; set;} = 10;
 		public int CellsColsAmount {get; set;} = 10;
 		public Cell[,] Cells;
+		public List<Cell> CellList {get; private set;}
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
 		// PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
@@ -23,6 +25,11 @@ namespace Trains.Model.Grids
 		public override void _Ready()
 		{
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
+			CellList = new List<Cell>();
+			for (int i = 0; i < Cells.GetLength(0); i++)
+			for (int j = 0; j < Cells.GetLength(1); j++)
+				CellList.Add(Cells[i, j]);
+
 			AddBuildings();
 
 			events = GetNode<Events>("/root/Events");
