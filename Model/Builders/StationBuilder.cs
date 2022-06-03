@@ -30,20 +30,35 @@ namespace Trains.Model.Builders
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
 			//GD.Print("onMainButtonPressed");
-
 			//turn on building mode
 			//turn cursor into station asset
+
+			if (buttonType != MainButtonType.BuildStation)
+			{
+				station?.QueueFree();
+				return;
+			}
+
+			if (Global.MainButtonMode is MainButtonType.BuildStation) Global.MainButtonMode = null;
+			else Global.MainButtonMode = MainButtonType.BuildStation;
+
+			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
+			{
+				station?.QueueFree();
+				return;
+			}
+
 			station = stationScene.Instance<Spatial>();
 			AddChild(station);
-
 		}
 
 		public override void _PhysicsProcess(float delta)
 		{
-			SetStationPosition();
+			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
+			SetBlueprintPosition();
 		}
 
-		private void SetStationPosition()
+		private void SetBlueprintPosition()
 		{
 			if (station is null) return;
 

@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/GUI/MainButtons/MainButton.cs" type="Script" id=1]
+
+[node name="Products" type="Button"]
+margin_left = 102.0
+margin_top = 110.0
+margin_right = 149.0
+margin_bottom = 161.0
+rect_min_size = Vector2( 40, 40 )
+focus_mode = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+toggle_mode = true
+enabled_focus_mode = 0
+script = ExtResource( 1 )
