@@ -146,7 +146,7 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Products" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
-text = "9"
+text = "P"
 
 [node name="ProductsMenu" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/HBoxContainer"]
 margin_left = 358.0

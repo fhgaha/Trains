@@ -54,6 +54,5 @@ namespace Trains.Scripts.GUI.ProductButtons
 			wasPressed = false;
 			Pressed = false;
 		}
-
 	}
 }

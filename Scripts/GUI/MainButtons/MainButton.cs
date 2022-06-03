@@ -14,19 +14,37 @@ namespace Trains
 		{
 			events = GetNode<Events>("/root/Events");
 			Connect("pressed", this, nameof(onButtonPressed));
+			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
 
 		private void onButtonPressed()
 		{
-			MainButtonType buttonType = 0;
-			switch (Text)
-			{
-				case "BS": buttonType = MainButtonType.BuildStation; break;
-			}
-
-			events.EmitSignal(nameof(Events.MainButtonPressed), buttonType);
+			wasPressed = true;
+			events.EmitSignal(nameof(Events.MainButtonPressed), GetButtonType());
 			//GD.Print("MainButton onButtonPressed");
 			//toggle build station mode, show station asset instead of mouse cursor, on press place asset on floor
+		}
+
+
+		private void onMainButtonPressed(MainButtonType buttonType)
+		{
+			// if (buttonType != GetButtonType()) return;
+			if (buttonType != GetButtonType()) Unpress();
+		}
+
+		private MainButtonType GetButtonType()
+		{
+			switch (Text)
+			{
+				case "BS": return MainButtonType.BuildStation; 
+				default: return MainButtonType.ShowProductMap; 
+			}
+		}
+
+		private void Unpress()
+		{
+			wasPressed = false;
+			Pressed = false;
 		}
 	}
 }
