@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=2]
@@ -14,6 +14,14 @@ albedo_color = Color( 0.309804, 0.309804, 0.309804, 1 )
 [sub_resource type="ConcavePolygonShape" id=8]
 data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
 
+[sub_resource type="Curve3D" id=9]
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, 1.69922, 1.09064e-07, 1.40849, 0, 0, 0, 0, 0, 0, 3.69867, 6.90058e-08, 0.492074, 0, 0, 0, 0, 0, 0, 5.99566, 8.56527e-08, 0.872922, 0, 0, 0, 0, 0, 0, 6.88827, 1.2623e-07, 1.80124, 0, 0, 0, 0, 0, 0, 6.26939, 1.77212e-07, 2.96758, 0, 0, 0, 0, 0, 0, 3.23451, 1.89697e-07, 3.25322, 0, 0, 0, 0, 0, 0, 1.90155, 1.56922e-07, 2.50342 ),
+"tilts": PoolRealArray( 0, 0, 0, 0, 0, 0, 0 )
+}
+
+[sub_resource type="CubeMesh" id=10]
+
 [node name="World" type="Spatial"]
 script = ExtResource( 4 )
 
@@ -26,6 +34,27 @@ material/0 = SubResource( 4 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Floor/StaticBody"]
 shape = SubResource( 8 )
+
+[node name="Trains" type="Spatial" parent="."]
+
+[node name="Stations" type="Spatial" parent="."]
+
+[node name="Rails" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.74975e-08, 0 )
+
+[node name="Path" type="Path" parent="Rails"]
+curve = SubResource( 9 )
+
+[node name="PathFollow" type="PathFollow" parent="Rails/Path"]
+transform = Transform( -0.636459, 6.25619e-09, -0.771311, 3.90836e-08, 1, -2.41392e-08, 0.771311, -4.55093e-08, -0.636459, 1.69922, 1.09064e-07, 1.40849 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Rails/Path/PathFollow"]
+transform = Transform( -0.133129, 4.1821e-09, 0.0903987, -1.1752e-08, 0.106767, -6.36605e-09, -0.268843, -6.73806e-09, -0.0447646, -3.86407e-07, 0.106767, 1.22277e-06 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Obstacle" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.15, 0, 0, 0, 0.5, 3.5, 0, 1.5 )
 
 [node name="GUI" parent="." instance=ExtResource( 3 )]
 
@@ -47,12 +76,3 @@ transform = Transform( 1, 0, 0, 0, 1, 4.58009e-08, 0, -4.58009e-08, 1, 0, -1.946
 current = true
 
 [node name="MainTimer" type="Timer" parent="."]
-
-[node name="Trains" type="Spatial" parent="."]
-
-[node name="Stations" type="Spatial" parent="."]
-
-[node name="Obstacle" parent="." instance=ExtResource( 5 )]
-transform = Transform( 0.5, 0, 0, 0, 0.15, 0, 0, 0, 0.5, 3.5, 0, 1.5 )
-
-[node name="Rails" type="Spatial" parent="."]

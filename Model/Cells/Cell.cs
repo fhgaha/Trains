@@ -77,16 +77,14 @@ namespace Trains.Model.Cells
 				var info = GetNode<Info>("Info");
 				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
-				var staticBody = GetNode<StaticBody>("MeshInstance/StaticBody");
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
-				// product.Connect(nameof(Product.PriceChanged), info, nameof(Info.SetPriceText));
-				// product.Connect(nameof(Product.PriceChanged), mesh, nameof(MeshInstanceScript.onPriceChanged));
 				product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
-				staticBody.Connect("mouse_entered", this, nameof(onMouseEntered));
-				staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
-
 				events.Connect(nameof(Events.Tick), product, nameof(Product.onTick));
 			}
+
+			var staticBody = GetNode<StaticBody>("MeshInstance/StaticBody");
+			staticBody.Connect("mouse_entered", this, nameof(onMouseEntered));
+			staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
 		}
 
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)

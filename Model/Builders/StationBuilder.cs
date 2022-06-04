@@ -45,14 +45,7 @@ namespace Trains.Model.Builders
 			{
 				if (!(blueprint is null) && canBuild)
 				{
-					//place station
-					var station = stationScene.Instance<Spatial>();
-					station.RemoveChild(station.GetNode("Base"));
-					station.Translation = blueprint.Translation;
-					station.Rotation = blueprint.Rotation;
-					station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
-					station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
-					stations.AddChild(station);
+					PlaceStation(blueprint.Translation, blueprint.Rotation);
 				}
 			}
 
@@ -60,6 +53,17 @@ namespace Trains.Model.Builders
 			{
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
 			}
+		}
+
+		public void PlaceStation(Vector3 position, Vector3 rotation)
+		{
+			var station = stationScene.Instance<Spatial>();
+			station.RemoveChild(station.GetNode("Base"));
+			station.Translation = position;
+			station.Rotation = rotation;
+			station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
+			station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
+			stations.AddChild(station);
 		}
 
 		private void UpdateBlueprint()
