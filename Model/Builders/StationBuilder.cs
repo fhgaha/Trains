@@ -17,6 +17,7 @@ namespace Trains.Model.Builders
 		private Events events;
 		private PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 		private Spatial blueprint;
+		private bool canBuild = false;
 		private const float rayLength = 1000f;
 		private Camera camera;
 
@@ -42,9 +43,8 @@ namespace Trains.Model.Builders
 		{
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 			{
-				if (!(blueprint is null)) 
+				if (!(blueprint is null) && canBuild) 
 				{
-					GD.Print("ev");
 					//place station
 					var station = stationScene.Instance<Spatial>();
 					station.RemoveChild(station.GetNode("Base"));
@@ -83,14 +83,9 @@ namespace Trains.Model.Builders
 			//set base color
 			var collider = blueprint.GetNode<Area>("Base/Area");
 			var bodies = collider.GetOverlappingBodies();
+			canBuild = !(bodies.Count > 0);
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0) ;
-			baseMaterial.AlbedoColor = bodies.Count > 0 ? red : yellow;
-			// if (bodies.Count > 0)
-			// {
-			// 	foreach (var item in bodies)
-			// 		GD.Print(item);
-			// 	GD.Print("--------");
-			// }
+			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 		
 		private void onMainButtonPressed(MainButtonType buttonType)
