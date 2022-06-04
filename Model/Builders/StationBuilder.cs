@@ -10,6 +10,8 @@ namespace Trains.Model.Builders
 {
 	public class StationBuilder : Spatial
 	{
+		private Color yellow = new Color("86e3db6b");
+		private Color red = new Color("86e36b6b");
 		private List<Cell> cells;
 		private Spatial stations;
 		private Events events;
@@ -35,17 +37,21 @@ namespace Trains.Model.Builders
 			SetBlueprintPosition();
 		}
 
+		bool validBuildPlace = false;
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton ev)
 			{
 				if (!(blueprint is null) && ev.ButtonIndex == (int)ButtonList.Left)
 				{
-					GD.Print("ev");
+					
+
+
 					//place station
 					var station = stationScene.Instance<Spatial>();
 					station.RemoveChild(station.GetNode("Base"));
 					station.Translation = blueprint.Translation;
+					station.Rotation = blueprint.Rotation;
 					stations.AddChild(station);
 				}
 			}
@@ -72,6 +78,11 @@ namespace Trains.Model.Builders
 			var pos = (Vector3)intersection["position"];
 			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
 			blueprint.Translation = closestCell.Translation;
+
+			var collider = blueprint.GetNode<Area>("Base/Area");
+			var bodies = collider.GetOverlappingBodies();
+			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0) ;
+			baseMaterial.AlbedoColor = bodies.Count > 0 ? red : yellow;
 		}
 		
 		private void onMainButtonPressed(MainButtonType buttonType)
