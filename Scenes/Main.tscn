@@ -29,6 +29,9 @@ script = ExtResource( 4 )
 transform = Transform( 20, 0, 0, 0, 1, 0, 0, 0, 20, 0, -1, 0 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="StaticBody" type="StaticBody" parent="Floor"]
 
@@ -46,7 +49,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.74975e-08, 0 )
 curve = SubResource( 9 )
 
 [node name="PathFollow" type="PathFollow" parent="Rails/Path"]
-transform = Transform( -0.636459, 6.25619e-09, -0.771311, 3.90836e-08, 1, -2.41392e-08, 0.771311, -4.55093e-08, -0.636459, 1.69922, 1.09064e-07, 1.40849 )
+transform = Transform( 0.709518, -1.19483e-09, -0.704689, 3.61527e-08, 1, 3.47051e-08, 0.704689, -5.01002e-08, 0.709518, 1.69922, 1.09064e-07, 1.40849 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Rails/Path/PathFollow"]
 transform = Transform( -0.133129, 4.1821e-09, 0.0903987, -1.1752e-08, 0.106767, -6.36605e-09, -0.268843, -6.73806e-09, -0.0447646, -3.86407e-07, 0.106767, 1.22277e-06 )

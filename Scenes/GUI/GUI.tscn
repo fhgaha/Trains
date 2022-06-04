@@ -59,15 +59,12 @@ margin_bottom = 161.0
 rect_min_size = Vector2( 150, 150 )
 columns = 3
 
-[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons"]
+[node name="BuildRail" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
+margin_left = 0.0
+margin_top = 0.0
 margin_right = 47.0
 margin_bottom = 51.0
-rect_min_size = Vector2( 40, 40 )
-focus_mode = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-toggle_mode = true
-enabled_focus_mode = 0
+text = "BR"
 
 [node name="BuildStation" parent="CanvasLayer/VBoxContainer/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
 margin_left = 51.0

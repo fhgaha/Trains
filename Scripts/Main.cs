@@ -13,13 +13,14 @@ namespace Trains.Scripts
 		private float timeSec = 0.1f;
 		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
 		private StationBuilder stationBuilder;
+		private RailBuilder railBuilder;
 
 		public override void _Ready()
 		{
 			FloatDisplayDotsInsteadOfCommas();
 
 			events = GetNode<Events>("/root/Events");
-			GD.Print("Main: " + events);
+			//GD.Print("Main: " + events);
 			mover = new ProductMigrationManager();
 			var timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
@@ -31,7 +32,14 @@ namespace Trains.Scripts
 			stationBuilder.Name = "StationBuilder";
 			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
-			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
+			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
+			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"), scene);
+
+			//init rail builder
+			railBuilder = new RailBuilder();
+			AddChild(railBuilder);
+			railBuilder.Name = "RailBuilder";
+			railBuilder.Init();
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -42,7 +50,7 @@ namespace Trains.Scripts
 				AddChild(consoleScene.Instance());
 				//freeze game so camera wont move while typing
 				//bad solution i want the game running when console is open
-				GetTree().Paused = true;	
+				GetTree().Paused = true;
 			}
 		}
 

@@ -35,6 +35,7 @@ namespace Trains
 		{
 			switch (Text)
 			{
+				case "BR": return MainButtonType.BuildRail; 
 				case "BS": return MainButtonType.BuildStation; 
 				default: return MainButtonType.ShowProductMap; 
 			}

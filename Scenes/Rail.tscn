@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="CubeMesh" id=1]
+
+[node name="Rail" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.351317, 0, 0, 0, 1, 0, 0.0412957, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 0.0472947, 0, 0, 0, 0.115535, 0, 0, 0, 0.0472947, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = null

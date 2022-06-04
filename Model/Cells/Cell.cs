@@ -74,8 +74,6 @@ namespace Trains.Model.Cells
 				product.Price = 30f;
 
 				//connect product button to product
-				var info = GetNode<Info>("Info");
-				var mesh = GetNode<MeshInstanceScript>("MeshInstance");
 				var amountBar = GetNode<ProductAmountBar>("Amount");
 				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
 				product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
