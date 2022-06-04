@@ -42,8 +42,9 @@ namespace Trains.Model.Builders
 		{
 			if (@event is InputEventMouseButton ev)
 			{
-				if (!(blueprint is null) && ev.ButtonIndex == (int)ButtonList.Left)
+				if (!(blueprint is null) && ev.IsActionPressed("lmb"))
 				{
+					GD.Print("ev");
 					//place station
 					var station = stationScene.Instance<Spatial>();
 					station.RemoveChild(station.GetNode("Base"));
