@@ -31,7 +31,7 @@ namespace Trains.Model.Builders
 			GD.Print("StationBuilder: " + events);
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
-		
+
 		public override void _PhysicsProcess(float delta)
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
@@ -43,7 +43,7 @@ namespace Trains.Model.Builders
 		{
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 			{
-				if (!(blueprint is null) && canBuild) 
+				if (!(blueprint is null) && canBuild)
 				{
 					//place station
 					var station = stationScene.Instance<Spatial>();
@@ -58,7 +58,7 @@ namespace Trains.Model.Builders
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
 			{
-				blueprint.Rotate(Vector3.Up, Mathf.Pi/2);
+				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
 			}
 		}
 
@@ -77,17 +77,18 @@ namespace Trains.Model.Builders
 			if (intersection.Count == 0) return;
 
 			var pos = (Vector3)intersection["position"];
-			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
+			Cell closestCell = cells.Aggregate((curMin, c)
+				=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
 			blueprint.Translation = closestCell.Translation;
 
 			//set base color
 			var collider = blueprint.GetNode<Area>("Base/Area");
 			var bodies = collider.GetOverlappingBodies();
 			canBuild = !(bodies.Count > 0);
-			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0) ;
+			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
 			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
-		
+
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
 			//GD.Print("onMainButtonPressed");
