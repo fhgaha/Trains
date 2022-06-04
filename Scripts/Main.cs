@@ -39,7 +39,8 @@ namespace Trains.Scripts
 			railBuilder = new RailBuilder();
 			AddChild(railBuilder);
 			railBuilder.Name = "RailBuilder";
-			railBuilder.Init();
+			scene = GD.Load<PackedScene>("res://Scenes/Rail.tscn");
+			railBuilder.Init(cells, camera, GetNode<Spatial>("Rails"), scene);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

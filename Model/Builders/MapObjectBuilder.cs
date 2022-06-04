@@ -22,6 +22,18 @@ namespace Trains.Model.Builders
 		protected const float rayLength = 1000f;
 		protected Camera camera;
 		protected Spatial objectHolder;
+		protected MainButtonType mainButtonType;
+
+		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
+		{
+			this.cells = cells;
+			this.objectHolder = objectHolder;
+			this.camera = camera;
+			this.scene = scene;
+			events = GetNode<Events>("/root/Events");
+			//GD.Print("StationBuilder: " + events);
+			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+		}
 
 		protected virtual void PlaceObject(Vector3 position, Vector3 rotation) { }
 
