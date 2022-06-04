@@ -95,6 +95,10 @@ Rotate={
  ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="Obstacles"
+
 [physics]
 
 common/enable_pause_aware_picking=true

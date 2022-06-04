@@ -34,7 +34,7 @@ namespace Trains.Model.Builders
 		public override void _PhysicsProcess(float delta)
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
-			SetBlueprintPosition();
+			UpdateBlueprint();
 		}
 
 		bool validBuildPlace = false;
@@ -44,14 +44,12 @@ namespace Trains.Model.Builders
 			{
 				if (!(blueprint is null) && ev.ButtonIndex == (int)ButtonList.Left)
 				{
-					
-
-
 					//place station
 					var station = stationScene.Instance<Spatial>();
 					station.RemoveChild(station.GetNode("Base"));
 					station.Translation = blueprint.Translation;
 					station.Rotation = blueprint.Rotation;
+					station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
 					stations.AddChild(station);
 				}
 			}
@@ -62,10 +60,11 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private void SetBlueprintPosition()
+		private void UpdateBlueprint()
 		{
 			if (blueprint is null) return;
 
+			//set blueprint position
 			PhysicsDirectSpaceState spaceState = GetWorld().DirectSpaceState;
 			Vector2 mousePosition = GetViewport().GetMousePosition();
 			Vector3 rayOrigin = camera.ProjectRayOrigin(mousePosition);
@@ -79,6 +78,7 @@ namespace Trains.Model.Builders
 			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
 			blueprint.Translation = closestCell.Translation;
 
+			//set base color
 			var collider = blueprint.GetNode<Area>("Base/Area");
 			var bodies = collider.GetOverlappingBodies();
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0) ;

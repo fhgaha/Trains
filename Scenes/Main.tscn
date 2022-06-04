@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/GUI/GUI.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/Main.cs" type="Script" id=4]
+[ext_resource path="res://Scenes/Obstacle.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -14,13 +15,6 @@ albedo_color = Color( 0.309804, 0.309804, 0.309804, 1 )
 
 [sub_resource type="ConcavePolygonShape" id=8]
 data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
-
-[sub_resource type="PrismMesh" id=6]
-
-[sub_resource type="BoxShape" id=9]
-
-[sub_resource type="ConcavePolygonShape" id=7]
-data = PoolVector3Array( 0, 1, 1, 1, -1, 1, -1, -1, 1, 0, 1, -1, -1, -1, -1, 1, -1, -1, 0, 1, 1, 0, 1, -1, 1, -1, 1, 0, 1, -1, 1, -1, -1, 1, -1, 1, 0, 1, -1, 0, 1, 1, -1, -1, -1, 0, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
 
 [node name="World" type="Spatial"]
 script = ExtResource( 4 )
@@ -62,27 +56,8 @@ current = true
 [node name="MainTimer" type="Timer" parent="."]
 
 [node name="Trains" type="Spatial" parent="."]
-visible = false
 
 [node name="Stations" type="Spatial" parent="."]
 
-[node name="Obstacle" type="Spatial" parent="."]
-transform = Transform( 0.5, 0, 0, 0, 0.15, 0, 0, 0, 0.5, 8.5, 0.15, 2.5 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Obstacle"]
-transform = Transform( 0.3, 0, 0, 0, 1, 0, 0, 0, 0.3, 0, 1.58946e-08, 0 )
-mesh = SubResource( 6 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="Area" type="Area" parent="Obstacle"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58946e-08, 0 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Obstacle/Area"]
-shape = SubResource( 9 )
-
-[node name="StaticBody" type="StaticBody" parent="Obstacle"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58946e-08, 0 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Obstacle/StaticBody"]
-shape = SubResource( 7 )
+[node name="Obstacle" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.15, 0, 0, 0, 0.5, 3.5, 0, 1.5 )
