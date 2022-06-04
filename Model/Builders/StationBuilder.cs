@@ -50,6 +50,7 @@ namespace Trains.Model.Builders
 					station.Translation = blueprint.Translation;
 					station.Rotation = blueprint.Rotation;
 					station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
+					station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
 					stations.AddChild(station);
 				}
 			}
@@ -83,6 +84,12 @@ namespace Trains.Model.Builders
 			var bodies = collider.GetOverlappingBodies();
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0) ;
 			baseMaterial.AlbedoColor = bodies.Count > 0 ? red : yellow;
+			// if (bodies.Count > 0)
+			// {
+			// 	foreach (var item in bodies)
+			// 		GD.Print(item);
+			// 	GD.Print("--------");
+			// }
 		}
 		
 		private void onMainButtonPressed(MainButtonType buttonType)

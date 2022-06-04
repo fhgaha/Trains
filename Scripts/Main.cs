@@ -25,8 +25,10 @@ namespace Trains.Scripts
 			timer.Connect("timeout", this, nameof(onTimeout));
 			timer.Start(timeSec);
 
+			//init station builder
 			stationBuilder = new StationBuilder();
 			AddChild(stationBuilder);
+			stationBuilder.Name = "StationBuilder";
 			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
