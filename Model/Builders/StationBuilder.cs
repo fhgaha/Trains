@@ -40,9 +40,9 @@ namespace Trains.Model.Builders
 		bool validBuildPlace = false;
 		public override void _UnhandledInput(InputEvent @event)
 		{
-			if (@event is InputEventMouseButton ev)
+			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 			{
-				if (!(blueprint is null) && ev.IsActionPressed("lmb"))
+				if (!(blueprint is null)) 
 				{
 					GD.Print("ev");
 					//place station
