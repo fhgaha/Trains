@@ -9,6 +9,7 @@ namespace Trains.Model.Builders
 {
 	public class RailBuilder : MapObjectBuilder
 	{
+		private bool duringBuilding = false;
 		public override void _PhysicsProcess(float delta)
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
