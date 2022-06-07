@@ -16,28 +16,69 @@ namespace Trains
 
 		public override void _Draw()
 		{
-			Arc();
+			Arc2();
 		}
 
 		private void Arc()
 		{
 			var s = new Vector2(512, 300);
+			//var s = new Vector2(960, 480);
 			var d = Vector2.Up;
 			var e = GetGlobalMousePosition();
+			var aplha = e.Dot(d);
 			var se = e - s;
 			var M = se / 2;
 			var perp = new Vector2(s.y - e.y, e.x - s.x);
+			//perp *= aplha / Mathf.Pi;
+			//var perp = -d * 1;
 			//var perp = M.Rotated(Mathf.Pi/180 * -90);
-			var t = ((s.x - M.x) * d.x + (s.y - M.y) * d.y) / (perp.x * d.x + perp.y * d.y);
+			var coeff = 0.1f;
+			var t = ((s.x - M.x) * d.x + (s.y - M.y) * d.y) / (perp.x * d.x + perp.y * d.y) * coeff;
+			//t *= Mathf.Pi/2 - aplha;
 			//var t = (s - M).Dot(d)/perp.Dot(d);
-			var C = s + M + perp * t;
 
+			var C = s + M + perp * t;
+			var R = (s - C).Length();
+			
 
 			DrawCircle(s, 10, white);
 			//white line
 			DrawLine(s, e, white);
 			DrawLine(s + M, C, white);
-			DrawArc(C, (s - C).Length(), 0, Mathf.Pi / 180 * 360, 100, white);
+			DrawArc(C, R, 0, Mathf.Pi / 180 * 360, 100, white);
+
+			ShowValues(s, d, e, se, M, perp, t, C);
+		}
+
+		private void Arc2()
+		{
+			var s = new Vector2(512, 300);
+			var d = Vector2.Up;
+			var e = GetGlobalMousePosition();
+			var sex = e.x - s.x;
+			var sey = e.y - s.y;
+			var perpx = -sey;
+			var perpy = sex;
+			var mx = (e.x + s.x) / 2;
+			var my = (e.y + s.y) / 2;
+			var p = perpx * d.x + perpy * d.y;
+			float t = 0f;
+			if (p > 0)	 t = -0.5f*(sex*d.x + sey*d.x) / p;
+			else return;
+
+			var cx = mx + perpx * t;
+			var cy = my + perpy * t;
+			var radius = new Vector2(cx - s.x, cy - s.y).Length();
+			var C = new Vector2(cx, cy);
+			var M = new Vector2(mx, my);
+			var se = new Vector2(sex, sey);
+			var perp = new Vector2(perpx, perpy);
+
+			DrawCircle(s, 10, white);
+			//white line
+			DrawLine(s, e, white);
+			DrawLine(s + M, C, white);
+			DrawArc(C, radius, 0, Mathf.Pi / 180 * 360, 100, white);
 
 			ShowValues(s, d, e, se, M, perp, t, C);
 		}

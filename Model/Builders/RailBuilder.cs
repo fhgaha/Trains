@@ -9,6 +9,8 @@ namespace Trains.Model.Builders
 {
 	public class RailBuilder : MapObjectBuilder
 	{
+		private Curve3D firstSegment;
+
 		private bool duringBuilding = false;
 		public override void _PhysicsProcess(float delta)
 		{
