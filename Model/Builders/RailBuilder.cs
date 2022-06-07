@@ -1,9 +1,11 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Trains.Model.Cells;
 using Trains.Model.Common;
 using static Trains.Model.Common.Enums;
+using static Godot.Mathf;
 
 namespace Trains.Model.Builders
 {
@@ -88,6 +90,40 @@ namespace Trains.Model.Builders
 
 			blueprint = scene.Instance<Spatial>();
 			AddChild(blueprint);
+		}
+
+		private void CalculateTrajectory()
+		{
+			int numPoints = 50;
+			float gravity = -9.8f;
+
+			var points = new List<Vector2>();
+			var startPos = GetNode<Sprite>("start").GlobalPosition;
+			var endPos = GetNode<Sprite>("end").GlobalPosition;
+			var startEndDir = (endPos - startPos).Normalized();
+			var DOT = Vector2.Right.Dot(startEndDir);   //-1, 0 or 1
+			var angle = 90 - 45 * DOT;
+
+			var xDist = endPos.x - startPos.x;
+			var yDist = -1f * (endPos.y - startPos.y);
+
+			var speed = Sqrt(
+				((0.5f * gravity * xDist * xDist) / Pow(Cos(Pi / 180 * angle), 2f))
+				/ (yDist - (Tan(Pi / 180 * angle) * xDist)));   
+			var xComp = Cos(Pi / 180 * angle) * speed;
+			var yComp = Sin(Pi / 180 * angle) * speed;
+
+			var totalTime = xDist / xComp;
+
+			for (int i = 0; i < numPoints; i++)
+			{
+				var time = totalTime * i / numPoints;
+				var dx = time * xComp;
+				var dy = -1f * (time * yComp + 0.5f * gravity * time * time);
+				points.Add(startPos + new Vector2(dx, dy));
+			}
+
+			GetNode<Line2D>("Line2D").Points = points.ToArray();
 		}
 	}
 }
