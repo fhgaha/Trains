@@ -10,8 +10,31 @@ namespace Trains.Model.Builders
 {
 	//it is required to extend spatial to access GetWorld() method to get mouse position on the grid
 	//also connecting signal of GUI
-	public class StationBuilder : MapObjectBuilder
+	public class StationBuilder : Spatial
 	{
+		private Color yellow = new Color("86e3db6b");	
+		private Color red = new Color("86e36b6b");
+		private List<Cell> cells;
+		private Events events;
+		private PackedScene scene;
+		private Spatial blueprint;
+		private bool canBuild = false;
+		private const float rayLength = 1000f;
+		private Camera camera;
+		private Spatial objectHolder;
+		private MainButtonType mainButtonType;
+
+		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
+		{
+			this.cells = cells;
+			this.objectHolder = objectHolder;
+			this.camera = camera;
+			this.scene = scene;
+			events = GetNode<Events>("/root/Events");
+			//GD.Print("StationBuilder: " + events);
+			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+		}
+
 		public override void _PhysicsProcess(float delta)
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
@@ -26,9 +49,9 @@ namespace Trains.Model.Builders
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
-		}
+		}		
 
-		protected override void PlaceObject(Vector3 position, Vector3 rotation)
+		private void PlaceObject(Vector3 position, Vector3 rotation)
 		{
 			var station = scene.Instance<Spatial>();
 			station.RemoveChild(station.GetNode("Base"));
@@ -39,7 +62,7 @@ namespace Trains.Model.Builders
 			objectHolder.AddChild(station);
 		}
 
-		protected override void UpdateBlueprint()
+		private void UpdateBlueprint()
 		{
 			if (blueprint is null) return;
 
@@ -66,7 +89,7 @@ namespace Trains.Model.Builders
 			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
-		protected override void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonPressed(MainButtonType buttonType)
 		{
 			//GD.Print("onMainButtonPressed");
 			//initialize blueprint

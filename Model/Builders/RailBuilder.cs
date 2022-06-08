@@ -9,14 +9,34 @@ using static Godot.Mathf;
 
 namespace Trains.Model.Builders
 {
-	public class RailBuilder : MapObjectBuilder
+	public class RailBuilder : Spatial
 	{
-		private Path path;
-		protected new Path blueprint;
-		private bool duringBuilding = false;
+		protected Color yellow = new Color("86e3db6b");	
+		protected Color red = new Color("86e36b6b");
+		protected List<Cell> cells;
+		protected Events events;
+		protected PackedScene scene;
+		protected Spatial blueprint;
+		protected bool canBuild = false;
+		protected const float rayLength = 1000f;
+		protected Camera camera;
+		protected Spatial objectHolder;
+		protected MainButtonType mainButtonType;
+
+		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
+		{
+			this.cells = cells;
+			this.objectHolder = objectHolder;
+			this.camera = camera;
+			this.scene = scene;
+			events = GetNode<Events>("/root/Events");
+			//GD.Print("StationBuilder: " + events);
+			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+		}
+
 		public override void _PhysicsProcess(float delta)
 		{
-			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
+			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
 			UpdateBlueprint();
 		}
 
@@ -25,26 +45,23 @@ namespace Trains.Model.Builders
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 				if (!(blueprint is null) && canBuild)
 					PlaceObject(blueprint.Translation, blueprint.Rotation);
-		}
 
-		protected override void PlaceObject(Vector3 position, Vector3 rotation)
+			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
+				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
+		}		
+
+		protected void PlaceObject(Vector3 position, Vector3 rotation)
 		{
-			//create path with 3 nodes
-			//create csg polygon
-			
-			var path = new Path();
-
-
-			//var rail = scene.Instance<Spatial>();
-			//rail.RemoveChild(rail.GetNode("Base"));
-			// rail.Translation = position;
-			// rail.Rotation = rotation;
-			//rail.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
-			//rail.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
-			//objectHolder.AddChild(rail);
+			var station = scene.Instance<Spatial>();
+			station.RemoveChild(station.GetNode("Base"));
+			station.Translation = position;
+			station.Rotation = rotation;
+			station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
+			station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
+			objectHolder.AddChild(station);
 		}
 
-		protected override void UpdateBlueprint()
+		protected virtual void UpdateBlueprint()
 		{
 			if (blueprint is null) return;
 
@@ -59,96 +76,40 @@ namespace Trains.Model.Builders
 			if (intersection.Count == 0) return;
 
 			var pos = (Vector3)intersection["position"];
-			// Cell closestCell = cells.Aggregate((curMin, c)
-			// 	=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
-			// blueprint.Translation = closestCell.Translation;
+			Cell closestCell = cells.Aggregate((curMin, c)
+				=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
+			blueprint.Translation = closestCell.Translation;
 
 			//set base color
-			//var collider = blueprint.GetNode<Area>("Base/Area");
-			//var bodies = collider.GetOverlappingBodies();
-			//canBuild = !(bodies.Count > 0);
-			blueprint.Translation = pos;
-			canBuild = true;
-			// var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0);
-			// baseMaterial.AlbedoColor = canBuild ? yellow : red;
+			var collider = blueprint.GetNode<Area>("Base/Area");
+			var bodies = collider.GetOverlappingBodies();
+			canBuild = !(bodies.Count > 0);
+			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
+			baseMaterial.AlbedoColor = canBuild ? yellow : red;
+		}
 
-		}		
-
-		protected override void onMainButtonPressed(MainButtonType buttonType)
+		protected virtual void onMainButtonPressed(MainButtonType buttonType)
 		{
 			//GD.Print("onMainButtonPressed");
 			//initialize blueprint
 
-			if (buttonType != MainButtonType.BuildRail)
+			if (buttonType != MainButtonType.BuildStation)
 			{
 				blueprint?.QueueFree();
 				return;
 			}
 
-			if (Global.MainButtonMode is MainButtonType.BuildRail) Global.MainButtonMode = null;
-			else Global.MainButtonMode = MainButtonType.BuildRail;
+			if (Global.MainButtonMode is MainButtonType.BuildStation) Global.MainButtonMode = null;
+			else Global.MainButtonMode = MainButtonType.BuildStation;
 
-			if (!(Global.MainButtonMode is MainButtonType.BuildRail))
+			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
 			{
 				blueprint?.QueueFree();
 				return;
 			}
 
-			//if first segment place 3 node path
-			//else continue previous path
-
-			path = new Path();
-			var curve = new Curve3D();
-			curve.AddPoint(new Vector3(-1, 0, 0));
-			curve.AddPoint(Vector3.Zero);
-			curve.AddPoint(new Vector3(1, 0, 0));
-			path.Curve = curve;
-			AddChild(path);
-
-			var csgPolygonScene = GD.Load<PackedScene>("res://Scenes/Rails/CSGPolygon2.tscn");
-			var rail = (CSGPolygon)csgPolygonScene.Instance();
-			rail.Mode = CSGPolygon.ModeEnum.Path;
-			rail.PathNode = path.GetPath();
-			path.AddChild(rail);
-			blueprint = path;
-
-			// blueprint = scene.Instance<Spatial>();
-			// AddChild(blueprint);
-		}
-
-		int numPoints = 50;
-		float gravity = -9.8f;
-		private Vector3 startPos = Vector3.Zero;
-
-		private void CalculateTrajectory()
-		{
-			var points = new List<Vector2>();
-			var startPos = GetNode<Sprite>("start").GlobalPosition;
-			var endPos = GetNode<Sprite>("end").GlobalPosition;
-			var startEndDir = (endPos - startPos).Normalized();
-			var DOT = Vector2.Right.Dot(startEndDir);   //-1, 0 or 1
-			var angle = 90 - 45 * DOT;
-
-			var xDist = endPos.x - startPos.x;
-			var yDist = -1f * (endPos.y - startPos.y);
-
-			var speed = Sqrt(
-				((0.5f * gravity * xDist * xDist) / Pow(Cos(Pi / 180 * angle), 2f))
-				/ (yDist - (Tan(Pi / 180 * angle) * xDist)));   
-			var xComp = Cos(Pi / 180 * angle) * speed;
-			var yComp = Sin(Pi / 180 * angle) * speed;
-
-			var totalTime = xDist / xComp;
-
-			for (int i = 0; i < numPoints; i++)
-			{
-				var time = totalTime * i / numPoints;
-				var dx = time * xComp;
-				var dy = -1f * (time * yComp + 0.5f * gravity * time * time);
-				points.Add(startPos + new Vector2(dx, dy));
-			}
-
-			GetNode<Line2D>("Line2D").Points = points.ToArray();
+			blueprint = scene.Instance<Spatial>();
+			AddChild(blueprint);
 		}
 	}
 }
