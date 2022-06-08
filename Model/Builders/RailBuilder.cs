@@ -93,16 +93,16 @@ namespace Trains.Model.Builders
 			//GD.Print("onMainButtonPressed");
 			//initialize blueprint
 
-			if (buttonType != MainButtonType.BuildStation)
+			if (buttonType != MainButtonType.BuildRail)
 			{
 				blueprint?.QueueFree();
 				return;
 			}
 
-			if (Global.MainButtonMode is MainButtonType.BuildStation) Global.MainButtonMode = null;
-			else Global.MainButtonMode = MainButtonType.BuildStation;
+			if (Global.MainButtonMode is MainButtonType.BuildRail) Global.MainButtonMode = null;
+			else Global.MainButtonMode = MainButtonType.BuildRail;
 
-			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
+			if (!(Global.MainButtonMode is MainButtonType.BuildRail))
 			{
 				blueprint?.QueueFree();
 				return;

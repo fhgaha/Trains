@@ -8,30 +8,25 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Builders
 {
-	//it is required to extend spatial to access GetWorld() method to get mouse position on the grid
-	//also connecting signal of GUI
 	public class StationBuilder : Spatial
 	{
-		private Color yellow = new Color("86e3db6b");	
+		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
 		private List<Cell> cells;
+		private Spatial stations;
 		private Events events;
-		private PackedScene scene;
+		private PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 		private Spatial blueprint;
-		private bool canBuild = false;
 		private const float rayLength = 1000f;
 		private Camera camera;
-		private Spatial objectHolder;
-		private MainButtonType mainButtonType;
 
-		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
+		public void Init(List<Cell> cells, Camera camera, Spatial stations)
 		{
 			this.cells = cells;
-			this.objectHolder = objectHolder;
+			this.stations = stations;
 			this.camera = camera;
-			this.scene = scene;
+			//cant get events if not in the scene
 			events = GetNode<Events>("/root/Events");
-			//GD.Print("StationBuilder: " + events);
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
 
@@ -41,25 +36,26 @@ namespace Trains.Model.Builders
 			UpdateBlueprint();
 		}
 
+		bool validBuildPlace = false;
 		public override void _UnhandledInput(InputEvent @event)
 		{
-			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
-				if (!(blueprint is null) && canBuild)
-					PlaceObject(blueprint.Translation, blueprint.Rotation);
+			if (@event is InputEventMouseButton ev)
+			{
+				if (!(blueprint is null) && ev.ButtonIndex == (int)ButtonList.Left)
+				{
+					//place station
+					var station = stationScene.Instance<Spatial>();
+					station.RemoveChild(station.GetNode("Base"));
+					station.Translation = blueprint.Translation;
+					station.Rotation = blueprint.Rotation;
+					station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
+					station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
+					stations.AddChild(station);
+				}
+			}
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
-		}		
-
-		private void PlaceObject(Vector3 position, Vector3 rotation)
-		{
-			var station = scene.Instance<Spatial>();
-			station.RemoveChild(station.GetNode("Base"));
-			station.Translation = position;
-			station.Rotation = rotation;
-			station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
-			station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
-			objectHolder.AddChild(station);
 		}
 
 		private void UpdateBlueprint()
@@ -77,22 +73,21 @@ namespace Trains.Model.Builders
 			if (intersection.Count == 0) return;
 
 			var pos = (Vector3)intersection["position"];
-			Cell closestCell = cells.Aggregate((curMin, c)
-				=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
+			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
 			blueprint.Translation = closestCell.Translation;
 
 			//set base color
 			var collider = blueprint.GetNode<Area>("Base/Area");
 			var bodies = collider.GetOverlappingBodies();
-			canBuild = !(bodies.Count > 0);
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
-			baseMaterial.AlbedoColor = canBuild ? yellow : red;
+			baseMaterial.AlbedoColor = bodies.Count > 0 ? red : yellow;
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
 			//GD.Print("onMainButtonPressed");
-			//initialize blueprint
+			//turn on building mode
+			//turn cursor into station asset
 
 			if (buttonType != MainButtonType.BuildStation)
 			{
@@ -100,8 +95,10 @@ namespace Trains.Model.Builders
 				return;
 			}
 
-			if (Global.MainButtonMode is MainButtonType.BuildStation) Global.MainButtonMode = null;
-			else Global.MainButtonMode = MainButtonType.BuildStation;
+			if (Global.MainButtonMode is MainButtonType.BuildStation) 
+				Global.MainButtonMode = null;
+			else 
+				Global.MainButtonMode = MainButtonType.BuildStation;
 
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
 			{
@@ -109,7 +106,7 @@ namespace Trains.Model.Builders
 				return;
 			}
 
-			blueprint = scene.Instance<Spatial>();
+			blueprint = stationScene.Instance<Spatial>();
 			AddChild(blueprint);
 		}
 	}

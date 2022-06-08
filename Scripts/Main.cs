@@ -33,7 +33,7 @@ namespace Trains.Scripts
 			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
-			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"), scene);
+			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
 
 			//init rail builder
 			railBuilder = new RailBuilder();
