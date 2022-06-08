@@ -11,8 +11,8 @@ namespace Trains.Model.Builders
 {
 	public class RailBuilder : MapObjectBuilder
 	{
-		private Curve3D firstSegment;
-
+		private Path path;
+		protected new Path blueprint;
 		private bool duringBuilding = false;
 		public override void _PhysicsProcess(float delta)
 		{
@@ -29,13 +29,19 @@ namespace Trains.Model.Builders
 
 		protected override void PlaceObject(Vector3 position, Vector3 rotation)
 		{
-			var rail = scene.Instance<Spatial>();
+			//create path with 3 nodes
+			//create csg polygon
+			
+			var path = new Path();
+
+
+			//var rail = scene.Instance<Spatial>();
 			//rail.RemoveChild(rail.GetNode("Base"));
-			//rail.Translation = position;
-			//rail.Rotation = rotation;
+			// rail.Translation = position;
+			// rail.Rotation = rotation;
 			//rail.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
 			//rail.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
-			objectHolder.AddChild(rail);
+			//objectHolder.AddChild(rail);
 		}
 
 		protected override void UpdateBlueprint()
@@ -63,8 +69,8 @@ namespace Trains.Model.Builders
 			//canBuild = !(bodies.Count > 0);
 			blueprint.Translation = pos;
 			canBuild = true;
-			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0);
-			baseMaterial.AlbedoColor = canBuild ? yellow : red;
+			// var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0);
+			// baseMaterial.AlbedoColor = canBuild ? yellow : red;
 
 		}		
 
@@ -88,15 +94,34 @@ namespace Trains.Model.Builders
 				return;
 			}
 
-			blueprint = scene.Instance<Spatial>();
-			AddChild(blueprint);
+			//if first segment place 3 node path
+			//else continue previous path
+
+			path = new Path();
+			var curve = new Curve3D();
+			curve.AddPoint(new Vector3(-1, 0, 0));
+			curve.AddPoint(Vector3.Zero);
+			curve.AddPoint(new Vector3(1, 0, 0));
+			path.Curve = curve;
+			AddChild(path);
+
+			var csgPolygonScene = GD.Load<PackedScene>("res://Scenes/Rails/CSGPolygon2.tscn");
+			var rail = (CSGPolygon)csgPolygonScene.Instance();
+			rail.Mode = CSGPolygon.ModeEnum.Path;
+			rail.PathNode = path.GetPath();
+			path.AddChild(rail);
+			blueprint = path;
+
+			// blueprint = scene.Instance<Spatial>();
+			// AddChild(blueprint);
 		}
+
+		int numPoints = 50;
+		float gravity = -9.8f;
+		private Vector3 startPos = Vector3.Zero;
 
 		private void CalculateTrajectory()
 		{
-			int numPoints = 50;
-			float gravity = -9.8f;
-
 			var points = new List<Vector2>();
 			var startPos = GetNode<Sprite>("start").GlobalPosition;
 			var endPos = GetNode<Sprite>("end").GlobalPosition;

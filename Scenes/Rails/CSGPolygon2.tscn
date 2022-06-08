@@ -1,0 +1,15 @@
+[gd_scene format=2]
+
+[node name="CSGPolygon2" type="CSGPolygon"]
+transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0 )
+polygon = PoolVector2Array( 0, 0, 0.277716, 0.363119, 0.729008, 0.363598, 1, 0 )
+mode = 2
+path_node = NodePath("")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_local = false
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false

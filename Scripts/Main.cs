@@ -39,7 +39,7 @@ namespace Trains.Scripts
 			railBuilder = new RailBuilder();
 			AddChild(railBuilder);
 			railBuilder.Name = "RailBuilder";
-			scene = GD.Load<PackedScene>("res://Scenes/Rail.tscn");
+			scene = GD.Load<PackedScene>("res://Scenes/Rails/Rail.tscn");
 			railBuilder.Init(cells, camera, GetNode<Spatial>("Rails"), scene);
 		}
 
