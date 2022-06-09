@@ -79,14 +79,7 @@ namespace Trains.Model.Builders
 			//set base color
 			var area = blueprint.GetNode<Area>("Path/CSGPolygon/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
-
-			foreach (var b in bodies)
-			{
-				//if (b.IsInGroup("Obstacles")) GD.Print("next node is obstacle");
-				GD.Print(b);
-			}
-			GD.Print("-------------");
-			canBuild = !(bodies.Count() > 0);
+			canBuild = bodies.Count() <= 0;
 			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("Path/CSGPolygon").Material;
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}

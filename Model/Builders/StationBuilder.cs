@@ -19,6 +19,7 @@ namespace Trains.Model.Builders
 		private Spatial blueprint;
 		private const float rayLength = 1000f;
 		private Camera camera;
+		private bool canBuild = false;
 
 		public void Init(List<Cell> cells, Camera camera, Spatial stations)
 		{
@@ -39,9 +40,9 @@ namespace Trains.Model.Builders
 		bool validBuildPlace = false;
 		public override void _UnhandledInput(InputEvent @event)
 		{
-			if (@event is InputEventMouseButton ev)
+			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 			{
-				if (!(blueprint is null) && ev.IsActionPressed("lmb"))
+				if (canBuild)
 				{
 					//place station
 					var station = stationScene.Instance<Spatial>();
@@ -70,7 +71,8 @@ namespace Trains.Model.Builders
 			var area = blueprint.GetNode<Area>("Base/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
-			baseMaterial.AlbedoColor = bodies.Count() > 0 ? red : yellow;
+			canBuild = bodies.Count() <= 0;
+			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
 		private Vector3 GetIntersection()
