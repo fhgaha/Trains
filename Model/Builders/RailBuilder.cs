@@ -53,6 +53,7 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject(Vector3 position, Vector3 rotation)
 		{
+			//csg: set collision layer and mask
 			var station = scene.Instance<Spatial>();
 			station.RemoveChild(station.GetNode("Base"));
 			station.Translation = position;
@@ -76,11 +77,19 @@ namespace Trains.Model.Builders
 			// blueprint.Translation = closestCell.Translation;
 
 			//set base color
-			// var collider = blueprint.GetNode<Area>("Base/Area");
-			// var bodies = collider.GetOverlappingBodies();
-			// canBuild = !(bodies.Count > 0);
-			// var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
-			// baseMaterial.AlbedoColor = canBuild ? yellow : red;
+			var area = blueprint.GetNode<Area>("Path/CSGPolygon/Area");
+			var bodies = area.GetOverlappingBodies().Cast<Node>();
+			bodies = bodies.Where(b => b.IsInGroup("Obstacles"));
+
+			foreach (var b in bodies)
+			{
+				//if (b.IsInGroup("Obstacles")) GD.Print("next node is obstacle");
+				GD.Print(b);
+			}
+			GD.Print("-------------");
+			canBuild = !(bodies.Count() > 0);
+			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("Path/CSGPolygon").Material;
+			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
 		private Vector3 GetIntersection()
@@ -122,16 +131,15 @@ namespace Trains.Model.Builders
 				return;
 			}
 
+			//Note: The returned value is a copy of the original. Methods which mutate the size or properties 
+			//of the return value will not impact the original polygon. To change properties of the polygon, 
+			//assign it to a temporary variable and make changes before reassigning the polygon member.
 			blueprint = scene.Instance<Spatial>();
+			//await Node.NotificationInstanced
+			var csg = blueprint.GetNode<CSGPolygon>("Path/CSGPolygon");
+			var collider = blueprint.GetNode<CollisionPolygon>("Path/CSGPolygon/Area/CollisionPolygon");
+			collider.Polygon = csg.Polygon;
 			AddChild(blueprint);
-
-			//cube sample
-			// blueprint = new Spatial();
-			// var m = new MeshInstance();
-			// m.Mesh = new CubeMesh();
-			// m.Scale = new Vector3(0.2f, 0.2f, 0.2f);
-			// blueprint.AddChild(m);
-			// AddChild(blueprint);
 		}
 	}
 }
