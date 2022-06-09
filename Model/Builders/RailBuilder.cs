@@ -11,7 +11,7 @@ namespace Trains.Model.Builders
 {
 	public class RailBuilder : Spatial
 	{
-		private Color yellow = new Color("86e3db6b");	
+		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
 		private List<Cell> cells;
 		private Events events;
@@ -47,31 +47,31 @@ namespace Trains.Model.Builders
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
 			UpdateBlueprint();
-
-			if (!(firstSegment is null))
-			{
-				Vector2 end = GetViewport().GetMousePosition();
-				// be cautious
-				//converting vec2 to vec3 back and forth meh
-				var path = firstSegment.GetNode<Path>("Path");
-				Vector3 start3d = path.Curve.GetClosestPoint(new Vector3(end.x, 0, end.y));
-				Vector2 start = new Vector2(start3d.x, start3d.z);
-				var points = CalculateTrajectory(start, end, 50);
-				var curve = new Curve3D();
-				points.ForEach(p => curve.AddPoint(new Vector3(p.x, 0, p.y)));
-				path.Curve = curve;
-			}
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
 		{
-			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
+			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
 				if (!(blueprint is null) && canBuild && firstSegment is null)
 					PlaceObject(blueprint.Translation, blueprint.Rotation);
 
-			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
-				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
-		}		
+			if (@event is InputEventMouseMotion evMouseMotion)
+			{
+				if (!(firstSegment is null))
+				{
+					var path = firstSegment.GetNode<Path>("Path");
+					path.Curve.ClearPoints();
+					Vector3 end = GetIntersection();
+					// be cautious
+					Vector3 start = path.Curve.GetClosestPoint(end);
+					var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 20);
+					var curve = new Curve3D();
+					points.ForEach(p => curve.AddPoint(p.ToVec3()));
+					path.Curve = curve;
+				}
+			}
+
+		}
 
 		protected void PlaceObject(Vector3 position, Vector3 rotation)
 		{
@@ -115,7 +115,7 @@ namespace Trains.Model.Builders
 			Vector3 rayEnd = rayOrigin + rayNormal * rayLength;
 			var intersection = spaceState.IntersectRay(rayOrigin, rayEnd);
 
-			if (intersection.Count == 0) 
+			if (intersection.Count == 0)
 			{
 				GD.Print("camera ray did not collide with an object.");
 				return Vector3.Zero;
@@ -169,7 +169,7 @@ namespace Trains.Model.Builders
 
 			var speed = Sqrt(
 				((0.5f * gravity * xDist * xDist) / Pow(Cos(Pi / 180 * angle), 2f))
-				/ (yDist - (Tan(Pi / 180 * angle) * xDist)));   
+				/ (yDist - (Tan(Pi / 180 * angle) * xDist)));
 			var xComp = Cos(Pi / 180 * angle) * speed;
 			var yComp = Sin(Pi / 180 * angle) * speed;
 
