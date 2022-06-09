@@ -1,6 +1,6 @@
 [gd_scene format=2]
 
-[node name="CSGPolygon2" type="CSGPolygon"]
+[node name="CSGPolygon" type="CSGPolygon"]
 use_collision = true
 polygon = PoolVector2Array( -0.0999167, 0.0693348, -0.0310872, 0.0693348, -0.000378639, 0.000505354, -0.139626, 0.000505354 )
 mode = 2

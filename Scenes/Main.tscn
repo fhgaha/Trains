@@ -1,10 +1,12 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/GUI/GUI.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/Main.cs" type="Script" id=4]
 [ext_resource path="res://Scenes/Obstacle.tscn" type="PackedScene" id=5]
+
+[sub_resource type="CubeMesh" id=9]
 
 [sub_resource type="CubeMesh" id=2]
 
@@ -16,6 +18,21 @@ data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1
 
 [node name="World" type="Spatial"]
 script = ExtResource( 4 )
+
+[node name="Origin" type="Spatial" parent="."]
+transform = Transform( 0.26, 0, 0, 0, 0.120397, 0, 0, 0, 0.290166, 0, 0.120397, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Origin"]
+transform = Transform( 0.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
+material/0 = null
+
+[node name="MeshInstance2" type="MeshInstance" parent="Origin"]
+transform = Transform( -8.74228e-09, 0, 1, 0, 1, 0, -0.2, 0, -4.37114e-08, 1, 0, -5.96046e-08 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
+material/0 = null
 
 [node name="Floor" type="MeshInstance" parent="."]
 transform = Transform( 20, 0, 0, 0, 1, 0, 0, 0, 20, 0, -1, 0 )

@@ -23,6 +23,7 @@ namespace Trains.Model.Builders
 		protected Spatial objectHolder;
 		protected MainButtonType mainButtonType;
 
+		//in editor for CSGPolygon property Path Local should be On to place polygon where the cursor is with no offset
 		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
 		{
 			this.cells = cells;
@@ -36,7 +37,7 @@ namespace Trains.Model.Builders
 
 		public override void _PhysicsProcess(float delta)
 		{
-			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
+			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
 			UpdateBlueprint();
 		}
 
@@ -65,7 +66,25 @@ namespace Trains.Model.Builders
 		{
 			if (blueprint is null) return;
 
+			var pos = GetIntersection();
+			blueprint.Translation = pos;
+
 			//set blueprint position
+			// var pos = GetIntersection();
+			// Cell closestCell = cells.Aggregate((curMin, c)
+			// 	=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
+			// blueprint.Translation = closestCell.Translation;
+
+			//set base color
+			// var collider = blueprint.GetNode<Area>("Base/Area");
+			// var bodies = collider.GetOverlappingBodies();
+			// canBuild = !(bodies.Count > 0);
+			// var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
+			// baseMaterial.AlbedoColor = canBuild ? yellow : red;
+		}
+
+		private Vector3 GetIntersection()
+		{
 			PhysicsDirectSpaceState spaceState = GetWorld().DirectSpaceState;
 			Vector2 mousePosition = GetViewport().GetMousePosition();
 			Vector3 rayOrigin = camera.ProjectRayOrigin(mousePosition);
@@ -73,19 +92,14 @@ namespace Trains.Model.Builders
 			Vector3 rayEnd = rayOrigin + rayNormal * rayLength;
 			var intersection = spaceState.IntersectRay(rayOrigin, rayEnd);
 
-			if (intersection.Count == 0) return;
+			if (intersection.Count == 0) 
+			{
+				GD.Print("camera ray did not collide with an object.");
+				return Vector3.Zero;
+			}
 
 			var pos = (Vector3)intersection["position"];
-			Cell closestCell = cells.Aggregate((curMin, c)
-				=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
-			blueprint.Translation = closestCell.Translation;
-
-			//set base color
-			var collider = blueprint.GetNode<Area>("Base/Area");
-			var bodies = collider.GetOverlappingBodies();
-			canBuild = !(bodies.Count > 0);
-			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
-			baseMaterial.AlbedoColor = canBuild ? yellow : red;
+			return pos;
 		}
 
 		protected virtual void onMainButtonPressed(MainButtonType buttonType)
@@ -110,6 +124,14 @@ namespace Trains.Model.Builders
 
 			blueprint = scene.Instance<Spatial>();
 			AddChild(blueprint);
+
+			//cube sample
+			// blueprint = new Spatial();
+			// var m = new MeshInstance();
+			// m.Mesh = new CubeMesh();
+			// m.Scale = new Vector3(0.2f, 0.2f, 0.2f);
+			// blueprint.AddChild(m);
+			// AddChild(blueprint);
 		}
 	}
 }
