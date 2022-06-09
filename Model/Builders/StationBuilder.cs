@@ -41,15 +41,14 @@ namespace Trains.Model.Builders
 		{
 			if (@event is InputEventMouseButton ev)
 			{
-				if (!(blueprint is null) && ev.ButtonIndex == (int)ButtonList.Left)
+				if (!(blueprint is null) && ev.IsActionPressed("lmb"))
 				{
 					//place station
 					var station = stationScene.Instance<Spatial>();
 					station.RemoveChild(station.GetNode("Base"));
 					station.Translation = blueprint.Translation;
 					station.Rotation = blueprint.Rotation;
-					station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
-					station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
+					station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
 					stations.AddChild(station);
 				}
 			}
@@ -68,10 +67,10 @@ namespace Trains.Model.Builders
 			blueprint.Translation = closestCell.Translation;
 
 			//set base color
-			var collider = blueprint.GetNode<Area>("Base/Area");
-			var bodies = collider.GetOverlappingBodies();
+			var area = blueprint.GetNode<Area>("Base/Area");
+			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
-			baseMaterial.AlbedoColor = bodies.Count > 0 ? red : yellow;
+			baseMaterial.AlbedoColor = bodies.Count() > 0 ? red : yellow;
 		}
 
 		private Vector3 GetIntersection()
@@ -117,6 +116,7 @@ namespace Trains.Model.Builders
 			}
 
 			blueprint = stationScene.Instance<Spatial>();
+			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
 			AddChild(blueprint);
 		}
 	}
