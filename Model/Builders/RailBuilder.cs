@@ -78,8 +78,7 @@ namespace Trains.Model.Builders
 
 			//set base color
 			var area = blueprint.GetNode<Area>("Path/CSGPolygon/Area");
-			var bodies = area.GetOverlappingBodies().Cast<Node>();
-			bodies = bodies.Where(b => b.IsInGroup("Obstacles"));
+			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 
 			foreach (var b in bodies)
 			{
@@ -131,11 +130,8 @@ namespace Trains.Model.Builders
 				return;
 			}
 
-			//Note: The returned value is a copy of the original. Methods which mutate the size or properties 
-			//of the return value will not impact the original polygon. To change properties of the polygon, 
-			//assign it to a temporary variable and make changes before reassigning the polygon member.
+			//init blueprint
 			blueprint = scene.Instance<Spatial>();
-			//await Node.NotificationInstanced
 			var csg = blueprint.GetNode<CSGPolygon>("Path/CSGPolygon");
 			var collider = blueprint.GetNode<CollisionPolygon>("Path/CSGPolygon/Area/CollisionPolygon");
 			collider.Polygon = csg.Polygon;
