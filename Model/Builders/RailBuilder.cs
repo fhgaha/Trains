@@ -11,19 +11,27 @@ namespace Trains.Model.Builders
 {
 	public class RailBuilder : Spatial
 	{
-		protected Color yellow = new Color("86e3db6b");	
-		protected Color red = new Color("86e36b6b");
-		protected List<Cell> cells;
-		protected Events events;
-		protected PackedScene scene;
-		protected Spatial blueprint;
-		protected bool canBuild = false;
-		protected const float rayLength = 1000f;
-		protected Camera camera;
-		protected Spatial objectHolder;
-		protected MainButtonType mainButtonType;
+		private Color yellow = new Color("86e3db6b");	
+		private Color red = new Color("86e36b6b");
+		private List<Cell> cells;
+		private Events events;
+		private PackedScene scene;
+		private Spatial blueprint;
+		private bool canBuild = false;
+		private const float rayLength = 1000f;
+		private Camera camera;
+		private Spatial objectHolder;
+		private MainButtonType mainButtonType;
+		private Spatial firstSegment = null;
 
-		//in editor for CSGPolygon property Path Local should be On to place polygon where the cursor is with no offset
+		//in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
+
+		//build order:
+		//1. press BS button, simple straight road will show up following cursor.
+		//2. using mouse select a place to build first segment. it cannot be built on obstacle.
+		//3. press lmb to place first segment. path will show up from first segment to mouse pos, showing possible path
+		//in blueprint mode.
+		//4. press lmb again to place blueprint road.
 		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
 		{
 			this.cells = cells;
@@ -54,16 +62,15 @@ namespace Trains.Model.Builders
 		protected void PlaceObject(Vector3 position, Vector3 rotation)
 		{
 			//csg: set collision layer and mask
-			var station = scene.Instance<Spatial>();
-			station.RemoveChild(station.GetNode("Base"));
-			station.Translation = position;
-			station.Rotation = rotation;
-			station.GetNode<StaticBody>("StaticBody").CollisionLayer = 0;
-			station.GetNode<CollisionShape>("StaticBody/CollisionShape").Disabled = false;
-			objectHolder.AddChild(station);
+			var rail = scene.Instance<Spatial>();
+			//rail.RemoveChild(rail.GetNode("Base"));
+			rail.Translation = position;
+			rail.Rotation = rotation;
+			//rail.GetNode<CollisionPolygon>("Path/CSGPolygon/Area/CollisionPolygon").Disabled = false;
+			objectHolder.AddChild(rail);
 		}
 
-		protected virtual void UpdateBlueprint()
+		private void UpdateBlueprint()
 		{
 			if (blueprint is null) return;
 
@@ -103,7 +110,7 @@ namespace Trains.Model.Builders
 			return pos;
 		}
 
-		protected virtual void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonPressed(MainButtonType buttonType)
 		{
 			//GD.Print("onMainButtonPressed");
 			//initialize blueprint
@@ -124,6 +131,8 @@ namespace Trains.Model.Builders
 			}
 
 			//init blueprint
+			//can be build new rail or continue existing one
+			//for the time let it be always build first ever rail
 			blueprint = scene.Instance<Spatial>();
 			var csg = blueprint.GetNode<CSGPolygon>("Path/CSGPolygon");
 			var collider = blueprint.GetNode<CollisionPolygon>("Path/CSGPolygon/Area/CollisionPolygon");

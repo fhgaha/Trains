@@ -42,7 +42,7 @@ namespace Trains.Model.Builders
 		{
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 			{
-				if (canBuild)
+				if (!(blueprint is null) && canBuild)
 				{
 					//place station
 					var station = stationScene.Instance<Spatial>();
