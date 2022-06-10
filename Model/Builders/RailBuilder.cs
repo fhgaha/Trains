@@ -59,18 +59,23 @@ namespace Trains.Model.Builders
 			{
 				if (!(firstSegment is null))
 				{
+					//draw trajectory
+					//each time build new path and connect with old path
 					var path = firstSegment.GetNode<Path>("Path");
 					path.Curve.ClearPoints();
-					Vector3 end = GetIntersection();
-					// be cautious
-					Vector3 start = path.Curve.GetClosestPoint(end);
-					var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 20);
+					Vector3 end = GetIntersection() - firstSegment.Translation;
+					//Vector3 start = firstSegment.Translation;
+					Vector3 start = path.Curve.GetClosestPoint(end);	//always zero
+					var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 10);
 					var curve = new Curve3D();
-					points.ForEach(p => curve.AddPoint(p.ToVec3()));
+					points.ForEach(p => curve.AddPoint(start + p.ToVec3()));
 					path.Curve = curve;
+
+					// GD.Print("start: " + start);
+					// points.ForEach(p => GD.Print(p));
+					// GD.Print("=====");
 				}
 			}
-
 		}
 
 		protected void PlaceObject(Vector3 position, Vector3 rotation)
@@ -158,9 +163,9 @@ namespace Trains.Model.Builders
 		private List<Vector2> CalculateTrajectory(Vector2 startPos, Vector2 endPos, int numPoints)
 		{
 			float gravity = -9.8f;
-
 			var points = new List<Vector2>();
 			var startEndDir = (endPos - startPos).Normalized();
+			//this should be changed to previous segment direction?
 			var DOT = Vector2.Right.Dot(startEndDir);   //-1, 0 or 1
 			var angle = 90 - 45 * DOT;
 
@@ -170,16 +175,16 @@ namespace Trains.Model.Builders
 			var speed = Sqrt(
 				((0.5f * gravity * xDist * xDist) / Pow(Cos(Pi / 180 * angle), 2f))
 				/ (yDist - (Tan(Pi / 180 * angle) * xDist)));
-			var xComp = Cos(Pi / 180 * angle) * speed;
-			var yComp = Sin(Pi / 180 * angle) * speed;
+			var xComponent = Cos(Pi / 180 * angle) * speed;
+			var yComponent = Sin(Pi / 180 * angle) * speed;
 
-			var totalTime = xDist / xComp;
+			var totalTime = xDist / xComponent;
 
 			for (int i = 0; i < numPoints; i++)
 			{
 				var time = totalTime * i / numPoints;
-				var dx = time * xComp;
-				var dy = -1f * (time * yComp + 0.5f * gravity * time * time);
+				var dx = time * xComponent;
+				var dy = -1f * (time * yComponent + 0.5f * gravity * time * time);
 				points.Add(startPos + new Vector2(dx, dy));
 			}
 
