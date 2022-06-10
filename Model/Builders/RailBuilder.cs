@@ -20,7 +20,7 @@ namespace Trains.Model.Builders
 		private bool canBuild = false;
 		private const float rayLength = 1000f;
 		private Camera camera;
-		private Spatial objectHolder;
+		private Spatial objectHolder;	//Rails
 		private MainButtonType mainButtonType;
 		private Spatial firstSegment = null;
 
@@ -39,7 +39,6 @@ namespace Trains.Model.Builders
 			this.camera = camera;
 			this.scene = scene;
 			events = GetNode<Events>("/root/Events");
-			//GD.Print("StationBuilder: " + events);
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
 
@@ -49,6 +48,7 @@ namespace Trains.Model.Builders
 			UpdateBlueprint();
 		}
 
+		private Vector3 start = Vector3.Zero;
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
@@ -62,18 +62,11 @@ namespace Trains.Model.Builders
 					//draw trajectory
 					//each time build new path and connect with old path
 					var path = firstSegment.GetNode<Path>("Path");
-					path.Curve.ClearPoints();
-					Vector3 end = GetIntersection() - firstSegment.Translation;
-					//Vector3 start = firstSegment.Translation;
-					Vector3 start = path.Curve.GetClosestPoint(end);	//always zero
-					var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 10);
+					Vector3 end = GetIntersection() - path.GlobalTransform.origin;
+					var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 5);
 					var curve = new Curve3D();
-					points.ForEach(p => curve.AddPoint(start + p.ToVec3()));
+					points.ForEach(p => curve.AddPoint(p.ToVec3()));
 					path.Curve = curve;
-
-					// GD.Print("start: " + start);
-					// points.ForEach(p => GD.Print(p));
-					// GD.Print("=====");
 				}
 			}
 		}
@@ -162,7 +155,7 @@ namespace Trains.Model.Builders
 
 		private List<Vector2> CalculateTrajectory(Vector2 startPos, Vector2 endPos, int numPoints)
 		{
-			float gravity = -9.8f;
+			float gravity = -15f;
 			var points = new List<Vector2>();
 			var startEndDir = (endPos - startPos).Normalized();
 			//this should be changed to previous segment direction?
@@ -170,7 +163,7 @@ namespace Trains.Model.Builders
 			var angle = 90 - 45 * DOT;
 
 			var xDist = endPos.x - startPos.x;
-			var yDist = -1f * (endPos.y - startPos.y);
+			var yDist = -1f * (endPos.y - startPos.y);  //flip y to do calculations in eucludus geometry. y flips back later.
 
 			var speed = Sqrt(
 				((0.5f * gravity * xDist * xDist) / Pow(Cos(Pi / 180 * angle), 2f))
