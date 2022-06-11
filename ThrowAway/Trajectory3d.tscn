@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://ThrowAway/Trajectory3d.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Rails/RailCSG.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ThrowAway/DarggableObj.cs" type="Script" id=4]
+[ext_resource path="res://ThrowAway/Draggable.cs" type="Script" id=5]
 
 [sub_resource type="CubeMesh" id=14]
 size = Vector3( 0.1, 6, 0.1 )
@@ -76,6 +77,15 @@ material/0 = null
 [node name="StaticBody" type="StaticBody" parent="start"]
 
 [node name="CollisionShape" type="CollisionShape" parent="start/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+shape = SubResource( 12 )
+
+[node name="Area" type="Area" parent="start"]
+
+[node name="Draggable_" type="Node" parent="start/Area"]
+script = ExtResource( 5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="start/Area"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
 shape = SubResource( 12 )
 

@@ -3,6 +3,7 @@ using System;
 
 namespace Trains
 {
+	[Tool]
 	public class Draggable : Node
 	{
 		[Signal] public delegate void DragStart(Draggable draggable);
@@ -17,10 +18,8 @@ namespace Trains
 		private Vector2 dragOffset = new Vector2();
 		private CollisionObject hovered = null;
 
-		// func _get_configuration_warning():
-		// 	if not get_parent() is CollisionObject:
-		// 		return 'Not under a collision object'
-		// 	return ''
+		public override string _GetConfigurationWarning()
+		=> GetParent<Node>() is CollisionObject ? "" : "Not under a collision object";
 
 		public override void _Ready()
 		{
@@ -53,15 +52,16 @@ namespace Trains
 
 		public void onHover(Godot.Collections.Dictionary cast) => EmitSignal(nameof(DragMove), this, cast);
 
-		private void onInputEvent(Godot.Object camera, InputEvent @event, Vector3 position, Vector3 normal, int shape_idx)
+		private void onInputEvent(Godot.Object camera, InputEvent @event, Vector3 position, Vector3 normal, int shape_idx, Node node)
 		{
 			if (@event is InputEventMouseButton ev && ev.ButtonIndex == (int)ButtonList.Left)
 			{
 				if (ev.IsPressed())
 				{
-					if (!(hovered is null)) 
+					if (!(hovered is null))
 					{
 						current = hovered.GetParent();
+						EmitSignal(nameof(DragStart), this);
 					}
 				}
 				else if (!(current is null))
@@ -71,7 +71,7 @@ namespace Trains
 			}
 		}
 
-	// 	func depth_sort(a,b):
-	// return b.get_index()<a.get_index()
+		// 	func depth_sort(a,b):
+		// return b.get_index()<a.get_index()
 	}
 }
