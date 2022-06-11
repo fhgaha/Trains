@@ -60,15 +60,20 @@ namespace Trains.Model.Builders
 				if (!(firstSegment is null))
 				{
 					//draw trajectory
-					//each time build new path and connect with old path
-					var path = firstSegment.GetNode<Path>("Path");
-					Vector3 end = GetIntersection() - path.GlobalTransform.origin;
-					var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 5);
-					var curve = new Curve3D();
-					points.ForEach(p => curve.AddPoint(p.ToVec3()));
-					path.Curve = curve;
+					DrawTrajectory();
 				}
 			}
+		}
+
+		private void DrawTrajectory()
+		{
+			//each time build new path and connect with old path
+			var path = firstSegment.GetNode<Path>("Path");
+			Vector3 end = GetIntersection() - path.GlobalTransform.origin;
+			var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 5);
+			var curve = new Curve3D();
+			points.ForEach(p => curve.AddPoint(p.ToVec3()));
+			path.Curve = curve;
 		}
 
 		protected void PlaceObject(Vector3 position, Vector3 rotation)

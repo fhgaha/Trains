@@ -3,7 +3,7 @@ using System;
 
 namespace Trains
 {
-	public class myNode2D : Node2D
+	public class DrawingArcs2D : Node2D
 	{
 
 		private Color white = new Color(1, 1, 1, 1);

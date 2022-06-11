@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/MainCamera/MainCameraController.cs" type="Script" id=1]
+
+[node name="MainCameraController" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.37053, 0.600662, 2.98392 )
+script = ExtResource( 1 )
+RotationSpeed = 20.0
+ZoomSpeed = 50.0
+ZoomSpeedDamp = 0.6
+
+[node name="Elevation" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.261044, 0.965327, 0, -0.965327, 0.261044, 0, 0, 0 )
+
+[node name="Camera" type="Camera" parent="Elevation"]
+transform = Transform( 1, 0, 0, 0, 1, 4.58009e-08, 0, -4.58009e-08, 1, 0, -1.9462e-07, 5.05318 )
+current = true
