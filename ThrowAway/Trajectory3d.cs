@@ -33,8 +33,8 @@ namespace Trains
 			Vector3 end = endNode.Translation;
 			path.Translation = start;
 
-			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
 			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 50);
+			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
 			//var points = CalculateLine(start.ToVec2(), end.ToVec2(), 2);
 			var curve = new Curve3D();
 			points.ToList().ForEach(p => curve.AddPoint(p.ToVec3()));
@@ -56,11 +56,19 @@ namespace Trains
 			var radVec = radius * (leftRight >= 0 ? new Vector2(-prevDir.y, prevDir.x) : new Vector2(prevDir.y, prevDir.x));
 			var center = start + radVec; 
 			
+			var circlePoints = new List<Vector2>();
+			for (float i = 0; i < 2 * Pi; i+=0.1f)
+			{
+				var point = new Vector2(radius * Cos(i), radius * Sin(i));
+				circlePoints.Add(radVec + point);
+			}
+
+
 			GetNode<MeshInstance>("dir").Translation = prevDir.ToVec3();
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();
 
 			var points = new List<Vector2>();
-			return points;
+			return circlePoints;
 		}
 
 		private List<Vector2> CalculateLine(Vector2 start, Vector2 end, int numPoints)
