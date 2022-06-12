@@ -37,7 +37,7 @@ namespace Trains
 			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
 			//var points = CalculateLine(start.ToVec2(), end.ToVec2(), 2);
 			var curve = new Curve3D();
-			points.ToList().ForEach(p => curve.AddPoint(p.ToVec3()));
+			points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
 			path.Curve = curve;
 
 			// GD.Print("start: " + start);
@@ -57,32 +57,49 @@ namespace Trains
 			var center = start + radVec;
 
 			var circlePoints = new List<Vector2>();
-			for (float i = 0; i < 2 * Pi; i += 0.1f)
+
+			//var tangent = Vector2.Zero;
+			var accuracy = 0.1f;
+
+			//go along circle
+			for (float i = Pi; i < 2 * Pi + Pi / 2; i += 0.1f)
 			{
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
-				circlePoints.Add(radVec + new Vector2(x, y));
+				var point = new Vector2(x, y);
+				circlePoints.Add(start + radVec + point);
+
+				//point is tangent if dot == 0
+				// var dirPointToCenter = (center - point).Normalized();
+				// var dirPointToEnd = (end - point).Normalized();
+				// var dot = dirPointToCenter.Dot(dirPointToEnd);
+				// var requiredVal = 0;
+				// if (dot > requiredVal - accuracy && dot < requiredVal + accuracy)
+				// {
+				// 	tangent = point;
+				// 	break;
+				// }
 			}
 
-			//display circle points
-			// circlePoints.ForEach(p => 
+			//go straight
+			// var _dirPointToEnd = (end - tangent).Normalized();
+			// var _point = tangent;
+			// while (_point.DistanceSquaredTo(end) > accuracy)
 			// {
-			// 	var dirPointToCenter = (center - p).Normalized();
-			// 	var dirPointToEnd = (end - p).Normalized();
-			// 	var dot = dirPointToCenter.Dot(dirPointToEnd);
-			// 	GD.Print(dot);
-			// });
-			// GD.Print();
+			// 	_point += _dirPointToEnd * accuracy;
+			// 	circlePoints.Add(_point);
+			// }
 
+			//find tangent in circle points
 			var tangent = Vector2.Zero;
 			tangent = circlePoints.FirstOrDefault(p =>
 			{
 				var dirPointToCenter = (center - p).Normalized();
 				var dirPointToEnd = (end - p).Normalized();
 				var dot = dirPointToCenter.Dot(dirPointToEnd);
-				var accuracy = 0.1f;
+				var _accuracy = 0.1f;
 				var requiredVal = 0;
-				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy)
+				if (dot > requiredVal - _accuracy && dot < requiredVal + _accuracy)
 				{
 					//GD.Print(p);
 					return true;
@@ -90,16 +107,17 @@ namespace Trains
 				return false;
 			});
 
+			//draw circle points
+			foreach (var p in circlePoints)
+			{
+				var dupl = (MeshInstance)GetNode<MeshInstance>("center").Duplicate();
+				AddChild(dupl);
+				dupl.Translation = p.ToVec3();
+			}
+
 			GetNode<MeshInstance>("dir").Translation = prevDir.ToVec3();
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();
-			GetNode<MeshInstance>("tangent").Translation = start.ToVec3() + tangent.ToVec3();
-
-			// foreach (var p in circlePoints)
-			// {
-			// 	var dupl = (MeshInstance)GetNode<MeshInstance>("tangent").Duplicate();
-			// 	AddChild(dupl);
-			// 	dupl.Translation = start.ToVec3() + p.ToVec3();
-			// }
+			GetNode<MeshInstance>("tangent").Translation = tangent.ToVec3();
 
 			var points = new List<Vector2>();
 			return circlePoints;
