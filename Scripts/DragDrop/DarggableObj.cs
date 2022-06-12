@@ -4,21 +4,45 @@ using System;
 
 namespace Trains.Scripts.DragDrop
 {
+	[Tool]
 	public class DarggableObj : Spatial
 	{
+		private Color color = new Color("fdff00");
+
+		[Export] public Color Color
+		{
+			get => color;
+			set
+			{
+				color = value;
+				if (Engine.EditorHint)
+				SetColor(value);
+			}
+		} 
+
 		public override void _Ready()
 		{
+			SetColor(Color);
+
+			var mesh = (PrimitiveMesh)GetNode<MeshInstance>("MeshInstance").Mesh;
+			var material = (SpatialMaterial)mesh.Material;
+			material.FlagsTransparent = true;
+
 			var draggable = GetNode<Draggable>("Area/Draggable_");
 			draggable.Connect(nameof(Draggable.DragMove), this, nameof(onDragMove));
 		}
 
-		
-// func _on_Draggable_drag_move(node, cast):
-// 	set_translation(cast['position'])
-
 		public void onDragMove(Node node, Godot.Collections.Dictionary cast)
 		{
 			Translation = (Vector3)cast["position"];
+		}
+
+		private void SetColor(Color value)
+		{
+			var mesh = (PrimitiveMesh)GetNode<MeshInstance>("MeshInstance").Mesh;
+			var material = (SpatialMaterial)mesh.Material;
+			material.AlbedoColor = value;
+			material.FlagsTransparent = true;
 		}
 	}
 }
