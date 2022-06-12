@@ -24,10 +24,6 @@ namespace Trains.Scripts.DragDrop
 		{
 			SetColor(Color);
 
-			var mesh = (PrimitiveMesh)GetNode<MeshInstance>("MeshInstance").Mesh;
-			var material = (SpatialMaterial)mesh.Material;
-			material.FlagsTransparent = true;
-
 			var draggable = GetNode<Draggable>("Area/Draggable_");
 			draggable.Connect(nameof(Draggable.DragMove), this, nameof(onDragMove));
 		}

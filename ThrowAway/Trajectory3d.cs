@@ -1,6 +1,8 @@
+//https://www.youtube.com/watch?v=F47dmKpAIW0&t=774s
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Trains.Model.Common;
 using static Godot.Mathf;
 
@@ -10,43 +12,63 @@ namespace Trains
 	{
 		private int numPoints = 50;
 		private float gravity = -9.8f;
-		private Spatial start;
-		private Spatial end;
+		private Spatial startNode;
+		private Spatial endNode;
 		private Path path;
 		//private PackedScene scene = GD.Load<PackedScene>("res://Scenes/Rails/RailCSG.tscn");
 
 		public override void _Ready()
 		{
-			start = GetNode<Spatial>("start");
-			end = GetNode<Spatial>("end");
+			startNode = GetNode<Spatial>("start");
+			endNode = GetNode<Spatial>("end");
 			path = GetNode<Path>("RailCSG/Path");
-			path.Translation = start.GlobalTransform.origin;
+			path.Translation = startNode.GlobalTransform.origin;
 		}
 
 		public override void _PhysicsProcess(float delta)
 		{
-			Vector3 startPos = start.Translation;
-			Vector3 endPos = end.Translation;
-			
-			var points = CalculateTrajectory(startPos.ToVec2(), endPos.ToVec2(), 20);
+			Vector3 start = startNode.Translation;
+			Vector3 end = endNode.Translation;
+			path.Translation = start;
+
+			var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
+			//var points = CalculateLine(start.ToVec2(), end.ToVec2(), 2);
 			var curve = new Curve3D();
-			points.ForEach(p => curve.AddPoint(p.ToVec3() - startPos));
+			points.ToList().ForEach(p => curve.AddPoint(p.ToVec3()));
 			path.Curve = curve;
 
-
+			// GD.Print("start: " + start);
+			// GD.Print("end: " + end);
+			// GD.Print("points:");
+			// points.ToList().ForEach(p => GD.Print(start + p.ToVec3()));
+			// GD.Print();
 		}
 
-		private List<Vector2> CalculateTrajectory(Vector2 startPos, Vector2 endPos, int numPoints)
+		private List<Vector2> CalculateLine(Vector2 start, Vector2 end, int numPoints)
+		{
+			var points = new List<Vector2>();
+			var startEnd = end - start;
+
+			for (int i = 0; i < numPoints + 1; i++)
+			{
+				var point = new Vector2(i * startEnd.x/numPoints, i * startEnd.y/numPoints);
+				points.Add(point);
+			}
+
+			return points;
+		}
+
+		private IEnumerable<Vector2> CalculateTrajectory(Vector2 start, Vector2 end, int numPoints)
 		{
 			float gravity = -15f;
 			var points = new List<Vector2>();
-			var startEndDir = (endPos - startPos).Normalized();
+			var startEndDir = (end - start).Normalized();
 			//this should be changed to previous segment direction?
 			var DOT = Vector2.Right.Dot(startEndDir);   //-1, 0 or 1
 			var angle = 90 - 45 * DOT;
 
-			var xDist = endPos.x - startPos.x;
-			var yDist = -1f * (endPos.y - startPos.y);  //flip y to do calculations in eucludus geometry. y flips back later.
+			var xDist = end.x - start.x;
+			var yDist = -1f * (end.y - start.y);  //flip y to do calculations in eucludus geometry. y flips back later.
 
 			var speed = Sqrt(
 				((0.5f * gravity * xDist * xDist) / Pow(Cos(Pi / 180 * angle), 2f))
@@ -56,15 +78,16 @@ namespace Trains
 
 			var totalTime = xDist / xComponent;
 
-			for (int i = 0; i < numPoints; i++)
+			for (int i = 0; i < numPoints + 1; i++)
 			{
 				var time = totalTime * i / numPoints;
 				var dx = time * xComponent;
 				var dy = -1f * (time * yComponent + 0.5f * gravity * time * time);
-				points.Add(startPos + new Vector2(dx, dy));
+				//points.Add(new Vector2(dx, dy));
+				yield return new Vector2(dx, dy);
 			}
 
-			return points;
+			//return points;
 		}
 	}
 }
