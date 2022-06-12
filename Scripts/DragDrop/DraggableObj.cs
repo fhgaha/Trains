@@ -5,7 +5,7 @@ using System;
 namespace Trains.Scripts.DragDrop
 {
 	[Tool]
-	public class DarggableObj : Spatial
+	public class DraggableObj : Spatial
 	{
 		private Color color = new Color("fdff00");
 
