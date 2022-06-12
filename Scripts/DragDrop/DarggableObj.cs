@@ -1,7 +1,8 @@
+//https://github.com/christinoleo/godot-plugin-DragDrop3D
 using Godot;
 using System;
 
-namespace Trains
+namespace Trains.Scripts.DragDrop
 {
 	public class DarggableObj : Spatial
 	{

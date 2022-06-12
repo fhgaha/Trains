@@ -1,8 +1,11 @@
+////https://github.com/christinoleo/godot-plugin-DragDrop3D
 using Godot;
 using System;
 
-namespace Trains
+namespace Trains.Scripts.DragDrop
 {
+	//if body has a collision object it will be detected as ray cast target 
+	//so either disable collision body of that object or use specific layer
 	[Tool]
 	public class Draggable : Node
 	{

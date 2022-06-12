@@ -3,8 +3,8 @@
 [ext_resource path="res://ThrowAway/Trajectory3d.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Rails/RailCSG.tscn" type="PackedScene" id=3]
-[ext_resource path="res://ThrowAway/DarggableObj.cs" type="Script" id=4]
-[ext_resource path="res://ThrowAway/Draggable.cs" type="Script" id=5]
+[ext_resource path="res://Scripts/DragDrop/DarggableObj.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/DragDrop/Draggable.cs" type="Script" id=5]
 
 [sub_resource type="CubeMesh" id=14]
 size = Vector3( 0.1, 6, 0.1 )
@@ -64,6 +64,7 @@ __meta__ = {
 shape = SubResource( 3 )
 
 [node name="MainCameraController" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 0.940359, -0.340183, 0, 0.340183, 0.940359, 8.92344, 4.47307, 11.2372 )
 
 [node name="start" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.54095, -8.88178e-16, 6.02414 )
@@ -79,6 +80,7 @@ material/0 = null
 [node name="CollisionShape" type="CollisionShape" parent="start/StaticBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
 shape = SubResource( 12 )
+disabled = true
 
 [node name="Area" type="Area" parent="start"]
 
@@ -91,6 +93,7 @@ shape = SubResource( 12 )
 
 [node name="end" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7544, 0, 8.97107 )
+script = ExtResource( 4 )
 
 [node name="MeshInstance" type="MeshInstance" parent="end"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
@@ -100,6 +103,16 @@ material/0 = null
 [node name="StaticBody" type="StaticBody" parent="end"]
 
 [node name="CollisionShape" type="CollisionShape" parent="end/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
+shape = SubResource( 12 )
+disabled = true
+
+[node name="Area" type="Area" parent="end"]
+
+[node name="Draggable_" type="Node" parent="end/Area"]
+script = ExtResource( 5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="end/Area"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )
 shape = SubResource( 12 )
 

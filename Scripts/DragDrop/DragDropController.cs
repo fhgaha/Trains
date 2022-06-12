@@ -1,8 +1,9 @@
+////https://github.com/christinoleo/godot-plugin-DragDrop3D
 using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace Trains
+namespace Trains.Scripts.DragDrop
 {
 	public class DragDropController : Node
 	{
