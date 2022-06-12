@@ -51,21 +51,55 @@ namespace Trains
 		{
 			float radius = 5f;
 			var startEndDir = (end - start).Normalized();
-			var prevDir = new Vector2(0, -1);	//up
-			var leftRight = prevDir.Rotated(Pi/2).Dot(startEndDir);   //-1, 0 or 1
+			var prevDir = new Vector2(0, -1);   //up
+			var leftRight = prevDir.Rotated(Pi / 2).Dot(startEndDir);   //-1, 0 or 1
 			var radVec = radius * (leftRight >= 0 ? new Vector2(-prevDir.y, prevDir.x) : new Vector2(prevDir.y, prevDir.x));
-			var center = start + radVec; 
-			
+			var center = start + radVec;
+
 			var circlePoints = new List<Vector2>();
-			for (float i = 0; i < 2 * Pi; i+=0.1f)
+			for (float i = 0; i < 2 * Pi; i += 0.1f)
 			{
-				var point = new Vector2(radius * Cos(i), radius * Sin(i));
-				circlePoints.Add(radVec + point);
+				var x = radius * Cos(i);
+				var y = radius * Sin(i);
+				circlePoints.Add(radVec + new Vector2(x, y));
 			}
 
+			//display circle points
+			// circlePoints.ForEach(p => 
+			// {
+			// 	var dirPointToCenter = (center - p).Normalized();
+			// 	var dirPointToEnd = (end - p).Normalized();
+			// 	var dot = dirPointToCenter.Dot(dirPointToEnd);
+			// 	GD.Print(dot);
+			// });
+			// GD.Print();
+
+			var tangent = Vector2.Zero;
+			tangent = circlePoints.FirstOrDefault(p =>
+			{
+				var dirPointToCenter = (center - p).Normalized();
+				var dirPointToEnd = (end - p).Normalized();
+				var dot = dirPointToCenter.Dot(dirPointToEnd);
+				var accuracy = 0.1f;
+				var requiredVal = 0;
+				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy)
+				{
+					//GD.Print(p);
+					return true;
+				}
+				return false;
+			});
 
 			GetNode<MeshInstance>("dir").Translation = prevDir.ToVec3();
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();
+			GetNode<MeshInstance>("tangent").Translation = start.ToVec3() + tangent.ToVec3();
+
+			// foreach (var p in circlePoints)
+			// {
+			// 	var dupl = (MeshInstance)GetNode<MeshInstance>("tangent").Duplicate();
+			// 	AddChild(dupl);
+			// 	dupl.Translation = start.ToVec3() + p.ToVec3();
+			// }
 
 			var points = new List<Vector2>();
 			return circlePoints;
@@ -78,7 +112,7 @@ namespace Trains
 
 			for (int i = 0; i < numPoints + 1; i++)
 			{
-				var point = new Vector2(i * startEnd.x/numPoints, i * startEnd.y/numPoints);
+				var point = new Vector2(i * startEnd.x / numPoints, i * startEnd.y / numPoints);
 				points.Add(point);
 			}
 
