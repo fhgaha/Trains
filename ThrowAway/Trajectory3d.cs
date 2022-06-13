@@ -36,6 +36,7 @@ namespace Trains
 			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 50);
 			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
 			//var points = CalculateLine(start.ToVec2(), end.ToVec2(), 2);
+
 			var curve = new Curve3D();
 			points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
 			path.Curve = curve;
@@ -57,8 +58,7 @@ namespace Trains
 			var center = start + radVec;
 
 			var circlePoints = new List<Vector2>();
-
-			//var tangent = Vector2.Zero;
+			var tangent = Vector2.Zero;
 			var accuracy = 0.1f;
 
 			//go along circle
@@ -70,21 +70,9 @@ namespace Trains
 				var y = radius * Sin(i);
 				var point = new Vector2(x, y);
 				circlePoints.Add(start + radVec + point);
-
-				//point is tangent if dot == 0
-				// var dirPointToCenter = (center - point).Normalized();
-				// var dirPointToEnd = (end - point).Normalized();
-				// var dot = dirPointToCenter.Dot(dirPointToEnd);
-				// var requiredVal = 0;
-				// if (dot > requiredVal - accuracy && dot < requiredVal + accuracy)
-				// {
-				// 	tangent = point;
-				// 	break;
-				// }
 			}
 
 			//find tangent in circle points
-			var tangent = Vector2.Zero;
 			tangent = circlePoints.FirstOrDefault(p =>
 			{
 				var dirPointToCenter = (center - p).Normalized();
@@ -100,6 +88,7 @@ namespace Trains
 				return false;
 			});
 
+			if (tangent == Vector2.Zero) return new List<Vector2>();
 			circlePoints.RemoveAll(p => circlePoints.IndexOf(p) > circlePoints.IndexOf(tangent));
 
 			//go straight
@@ -123,7 +112,6 @@ namespace Trains
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();
 			GetNode<MeshInstance>("tangent").Translation = tangent.ToVec3();
 
-			var points = new List<Vector2>();
 			return circlePoints;
 		}
 
