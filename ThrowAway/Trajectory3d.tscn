@@ -65,7 +65,7 @@ __meta__ = {
 shape = SubResource( 3 )
 
 [node name="MainCameraController" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 0.940359, -0.340183, 0, 0.340183, 0.940359, 8.92344, 4.47307, 11.2372 )
+transform = Transform( 1, 0, 0, 0, 0.940359, -0.340183, 0, 0.340183, 0.940359, 3.3225, 7.01609, 13.46 )
 
 [node name="start" parent="." instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.48457, -8.88178e-16, 9.74874 )

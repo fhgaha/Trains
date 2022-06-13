@@ -50,46 +50,45 @@ namespace Trains
 
 		private IEnumerable<Vector2> CalculateCircledPath(Vector2 start, Vector2 end, int numPoints)
 		{
-			float radius = 5f;
+			float radius = 3f;
 			var startEndDir = (end - start).Normalized();
 			var prevDir = new Vector2(0, -1);   //up
 			var leftRight = prevDir.Rotated(Pi / 2).Dot(startEndDir);   //-1, 0 or 1
 			var radVec = radius * (leftRight >= 0 ? new Vector2(-prevDir.y, prevDir.x) : new Vector2(prevDir.y, prevDir.x));
 			var center = start + radVec;
 
-			var circlePoints = new List<Vector2>();
+			var points = new List<Vector2>();
 			var tangent = Vector2.Zero;
 			var accuracy = 0.1f;
 
 			//go along circle
-			var startAngle = Pi;
-			var endAngle = 2 * Pi + Pi / 2;
-			for (float i = startAngle; i < endAngle; i += 0.1f)
+			var startAngle = leftRight >= 0 ? Pi : 0;
+			var endAngle = leftRight >= 0 ? 2 * Pi + Pi / 2 : -Pi - Pi / 2;
+			var dAngle = leftRight >= 0 ? 0.1f : -0.1f;
+			Func<float, bool> condition = i => leftRight >= 0 ? i < endAngle : i > endAngle;
+
+			for (float i = startAngle; condition(i); i += dAngle)
 			{
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
 				var point = new Vector2(x, y);
-				circlePoints.Add(start + radVec + point);
+				points.Add(start + radVec + point);
 			}
 
 			//find tangent in circle points
-			tangent = circlePoints.FirstOrDefault(p =>
+			tangent = points.FirstOrDefault(p =>
 			{
 				var dirPointToCenter = (center - p).Normalized();
 				var dirPointToEnd = (end - p).Normalized();
-				var dot = dirPointToCenter.Dot(dirPointToEnd);
-				var _accuracy = 0.1f;
+				//var dot = dirPointToCenter.Dot(dirPointToEnd);
+				var dot = leftRight >= 0 ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
 				var requiredVal = 0;
-				if (dot > requiredVal - _accuracy && dot < requiredVal + _accuracy)
-				{
-					//GD.Print(p);
-					return true;
-				}
+				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;
 				return false;
 			});
 
 			if (tangent == Vector2.Zero) return new List<Vector2>();
-			circlePoints.RemoveAll(p => circlePoints.IndexOf(p) > circlePoints.IndexOf(tangent));
+			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 
 			//go straight
 			var _dirPointToEnd = (end - tangent).Normalized();
@@ -97,7 +96,7 @@ namespace Trains
 			while (_point.DistanceSquaredTo(end) > accuracy)
 			{
 				_point += _dirPointToEnd * accuracy;
-				circlePoints.Add(_point);
+				points.Add(_point);
 			}
 
 			//draw circle points
@@ -112,7 +111,7 @@ namespace Trains
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();
 			GetNode<MeshInstance>("tangent").Translation = tangent.ToVec3();
 
-			return circlePoints;
+			return points;
 		}
 
 		private List<Vector2> CalculateLine(Vector2 start, Vector2 end, int numPoints)
