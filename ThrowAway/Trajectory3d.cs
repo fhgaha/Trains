@@ -87,7 +87,11 @@ namespace Trains
 				return false;
 			});
 
+			//prevent drawing inside circle or from scene origin
 			if (tangent == Vector2.Zero) return new List<Vector2>();
+			//prevent drawing behind start
+			if (tangent == start && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
+
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 
 			//go straight
