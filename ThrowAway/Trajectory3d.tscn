@@ -39,6 +39,7 @@ albedo_color = Color( 0, 0.937255, 1, 1 )
 
 [node name="Trajectory3d" type="Spatial"]
 script = ExtResource( 1 )
+_Rotation = 100.0
 
 [node name="Base" type="Spatial" parent="."]
 __meta__ = {

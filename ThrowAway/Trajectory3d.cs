@@ -11,6 +11,8 @@ namespace Trains
 {
 	public class Trajectory3d : Spatial
 	{
+		[Export(PropertyHint.Range, "0, 359,")]
+		public float _Rotation { get; set; } = 0;
 		private int numPoints = 50;
 		private float gravity = -9.8f;
 		private Spatial startNode;
@@ -25,8 +27,6 @@ namespace Trains
 			endNode = GetNode<Spatial>("end");
 			path = GetNode<Path>("RailCSG/Path");
 			path.Translation = startNode.GlobalTransform.origin;
-
-
 		}
 
 		public override void _PhysicsProcess(float delta)
@@ -35,7 +35,7 @@ namespace Trains
 			Vector3 end = endNode.Translation;
 			path.Translation = start;
 
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 3f, 50, new Vector3(0, 0, -1).ToVec2());
+			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 3f, 50, Pi/180 * _Rotation);
 			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
 			//var points = CalculateLine(start.ToVec2(), end.ToVec2(), 2);
 
@@ -44,6 +44,7 @@ namespace Trains
 				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
 			else
 			{
+				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"
 				curve.AddPoint(Vector3.Zero);
 				curve.AddPoint(Vector3.Forward);
 			}
@@ -57,11 +58,15 @@ namespace Trains
 		}
 
 		private IEnumerable<Vector2> CalculateCircledPath(
-			Vector2 start, Vector2 end, float radius, int numPoints, Vector2 prevDir)
+			Vector2 start, Vector2 end, float radius, int numPoints, float rotation)
 		{
+			var prevDir = new Vector2(0, -1).Rotated(rotation);
 			var startEndDir = (end - start).Normalized();
 			var leftRight = prevDir.Rotated(Pi / 2).Dot(startEndDir);   //-1, 0 or 1
-			var radVec = radius * (leftRight >= 0 ? new Vector2(-prevDir.y, prevDir.x) : new Vector2(prevDir.y, prevDir.x));
+
+			var d = rotation >= Pi/2 && rotation < 3*Pi/2 ? -1 : 1;
+			var prevDirPerp = new Vector2(d, -d * prevDir.x / prevDir.y).Normalized();
+			var radVec = radius * (leftRight >= 0 ? prevDirPerp : prevDirPerp.Rotated(Pi));
 			var center = start + radVec;
 
 			var points = new List<Vector2>();
@@ -69,8 +74,8 @@ namespace Trains
 			var accuracy = 0.1f;
 
 			//go along circle
-			var startAngle = leftRight >= 0 ? Pi : 0;
-			var endAngle = leftRight >= 0 ? 2 * Pi + Pi / 2 : -Pi - Pi / 2;
+			var startAngle = (leftRight >= 0 ? Pi : 0) + rotation;
+			var endAngle = (leftRight >= 0 ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + rotation;
 			var dAngle = leftRight >= 0 ? 0.1f : -0.1f;
 			Func<float, bool> condition = i => leftRight >= 0 ? i < endAngle : i > endAngle;
 
@@ -110,7 +115,7 @@ namespace Trains
 			}
 
 			//draw circle points
-			// foreach (var p in circlePoints)
+			// foreach (var p in points)
 			// {
 			// 	var dupl = (MeshInstance)GetNode<MeshInstance>("center").Duplicate();
 			// 	AddChild(dupl);
