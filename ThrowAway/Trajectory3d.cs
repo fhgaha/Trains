@@ -25,6 +25,8 @@ namespace Trains
 			endNode = GetNode<Spatial>("end");
 			path = GetNode<Path>("RailCSG/Path");
 			path.Translation = startNode.GlobalTransform.origin;
+
+
 		}
 
 		public override void _PhysicsProcess(float delta)
@@ -33,12 +35,18 @@ namespace Trains
 			Vector3 end = endNode.Translation;
 			path.Translation = start;
 
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 50);
+			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 3f, 50, new Vector3(0, 0, -1).ToVec2());
 			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 50);
 			//var points = CalculateLine(start.ToVec2(), end.ToVec2(), 2);
 
 			var curve = new Curve3D();
-			points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
+			if (points.Count() > 0)
+				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
+			else
+			{
+				curve.AddPoint(Vector3.Zero);
+				curve.AddPoint(Vector3.Forward);
+			}
 			path.Curve = curve;
 
 			// GD.Print("start: " + start);
@@ -48,11 +56,10 @@ namespace Trains
 			// GD.Print();
 		}
 
-		private IEnumerable<Vector2> CalculateCircledPath(Vector2 start, Vector2 end, int numPoints)
+		private IEnumerable<Vector2> CalculateCircledPath(
+			Vector2 start, Vector2 end, float radius, int numPoints, Vector2 prevDir)
 		{
-			float radius = 3f;
 			var startEndDir = (end - start).Normalized();
-			var prevDir = new Vector2(0, -1);   //up
 			var leftRight = prevDir.Rotated(Pi / 2).Dot(startEndDir);   //-1, 0 or 1
 			var radVec = radius * (leftRight >= 0 ? new Vector2(-prevDir.y, prevDir.x) : new Vector2(prevDir.y, prevDir.x));
 			var center = start + radVec;
@@ -91,7 +98,6 @@ namespace Trains
 			if (tangent == Vector2.Zero) return new List<Vector2>();
 			//prevent drawing behind start
 			if (tangent == start && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
-
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 
 			//go straight
