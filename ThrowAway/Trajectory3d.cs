@@ -62,7 +62,9 @@ namespace Trains
 			var accuracy = 0.1f;
 
 			//go along circle
-			for (float i = Pi; i < 2 * Pi + Pi / 2; i += 0.1f)
+			var startAngle = Pi;
+			var endAngle = 2 * Pi + Pi / 2;
+			for (float i = startAngle; i < endAngle; i += 0.1f)
 			{
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
@@ -81,15 +83,6 @@ namespace Trains
 				// }
 			}
 
-			//go straight
-			// var _dirPointToEnd = (end - tangent).Normalized();
-			// var _point = tangent;
-			// while (_point.DistanceSquaredTo(end) > accuracy)
-			// {
-			// 	_point += _dirPointToEnd * accuracy;
-			// 	circlePoints.Add(_point);
-			// }
-
 			//find tangent in circle points
 			var tangent = Vector2.Zero;
 			tangent = circlePoints.FirstOrDefault(p =>
@@ -107,13 +100,24 @@ namespace Trains
 				return false;
 			});
 
-			//draw circle points
-			foreach (var p in circlePoints)
+			circlePoints.RemoveAll(p => circlePoints.IndexOf(p) > circlePoints.IndexOf(tangent));
+
+			//go straight
+			var _dirPointToEnd = (end - tangent).Normalized();
+			var _point = tangent;
+			while (_point.DistanceSquaredTo(end) > accuracy)
 			{
-				var dupl = (MeshInstance)GetNode<MeshInstance>("center").Duplicate();
-				AddChild(dupl);
-				dupl.Translation = p.ToVec3();
+				_point += _dirPointToEnd * accuracy;
+				circlePoints.Add(_point);
 			}
+
+			//draw circle points
+			// foreach (var p in circlePoints)
+			// {
+			// 	var dupl = (MeshInstance)GetNode<MeshInstance>("center").Duplicate();
+			// 	AddChild(dupl);
+			// 	dupl.Translation = p.ToVec3();
+			// }
 
 			GetNode<MeshInstance>("dir").Translation = prevDir.ToVec3();
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();

@@ -68,10 +68,11 @@ shape = SubResource( 3 )
 transform = Transform( 1, 0, 0, 0, 0.940359, -0.340183, 0, 0.340183, 0.940359, 8.92344, 4.47307, 11.2372 )
 
 [node name="start" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.95073, -8.88178e-16, 10.112 )
 Color = Color( 0.0588235, 0.054902, 0.694118, 0.458824 )
 
 [node name="end" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.56865, -8.88178e-16, 9.89061 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8748, -8.88178e-16, 5.74277 )
 Color = Color( 1, 0, 0, 0.501961 )
 
 [node name="draggable_" type="Spatial" parent="."]
