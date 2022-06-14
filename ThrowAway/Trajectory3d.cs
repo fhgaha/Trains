@@ -101,8 +101,13 @@ namespace Trains
 
 			//prevent drawing inside circle or from scene origin
 			if (tangent == Vector2.Zero) return new List<Vector2>();
+			
 			//prevent drawing behind start
-			if (tangent == start && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
+			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
+			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
+			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
+
+			if (tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 
 			//go straight
