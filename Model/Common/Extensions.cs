@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using Godot;
+using System;
 
 namespace Trains.Model.Common
 {
 	public static class Extensions
 	{
+		//Node
 		public static void RemoveAllChildren(this Node node)
 		{
 			foreach (Node child in node.GetChildren())
@@ -13,16 +16,28 @@ namespace Trains.Model.Common
 			}
 		}
 
-		// func vec2_vec3(vec3, axis):
-		// var array = [vec3.x, vec3.y, vec3.z]
-		// array.remove(axis)
-		// return Vector2(array[0], array[1])
 
-		// func vec3_vec2(vec2, axis, value):
-		// var array = [vec2.x, vec2.y]
-		// array.insert(axis, value)
-		// return Vector3(array[0], array[1], array[2])
+		//Vector
 		public static Vector3 ToVec3(this Vector2 vec) => new Vector3(vec.x, 0, vec.y);
 		public static Vector2 ToVec2(this Vector3 vec) => new Vector2(vec.x, vec.z);
+
+
+		//Curve3D
+		public static Vector3 First(this Curve3D curve) => curve.GetPointPosition(0);
+		public static Vector3 Last(this Curve3D curve) => curve.GetPointPosition(curve.GetPointCount() - 1);
+
+		public static List<Vector3> TakeLast(this Curve3D curve, int amount)
+		{
+			var list = new List<Vector3>();
+			var startIndex = curve.GetPointCount() - 1;
+			var lastIndex = curve.GetPointCount() - amount;
+			if (lastIndex < 0) throw new ArgumentException(
+				"amount " + amount + " cannot be bigger that curve points count " + curve.GetPointCount());
+
+			for (int i = startIndex; i >= lastIndex; i--)
+				list.Add(curve.GetPointPosition(i));
+
+			return list;
+		}
 	}
 }
