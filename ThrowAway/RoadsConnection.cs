@@ -6,13 +6,12 @@ namespace Trains
 {
 	public class RoadsConnection : Spatial
 	{
-		private PackedScene scene = GD.Load<PackedScene>("res://Scenes/Rails/RailCSG.tscn");
 		private Path path;
 
 
 		public override void _Ready()
 		{
-			path = GetNode<Path>("RailCSG/Path");
+			path = GetNode<Path>("RailPath");
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -23,14 +22,7 @@ namespace Trains
 
 		private void PlaceRailSegment()
 		{
-			var newPath = scene.Instance<Spatial>();
-			AddChild(newPath);
-			newPath.Translation = path.Curve.Last() + Vector3.Forward;
-			path = newPath.GetNode<Path>("Path");
-
-			GD.Print(path.Curve.Last());
-			GD.Print(newPath.Translation);
-			GD.Print();
+			path.Curve.AddPoint(path.Curve.Last() + Vector3.Forward);
 		}
 	}
 }

@@ -9,6 +9,7 @@ using static Godot.Mathf;
 
 namespace Trains.Model.Builders
 {
+	enum State { None, SelectStart, SelectEnd }
 	public class RailBuilder : Spatial
 	{
 		private Color yellow = new Color("86e3db6b");
@@ -16,14 +17,15 @@ namespace Trains.Model.Builders
 		private List<Cell> cells;
 		private Events events;
 		private PackedScene scene;
-		private Spatial blueprint;
+		private Path blueprint;
 		private bool canBuild = false;
 		private const float rayLength = 1000f;
 		private Camera camera;
-		private Spatial objectHolder;	//Rails
+		private Spatial objectHolder;   //Rails
 		private MainButtonType mainButtonType;
-		private Spatial firstSegment = null;
+		private Path firstSegment = null;
 		private Vector3 prevDir;
+		private State state = State.None;
 
 		//in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -46,10 +48,9 @@ namespace Trains.Model.Builders
 		public override void _PhysicsProcess(float delta)
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
-			UpdateBlueprint();
+			if (!(blueprint is null)) UpdateBlueprint();
 		}
 
-		private Vector3 start = Vector3.Zero;
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
@@ -62,7 +63,6 @@ namespace Trains.Model.Builders
 			{
 				if (!(firstSegment is null))
 				{
-					//draw trajectory
 					DrawTrajectory();
 				}
 			}
@@ -71,19 +71,13 @@ namespace Trains.Model.Builders
 		private void DrawTrajectory()
 		{
 			//each time build new path and connect with old path
-			var path = firstSegment.GetNode<Path>("Path");
-			var start = path.Curve.Last();	
-			var end = GetIntersection();
-
+			var start = firstSegment.Curve.Last();
+			Vector3 end = this.GetIntersection(camera, rayLength);
 			GD.Print(start);
-			GD.Print(end);
-			GD.Print();
+			blueprint.Translation = start;
+			var _Rotation = 0;
 
-			var dotPrevDirToEnd = prevDir.ToVec2().Dot((end - start).ToVec2().Normalized());
-			var rotation = (dotPrevDirToEnd + 1) * Pi;
-			//var points = CalculateTrajectory(start.ToVec2(), end.ToVec2(), 5);
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 10, 0);
-
+			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1.5f, 50, Pi / 180 * _Rotation);
 			var curve = new Curve3D();
 			if (points.Count() > 0)
 				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
@@ -93,66 +87,43 @@ namespace Trains.Model.Builders
 				curve.AddPoint(Vector3.Zero);
 				curve.AddPoint(Vector3.Forward);
 			}
-			path.Curve = curve;
+			blueprint.Curve = curve;
+
+			// GD.Print("start: " + start);
+			// GD.Print("end: " + end);
+			// GD.Print("points:");
+			// points.ToList().ForEach(p => GD.Print(start + p.ToVec3()));
+			// GD.Print();
 		}
 
 		protected void PlaceObject(Vector3 position, Vector3 rotation)
 		{
-			//place segment which is defined by path
+			if (firstSegment is null)
+			{
+				firstSegment = scene.Instance<Path>();
+				firstSegment.Translation = position;
+				firstSegment.Rotation = rotation;
+				objectHolder.AddChild(firstSegment);
 
+				//set prevDir
+				var points = firstSegment.Curve.TakeLast(2);
+				prevDir = (points[1] - points[0]).Normalized();
+			}
 
-			//csg: set collision layer and mask
-			var rail = scene.Instance<Spatial>();
-			//rail.RemoveChild(rail.GetNode("Base"));
-			rail.Translation = position;
-			rail.Rotation = rotation;
-			//rail.GetNode<CollisionPolygon>("Path/CSGPolygon/Area/CollisionPolygon").Disabled = false;
-			objectHolder.AddChild(rail);
-			firstSegment = rail;	//origin in 0;0
-
-			//set prevDir
-			var points = rail.GetNode<Path>("Path").Curve.TakeLast(2);
-			prevDir = (points[1] - points[0]).Normalized();
 		}
 
 		private void UpdateBlueprint()
 		{
-			if (blueprint is null) return;
 
-			var pos = GetIntersection();
-			blueprint.Translation = pos;
 
-			//set blueprint position
-			// var pos = GetIntersection();
-			// Cell closestCell = cells.Aggregate((curMin, c)
-			// 	=> c.Translation.DistanceSquaredTo(pos) < curMin.Translation.DistanceSquaredTo(pos) ? c : curMin);
-			// blueprint.Translation = closestCell.Translation;
+			blueprint.Translation = this.GetIntersection(camera, rayLength);
 
 			//set base color
-			var area = blueprint.GetNode<Area>("Path/CSGPolygon/Area");
+			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			canBuild = bodies.Count() <= 0;
-			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("Path/CSGPolygon").Material;
+			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
-		}
-
-		private Vector3 GetIntersection()
-		{
-			PhysicsDirectSpaceState spaceState = GetWorld().DirectSpaceState;
-			Vector2 mousePosition = GetViewport().GetMousePosition();
-			Vector3 rayOrigin = camera.ProjectRayOrigin(mousePosition);
-			Vector3 rayNormal = camera.ProjectRayNormal(mousePosition);
-			Vector3 rayEnd = rayOrigin + rayNormal * rayLength;
-			var intersection = spaceState.IntersectRay(rayOrigin, rayEnd);
-
-			if (intersection.Count == 0)
-			{
-				GD.Print("camera ray did not collide with an object.");
-				return Vector3.Zero;
-			}
-
-			var pos = (Vector3)intersection["position"];
-			return pos;
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -175,9 +146,9 @@ namespace Trains.Model.Builders
 			//init blueprint
 			//can be build new rail or continue existing one
 			//for the time let it be always build first ever rail
-			blueprint = scene.Instance<Spatial>();
-			var csg = blueprint.GetNode<CSGPolygon>("Path/CSGPolygon");
-			var collider = blueprint.GetNode<CollisionPolygon>("Path/CSGPolygon/Area/CollisionPolygon");
+			blueprint = scene.Instance<Path>();
+			var csg = blueprint.GetNode<CSGPolygon>("CSGPolygon");
+			var collider = blueprint.GetNode<CollisionPolygon>("CSGPolygon/Area/CollisionPolygon");
 			collider.Polygon = csg.Polygon;
 			AddChild(blueprint);
 		}
@@ -212,7 +183,7 @@ namespace Trains.Model.Builders
 
 			return points;
 		}
-	
+
 		private IEnumerable<Vector2> CalculateCircledPath(
 			Vector2 start, Vector2 end, float radius, int numPoints, float rotationRad)
 		{
@@ -220,7 +191,7 @@ namespace Trains.Model.Builders
 			var startEndDir = (end - start).Normalized();
 			var leftRight = prevDir.Rotated(Pi / 2).Dot(startEndDir);   //-1, 0 or 1
 
-			var d = rotationRad >= Pi/2 && rotationRad < 3*Pi/2 ? -1 : 1;
+			var d = rotationRad >= Pi / 2 && rotationRad < 3 * Pi / 2 ? -1 : 1;
 			var prevDirPerp = new Vector2(d, -d * prevDir.x / prevDir.y).Normalized();
 			var radVec = radius * (leftRight >= 0 ? prevDirPerp : prevDirPerp.Rotated(Pi));
 			var center = start + radVec;
@@ -257,7 +228,7 @@ namespace Trains.Model.Builders
 
 			//prevent drawing inside circle or from scene origin
 			if (tangent == Vector2.Zero) return new List<Vector2>();
-			
+
 			//prevent drawing behind start
 			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
 			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
@@ -277,6 +248,6 @@ namespace Trains.Model.Builders
 
 			return points;
 		}
-	
+
 	}
 }

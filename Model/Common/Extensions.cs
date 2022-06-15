@@ -39,5 +39,25 @@ namespace Trains.Model.Common
 
 			return list;
 		}
+
+		//Spatial
+		public static Vector3 GetIntersection(this Spatial spatial, Camera camera, float rayLength)
+		{
+			PhysicsDirectSpaceState spaceState = spatial.GetWorld().DirectSpaceState;
+			Vector2 mousePosition = spatial.GetViewport().GetMousePosition();
+			Vector3 rayOrigin = camera.ProjectRayOrigin(mousePosition);
+			Vector3 rayNormal = camera.ProjectRayNormal(mousePosition);
+			Vector3 rayEnd = rayOrigin + rayNormal * rayLength;
+			var intersection = spaceState.IntersectRay(rayOrigin, rayEnd);
+
+			if (intersection.Count == 0)
+			{
+				GD.Print("camera ray did not collide with an object.");
+				return Vector3.Zero;
+			}
+
+			var pos = (Vector3)intersection["position"];
+			return pos;
+		}
 	}
 }

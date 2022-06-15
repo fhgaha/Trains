@@ -9,12 +9,10 @@ _data = {
 [sub_resource type="SpatialMaterial" id=2]
 resource_local_to_scene = true
 
-[node name="RailCSG" type="Spatial"]
-
-[node name="Path" type="Path" parent="."]
+[node name="RailPath" type="Path"]
 curve = SubResource( 1 )
 
-[node name="CSGPolygon" type="CSGPolygon" parent="Path"]
+[node name="CSGPolygon" type="CSGPolygon" parent="."]
 use_collision = true
 polygon = PoolVector2Array( 0, 0, 0.0812698, 0.102208, 0.201457, 0.102208, 0.272933, -0.000506997 )
 mode = 2
@@ -29,6 +27,6 @@ path_u_distance = 1.0
 path_joined = false
 material = SubResource( 2 )
 
-[node name="Area" type="Area" parent="Path/CSGPolygon"]
+[node name="Area" type="Area" parent="CSGPolygon"]
 
-[node name="CollisionPolygon" type="CollisionPolygon" parent="Path/CSGPolygon/Area"]
+[node name="CollisionPolygon" type="CollisionPolygon" parent="CSGPolygon/Area"]

@@ -25,7 +25,7 @@ namespace Trains
 		{
 			startNode = GetNode<Spatial>("start");
 			endNode = GetNode<Spatial>("end");
-			path = GetNode<Path>("RailCSG/Path");
+			path = GetNode<Path>("RailPath");
 			path.Translation = startNode.GlobalTransform.origin;
 		}
 
