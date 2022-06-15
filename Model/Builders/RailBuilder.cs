@@ -62,7 +62,7 @@ namespace Trains.Model.Builders
 						start = this.GetIntersection(camera, rayLength);
 						break;
 					case State.SelectEnd:
-
+						PlaceObject(this.GetIntersection(camera, rayLength));
 						break;
 				}
 			}
@@ -102,7 +102,7 @@ namespace Trains.Model.Builders
 			blueprint.Curve = curve;
 		}
 
-		protected void PlaceObject(Vector3 position, Vector3 rotation)
+		protected void PlaceObject(Vector3 position)
 		{
 			// if (firstSegment is null)
 			// {
@@ -115,6 +115,14 @@ namespace Trains.Model.Builders
 			// 	var points = firstSegment.Curve.TakeLast(2);
 			// 	prevDir = (points[1] - points[0]).Normalized();
 			// }
+			
+			//copy blueprint
+			var path = scene.Instance<Path>();
+			AddChild(path);
+			path.Transform = blueprint.Transform;
+			path.Curve = blueprint.Curve;
+			path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
+			
 
 		}
 
@@ -152,6 +160,7 @@ namespace Trains.Model.Builders
 			if (state != State.None) { state = State.None; return; }
 			if (state == State.None) state = State.SelectStart;
 
+			//set up blueprint
 			blueprint = scene.Instance<Path>();
 			AddChild(blueprint);
 		}

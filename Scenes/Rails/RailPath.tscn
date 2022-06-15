@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[sub_resource type="Curve3D" id=1]
+[sub_resource type="Curve3D" id=3]
 _data = {
 "points": PoolVector3Array( 0, 0, 0, 0, 0, 0, 0.00387073, -0.00349378, 0.238527, 0, 0, 0, 0, 0, 0, 0.000242949, -0.00102601, -0.234899 ),
 "tilts": PoolRealArray( 0, 0 )
@@ -10,7 +10,7 @@ _data = {
 resource_local_to_scene = true
 
 [node name="RailPath" type="Path"]
-curve = SubResource( 1 )
+curve = SubResource( 3 )
 
 [node name="CSGPolygon" type="CSGPolygon" parent="."]
 use_collision = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://ThrowAway/Trajectory3d.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -30,9 +30,12 @@ size = Vector3( 1, 1, 1 )
 [sub_resource type="ConvexPolygonShape" id=12]
 points = PoolVector3Array( 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5 )
 
-[sub_resource type="SpatialMaterial" id=15]
+[sub_resource type="CubeMesh" id=17]
+size = Vector3( 0.1, 1, 0.1 )
+
+[sub_resource type="SpatialMaterial" id=18]
 resource_local_to_scene = true
-albedo_color = Color( 0.435294, 1, 0, 1 )
+albedo_color = Color( 0.454902, 1, 0.0313726, 1 )
 
 [sub_resource type="SpatialMaterial" id=16]
 albedo_color = Color( 0, 0.937255, 1, 1 )
@@ -101,8 +104,13 @@ material/0 = null
 
 [node name="dir" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.88056, 0.5, 0.487642 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 15 )
+mesh = SubResource( 17 )
+material/0 = SubResource( 18 )
+
+[node name="dir2" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.05795, 0.5, -0.799586 )
+mesh = SubResource( 17 )
+material/0 = SubResource( 18 )
 
 [node name="tangent" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.91735, 0.5, 0.479805 )
@@ -110,3 +118,5 @@ mesh = SubResource( 14 )
 material/0 = SubResource( 16 )
 
 [node name="RailPath" parent="." instance=ExtResource( 3 )]
+
+[node name="RailPath2" parent="." instance=ExtResource( 3 )]
