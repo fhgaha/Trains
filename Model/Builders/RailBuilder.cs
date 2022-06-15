@@ -23,7 +23,9 @@ namespace Trains.Model.Builders
 		private Camera camera;
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
+
 		private Vector3 start = Vector3.Zero;
+		private Vector3 prevDir;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -31,7 +33,7 @@ namespace Trains.Model.Builders
 		//1. press BS button, simple straight road will show up following cursor.
 		//2. using mouse select a place to build first segment. it cannot be built on obstacle.
 		//3. press lmb to place first segment. path will show up from first segment to mouse pos, showing possible path
-		//in blueprint mode.
+		//	 in blueprint mode.
 		//4. press lmb again to place blueprint road.
 		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
 		{
@@ -85,11 +87,16 @@ namespace Trains.Model.Builders
 		private void DrawTrajectory()
 		{
 			Vector3 end = this.GetIntersection(camera, rayLength);
-			GD.Print(start);
 			blueprint.Translation = start;
-			var _Rotation = 0;
+			
+			var _rotation = Pi / 180 * 0;
+			// if (prevDir != Vector3.Zero)
+			// {
+			// 	var dir = (end - start).Normalized();
+			// 	_rotation = Vector3.Up.SignedAngleTo(dir, Vector3.Back);
+			// }
 
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 50, Pi / 180 * _Rotation);
+			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 50, _rotation);
 			var curve = new Curve3D();
 			if (points.Count() > 0)
 				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
@@ -123,7 +130,10 @@ namespace Trains.Model.Builders
 			path.Curve = blueprint.Curve;
 			path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
 			
-
+			//save 
+			start += path.Curve.Last();
+			var points = path.Curve.TakeLast(2);
+			prevDir = (points[1] - points[0]).Normalized();
 		}
 
 		private void UpdateBlueprint()
