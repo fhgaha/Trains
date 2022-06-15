@@ -52,7 +52,7 @@ namespace Trains.Model.Common
 
 			if (intersection.Count == 0)
 			{
-				GD.Print("camera ray did not collide with an object.");
+				//GD.Print("camera ray did not collide with an object.");
 				return Vector3.Zero;
 			}
 

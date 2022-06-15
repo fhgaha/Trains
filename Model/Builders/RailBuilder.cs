@@ -22,12 +22,10 @@ namespace Trains.Model.Builders
 		private const float rayLength = 1000f;
 		private Camera camera;
 		private Spatial objectHolder;   //Rails
-		private MainButtonType mainButtonType;
-		private Path firstSegment = null;
-		private Vector3 prevDir;
 		private State state = State.None;
+		private Vector3 start = Vector3.Zero;
 
-		//in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
+		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
 		//build order:
 		//1. press BS button, simple straight road will show up following cursor.
@@ -48,36 +46,50 @@ namespace Trains.Model.Builders
 		public override void _PhysicsProcess(float delta)
 		{
 			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
-			if (!(blueprint is null)) UpdateBlueprint();
+			if (state == State.None) return;
+			if (start == Vector3.Zero) state = State.SelectStart;
+			else state = State.SelectEnd;
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
-				if (!(blueprint is null) && canBuild && firstSegment is null)
+			{
+				switch (state)
 				{
-					PlaceObject(blueprint.Translation, blueprint.Rotation);
+					case State.None: return;
+					case State.SelectStart:
+						start = this.GetIntersection(camera, rayLength);
+						break;
+					case State.SelectEnd:
+
+						break;
 				}
+			}
 
 			if (@event is InputEventMouseMotion evMouseMotion)
 			{
-				if (!(firstSegment is null))
+				switch (state)
 				{
-					DrawTrajectory();
+					case State.None: return;
+					case State.SelectStart:
+						UpdateBlueprint();
+						break;
+					case State.SelectEnd:
+						DrawTrajectory();
+						break;
 				}
 			}
 		}
 
 		private void DrawTrajectory()
 		{
-			//each time build new path and connect with old path
-			var start = firstSegment.Curve.Last();
 			Vector3 end = this.GetIntersection(camera, rayLength);
 			GD.Print(start);
 			blueprint.Translation = start;
 			var _Rotation = 0;
 
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1.5f, 50, Pi / 180 * _Rotation);
+			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 50, Pi / 180 * _Rotation);
 			var curve = new Curve3D();
 			if (points.Count() > 0)
 				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
@@ -88,34 +100,26 @@ namespace Trains.Model.Builders
 				curve.AddPoint(Vector3.Forward);
 			}
 			blueprint.Curve = curve;
-
-			// GD.Print("start: " + start);
-			// GD.Print("end: " + end);
-			// GD.Print("points:");
-			// points.ToList().ForEach(p => GD.Print(start + p.ToVec3()));
-			// GD.Print();
 		}
 
 		protected void PlaceObject(Vector3 position, Vector3 rotation)
 		{
-			if (firstSegment is null)
-			{
-				firstSegment = scene.Instance<Path>();
-				firstSegment.Translation = position;
-				firstSegment.Rotation = rotation;
-				objectHolder.AddChild(firstSegment);
+			// if (firstSegment is null)
+			// {
+			// 	firstSegment = scene.Instance<Path>();
+			// 	firstSegment.Translation = position;
+			// 	firstSegment.Rotation = rotation;
+			// 	objectHolder.AddChild(firstSegment);
 
-				//set prevDir
-				var points = firstSegment.Curve.TakeLast(2);
-				prevDir = (points[1] - points[0]).Normalized();
-			}
+			// 	//set prevDir
+			// 	var points = firstSegment.Curve.TakeLast(2);
+			// 	prevDir = (points[1] - points[0]).Normalized();
+			// }
 
 		}
 
 		private void UpdateBlueprint()
 		{
-
-
 			blueprint.Translation = this.GetIntersection(camera, rayLength);
 
 			//set base color
@@ -128,6 +132,7 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
+			//check buttonType
 			if (buttonType != MainButtonType.BuildRail)
 			{
 				blueprint?.QueueFree();
@@ -143,13 +148,11 @@ namespace Trains.Model.Builders
 				return;
 			}
 
-			//init blueprint
-			//can be build new rail or continue existing one
-			//for the time let it be always build first ever rail
+			//check state
+			if (state != State.None) { state = State.None; return; }
+			if (state == State.None) state = State.SelectStart;
+
 			blueprint = scene.Instance<Path>();
-			var csg = blueprint.GetNode<CSGPolygon>("CSGPolygon");
-			var collider = blueprint.GetNode<CollisionPolygon>("CSGPolygon/Area/CollisionPolygon");
-			collider.Polygon = csg.Polygon;
 			AddChild(blueprint);
 		}
 
