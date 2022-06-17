@@ -57,6 +57,14 @@ namespace Trains
 			// GD.Print();
 		}
 
+		public override void _UnhandledInput(InputEvent @event)
+		{
+			if (@event is InputEventMouseMotion ev)
+			{
+				
+			}
+		}
+
 		private IEnumerable<Vector2> CalculateCircledPath(
 			Vector2 start, Vector2 end, float radius, int numPoints, float rotation)
 		{

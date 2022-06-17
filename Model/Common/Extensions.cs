@@ -37,6 +37,7 @@ namespace Trains.Model.Common
 			for (int i = startIndex; i >= lastIndex; i--)
 				list.Add(curve.GetPointPosition(i));
 
+			list.Reverse();
 			return list;
 		}
 

@@ -24,8 +24,10 @@ namespace Trains.Model.Builders
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
 
+		private bool firstSegmentIsPlaced = false;
 		private Vector3 start = Vector3.Zero;
-		private Vector3 prevDir;
+		private Vector3 prevDir = Vector3.Zero;
+
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -51,6 +53,8 @@ namespace Trains.Model.Builders
 			if (state == State.None) return;
 			if (start == Vector3.Zero) state = State.SelectStart;
 			else state = State.SelectEnd;
+
+			//GD.Print(state);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -88,15 +92,17 @@ namespace Trains.Model.Builders
 		{
 			Vector3 end = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = start;
-			
-			var _rotation = Pi / 180 * 0;
-			// if (prevDir != Vector3.Zero)
-			// {
-			// 	var dir = (end - start).Normalized();
-			// 	_rotation = Vector3.Up.SignedAngleTo(dir, Vector3.Back);
-			// }
 
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 50, _rotation);
+			var _rotationDeg = 0f;
+			if (prevDir != Vector3.Zero)
+			{
+				_rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180/Pi;
+				GD.Print("_rotationDeg: " + _rotationDeg);
+			}
+			//GD.Print("_rotationRad: " + 180/Pi*_rotationRad);
+
+			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 50, _rotationDeg);
+			//GD.Print("start: " + start);
 			var curve = new Curve3D();
 			if (points.Count() > 0)
 				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
@@ -111,29 +117,24 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject(Vector3 position)
 		{
-			// if (firstSegment is null)
-			// {
-			// 	firstSegment = scene.Instance<Path>();
-			// 	firstSegment.Translation = position;
-			// 	firstSegment.Rotation = rotation;
-			// 	objectHolder.AddChild(firstSegment);
-
-			// 	//set prevDir
-			// 	var points = firstSegment.Curve.TakeLast(2);
-			// 	prevDir = (points[1] - points[0]).Normalized();
-			// }
-			
 			//copy blueprint
 			var path = scene.Instance<Path>();
 			AddChild(path);
 			path.Transform = blueprint.Transform;
 			path.Curve = blueprint.Curve;
 			path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
-			
+
 			//save 
 			start += path.Curve.Last();
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
+
+			// GD.Print(points[0]);
+			// GD.Print(points[1]);
+			// GD.Print(prevDir);
+			// GD.Print();
+
+			if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
 		}
 
 		private void UpdateBlueprint()
@@ -175,6 +176,88 @@ namespace Trains.Model.Builders
 			AddChild(blueprint);
 		}
 
+		private IEnumerable<Vector2> CalculateCircledPath(
+			Vector2 start, Vector2 end, float radius, int numPoints, float rotationDeg)
+		{
+			var prevDir = Vector2.Up.Rotated(Pi / 180 * rotationDeg);
+			var startEndDir = (end - start).Normalized();
+			var centerIsOnRight = prevDir.Rotated(Pi / 2).Dot(startEndDir) >= 0;   //-1, 0 or 1
+
+			var d = Pi / 180 * rotationDeg >= Pi / 2 && Pi / 180 * rotationDeg < 3 * Pi / 2 ? -1 : 1;
+			var prevDirPerp = new Vector2(d, -d * prevDir.x / prevDir.y).Normalized();
+			var radVec = radius * (centerIsOnRight ? prevDirPerp : prevDirPerp.Rotated(Pi));
+			var center = start + radVec;
+
+			var points = new List<Vector2>();
+			var tangent = Vector2.Zero;
+			var accuracy = 0.1f;
+
+			// if (firstSegmentIsPlaced)
+			// {
+			//go along circle
+			var startAngle = (centerIsOnRight ? Pi : 0) + Pi / 180 * rotationDeg;
+			startAngle = Mathf.Clamp(startAngle, -2 * Pi, 2 * Pi);
+			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
+			endAngle = Mathf.Clamp(endAngle, -2 * Pi, 2 * Pi);
+			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
+			Func<float, bool> condition = i => centerIsOnRight ? i < endAngle : i > endAngle;
+
+			for (float i = startAngle; condition(i); i += dAngle)
+			{
+				var x = radius * Cos(i);
+				var y = radius * Sin(i);
+				var point = new Vector2(x, y);
+				points.Add(start + radVec + point);
+			}
+
+			//find tangent in circle points
+			tangent = points.FirstOrDefault(p =>
+			{
+				var dirPointToCenter = (center - p).Normalized();
+				var dirPointToEnd = (end - p).Normalized();
+				//var dot = dirPointToCenter.Dot(dirPointToEnd);
+				var dot = centerIsOnRight ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
+				var requiredVal = 0;
+				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;
+				return false;
+			});
+
+			//prevent drawing inside circle or from scene origin
+			if (tangent == Vector2.Zero) return new List<Vector2>();
+
+			//prevent drawing behind start
+			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
+			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
+			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
+
+			if (tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
+			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
+
+			//go straight
+			var _dirPointToEnd = (end - tangent).Normalized();
+			var _point = tangent;
+			while (_point.DistanceSquaredTo(end) > accuracy)
+			{
+				_point += _dirPointToEnd * accuracy;
+				points.Add(_point);
+			}
+			// }
+			// else
+			// {
+			// 	var a_point = start;
+			// 	while (a_point.DistanceSquaredTo(end) > accuracy)
+			// 	{
+			// 		a_point += startEndDir * accuracy;
+			// 		points.Add(a_point);
+			// 	}
+			// }
+			GetNode<MeshInstance>("dir").Translation = prevDir.ToVec3();
+			GetNode<MeshInstance>("center").Translation = center.ToVec3();
+			GetNode<MeshInstance>("tangent").Translation = tangent.ToVec3();
+
+			return points;
+		}
+
 		private List<Vector2> CalculateTrajectory(Vector2 startPos, Vector2 endPos, int numPoints)
 		{
 			float gravity = -15f;
@@ -205,71 +288,5 @@ namespace Trains.Model.Builders
 
 			return points;
 		}
-
-		private IEnumerable<Vector2> CalculateCircledPath(
-			Vector2 start, Vector2 end, float radius, int numPoints, float rotationRad)
-		{
-			var prevDir = new Vector2(0, -1).Rotated(rotationRad);
-			var startEndDir = (end - start).Normalized();
-			var leftRight = prevDir.Rotated(Pi / 2).Dot(startEndDir);   //-1, 0 or 1
-
-			var d = rotationRad >= Pi / 2 && rotationRad < 3 * Pi / 2 ? -1 : 1;
-			var prevDirPerp = new Vector2(d, -d * prevDir.x / prevDir.y).Normalized();
-			var radVec = radius * (leftRight >= 0 ? prevDirPerp : prevDirPerp.Rotated(Pi));
-			var center = start + radVec;
-
-			var points = new List<Vector2>();
-			var tangent = Vector2.Zero;
-			var accuracy = 0.1f;
-
-			//go along circle
-			var startAngle = (leftRight >= 0 ? Pi : 0) + rotationRad;
-			var endAngle = (leftRight >= 0 ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + rotationRad;
-			var dAngle = leftRight >= 0 ? 0.1f : -0.1f;
-			Func<float, bool> condition = i => leftRight >= 0 ? i < endAngle : i > endAngle;
-
-			for (float i = startAngle; condition(i); i += dAngle)
-			{
-				var x = radius * Cos(i);
-				var y = radius * Sin(i);
-				var point = new Vector2(x, y);
-				points.Add(start + radVec + point);
-			}
-
-			//find tangent in circle points
-			tangent = points.FirstOrDefault(p =>
-			{
-				var dirPointToCenter = (center - p).Normalized();
-				var dirPointToEnd = (end - p).Normalized();
-				//var dot = dirPointToCenter.Dot(dirPointToEnd);
-				var dot = leftRight >= 0 ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
-				var requiredVal = 0;
-				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;
-				return false;
-			});
-
-			//prevent drawing inside circle or from scene origin
-			if (tangent == Vector2.Zero) return new List<Vector2>();
-
-			//prevent drawing behind start
-			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
-			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
-			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
-
-			if (tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
-			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
-
-			//go straight
-			var _dirPointToEnd = (end - tangent).Normalized();
-			var _point = tangent;
-			while (_point.DistanceSquaredTo(end) > accuracy)
-			{
-				_point += _dirPointToEnd * accuracy;
-				points.Add(_point);
-			}
-
-			return points;
-		}
-
 	}
 }

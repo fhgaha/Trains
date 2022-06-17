@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using Trains.Model.Common;
 
 namespace Trains
@@ -23,6 +24,15 @@ namespace Trains
 		private void PlaceRailSegment()
 		{
 			path.Curve.AddPoint(path.Curve.Last() + Vector3.Forward);
+
+			var newPath = new List<Vector3>
+			{
+				new Vector3(path.Curve.Last() + Vector3.Forward),
+				new Vector3(path.Curve.Last() + Vector3.Forward + Vector3.Right ),
+				new Vector3(path.Curve.Last() + Vector3.Forward + Vector3.Right +  Vector3.Forward )
+			};
+
+			newPath.ForEach(p => path.Curve.AddPoint(p));
 		}
 	}
 }
