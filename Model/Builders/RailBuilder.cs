@@ -96,7 +96,8 @@ namespace Trains.Model.Builders
 			var _rotationDeg = 0f;
 			if (prevDir != Vector3.Zero)
 			{
-				_rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180/Pi;
+				_rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
+				if (_rotationDeg < 0) _rotationDeg += 360;
 				GD.Print("_rotationDeg: " + _rotationDeg);
 			}
 			//GD.Print("_rotationRad: " + 180/Pi*_rotationRad);
@@ -230,7 +231,7 @@ namespace Trains.Model.Builders
 			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
 			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
 			if (tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
-			
+
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 
 			//go straight
