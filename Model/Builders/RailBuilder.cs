@@ -196,9 +196,9 @@ namespace Trains.Model.Builders
 			// {
 			//go along circle
 			var startAngle = (centerIsOnRight ? Pi : 0) + Pi / 180 * rotationDeg;
-			startAngle = Mathf.Clamp(startAngle, -2 * Pi, 2 * Pi);
+			//startAngle = Mathf.Clamp(startAngle, -2 * Pi, 2 * Pi);
 			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
-			endAngle = Mathf.Clamp(endAngle, -2 * Pi, 2 * Pi);
+			//endAngle = Mathf.Clamp(endAngle, -2 * Pi, 2 * Pi);
 			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
 			Func<float, bool> condition = i => centerIsOnRight ? i < endAngle : i > endAngle;
 
@@ -229,8 +229,8 @@ namespace Trains.Model.Builders
 			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
 			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
 			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
-
 			if (tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
+			
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 
 			//go straight
