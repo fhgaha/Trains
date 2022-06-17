@@ -27,6 +27,7 @@ namespace Trains.Model.Builders
 		private bool firstSegmentIsPlaced = false;
 		private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
+		private List<Path> pathList = new List<Path>();
 
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
@@ -98,7 +99,6 @@ namespace Trains.Model.Builders
 			{
 				_rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
 				if (_rotationDeg < 0) _rotationDeg += 360;
-				GD.Print("_rotationDeg: " + _rotationDeg);
 			}
 			//GD.Print("_rotationRad: " + 180/Pi*_rotationRad);
 
@@ -129,13 +129,40 @@ namespace Trains.Model.Builders
 			start += path.Curve.Last();
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
-
-			// GD.Print(points[0]);
-			// GD.Print(points[1]);
-			// GD.Print(prevDir);
-			// GD.Print();
-
 			if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+
+
+
+			// Path path = pathList.LastOrDefault();
+			// if (pathList.Count == 0)
+			// {
+			// 	path = scene.Instance<Path>();
+			// 	AddChild(path);
+			// 	pathList.Add(path);
+			// 	path.Transform = blueprint.Transform;
+			// 	path.Curve = blueprint.Curve;
+			// 	path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
+			// }
+			// else
+			// {
+			// 	//copy blueprint
+			// 	var first = blueprint.Curve.First(); //(0; 0)
+			// 	var last = blueprint.Curve.Last();
+			// 	var origin = blueprint.GlobalTransform.origin;
+			// 	var start = this.start;
+
+			// 	foreach (var p in blueprint.Curve.GetBakedPoints())
+			// 	{
+			// 		path.Curve.AddPoint( p);
+			// 	}
+			// }
+
+			// //save 
+			// start += path.Curve.Last();
+			// var points = path.Curve.TakeLast(2);
+			// prevDir = (points[1] - points[0]).Normalized();
+			// if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+
 		}
 
 		private void UpdateBlueprint()
@@ -208,7 +235,7 @@ namespace Trains.Model.Builders
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
 				var point = new Vector2(x, y);
-				points.Add(start + radVec + point);
+				points.Add(center + point);
 			}
 
 			//find tangent in circle points
