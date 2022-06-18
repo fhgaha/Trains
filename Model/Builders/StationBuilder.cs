@@ -63,7 +63,7 @@ namespace Trains.Model.Builders
 			if (blueprint is null) return;
 
 			//set blueprint position
-			var pos = GetIntersection();
+			var pos = this.GetIntersection(camera, rayLength);
 			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
 			blueprint.Translation = closestCell.Translation;
 
@@ -73,25 +73,6 @@ namespace Trains.Model.Builders
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
 			canBuild = bodies.Count() <= 0;
 			baseMaterial.AlbedoColor = canBuild ? yellow : red;
-		}
-
-		private Vector3 GetIntersection()
-		{
-			PhysicsDirectSpaceState spaceState = GetWorld().DirectSpaceState;
-			Vector2 mousePosition = GetViewport().GetMousePosition();
-			Vector3 rayOrigin = camera.ProjectRayOrigin(mousePosition);
-			Vector3 rayNormal = camera.ProjectRayNormal(mousePosition);
-			Vector3 rayEnd = rayOrigin + rayNormal * rayLength;
-			var intersection = spaceState.IntersectRay(rayOrigin, rayEnd);
-
-			if (intersection.Count == 0) 
-			{
-				GD.Print("camera ray did not collide with an object.");
-				return Vector3.Zero;
-			}
-
-			var pos = (Vector3)intersection["position"];
-			return pos;
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)

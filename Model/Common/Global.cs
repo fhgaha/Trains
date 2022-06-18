@@ -26,6 +26,8 @@ namespace Trains.Model.Common
 
 		//decreasing amount per tick
 		public const float PriceDecay = 0.1f;
+		///used when placing objects
+		public const float SnapDistance = 1f;
 
 		public static ProductType? CurrentDisplayProductMode = null;
 		public static MainButtonType? MainButtonMode = null;
