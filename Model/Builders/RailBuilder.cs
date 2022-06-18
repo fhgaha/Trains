@@ -168,7 +168,7 @@ namespace Trains.Model.Builders
 			}
 
 			//save 
-			start = position;
+			start = blueprintOrigin + last;
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
 		}
