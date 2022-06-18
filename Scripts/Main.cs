@@ -22,6 +22,7 @@ namespace Trains.Scripts
 			events = GetNode<Events>("/root/Events");
 			//GD.Print("Main: " + events);
 			mover = new ProductMigrationManager();
+			var c = GetChildren();
 			var timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
 			timer.Start(timeSec);

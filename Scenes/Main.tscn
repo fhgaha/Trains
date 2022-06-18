@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Scripts/Main.cs" type="Script" id=4]
 [ext_resource path="res://Model/Builders/RailBuilder.cs" type="Script" id=5]
 [ext_resource path="res://Scenes/_Obstacle.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Model/Builders/CurveCalculator.cs" type="Script" id=7]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -68,19 +69,25 @@ shape = SubResource( 8 )
 [node name="RailBuilder" type="Spatial" parent="."]
 script = ExtResource( 5 )
 
-[node name="center" type="MeshInstance" parent="RailBuilder"]
+[node name="Calculator" type="Spatial" parent="RailBuilder"]
+script = ExtResource( 7 )
+
+[node name="center" type="MeshInstance" parent="RailBuilder/Calculator"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.98691, 0.5, 0.343641 )
 mesh = SubResource( 10 )
+skeleton = NodePath("../..")
 material/0 = null
 
-[node name="dir" type="MeshInstance" parent="RailBuilder"]
+[node name="dir" type="MeshInstance" parent="RailBuilder/Calculator"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.88056, 0.5, 0.487642 )
 mesh = SubResource( 11 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="tangent" type="MeshInstance" parent="RailBuilder"]
+[node name="tangent" type="MeshInstance" parent="RailBuilder/Calculator"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.91735, 0.5, 0.479805 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 14 )
 
 [node name="Trains" type="Spatial" parent="."]
