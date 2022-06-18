@@ -164,6 +164,9 @@ namespace Trains.Model.Builders
 			start = blueprint.Translation + last;
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
+
+			//this is called so that there is no overlap of blueprint and path
+			DrawTrajectory();
 		}
 
 		private void UpdateBlueprint()
