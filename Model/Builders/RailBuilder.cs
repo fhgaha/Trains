@@ -14,13 +14,13 @@ namespace Trains.Model.Builders
 	{
 		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
+		private const float rayLength = 1000f;
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
 		private PackedScene scene;
 		private Path blueprint;
 		private bool canBuild = false;
-		private const float rayLength = 1000f;
 		private Camera camera;
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
@@ -52,14 +52,11 @@ namespace Trains.Model.Builders
 
 		public override void _PhysicsProcess(float delta)
 		{
-			if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
+			//if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
 			if (state == State.None) return;
 			if (start == Vector3.Zero) state = State.SelectStart;
 			else state = State.SelectEnd;
-
-			//GD.Print(state);
 		}
-
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
@@ -78,6 +75,7 @@ namespace Trains.Model.Builders
 
 			if (@event is InputEventMouseMotion evMouseMotion)
 			{
+				var s = state;
 				switch (state)
 				{
 					case State.None: return;
@@ -103,7 +101,7 @@ namespace Trains.Model.Builders
 				if (rotationDeg < 0) rotationDeg += 360;
 			}
 			var points = calculator.CalculateCurvePoints(start.ToVec2(), end.ToVec2(), 1f, rotationDeg, firstSegmentIsPlaced);
-			
+
 			var curve = new Curve3D();
 			if (points.Count() > 0)
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - start));
@@ -111,7 +109,7 @@ namespace Trains.Model.Builders
 			{
 				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"
 				curve.AddPoint(Vector3.Zero);
-				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Up : prevDir);
+				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			}
 			blueprint.Curve = curve;
 		}
@@ -165,8 +163,7 @@ namespace Trains.Model.Builders
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
 
-			//this is called so that there is no overlap of blueprint and path
-			DrawTrajectory();
+			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
 		}
 
 		private void UpdateBlueprint()
@@ -183,30 +180,35 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			//check buttonType
+			//other button is clicked
 			if (buttonType != MainButtonType.BuildRail)
 			{
-				blueprint?.QueueFree();
+				Reset();
 				return;
 			}
 
-			if (Global.MainButtonMode is MainButtonType.BuildRail) Global.MainButtonMode = null;
-			else Global.MainButtonMode = MainButtonType.BuildRail;
-
-			if (!(Global.MainButtonMode is MainButtonType.BuildRail))
+			//"Build Rail" button is clicked
+			if (Global.MainButtonMode is MainButtonType.BuildRail)
 			{
-				blueprint?.QueueFree();
+				Global.MainButtonMode = null;
+				Reset();
 				return;
 			}
 
-			//check state
-			if (state != State.None) { state = State.None; return; }
-			if (state == State.None) state = State.SelectStart;
-
-			//set up blueprint
+			//init blueprint
+			Global.MainButtonMode = MainButtonType.BuildRail;
+			state = State.SelectStart;
 			blueprint = scene.Instance<Path>();
 			AddChild(blueprint);
+			blueprint.Name = "blueprint";
 		}
 
+		private void Reset()
+		{
+			blueprint?.QueueFree();
+			blueprint = null;
+			state = State.None;
+			start = Vector3.Zero;
+		}
 	}
 }
