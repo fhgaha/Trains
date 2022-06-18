@@ -24,7 +24,7 @@ namespace Trains.Model.Builders
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
 
-		private bool firstSegmentIsPlaced = false;
+		private bool firstSegmentIsPlaced => pathList.Count > 0;
 		private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
 		private List<Path> pathList = new List<Path>();
@@ -94,16 +94,14 @@ namespace Trains.Model.Builders
 			Vector3 end = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = start;
 
-			var _rotationDeg = 0f;
+			var rotationDeg = 0f;
 			if (prevDir != Vector3.Zero)
 			{
-				_rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
-				if (_rotationDeg < 0) _rotationDeg += 360;
+				rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
+				if (rotationDeg < 0) rotationDeg += 360;
 			}
-			//GD.Print("_rotationRad: " + 180/Pi*_rotationRad);
 
-			var points = CalculateCircledPath(start.ToVec2(), end.ToVec2(), 1f, 50, _rotationDeg);
-			//GD.Print("start: " + start);
+			var points = CalculateCurvePoints(start.ToVec2(), end.ToVec2(), 1f, rotationDeg);
 			var curve = new Curve3D();
 			if (points.Count() > 0)
 				points.ToList().ForEach(p => curve.AddPoint(p.ToVec3() - start));
@@ -111,7 +109,7 @@ namespace Trains.Model.Builders
 			{
 				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"
 				curve.AddPoint(Vector3.Zero);
-				curve.AddPoint(Vector3.Forward);
+				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Up : prevDir);
 			}
 			blueprint.Curve = curve;
 		}
@@ -130,7 +128,6 @@ namespace Trains.Model.Builders
 			start += path.Curve.Last();
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
-			if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
 		}
 
 		protected void PlaceObject(Vector3 position)
@@ -138,6 +135,7 @@ namespace Trains.Model.Builders
 			Path path = pathList.LastOrDefault();
 			if (pathList.Count == 0)
 			{
+				//init path
 				path = scene.Instance<Path>();
 				AddChild(path);
 				pathList.Add(path);
@@ -149,26 +147,17 @@ namespace Trains.Model.Builders
 				start += path.Curve.Last();
 				var _points = path.Curve.TakeLast(2);
 				prevDir = (_points[1] - _points[0]).Normalized();
-				firstSegmentIsPlaced = true;
 				return;
 			}
 
 			//copy blueprint
-			var first = blueprint.Curve.First(); //(0; 0)
 			var last = blueprint.Curve.Last();
-			var blueprintOrigin = blueprint.Translation;
-			var pathOrigin = path.Translation;
-			var bpPoints = blueprint.Curve.GetBakedPoints();
-			var add = blueprintOrigin - pathOrigin;
-
-			foreach (var p in bpPoints)
-			{	
-				var point = add + p;
-				path.Curve.AddPoint(point);
-			}
+			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
+			foreach (var p in blueprint.Curve.GetBakedPoints())
+				path.Curve.AddPoint(pathOriginToBpOrigin + p);
 
 			//save 
-			start = blueprintOrigin + last;
+			start = blueprint.Translation + last;
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
 		}
@@ -212,8 +201,7 @@ namespace Trains.Model.Builders
 			AddChild(blueprint);
 		}
 
-		private IEnumerable<Vector2> CalculateCircledPath(
-			Vector2 start, Vector2 end, float radius, int numPoints, float rotationDeg)
+		private IEnumerable<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, float radius, float rotationDeg)
 		{
 			var prevDir = Vector2.Up.Rotated(Pi / 180 * rotationDeg);
 			var startEndDir = (end - start).Normalized();
@@ -228,13 +216,15 @@ namespace Trains.Model.Builders
 			var tangent = Vector2.Zero;
 			var accuracy = 0.1f;
 
-			// if (firstSegmentIsPlaced)
-			// {
+			if (!firstSegmentIsPlaced)
+			{
+				GoStraight(start, end, points, accuracy);
+				return points;
+			}
+
 			//go along circle
 			var startAngle = (centerIsOnRight ? Pi : 0) + Pi / 180 * rotationDeg;
-			//startAngle = Mathf.Clamp(startAngle, -2 * Pi, 2 * Pi);
 			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
-			//endAngle = Mathf.Clamp(endAngle, -2 * Pi, 2 * Pi);
 			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
 			Func<float, bool> condition = i => centerIsOnRight ? i < endAngle : i > endAngle;
 
@@ -268,30 +258,25 @@ namespace Trains.Model.Builders
 			if (tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0) return new List<Vector2>();
 
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
+			GoStraight(tangent, end, points, accuracy);
 
-			//go straight
-			var _dirPointToEnd = (end - tangent).Normalized();
-			var _point = tangent;
-			while (_point.DistanceSquaredTo(end) > accuracy)
-			{
-				_point += _dirPointToEnd * accuracy;
-				points.Add(_point);
-			}
-			// }
-			// else
-			// {
-			// 	var a_point = start;
-			// 	while (a_point.DistanceSquaredTo(end) > accuracy)
-			// 	{
-			// 		a_point += startEndDir * accuracy;
-			// 		points.Add(a_point);
-			// 	}
-			// }
 			GetNode<MeshInstance>("dir").Translation = prevDir.ToVec3();
 			GetNode<MeshInstance>("center").Translation = center.ToVec3();
 			GetNode<MeshInstance>("tangent").Translation = tangent.ToVec3();
 
 			return points;
+		}
+
+		private static void GoStraight(Vector2 start, Vector2 end, List<Vector2> points, float accuracy)
+		{
+			//go straight
+			var dirPointToEnd = (end - start).Normalized(); ;
+			var point = start;
+			while (point.DistanceSquaredTo(end) > accuracy)
+			{
+				point += dirPointToEnd * accuracy;
+				points.Add(point);
+			}
 		}
 
 		private List<Vector2> CalculateTrajectory(Vector2 startPos, Vector2 endPos, int numPoints)
