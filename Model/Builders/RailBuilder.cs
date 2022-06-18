@@ -116,7 +116,8 @@ namespace Trains.Model.Builders
 			blueprint.Curve = curve;
 		}
 
-		protected void PlaceObject(Vector3 position)
+		///use this method to place multiple paths instead of continuing a single path
+		protected void PlaceObjectMultiplePathsCase(Vector3 position)
 		{
 			//copy blueprint
 			var path = scene.Instance<Path>();
@@ -130,39 +131,49 @@ namespace Trains.Model.Builders
 			var points = path.Curve.TakeLast(2);
 			prevDir = (points[1] - points[0]).Normalized();
 			if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+		}
 
+		protected void PlaceObject(Vector3 position)
+		{
+			Path path = pathList.LastOrDefault();
+			if (pathList.Count == 0)
+			{
+				path = scene.Instance<Path>();
+				AddChild(path);
+				pathList.Add(path);
+				path.Transform = blueprint.Transform;
+				path.Curve = blueprint.Curve;
+				path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
 
+				//save 
+				start += path.Curve.Last();
+				var points = path.Curve.TakeLast(2);
+				prevDir = (points[1] - points[0]).Normalized();
+				if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+			}
+			else
+			{
+				//copy blueprint
+				var first = blueprint.Curve.First(); //(0; 0)
+				var last = blueprint.Curve.Last();
+				var blueprintOrigin = blueprint.Translation;
+				var pathOrigin = path.Translation;
+				var start = this.start;
+				var bpPoints = blueprint.Curve.GetBakedPoints();
+				var add = blueprintOrigin - pathOrigin;
 
-			// Path path = pathList.LastOrDefault();
-			// if (pathList.Count == 0)
-			// {
-			// 	path = scene.Instance<Path>();
-			// 	AddChild(path);
-			// 	pathList.Add(path);
-			// 	path.Transform = blueprint.Transform;
-			// 	path.Curve = blueprint.Curve;
-			// 	path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
-			// }
-			// else
-			// {
-			// 	//copy blueprint
-			// 	var first = blueprint.Curve.First(); //(0; 0)
-			// 	var last = blueprint.Curve.Last();
-			// 	var origin = blueprint.GlobalTransform.origin;
-			// 	var start = this.start;
+				foreach (var p in bpPoints)
+				{	
+					var point = add + p;
+					path.Curve.AddPoint(point);
+				}
 
-			// 	foreach (var p in blueprint.Curve.GetBakedPoints())
-			// 	{
-			// 		path.Curve.AddPoint( p);
-			// 	}
-			// }
-
-			// //save 
-			// start += path.Curve.Last();
-			// var points = path.Curve.TakeLast(2);
-			// prevDir = (points[1] - points[0]).Normalized();
-			// if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
-
+				//save 
+				start += path.Curve.Last();
+				var points = path.Curve.TakeLast(2);
+				prevDir = (points[1] - points[0]).Normalized();
+				if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+			}
 		}
 
 		private void UpdateBlueprint()
