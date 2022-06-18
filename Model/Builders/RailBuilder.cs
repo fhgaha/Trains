@@ -147,33 +147,30 @@ namespace Trains.Model.Builders
 
 				//save 
 				start += path.Curve.Last();
-				var points = path.Curve.TakeLast(2);
-				prevDir = (points[1] - points[0]).Normalized();
-				if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+				var _points = path.Curve.TakeLast(2);
+				prevDir = (_points[1] - _points[0]).Normalized();
+				firstSegmentIsPlaced = true;
+				return;
 			}
-			else
-			{
-				//copy blueprint
-				var first = blueprint.Curve.First(); //(0; 0)
-				var last = blueprint.Curve.Last();
-				var blueprintOrigin = blueprint.Translation;
-				var pathOrigin = path.Translation;
-				var start = this.start;
-				var bpPoints = blueprint.Curve.GetBakedPoints();
-				var add = blueprintOrigin - pathOrigin;
 
-				foreach (var p in bpPoints)
-				{	
-					var point = add + p;
-					path.Curve.AddPoint(point);
-				}
+			//copy blueprint
+			var first = blueprint.Curve.First(); //(0; 0)
+			var last = blueprint.Curve.Last();
+			var blueprintOrigin = blueprint.Translation;
+			var pathOrigin = path.Translation;
+			var bpPoints = blueprint.Curve.GetBakedPoints();
+			var add = blueprintOrigin - pathOrigin;
 
-				//save 
-				start += path.Curve.Last();
-				var points = path.Curve.TakeLast(2);
-				prevDir = (points[1] - points[0]).Normalized();
-				if (!firstSegmentIsPlaced) firstSegmentIsPlaced = true;
+			foreach (var p in bpPoints)
+			{	
+				var point = add + p;
+				path.Curve.AddPoint(point);
 			}
+
+			//save 
+			start = position;
+			var points = path.Curve.TakeLast(2);
+			prevDir = (points[1] - points[0]).Normalized();
 		}
 
 		private void UpdateBlueprint()
