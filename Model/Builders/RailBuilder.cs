@@ -52,10 +52,7 @@ namespace Trains.Model.Builders
 
 		public override void _PhysicsProcess(float delta)
 		{
-			//if (!(Global.MainButtonMode is MainButtonType.BuildRail)) return;
-			if (state == State.None) return;
-			if (start == Vector3.Zero) state = State.SelectStart;
-			else state = State.SelectEnd;
+
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -92,6 +89,8 @@ namespace Trains.Model.Builders
 					case State.None: return;
 					case State.SelectStart:
 						start = this.GetIntersection(camera, rayLength);
+						Snap(start);
+						state = State.SelectEnd;
 						break;
 					case State.SelectEnd:
 						PlaceObject(this.GetIntersection(camera, rayLength));
@@ -127,7 +126,9 @@ namespace Trains.Model.Builders
 				rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
 				if (rotationDeg < 0) rotationDeg += 360;
 			}
-			var points = calculator.CalculateCurvePoints(start.ToVec2(), end.ToVec2(), 1f, rotationDeg, firstSegmentIsPlaced);
+
+			var points = calculator.CalculateCurvePoints(blueprint.Translation.ToVec2(), end.ToVec2(), 
+				1f, rotationDeg, firstSegmentIsPlaced);
 
 			var curve = new Curve3D();
 			if (points.Count() > 0)
@@ -227,6 +228,7 @@ namespace Trains.Model.Builders
 				if (p.DistanceTo(mousePos) < snapDistance)
 				{
 					blueprint.Translation = p;
+					start = p;
 					return;
 				}
 			}

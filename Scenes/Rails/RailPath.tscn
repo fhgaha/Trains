@@ -14,7 +14,7 @@ resource_local_to_scene = true
 curve = SubResource( 3 )
 
 [node name="CSGPolygon" type="CSGPolygon" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.139313, 0, -0.206503 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.130973, 0, -0.00179856 )
 polygon = PoolVector2Array( 0, 0, 0.0812698, 0.102208, 0.201457, 0.102208, 0.272933, -0.000506997 )
 mode = 2
 path_node = NodePath("..")
