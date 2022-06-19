@@ -113,8 +113,6 @@ namespace Trains.Model.Builders
 			}
 		}
 
-
-
 		private void DrawTrajectory()
 		{
 			Vector3 end = this.GetIntersection(camera, rayLength);
@@ -127,8 +125,7 @@ namespace Trains.Model.Builders
 				if (rotationDeg < 0) rotationDeg += 360;
 			}
 
-			var points = calculator.CalculateCurvePoints(blueprint.Translation.ToVec2(), end.ToVec2(), 
-				1f, rotationDeg, firstSegmentIsPlaced);
+			var points = calculator.CalculateCurvePoints(blueprint.Translation.ToVec2(), end.ToVec2(), 1f, rotationDeg, firstSegmentIsPlaced);
 
 			var curve = new Curve3D();
 			if (points.Count() > 0)
@@ -154,8 +151,7 @@ namespace Trains.Model.Builders
 
 			//save 
 			start += path.Curve.Last();
-			var points = path.Curve.TakeLast(2);
-			prevDir = (points[1] - points[0]).Normalized();
+			prevDir = GetDir(path.Curve.TakeLast(2));
 		}
 
 		protected void PlaceObject(Vector3 position)
@@ -176,8 +172,7 @@ namespace Trains.Model.Builders
 
 				//save 
 				start += path.Curve.Last();
-				var _points = path.Curve.TakeLast(2);
-				prevDir = (_points[1] - _points[0]).Normalized();
+				prevDir = GetDir(path.Curve.TakeLast(2));
 				return;
 			}
 
@@ -189,8 +184,7 @@ namespace Trains.Model.Builders
 
 			//save 
 			start = blueprint.Translation + last;
-			var points = path.Curve.TakeLast(2);
-			prevDir = (points[1] - points[0]).Normalized();
+			prevDir = GetDir(path.Curve.TakeLast(2));
 
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
 		}
@@ -215,6 +209,7 @@ namespace Trains.Model.Builders
 			blueprint = null;
 			state = State.None;
 			start = Vector3.Zero;
+			//prevDir = Vector3.Zero;
 		}
 
 		private void Snap(Vector3 mousePos)
@@ -229,9 +224,12 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = p;
 					start = p;
+					//prevDir = ?
 					return;
 				}
 			}
 		}
+
+		private Vector3 GetDir(List<Vector3> points) => (points[1] - points[0]).Normalized();
 	}
 }
