@@ -96,6 +96,7 @@ namespace Trains.Model.Builders
 				point += dirPointToEnd * accuracy;
 				points.Add(point);
 			}
+			points.Add(end);
 		}
 
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)

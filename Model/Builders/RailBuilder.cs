@@ -29,7 +29,7 @@ namespace Trains.Model.Builders
 		private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
 		private List<Path> pathList = new List<Path>();
-
+		private const float snapDistance = 1f;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -57,6 +57,32 @@ namespace Trains.Model.Builders
 			if (start == Vector3.Zero) state = State.SelectStart;
 			else state = State.SelectEnd;
 		}
+
+		private void onMainButtonPressed(MainButtonType buttonType)
+		{
+			//other button is clicked
+			if (buttonType != MainButtonType.BuildRail)
+			{
+				Reset();
+				return;
+			}
+
+			//"Build Rail" button is clicked
+			if (Global.MainButtonMode is MainButtonType.BuildRail)
+			{
+				Global.MainButtonMode = null;
+				Reset();
+				return;
+			}
+
+			//init blueprint
+			Global.MainButtonMode = MainButtonType.BuildRail;
+			state = State.SelectStart;
+			blueprint = scene.Instance<Path>();
+			AddChild(blueprint);
+			blueprint.Name = "blueprint";
+		}
+
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
@@ -75,7 +101,6 @@ namespace Trains.Model.Builders
 
 			if (@event is InputEventMouseMotion evMouseMotion)
 			{
-				var s = state;
 				switch (state)
 				{
 					case State.None: return;
@@ -88,6 +113,8 @@ namespace Trains.Model.Builders
 				}
 			}
 		}
+
+
 
 		private void DrawTrajectory()
 		{
@@ -143,7 +170,8 @@ namespace Trains.Model.Builders
 				pathList.Add(path);
 				path.Transform = blueprint.Transform;
 				path.Curve = blueprint.Curve;
-				path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
+				//path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
+				path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 
 				//save 
 				start += path.Curve.Last();
@@ -168,7 +196,9 @@ namespace Trains.Model.Builders
 
 		private void UpdateBlueprint()
 		{
-			blueprint.Translation = this.GetIntersection(camera, rayLength);
+			var mousePos = this.GetIntersection(camera, rayLength);
+			blueprint.Translation = mousePos;
+			Snap(mousePos);
 
 			//set base color
 			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
@@ -178,37 +208,28 @@ namespace Trains.Model.Builders
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
-		{
-			//other button is clicked
-			if (buttonType != MainButtonType.BuildRail)
-			{
-				Reset();
-				return;
-			}
-
-			//"Build Rail" button is clicked
-			if (Global.MainButtonMode is MainButtonType.BuildRail)
-			{
-				Global.MainButtonMode = null;
-				Reset();
-				return;
-			}
-
-			//init blueprint
-			Global.MainButtonMode = MainButtonType.BuildRail;
-			state = State.SelectStart;
-			blueprint = scene.Instance<Path>();
-			AddChild(blueprint);
-			blueprint.Name = "blueprint";
-		}
-
 		private void Reset()
 		{
 			blueprint?.QueueFree();
 			blueprint = null;
 			state = State.None;
 			start = Vector3.Zero;
+		}
+
+		private void Snap(Vector3 mousePos)
+		{
+			var firstPoints = pathList.Select(path => path.Translation + path.Curve.First());
+			var lastPoints = pathList.Select(path => path.Translation + path.Curve.Last());
+			var points = firstPoints.Union(lastPoints);
+
+			foreach (var p in points)
+			{
+				if (p.DistanceTo(mousePos) < snapDistance)
+				{
+					blueprint.Translation = p;
+					return;
+				}
+			}
 		}
 	}
 }
