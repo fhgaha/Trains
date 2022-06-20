@@ -26,6 +26,20 @@ namespace Trains.Model.Common
 		public static Vector3 First(this Curve3D curve) => curve.GetPointPosition(0);
 		public static Vector3 Last(this Curve3D curve) => curve.GetPointPosition(curve.GetPointCount() - 1);
 
+		public static List<Vector3> TakeFirst(this Curve3D curve, int amount)
+		{
+			if (amount > curve.GetPointCount()) throw new ArgumentException(
+				"amount " + amount + " cannot be bigger that curve points count " + curve.GetPointCount());
+
+			var list = new List<Vector3>();
+
+			for (int i = 0; i < amount; i++)
+				list.Add(curve.GetPointPosition(i));
+
+			list.Reverse();
+			return list;
+		}
+
 		public static List<Vector3> TakeLast(this Curve3D curve, int amount)
 		{
 			var list = new List<Vector3>();

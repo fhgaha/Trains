@@ -209,22 +209,45 @@ namespace Trains.Model.Builders
 			blueprint = null;
 			state = State.None;
 			start = Vector3.Zero;
-			//prevDir = Vector3.Zero;
+			prevDir = Vector3.Zero;
 		}
 
 		private void Snap(Vector3 mousePos)
 		{
-			var firstPoints = pathList.Select(path => path.Translation + path.Curve.First());
-			var lastPoints = pathList.Select(path => path.Translation + path.Curve.Last());
-			var points = firstPoints.Union(lastPoints);
+			// var firstPoints = pathList.Select(path => path.Translation + path.Curve.First());
+			// var lastPoints = pathList.Select(path => path.Translation + path.Curve.Last());
+			// var points = firstPoints.Union(lastPoints);
 
-			foreach (var p in points)
+			// foreach (var p in points)
+			// {
+			// 	if (p.DistanceTo(mousePos) < snapDistance)
+			// 	{
+			// 		blueprint.Translation = p;
+			// 		start = p;
+			// 		//prevDir = ?
+			// 		return;
+			// 	}
+			// }
+
+
+			foreach (var path in pathList)
 			{
-				if (p.DistanceTo(mousePos) < snapDistance)
+				var start = path.Translation + path.Curve.First();
+				var end = path.Translation + path.Curve.Last();
+				
+				if (start.DistanceTo(mousePos) < snapDistance)
 				{
-					blueprint.Translation = p;
-					start = p;
-					//prevDir = ?
+					blueprint.Translation = start;
+					this.start = start;
+					prevDir = GetDir(path.Curve.TakeFirst(2));
+					return;
+				}
+
+				if (end.DistanceTo(mousePos) < snapDistance)
+				{
+					blueprint.Translation = end;
+					this.start = end;
+					prevDir = GetDir(path.Curve.TakeLast(2));
 					return;
 				}
 			}
