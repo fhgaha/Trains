@@ -214,44 +214,33 @@ namespace Trains.Model.Builders
 
 		private void Snap(Vector3 mousePos)
 		{
-			// var firstPoints = pathList.Select(path => path.Translation + path.Curve.First());
-			// var lastPoints = pathList.Select(path => path.Translation + path.Curve.Last());
-			// var points = firstPoints.Union(lastPoints);
-
-			// foreach (var p in points)
-			// {
-			// 	if (p.DistanceTo(mousePos) < snapDistance)
-			// 	{
-			// 		blueprint.Translation = p;
-			// 		start = p;
-			// 		//prevDir = ?
-			// 		return;
-			// 	}
-			// }
-
-
 			foreach (var path in pathList)
 			{
 				var start = path.Translation + path.Curve.First();
 				var end = path.Translation + path.Curve.Last();
-				
-				if (start.DistanceTo(mousePos) < snapDistance)
+
+				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
 				{
-					blueprint.Translation = start;
-					this.start = start;
-					prevDir = GetDir(path.Curve.TakeFirst(2));
+					MoveBpUpdateStartAndPrevDir(start, isStart: true);
 					return;
 				}
 
-				if (end.DistanceTo(mousePos) < snapDistance)
+				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
 				{
-					blueprint.Translation = end;
-					this.start = end;
-					prevDir = GetDir(path.Curve.TakeLast(2));
+					MoveBpUpdateStartAndPrevDir(end, isStart: false);
 					return;
+				}
+
+				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
+				{
+					blueprint.Translation = point;
+					this.start = point;
+					prevDir = isStart ? GetDir(path.Curve.TakeFirst(2)) : GetDir(path.Curve.TakeLast(2));
 				}
 			}
 		}
+
+
 
 		private Vector3 GetDir(List<Vector3> points) => (points[1] - points[0]).Normalized();
 	}
