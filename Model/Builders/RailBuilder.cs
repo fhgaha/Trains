@@ -12,6 +12,7 @@ namespace Trains.Model.Builders
 	enum State { None, SelectStart, SelectEnd }
 	public class RailBuilder : Spatial
 	{
+		private const float snapDistance = 1f;
 		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
 		private const float rayLength = 1000f;
@@ -29,16 +30,16 @@ namespace Trains.Model.Builders
 		private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
 		private List<Path> pathList = new List<Path>();
-		private const float snapDistance = 1f;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
 		//build order:
-		//1. press BS button, simple straight road will show up following cursor.
+		//1. press BS button, blueprint will show up as simple straight road with it's end following cursor. 
 		//2. using mouse select a place to build first segment. it cannot be built on obstacle.
-		//3. press lmb to place first segment. path will show up from first segment to mouse pos, showing possible path
-		//	 in blueprint mode.
-		//4. press lmb again to place blueprint road.
+		//3. press lmb to place first segment. 
+		//4. a new blueprint will show up with start in the end of previous segment with the end following mouse pos.
+		//	 this time path will be curved.
+		//5. press lmb again to place blueprint road.
 		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
 		{
 			this.cells = cells;
