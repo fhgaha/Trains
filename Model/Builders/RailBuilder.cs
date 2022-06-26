@@ -26,10 +26,10 @@ namespace Trains.Model.Builders
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
 
+		private List<Path> pathList = new List<Path>();
 		private bool firstSegmentIsPlaced => pathList.Count > 0;
 		private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
-		private List<Path> pathList = new List<Path>();
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -49,11 +49,6 @@ namespace Trains.Model.Builders
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			calculator = GetNode<CurveCalculator>("Calculator");
-		}
-
-		public override void _PhysicsProcess(float delta)
-		{
-
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -128,7 +123,7 @@ namespace Trains.Model.Builders
 
 			var points = calculator.CalculateCurvePoints(blueprint.Translation.ToVec2(), end.ToVec2(), 1f, rotationDeg, firstSegmentIsPlaced);
 
-			var curve = new Curve3D();
+			var curve = new RailCurve();
 			if (points.Count() > 0)
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - start));
 			else
@@ -138,21 +133,6 @@ namespace Trains.Model.Builders
 				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			}
 			blueprint.Curve = curve;
-		}
-
-		///use this method to place multiple paths instead of continuing a single path
-		protected void PlaceObjectMultiplePathsCase(Vector3 position)
-		{
-			//copy blueprint
-			var path = scene.Instance<Path>();
-			AddChild(path);
-			path.Transform = blueprint.Transform;
-			path.Curve = blueprint.Curve;
-			path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
-
-			//save 
-			start += path.Curve.Last();
-			prevDir = GetDir(path.Curve.TakeLast(2));
 		}
 
 		protected void PlaceObject(Vector3 position)
@@ -180,8 +160,8 @@ namespace Trains.Model.Builders
 			//copy blueprint
 			var last = blueprint.Curve.Last();
 			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
-			foreach (var p in blueprint.Curve.GetBakedPoints())
-				path.Curve.AddPoint(pathOriginToBpOrigin + p);
+			var segment = new CurveSegment(pathOriginToBpOrigin, blueprint.Curve.GetBakedPoints());
+			((RailCurve)path.Curve).AppendSegment(segment);
 
 			//save 
 			start = blueprint.Translation + last;
