@@ -26,7 +26,7 @@ namespace Trains.Model.Builders
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
 
-		private List<Path> pathList = new List<Path>();
+		private List<RailPath> pathList = new List<RailPath>();
 		private bool firstSegmentIsPlaced => pathList.Count > 0;
 		private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
@@ -71,7 +71,7 @@ namespace Trains.Model.Builders
 			//init blueprint
 			Global.MainButtonMode = MainButtonType.BuildRail;
 			state = State.SelectStart;
-			blueprint = scene.Instance<Path>();
+			blueprint = scene.Instance<RailPath>();
 			AddChild(blueprint);
 			blueprint.Name = "blueprint";
 		}
@@ -137,35 +137,44 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject(Vector3 position)
 		{
-			Path path = pathList.LastOrDefault();
+			RailPath path = pathList.LastOrDefault();
 
 			//place first segment
 			if (pathList.Count == 0)
 			{
-				//init path
-				path = scene.Instance<Path>();
+				path = scene.Instance<RailPath>();
 				AddChild(path);
 				pathList.Add(path);
-				path.Transform = blueprint.Transform;
-				path.Curve = blueprint.Curve;
-				//path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
-				path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+				path.Init(blueprint);
 
-				//save 
+				//init path
+				// path = scene.Instance<Path>();
+				// AddChild(path);
+				// pathList.Add(path);
+				// path.Transform = blueprint.Transform;
+				// path.Curve = blueprint.Curve;
+				// //path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
+				// path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+
+				// //save 
 				start += path.Curve.Last();
 				prevDir = GetDir(path.Curve.TakeLast(2));
+				path.Start = start;
+				path.PrevDir = prevDir;
 				return;
 			}
 
 			//copy blueprint
 			var last = blueprint.Curve.Last();
 			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
-			var segment = new CurveSegment(pathOriginToBpOrigin, blueprint.Curve.GetBakedPoints());
-			((RailCurve)path.Curve).AppendSegment(segment);
+			var segment = new CurveSegment(blueprint.Curve.GetBakedPoints());
+			((RailCurve)path.Curve).AppendSegment(pathOriginToBpOrigin, segment);
 
 			//save 
 			start = blueprint.Translation + last;
 			prevDir = GetDir(path.Curve.TakeLast(2));
+			path.Start = blueprint.Translation + last;
+			path.PrevDir = GetDir(path.Curve.TakeLast(2));
 
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
 		}
