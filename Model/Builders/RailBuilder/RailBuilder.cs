@@ -20,7 +20,7 @@ namespace Trains.Model.Builders
 		private Events events;
 		private CurveCalculator calculator;
 		private PackedScene scene;
-		private Path blueprint;
+		private RailPath blueprint;
 		private bool canBuild = false;
 		private Camera camera;
 		private Spatial objectHolder;   //Rails
@@ -28,7 +28,7 @@ namespace Trains.Model.Builders
 
 		private List<RailPath> pathList = new List<RailPath>();
 		private bool firstSegmentIsPlaced => pathList.Count > 0;
-		private Vector3 start = Vector3.Zero;
+		//private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
@@ -56,7 +56,7 @@ namespace Trains.Model.Builders
 			//other button is clicked
 			if (buttonType != MainButtonType.BuildRail)
 			{
-				Reset();
+				ResetBp();
 				return;
 			}
 
@@ -64,7 +64,7 @@ namespace Trains.Model.Builders
 			if (Global.MainButtonMode is MainButtonType.BuildRail)
 			{
 				Global.MainButtonMode = null;
-				Reset();
+				ResetBp();
 				return;
 			}
 
@@ -84,8 +84,9 @@ namespace Trains.Model.Builders
 				{
 					case State.None: return;
 					case State.SelectStart:
-						start = this.GetIntersection(camera, rayLength);
-						Snap(start);
+						var mousePos = this.GetIntersection(camera, rayLength);
+						blueprint.Start = mousePos;
+						TrySnap(mousePos);
 						state = State.SelectEnd;
 						break;
 					case State.SelectEnd:
@@ -112,7 +113,7 @@ namespace Trains.Model.Builders
 		private void DrawTrajectory()
 		{
 			Vector3 end = this.GetIntersection(camera, rayLength);
-			blueprint.Translation = start;
+			blueprint.Translation = blueprint.Start;
 
 			var rotationDeg = 0f;
 			if (prevDir != Vector3.Zero)
@@ -125,7 +126,7 @@ namespace Trains.Model.Builders
 
 			var curve = new RailCurve();
 			if (points.Count() > 0)
-				points.ForEach(p => curve.AddPoint(p.ToVec3() - start));
+				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Start));
 			else
 			{
 				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"
@@ -140,26 +141,18 @@ namespace Trains.Model.Builders
 			RailPath path = pathList.LastOrDefault();
 
 			//place first segment
-			if (pathList.Count == 0)
+			if (path is null)
 			{
+				//init path
 				path = scene.Instance<RailPath>();
 				AddChild(path);
 				pathList.Add(path);
 				path.Init(blueprint);
 
-				//init path
-				// path = scene.Instance<Path>();
-				// AddChild(path);
-				// pathList.Add(path);
-				// path.Transform = blueprint.Transform;
-				// path.Curve = blueprint.Curve;
-				// //path.GetNode<CSGPolygon>("CSGPolygon").Polygon = path.GetNode<CSGPolygon>("CSGPolygon").Polygon;
-				// path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
-
-				// //save 
-				start += path.Curve.Last();
-				prevDir = GetDir(path.Curve.TakeLast(2));
-				path.Start = start;
+				//save 
+				blueprint.Start += path.Curve.Last();
+				prevDir = path.GetDirFromEnd();
+				path.Start = blueprint.Start;
 				path.PrevDir = prevDir;
 				return;
 			}
@@ -171,10 +164,10 @@ namespace Trains.Model.Builders
 			((RailCurve)path.Curve).AppendSegment(pathOriginToBpOrigin, segment);
 
 			//save 
-			start = blueprint.Translation + last;
-			prevDir = GetDir(path.Curve.TakeLast(2));
+			blueprint.Start = blueprint.Translation + last;
+			prevDir = path.GetDirFromEnd();
 			path.Start = blueprint.Translation + last;
-			path.PrevDir = GetDir(path.Curve.TakeLast(2));
+			path.PrevDir = path.GetDirFromEnd();
 
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
 		}
@@ -183,7 +176,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			Snap(mousePos);
+			TrySnap(mousePos);
 
 			//set base color
 			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
@@ -193,16 +186,15 @@ namespace Trains.Model.Builders
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
-		private void Reset()
+		private void ResetBp()
 		{
+			state = State.None;
 			blueprint?.QueueFree();
 			blueprint = null;
-			state = State.None;
-			start = Vector3.Zero;
 			prevDir = Vector3.Zero;
 		}
 
-		private void Snap(Vector3 mousePos)
+		private void TrySnap(Vector3 mousePos)
 		{
 			foreach (var path in pathList)
 			{
@@ -224,14 +216,10 @@ namespace Trains.Model.Builders
 				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
 				{
 					blueprint.Translation = point;
-					this.start = point;
-					prevDir = isStart ? GetDir(path.Curve.TakeFirst(2)) : GetDir(path.Curve.TakeLast(2));
+					blueprint.Start = point;
+					prevDir = isStart ? path.GetDirFromStart() : path.GetDirFromEnd();
 				}
 			}
 		}
-
-
-
-		private Vector3 GetDir(List<Vector3> points) => (points[1] - points[0]).Normalized();
 	}
 }
