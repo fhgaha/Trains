@@ -90,13 +90,10 @@ namespace Trains.Model.Builders
 				{
 					case State.None: return;
 					case State.SelectStart:
-						var mousePos = this.GetIntersection(camera, rayLength);
-						blueprint.Start = mousePos;
-						TrySnap(mousePos);
-						state = State.SelectEnd;
+						SelectStart();
 						break;
 					case State.SelectEnd:
-						PlaceObject(this.GetIntersection(camera, rayLength));
+						PlaceObject();
 						break;
 				}
 			}
@@ -114,6 +111,14 @@ namespace Trains.Model.Builders
 						break;
 				}
 			}
+		}
+
+		private void SelectStart()
+		{
+			var mousePos = this.GetIntersection(camera, rayLength);
+			blueprint.Start.Position = mousePos;
+			TrySnap(mousePos);  //path should begin from snapped point with no offset
+			state = State.SelectEnd;
 		}
 
 		private void TrySnap(Vector3 mousePos)
@@ -138,8 +143,13 @@ namespace Trains.Model.Builders
 				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
 				{
 					blueprint.Translation = point;
-					blueprint.Start = point;
+					blueprint.Start.Position = point;
 					prevDir = isStart ? path.GetDirFromStart() : path.GetDirFromEnd();
+
+					if (isStart)
+						blueprint.Start = new CurvePoint(point, path.GetDirFromStart());
+					else
+						blueprint.End = new CurvePoint(point, path.GetDirFromStart());
 				}
 			}
 		}
@@ -160,21 +170,24 @@ namespace Trains.Model.Builders
 
 		private void DrawTrajectory()
 		{
-			Vector3 end = this.GetIntersection(camera, rayLength);
-			blueprint.Translation = blueprint.Start;
+			var mousePos = this.GetIntersection(camera, rayLength);
+			blueprint.Translation = blueprint.Start.Position;
 
-			var rotationDeg = 0f;
-			if (prevDir != Vector3.Zero)
-			{
-				rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
-				if (rotationDeg < 0) rotationDeg += 360;
-			}
-
-			var points = calculator.CalculateCurvePoints(blueprint.Translation.ToVec2(), end.ToVec2(), 1f, rotationDeg, firstSegmentIsPlaced);
+			var points = calculator.CalculateCurvePoints(
+				blueprint.Translation.ToVec2(), mousePos.ToVec2(), 1f, GetRotationDeg(), firstSegmentIsPlaced);
 
 			var curve = new RailCurve();
+			//convert points to segments and add segments to curve
+			// var pointsAsVec3 = points.Select(p => p.ToVec3()).ToList();
+			// if (points.Count() > 0)
+			// {
+			// 	var segments = CurveSegment.ConvertToSegments(pointsAsVec3);
+			// 	//segments.ForEach(s => curve.AppendSegment());
+			// }
+
+
 			if (points.Count() > 0)
-				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Start));
+				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
 			else
 			{
 				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"
@@ -184,7 +197,18 @@ namespace Trains.Model.Builders
 			blueprint.Curve = curve;
 		}
 
-		protected void PlaceObject(Vector3 position)
+		private float GetRotationDeg()
+		{
+			var rotationDeg = 0f;
+			if (prevDir != Vector3.Zero)
+			{
+				rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
+				if (rotationDeg < 0) rotationDeg += 360;
+			}
+			return rotationDeg;
+		}
+
+		protected void PlaceObject()
 		{
 			RailPath path = pathList.LastOrDefault();
 
@@ -198,10 +222,10 @@ namespace Trains.Model.Builders
 				path.Init(blueprint);
 
 				//save 
-				blueprint.Start += path.Curve.Last();
+				blueprint.Start.Position += path.Curve.Last();
 				prevDir = path.GetDirFromEnd();
 				path.Start = blueprint.Start;
-				path.PrevDir = prevDir;
+				//path.PrevDir = prevDir;
 				return;
 			}
 
@@ -212,10 +236,14 @@ namespace Trains.Model.Builders
 			((RailCurve)path.Curve).AppendSegment(pathOriginToBpOrigin, segment);
 
 			//save 
-			blueprint.Start = blueprint.Translation + last;
+			blueprint.Start.Position = blueprint.Translation + last;
 			prevDir = path.GetDirFromEnd();
-			path.Start = blueprint.Translation + last;
-			path.PrevDir = path.GetDirFromEnd();
+			path.Start.Position = blueprint.Translation + last;
+			//path.PrevDir = path.GetDirFromEnd();
+
+			path.Start = new CurvePoint { Position = path.Translation + path.Curve.First(), Direction = path.GetDirFromStart() };
+			path.End = new CurvePoint { Position = path.Translation + path.Curve.Last(), Direction = path.GetDirFromEnd() };
+
 
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
 		}

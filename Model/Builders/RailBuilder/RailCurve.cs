@@ -2,12 +2,20 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Trains.Model.Common;
 
 namespace Trains.Model.Builders
 {
 	public class RailCurve : Curve3D
 	{
 		public List<CurveSegment> Segments { get; set; }
+
+		public RailCurve() { }
+
+		public RailCurve(List<Vector2> points)
+		{
+			//points.ForEach(p => AddPoint(p.ToVec3()));
+		}
 
 		public void Copy(Curve3D original)
 		{
