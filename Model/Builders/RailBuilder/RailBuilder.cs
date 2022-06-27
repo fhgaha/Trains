@@ -21,14 +21,12 @@ namespace Trains.Model.Builders
 		private CurveCalculator calculator;
 		private PackedScene scene;
 		private RailPath blueprint;
-		private bool canBuild = false;
 		private Camera camera;
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
 
 		private List<RailPath> pathList = new List<RailPath>();
 		private bool firstSegmentIsPlaced => pathList.Count > 0;
-		//private Vector3 start = Vector3.Zero;
 		private Vector3 prevDir = Vector3.Zero;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
@@ -56,7 +54,7 @@ namespace Trains.Model.Builders
 			//other button is clicked
 			if (buttonType != MainButtonType.BuildRail)
 			{
-				ResetBp();
+				ResetBlueprint();
 				return;
 			}
 
@@ -64,16 +62,24 @@ namespace Trains.Model.Builders
 			if (Global.MainButtonMode is MainButtonType.BuildRail)
 			{
 				Global.MainButtonMode = null;
-				ResetBp();
+				ResetBlueprint();
 				return;
 			}
 
-			//init blueprint
 			Global.MainButtonMode = MainButtonType.BuildRail;
 			state = State.SelectStart;
+			//init blueprint
 			blueprint = scene.Instance<RailPath>();
 			AddChild(blueprint);
 			blueprint.Name = "blueprint";
+		}
+
+		private void ResetBlueprint()
+		{
+			state = State.None;
+			blueprint?.QueueFree();
+			blueprint = null;
+			prevDir = Vector3.Zero;
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -108,6 +114,48 @@ namespace Trains.Model.Builders
 						break;
 				}
 			}
+		}
+
+		private void TrySnap(Vector3 mousePos)
+		{
+			foreach (var path in pathList)
+			{
+				var start = path.Translation + path.Curve.First();
+				var end = path.Translation + path.Curve.Last();
+
+				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
+				{
+					MoveBpUpdateStartAndPrevDir(start, isStart: true);
+					return;
+				}
+
+				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
+				{
+					MoveBpUpdateStartAndPrevDir(end, isStart: false);
+					return;
+				}
+
+				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
+				{
+					blueprint.Translation = point;
+					blueprint.Start = point;
+					prevDir = isStart ? path.GetDirFromStart() : path.GetDirFromEnd();
+				}
+			}
+		}
+
+		private void UpdateBlueprint()
+		{
+			var mousePos = this.GetIntersection(camera, rayLength);
+			blueprint.Translation = mousePos;
+			TrySnap(mousePos);
+
+			//set base color
+			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
+			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
+			var canBuild = bodies.Count() <= 0;
+			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
+			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
 		private void DrawTrajectory()
@@ -170,56 +218,6 @@ namespace Trains.Model.Builders
 			path.PrevDir = path.GetDirFromEnd();
 
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
-		}
-
-		private void UpdateBlueprint()
-		{
-			var mousePos = this.GetIntersection(camera, rayLength);
-			blueprint.Translation = mousePos;
-			TrySnap(mousePos);
-
-			//set base color
-			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
-			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
-			canBuild = bodies.Count() <= 0;
-			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
-			csgMaterial.AlbedoColor = canBuild ? yellow : red;
-		}
-
-		private void ResetBp()
-		{
-			state = State.None;
-			blueprint?.QueueFree();
-			blueprint = null;
-			prevDir = Vector3.Zero;
-		}
-
-		private void TrySnap(Vector3 mousePos)
-		{
-			foreach (var path in pathList)
-			{
-				var start = path.Translation + path.Curve.First();
-				var end = path.Translation + path.Curve.Last();
-
-				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
-				{
-					MoveBpUpdateStartAndPrevDir(start, isStart: true);
-					return;
-				}
-
-				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
-				{
-					MoveBpUpdateStartAndPrevDir(end, isStart: false);
-					return;
-				}
-
-				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
-				{
-					blueprint.Translation = point;
-					blueprint.Start = point;
-					prevDir = isStart ? path.GetDirFromStart() : path.GetDirFromEnd();
-				}
-			}
 		}
 	}
 }
