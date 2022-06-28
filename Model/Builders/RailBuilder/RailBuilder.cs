@@ -28,6 +28,7 @@ namespace Trains.Model.Builders
 		private List<RailPath> pathList = new List<RailPath>();
 		private bool firstSegmentIsPlaced => pathList.Count > 0;
 		private Vector3 prevDir = Vector3.Zero;
+		private RailPath currentPath;   //path from which railbuilding is being continued
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -80,6 +81,7 @@ namespace Trains.Model.Builders
 			blueprint?.QueueFree();
 			blueprint = null;
 			prevDir = Vector3.Zero;
+			currentPath = null;
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -117,12 +119,11 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Start.Position = mousePos;
-			TrySnap(mousePos);  //path should begin from snapped point with no offset
-
+			prevDir = TrySnap(mousePos);  //path should begin from snapped point with no offset
 			state = State.SelectEnd;
 		}
 
-		private void TrySnap(Vector3 mousePos)
+		private Vector3 TrySnap(Vector3 mousePos)
 		{
 			foreach (var path in pathList)
 			{
@@ -132,27 +133,34 @@ namespace Trains.Model.Builders
 				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
 				{
 					MoveBpUpdateStartAndPrevDir(start, isStart: true);
-					return;
+					return path.DirFromStart;
 				}
 
 				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
 				{
 					MoveBpUpdateStartAndPrevDir(end, isStart: false);
-					return;
+					return path.DirFromEnd;
+
 				}
 
 				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
 				{
 					blueprint.Translation = point;
 					blueprint.Start.Position = point;
+					currentPath = path;
 					prevDir = isStart ? path.GetDirFromStart() : path.GetDirFromEnd();
 
 					if (isStart)
+					{
 						blueprint.Start = new CurvePoint(point, path.GetDirFromStart());
+					}
 					else
+					{
 						blueprint.End = new CurvePoint(point, path.GetDirFromStart());
+					}
 				}
 			}
+			return Vector3.Zero;
 		}
 
 		private void UpdateBlueprint()
@@ -227,11 +235,27 @@ namespace Trains.Model.Builders
 			}
 
 			//copy blueprint
-			var bpLast = blueprint.Curve.Last();
 			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
 			var segment = new CurveSegment(blueprint.Curve.GetBakedPoints());
 			var railCurve = (RailCurve)path.Curve;
-			railCurve.AppendSegment(pathOriginToBpOrigin, segment);
+
+			GD.Print("blueprint._Start: " + blueprint._Start);
+			GD.Print("currentPath._Start" + currentPath._Start);
+			GD.Print("currentPath._End" + currentPath._End);
+
+			if (blueprint._Start.IsEqualApprox(currentPath._Start))
+			{
+				GD.Print("blueprint._Start == currentPath._Start");
+				railCurve.PrependSegment(pathOriginToBpOrigin, segment);
+			}
+
+			if (blueprint._Start.IsEqualApprox(currentPath._End))
+			{
+				GD.Print("blueprint._Start == currentPath._End");
+				railCurve.AppendSegment(pathOriginToBpOrigin, segment);
+			}
+			GD.Print();
+
 
 			Save(path);
 
@@ -247,6 +271,7 @@ namespace Trains.Model.Builders
 			prevDir = path.GetDirFromEnd();
 			path.Start = blueprint.Start;
 			//path.PrevDir = prevDir;
+			currentPath = path;
 		}
 	}
 }
