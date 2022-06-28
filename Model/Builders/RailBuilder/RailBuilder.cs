@@ -119,7 +119,8 @@ namespace Trains.Model.Builders
 		private void SelectStart()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			blueprint.Start.Position = mousePos;
+			blueprint.Translation = mousePos;
+			//blueprint.Start.Position = mousePos;
 			prevDir = TrySnap(mousePos);  //path should begin from snapped point with no offset
 			state = State.SelectEnd;
 		}
@@ -128,37 +129,27 @@ namespace Trains.Model.Builders
 		{
 			foreach (var path in pathList)
 			{
-				var start = path.Translation + path.Curve.First();
-				var end = path.Translation + path.Curve.Last();
+				var start = path.Start;
+				var end = path.End;
 
 				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
 				{
-					MoveBpUpdateStartAndPrevDir(start, isStart: true);
+					MoveBpUpdateStartAndPrevDir(start);
 					return path.DirFromStart;
 				}
 
 				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
 				{
-					MoveBpUpdateStartAndPrevDir(end, isStart: false);
+					MoveBpUpdateStartAndPrevDir(end);
 					return path.DirFromEnd;
 
 				}
 
-				void MoveBpUpdateStartAndPrevDir(Vector3 point, bool isStart)
+				void MoveBpUpdateStartAndPrevDir(Vector3 point)
 				{
 					blueprint.Translation = point;
-					blueprint.Start.Position = point;
+					//blueprint.Start.Position = point;
 					currentPath = path;
-					prevDir = isStart ? path.GetDirFromStart() : path.GetDirFromEnd();
-
-					if (isStart)
-					{
-						blueprint.Start = new CurvePoint(point, path.GetDirFromStart());
-					}
-					else
-					{
-						blueprint.End = new CurvePoint(point, path.GetDirFromStart());
-					}
 				}
 			}
 			return Vector3.Zero;
@@ -181,7 +172,7 @@ namespace Trains.Model.Builders
 		private void DrawTrajectory()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			blueprint.Translation = blueprint.Start.Position;
+			//blueprint.Translation = blueprint.Start.Position;
 
 			var points = calculator.CalculateCurvePoints(
 				blueprint.Translation.ToVec2(), mousePos.ToVec2(), 1f, GetRotationDeg(), firstSegmentIsPlaced);
@@ -223,7 +214,7 @@ namespace Trains.Model.Builders
 				path.Init(blueprint);
 
 				Save(path);
-				prevDir = path.GetDirFromEnd();
+				prevDir = path.DirFromEnd;
 				return;
 			}
 
@@ -232,13 +223,13 @@ namespace Trains.Model.Builders
 			var segment = new CurveSegment(blueprint);
 			var railCurve = (RailCurve)path.Curve;
 
-			if (blueprint._Start.IsEqualApprox(currentPath._Start))
+			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
 				railCurve.PrependSegment(pathOriginToBpOrigin, segment);
 				prevDir = path.DirFromStart;
 			}
 
-			if (blueprint._Start.IsEqualApprox(currentPath._End))
+			if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				railCurve.AppendSegment(pathOriginToBpOrigin, segment);
 				prevDir = path.DirFromEnd;
@@ -250,8 +241,10 @@ namespace Trains.Model.Builders
 
 		private void Save(RailPath path)
 		{
-			blueprint.Start.Position += blueprint.Curve.Last();
-			path.Start = blueprint.Start;
+			//blueprint.Start.Position += blueprint.Curve.Last();
+			//path.Start = blueprint.Start;
+			//path.Start = blueprint._End;
+			blueprint.Translation = blueprint.End;
 			currentPath = path;
 		}
 	}

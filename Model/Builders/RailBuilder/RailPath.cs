@@ -7,11 +7,8 @@ namespace Trains.Model.Builders
 {
 	public class RailPath : Path
 	{
-		public CurvePoint Start { get; set; }
-		public CurvePoint End { get; set; }
-
-		public Vector3 _Start { get => Translation + Curve.First(); }
-		public Vector3 _End { get => Translation + Curve.Last(); }
+		public Vector3 Start { get => Translation + Curve.First(); }
+		public Vector3 End { get => Translation + Curve.Last(); }
 
 		public Vector3 DirFromStart
 		{
@@ -30,12 +27,7 @@ namespace Trains.Model.Builders
 			}
 		}
 
-
-		public RailPath()
-		{
-			Start = new CurvePoint();
-			End = new CurvePoint();
-		}
+		public RailPath() { }
 
 		public void Init(Path blueprint)
 		{
