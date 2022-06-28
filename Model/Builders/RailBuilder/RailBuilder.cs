@@ -186,15 +186,6 @@ namespace Trains.Model.Builders
 				blueprint.Translation.ToVec2(), mousePos.ToVec2(), 1f, GetRotationDeg(), firstSegmentIsPlaced);
 
 			var curve = new RailCurve();
-			//convert points to segments and add segments to curve
-			// var pointsAsVec3 = points.Select(p => p.ToVec3()).ToList();
-			// if (points.Count() > 0)
-			// {
-			// 	var segments = CurveSegment.ConvertToSegments(pointsAsVec3);
-			// 	//segments.ForEach(s => curve.AppendSegment());
-			// }
-
-
 			if (points.Count() > 0)
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
 			else
@@ -231,6 +222,7 @@ namespace Trains.Model.Builders
 				path.Init(blueprint);
 
 				Save(path);
+				prevDir = path.GetDirFromEnd();
 				return;
 			}
 
@@ -239,23 +231,24 @@ namespace Trains.Model.Builders
 			var segment = new CurveSegment(blueprint.Curve.GetBakedPoints());
 			var railCurve = (RailCurve)path.Curve;
 
-			GD.Print("blueprint._Start: " + blueprint._Start);
-			GD.Print("currentPath._Start" + currentPath._Start);
-			GD.Print("currentPath._End" + currentPath._End);
+			// GD.Print("blueprint._Start: " + blueprint._Start);
+			// GD.Print("currentPath._Start" + currentPath._Start);
+			// GD.Print("currentPath._End" + currentPath._End);
 
 			if (blueprint._Start.IsEqualApprox(currentPath._Start))
 			{
-				GD.Print("blueprint._Start == currentPath._Start");
+				// GD.Print("blueprint._Start == currentPath._Start");
 				railCurve.PrependSegment(pathOriginToBpOrigin, segment);
+				prevDir = path.DirFromStart;
 			}
 
 			if (blueprint._Start.IsEqualApprox(currentPath._End))
 			{
-				GD.Print("blueprint._Start == currentPath._End");
+				// GD.Print("blueprint._Start == currentPath._End");
 				railCurve.AppendSegment(pathOriginToBpOrigin, segment);
+				prevDir = path.DirFromEnd;
 			}
-			GD.Print();
-
+			// GD.Print();
 
 			Save(path);
 
@@ -268,9 +261,7 @@ namespace Trains.Model.Builders
 		private void Save(RailPath path)
 		{
 			blueprint.Start.Position += blueprint.Curve.Last();
-			prevDir = path.GetDirFromEnd();
 			path.Start = blueprint.Start;
-			//path.PrevDir = prevDir;
 			currentPath = path;
 		}
 	}
