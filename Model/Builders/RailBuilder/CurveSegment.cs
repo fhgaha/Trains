@@ -23,6 +23,8 @@ namespace Trains.Model.Builders
 			Points = points.ToList();
 		}
 
+		public CurveSegment(RailPath path) : this(path.Curve.GetBakedPoints()) { }
+
 		public static List<CurveSegment> ConvertToSegments(List<Vector3> points)
 		{
 			var segmentLength = 2;

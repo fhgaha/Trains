@@ -52,14 +52,14 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			//other button is clicked
+			//other button is pressed
 			if (buttonType != MainButtonType.BuildRail)
 			{
 				ResetBlueprint();
 				return;
 			}
 
-			//"Build Rail" button is clicked
+			//"Build Rail" button was pressed and we press it again
 			if (Global.MainButtonMode is MainButtonType.BuildRail)
 			{
 				Global.MainButtonMode = null;
@@ -69,6 +69,7 @@ namespace Trains.Model.Builders
 
 			Global.MainButtonMode = MainButtonType.BuildRail;
 			state = State.SelectStart;
+
 			//init blueprint
 			blueprint = scene.Instance<RailPath>();
 			AddChild(blueprint);
@@ -228,33 +229,22 @@ namespace Trains.Model.Builders
 
 			//copy blueprint
 			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
-			var segment = new CurveSegment(blueprint.Curve.GetBakedPoints());
+			var segment = new CurveSegment(blueprint);
 			var railCurve = (RailCurve)path.Curve;
-
-			// GD.Print("blueprint._Start: " + blueprint._Start);
-			// GD.Print("currentPath._Start" + currentPath._Start);
-			// GD.Print("currentPath._End" + currentPath._End);
 
 			if (blueprint._Start.IsEqualApprox(currentPath._Start))
 			{
-				// GD.Print("blueprint._Start == currentPath._Start");
 				railCurve.PrependSegment(pathOriginToBpOrigin, segment);
 				prevDir = path.DirFromStart;
 			}
 
 			if (blueprint._Start.IsEqualApprox(currentPath._End))
 			{
-				// GD.Print("blueprint._Start == currentPath._End");
 				railCurve.AppendSegment(pathOriginToBpOrigin, segment);
 				prevDir = path.DirFromEnd;
 			}
-			// GD.Print();
 
 			Save(path);
-
-			path.Start = new CurvePoint(path.Translation + path.Curve.First(), path.GetDirFromStart());
-			path.End = new CurvePoint(path.Translation + path.Curve.Last(), path.GetDirFromEnd());
-
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
 		}
 
