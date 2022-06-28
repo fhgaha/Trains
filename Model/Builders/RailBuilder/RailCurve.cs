@@ -26,7 +26,7 @@ namespace Trains.Model.Builders
 		public void PrependSegment(Vector3 origin, CurveSegment segment)
 		{
 			var points = segment.Points;
-			points.Reverse();
+			//points.Reverse();
 			foreach (var p in points)
 			{
 				AddPoint(origin + p, atPosition: 0);
