@@ -118,6 +118,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Start.Position = mousePos;
 			TrySnap(mousePos);  //path should begin from snapped point with no offset
+
 			state = State.SelectEnd;
 		}
 
@@ -221,31 +222,31 @@ namespace Trains.Model.Builders
 				pathList.Add(path);
 				path.Init(blueprint);
 
-				//save 
-				blueprint.Start.Position += path.Curve.Last();
-				prevDir = path.GetDirFromEnd();
-				path.Start = blueprint.Start;
-				//path.PrevDir = prevDir;
+				Save(path);
 				return;
 			}
 
 			//copy blueprint
-			var last = blueprint.Curve.Last();
+			var bpLast = blueprint.Curve.Last();
 			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
 			var segment = new CurveSegment(blueprint.Curve.GetBakedPoints());
-			((RailCurve)path.Curve).AppendSegment(pathOriginToBpOrigin, segment);
+			var railCurve = (RailCurve)path.Curve;
+			railCurve.AppendSegment(pathOriginToBpOrigin, segment);
 
-			//save 
-			blueprint.Start.Position = blueprint.Translation + last;
-			prevDir = path.GetDirFromEnd();
-			path.Start.Position = blueprint.Translation + last;
-			//path.PrevDir = path.GetDirFromEnd();
+			Save(path);
 
-			path.Start = new CurvePoint { Position = path.Translation + path.Curve.First(), Direction = path.GetDirFromStart() };
-			path.End = new CurvePoint { Position = path.Translation + path.Curve.Last(), Direction = path.GetDirFromEnd() };
-
+			path.Start = new CurvePoint(path.Translation + path.Curve.First(), path.GetDirFromStart());
+			path.End = new CurvePoint(path.Translation + path.Curve.Last(), path.GetDirFromEnd());
 
 			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
+		}
+
+		private void Save(RailPath path)
+		{
+			blueprint.Start.Position += blueprint.Curve.Last();
+			prevDir = path.GetDirFromEnd();
+			path.Start = blueprint.Start;
+			//path.PrevDir = prevDir;
 		}
 	}
 }
