@@ -203,40 +203,40 @@ namespace Trains.Model.Builders
 		protected void PlaceObject()
 		{
 			//RailPath path = pathList.LastOrDefault();
-			RailPath path = currentPath;
+			//RailPath path = currentPath;
 
 			//place first segment
-			if (path is null)
+			if (currentPath is null)
 			{
 				//init path
-				path = scene.Instance<RailPath>();
-				AddChild(path);
-				pathList.Add(path);
-				path.Init(blueprint);
+				currentPath = scene.Instance<RailPath>();
+				AddChild(currentPath);
+				pathList.Add(currentPath);
+				currentPath.Init(blueprint);
 
-				SaveVarsRedrawBlueprint(path, path.DirFromEnd);
+				SaveVarsRedrawBlueprint(currentPath, currentPath.DirFromEnd);
 				return;
 			}
 
 			//copy blueprint
-			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
+			var pathOriginToBpOrigin = blueprint.Translation - currentPath.Translation;
 			var segment = new CurveSegment(blueprint);
-			var railCurve = (RailCurve)path.Curve;
+			var railCurve = (RailCurve)currentPath.Curve;
 			var newDir = prevDir;
 
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
 				railCurve.PrependSegment(pathOriginToBpOrigin, segment);
-				newDir = path.DirFromStart;
+				newDir = currentPath.DirFromStart;
 			}
 
 			if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				railCurve.AppendSegment(pathOriginToBpOrigin, segment);
-				newDir = path.DirFromEnd;
+				newDir = currentPath.DirFromEnd;
 			}
 
-			SaveVarsRedrawBlueprint(path, newDir);
+			SaveVarsRedrawBlueprint(currentPath, newDir);
 		}
 
 		private void SaveVarsRedrawBlueprint(RailPath path, Vector3 direction)
