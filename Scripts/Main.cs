@@ -20,7 +20,6 @@ namespace Trains.Scripts
 			FloatDisplayDotsInsteadOfCommas();
 
 			events = GetNode<Events>("/root/Events");
-			//GD.Print("Main: " + events);
 			mover = new ProductMigrationManager();
 			var c = GetChildren();
 			var timer = GetNode<Timer>("MainTimer");
@@ -37,11 +36,7 @@ namespace Trains.Scripts
 			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
 
 			//init rail builder
-			// railBuilder = new RailBuilder();
-			// AddChild(railBuilder);
-			// railBuilder.Name = "RailBuilder";
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");
-			// railBuilder.Init(cells, camera, GetNode<Spatial>("Rails"), scene);
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
 			railBuilder.Init(cells, camera, GetNode<Spatial>("Rails"), scene);
 		}

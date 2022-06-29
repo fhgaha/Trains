@@ -26,7 +26,6 @@ namespace Trains.Model.Builders
 		private State state = State.None;
 
 		private List<RailPath> pathList = new List<RailPath>();
-		private bool firstSegmentIsPlaced => pathList.Count > 0;
 		private Vector3 prevDir = Vector3.Zero;
 		private RailPath currentPath;   //path from which railbuilding is being continued
 
@@ -48,6 +47,10 @@ namespace Trains.Model.Builders
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			calculator = GetNode<CurveCalculator>("Calculator");
+		}
+
+		public override void _Process(float delta)
+		{
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -152,6 +155,8 @@ namespace Trains.Model.Builders
 					currentPath = path;
 				}
 			}
+
+			currentPath = null;
 			return Vector3.Zero;
 		}
 
@@ -174,8 +179,9 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			//blueprint.Translation = blueprint.Start.Position;
 
+			var continuing = !(currentPath is null);
 			var points = calculator.CalculateCurvePoints(
-				blueprint.Translation.ToVec2(), mousePos.ToVec2(), 1f, GetRotationDeg(), firstSegmentIsPlaced);
+				blueprint.Translation.ToVec2(), mousePos.ToVec2(), 1f, GetRotationDeg(), continuing);
 
 			var curve = new RailCurve();
 			if (points.Count() > 0)
@@ -202,9 +208,6 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject()
 		{
-			//RailPath path = pathList.LastOrDefault();
-			//RailPath path = currentPath;
-
 			//place first segment
 			if (currentPath is null)
 			{
@@ -244,8 +247,10 @@ namespace Trains.Model.Builders
 			blueprint.Translation = blueprint.End;
 			currentPath = path;
 			prevDir = direction;
-			DrawBlueprint();   //this is called so that there is no overlap of blueprint and path or 
+
+			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
+			DrawBlueprint();   
 		}
 	}
 }
