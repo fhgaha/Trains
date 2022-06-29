@@ -202,7 +202,8 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject()
 		{
-			RailPath path = pathList.LastOrDefault();
+			//RailPath path = pathList.LastOrDefault();
+			RailPath path = currentPath;
 
 			//place first segment
 			if (path is null)
