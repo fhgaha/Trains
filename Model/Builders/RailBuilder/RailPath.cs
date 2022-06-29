@@ -35,17 +35,5 @@ namespace Trains.Model.Builders
 			Curve = (RailCurve)blueprint.Curve;
 			GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
-
-		public Vector3 GetDirFromStart()
-		{
-			var points = Curve.TakeFirst(2);
-			return (points[1] - points[0]).Normalized();
-		}
-
-		public Vector3 GetDirFromEnd()
-		{
-			var points = Curve.TakeLast(2);
-			return (points[1] - points[0]).Normalized();
-		}
 	}
 }

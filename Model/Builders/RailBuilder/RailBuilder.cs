@@ -110,7 +110,7 @@ namespace Trains.Model.Builders
 						UpdateBlueprint();
 						break;
 					case State.SelectEnd:
-						DrawTrajectory();
+						DrawBlueprint();
 						break;
 				}
 			}
@@ -169,7 +169,7 @@ namespace Trains.Model.Builders
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
-		private void DrawTrajectory()
+		private void DrawBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			//blueprint.Translation = blueprint.Start.Position;
@@ -213,8 +213,7 @@ namespace Trains.Model.Builders
 				pathList.Add(path);
 				path.Init(blueprint);
 
-				Save(path);
-				prevDir = path.DirFromEnd;
+				SaveVarsRedrawBlueprint(path, path.DirFromEnd);
 				return;
 			}
 
@@ -222,30 +221,30 @@ namespace Trains.Model.Builders
 			var pathOriginToBpOrigin = blueprint.Translation - path.Translation;
 			var segment = new CurveSegment(blueprint);
 			var railCurve = (RailCurve)path.Curve;
+			var newDir = prevDir;
 
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
 				railCurve.PrependSegment(pathOriginToBpOrigin, segment);
-				prevDir = path.DirFromStart;
+				newDir = path.DirFromStart;
 			}
 
 			if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				railCurve.AppendSegment(pathOriginToBpOrigin, segment);
-				prevDir = path.DirFromEnd;
+				newDir = path.DirFromEnd;
 			}
 
-			Save(path);
-			DrawTrajectory();   //this is called so that there is no overlap of blueprint and path
+			SaveVarsRedrawBlueprint(path, newDir);
 		}
 
-		private void Save(RailPath path)
+		private void SaveVarsRedrawBlueprint(RailPath path, Vector3 direction)
 		{
-			//blueprint.Start.Position += blueprint.Curve.Last();
-			//path.Start = blueprint.Start;
-			//path.Start = blueprint._End;
 			blueprint.Translation = blueprint.End;
 			currentPath = path;
+			prevDir = direction;
+			DrawBlueprint();   //this is called so that there is no overlap of blueprint and path or 
+			//generally wrong bp display until next frame starts
 		}
 	}
 }
