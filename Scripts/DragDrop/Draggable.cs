@@ -6,7 +6,7 @@ namespace Trains.Scripts.DragDrop
 {
 	//if body has a collision object it will be detected as ray cast target 
 	//so either disable collision body of that object or use specific layer
-	[Tool]
+	//[Tool]
 	public class Draggable : Node
 	{
 		[Signal] public delegate void DragStart(Draggable draggable);
