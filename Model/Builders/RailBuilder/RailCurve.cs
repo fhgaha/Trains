@@ -26,11 +26,12 @@ namespace Trains.Model.Builders
 		public void PrependSegment(Vector3 origin, CurveSegment segment)
 		{
 			var points = segment.Points;
-			//points.Reverse();
 			foreach (var p in points)
 			{
 				AddPoint(origin + p, atPosition: 0);
 			}
+			
+			Segments.Insert(0, segment);
 		}
 
 		public void AppendSegment(Vector3 origin, CurveSegment segment)
@@ -39,6 +40,8 @@ namespace Trains.Model.Builders
 			{
 				AddPoint(origin + p);
 			}
+
+			Segments.Add(segment);
 		}
 	}
 }

@@ -42,6 +42,8 @@ namespace Trains.Model.Common
 		//GUI uses this to hide cell data in bottom section
 		[Signal] public delegate void MouseHoveredOffCell(Cell cell);
 
+		[Signal] public delegate void UndoRailPressed();
+
 
 		public override void _Ready()
 		{

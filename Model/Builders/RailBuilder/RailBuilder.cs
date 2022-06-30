@@ -46,6 +46,7 @@ namespace Trains.Model.Builders
 			this.scene = scene;
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
 			calculator = GetNode<CurveCalculator>("Calculator");
 		}
 
@@ -251,6 +252,14 @@ namespace Trains.Model.Builders
 			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
 			DrawBlueprint();   
+		}
+
+		private void onUndoRailPressed()
+		{
+			GD.Print("onUndoRailPressed");
+
+
+			
 		}
 	}
 }
