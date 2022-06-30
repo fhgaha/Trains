@@ -21,8 +21,6 @@ namespace Trains
 		{
 			wasPressed = true;
 			events.EmitSignal(nameof(Events.MainButtonPressed), GetButtonType());
-			//GD.Print("MainButton onButtonPressed");
-			//toggle build station mode, show station asset instead of mouse cursor, on press place asset on floor
 		}
 
 

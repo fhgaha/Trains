@@ -77,10 +77,6 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			//GD.Print("onMainButtonPressed");
-			//turn on building mode
-			//turn cursor into station asset
-
 			if (buttonType != MainButtonType.BuildStation)
 			{
 				blueprint?.QueueFree();

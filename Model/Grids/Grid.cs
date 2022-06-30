@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using Trains.Model.Cells;
@@ -10,10 +11,10 @@ namespace Trains.Model.Grids
 {
 	public class Grid : Spatial
 	{
-		public int CellsRowsAmount {get; set;} = 10;
-		public int CellsColsAmount {get; set;} = 10;
+		public int CellsRowsAmount { get; set; } = 10;
+		public int CellsColsAmount { get; set; } = 10;
 		public Cell[,] Cells;
-		public List<Cell> CellList {get; private set;}
+		public List<Cell> CellList { get; private set; }
 		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
 		// PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
@@ -27,14 +28,17 @@ namespace Trains.Model.Grids
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
 			CellList = new List<Cell>();
 			for (int i = 0; i < Cells.GetLength(0); i++)
-			for (int j = 0; j < Cells.GetLength(1); j++)
-				CellList.Add(Cells[i, j]);
+				for (int j = 0; j < Cells.GetLength(1); j++)
+					CellList.Add(Cells[i, j]);
 
 			AddBuildings();
 
 			events = GetNode<Events>("/root/Events");
+			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
+
+			Visible = false;
 		}
 
 		private void AddBuildings()
@@ -55,9 +59,29 @@ namespace Trains.Model.Grids
 			Cells[0, 6].AddBuilding(BuildingType.Stock, building, ProductType.Dairy, 0f);
 
 			//both
-			
+
 		}
 
+		private void onMainButtonPressed(MainButtonType buttonType)
+		{
+			//other button is pressed
+			if (buttonType != MainButtonType.ShowProductMap)
+			{
+				Visible = false;
+				return;
+			}
+
+			//"Show Product Menu" button was pressed and we press it again
+			if (Global.MainButtonMode is MainButtonType.ShowProductMap)
+			{
+				Global.MainButtonMode = null;
+				Visible = false;
+				return;
+			}
+
+			Global.MainButtonMode = MainButtonType.ShowProductMap;
+			Visible = true;
+		}
 		public void onSpecificProductButtonPressed(ProductType productType)
 		{
 			Global.CurrentDisplayProductMode = productType;
@@ -68,10 +92,10 @@ namespace Trains.Model.Grids
 		private void DisplayProductDataAll(ProductType productType)
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
-			for (int j = 0; j < Cells.GetLength(1); j++)
-				Cells[i, j].DisplayProductData(productType);
+				for (int j = 0; j < Cells.GetLength(1); j++)
+					Cells[i, j].DisplayProductData(productType);
 		}
-		
+
 		private void onAllProductsButtonPressed()
 		{
 			Global.CurrentDisplayProductMode = null;
@@ -82,8 +106,8 @@ namespace Trains.Model.Grids
 		private void HideProductDataAll()
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
-			for (int j = 0; j < Cells.GetLength(1); j++)
-				Cells[i, j].DisplayProductDataAllProductsMode();
+				for (int j = 0; j < Cells.GetLength(1); j++)
+					Cells[i, j].DisplayProductDataAllProductsMode();
 		}
 	}
 }

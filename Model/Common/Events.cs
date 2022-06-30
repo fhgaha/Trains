@@ -23,13 +23,16 @@ namespace Trains.Model.Common
 		// Cell usies this to update product amount
 		[Signal] public delegate void Tick();
 
-		// Emitted when specific product button is pressed. 
-		// Grid uses this to display product prices and colors
-		[Signal] public delegate void SpecificProductButtonPressed(ProductType productType);
+		//Emitted when Build station button was pressed.
+		[Signal] public delegate void MainButtonPressed(MainButtonType buttonType);
 
 		// Emitted when AllProducts button is pressed. 
 		// Grid uses this to hide prices and colors
 		[Signal] public delegate void AllProductButtonPressed();
+
+		// Emitted when specific product button is pressed. 
+		// Grid uses this to display product prices and colors
+		[Signal] public delegate void SpecificProductButtonPressed(ProductType productType);
 
 		//Emitted when you hover mouse on cell.
 		//GUI uses this to display cell data in bottom section
@@ -38,10 +41,6 @@ namespace Trains.Model.Common
 		//Emitted when you stoped hover mouse on cell.
 		//GUI uses this to hide cell data in bottom section
 		[Signal] public delegate void MouseHoveredOffCell(Cell cell);
-
-		//Emitted when Build station button was pressed.
-		//
-		[Signal] public delegate void MainButtonPressed(MainButtonType buttonType);
 
 
 		public override void _Ready()

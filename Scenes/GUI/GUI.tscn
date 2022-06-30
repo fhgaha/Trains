@@ -160,7 +160,6 @@ enabled_focus_mode = 0
 text = "P"
 
 [node name="BuildRailMenu" type="Control" parent="CanvasLayer/VBoxContainer/MapAndButtons"]
-visible = false
 margin_left = 358.0
 margin_right = 1008.0
 margin_bottom = 161.0
