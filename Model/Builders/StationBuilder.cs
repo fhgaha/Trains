@@ -84,6 +84,7 @@ namespace Trains.Model.Builders
 			if (buttonType != MainButtonType.BuildStation)
 			{
 				blueprint?.QueueFree();
+				blueprint = null;
 				return;
 			}
 
@@ -95,6 +96,7 @@ namespace Trains.Model.Builders
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
 			{
 				blueprint?.QueueFree();
+				blueprint = null;
 				return;
 			}
 

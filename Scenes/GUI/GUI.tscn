@@ -159,8 +159,47 @@ enabled_focus_mode = 0
 [node name="Products" parent="CanvasLayer/VBoxContainer/MapAndButtons/MainButtons" instance=ExtResource( 5 )]
 text = "P"
 
-[node name="ProductsMenu" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/MapAndButtons"]
+[node name="BuildRailMenu" type="Control" parent="CanvasLayer/VBoxContainer/MapAndButtons"]
+visible = false
 margin_left = 358.0
+margin_right = 1008.0
+margin_bottom = 161.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildRailMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.211765, 0.211765, 0.211765, 1 )
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildRailMenu"]
+anchor_right = 1.0
+margin_bottom = 23.0
+text = "build rail menu"
+align = 1
+
+[node name="BuildStationMenu" type="Control" parent="CanvasLayer/VBoxContainer/MapAndButtons"]
+visible = false
+margin_left = 358.0
+margin_right = 1008.0
+margin_bottom = 161.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildStationMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.211765, 0.211765, 0.211765, 1 )
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildStationMenu"]
+anchor_right = 1.0
+margin_bottom = 23.0
+text = "build station menu"
+align = 1
+
+[node name="ProductsMenu" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/MapAndButtons"]
+visible = false
+margin_left = 685.0
 margin_right = 1008.0
 margin_bottom = 161.0
 size_flags_horizontal = 11
@@ -218,13 +257,13 @@ enabled_focus_mode = 0
 
 [node name="ProductButtons" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu"]
 margin_left = 74.0
-margin_right = 650.0
+margin_right = 323.0
 margin_bottom = 161.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AllProducts" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons"]
-margin_right = 576.0
+margin_right = 249.0
 margin_bottom = 29.0
 focus_mode = 0
 toggle_mode = true
@@ -235,13 +274,13 @@ script = ExtResource( 2 )
 
 [node name="SpecificProductButtons" type="GridContainer" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons"]
 margin_top = 33.0
-margin_right = 576.0
+margin_right = 249.0
 margin_bottom = 161.0
 size_flags_vertical = 3
 columns = 5
 
 [node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_right = 112.0
+margin_right = 15.0
 margin_bottom = 29.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -250,8 +289,8 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button2" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 116.0
-margin_right = 228.0
+margin_left = 19.0
+margin_right = 80.0
 margin_bottom = 29.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -260,8 +299,8 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button3" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 232.0
-margin_right = 344.0
+margin_left = 84.0
+margin_right = 99.0
 margin_bottom = 29.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -270,8 +309,8 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button4" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 348.0
-margin_right = 460.0
+margin_left = 103.0
+margin_right = 163.0
 margin_bottom = 29.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -280,8 +319,8 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button5" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 464.0
-margin_right = 576.0
+margin_left = 167.0
+margin_right = 249.0
 margin_bottom = 29.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -291,7 +330,7 @@ enabled_focus_mode = 0
 
 [node name="Button6" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_top = 33.0
-margin_right = 112.0
+margin_right = 15.0
 margin_bottom = 62.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -300,9 +339,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button7" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 116.0
+margin_left = 19.0
 margin_top = 33.0
-margin_right = 228.0
+margin_right = 80.0
 margin_bottom = 62.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -311,9 +350,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button8" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 232.0
+margin_left = 84.0
 margin_top = 33.0
-margin_right = 344.0
+margin_right = 99.0
 margin_bottom = 62.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -322,9 +361,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button9" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 348.0
+margin_left = 103.0
 margin_top = 33.0
-margin_right = 460.0
+margin_right = 163.0
 margin_bottom = 62.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -333,9 +372,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button10" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 464.0
+margin_left = 167.0
 margin_top = 33.0
-margin_right = 576.0
+margin_right = 249.0
 margin_bottom = 62.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -345,7 +384,7 @@ enabled_focus_mode = 0
 
 [node name="Button11" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_top = 66.0
-margin_right = 112.0
+margin_right = 15.0
 margin_bottom = 95.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -354,9 +393,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Grain" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons" instance=ExtResource( 1 )]
-margin_left = 116.0
+margin_left = 19.0
 margin_top = 66.0
-margin_right = 228.0
+margin_right = 80.0
 margin_bottom = 95.0
 focus_mode = 0
 size_flags_vertical = 3
@@ -364,9 +403,9 @@ enabled_focus_mode = 0
 text = "Grain"
 
 [node name="Button13" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 232.0
+margin_left = 84.0
 margin_top = 66.0
-margin_right = 344.0
+margin_right = 99.0
 margin_bottom = 95.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -375,9 +414,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button14" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 348.0
+margin_left = 103.0
 margin_top = 66.0
-margin_right = 460.0
+margin_right = 163.0
 margin_bottom = 95.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -386,9 +425,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Lumber" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons" instance=ExtResource( 1 )]
-margin_left = 464.0
+margin_left = 167.0
 margin_top = 66.0
-margin_right = 576.0
+margin_right = 249.0
 margin_bottom = 95.0
 focus_mode = 0
 size_flags_vertical = 3
@@ -396,7 +435,7 @@ enabled_focus_mode = 0
 
 [node name="Button16" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
 margin_top = 99.0
-margin_right = 112.0
+margin_right = 15.0
 margin_bottom = 128.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -405,9 +444,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button17" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 116.0
+margin_left = 19.0
 margin_top = 99.0
-margin_right = 228.0
+margin_right = 80.0
 margin_bottom = 128.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -416,9 +455,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button18" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 232.0
+margin_left = 84.0
 margin_top = 99.0
-margin_right = 344.0
+margin_right = 99.0
 margin_bottom = 128.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -427,18 +466,18 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Dairy" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons" instance=ExtResource( 1 )]
-margin_left = 348.0
+margin_left = 103.0
 margin_top = 99.0
-margin_right = 460.0
+margin_right = 163.0
 margin_bottom = 128.0
 focus_mode = 0
 enabled_focus_mode = 0
 text = "Dairy"
 
 [node name="Button20" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/ProductsMenu/ProductButtons/SpecificProductButtons"]
-margin_left = 464.0
+margin_left = 167.0
 margin_top = 99.0
-margin_right = 576.0
+margin_right = 249.0
 margin_bottom = 128.0
 focus_mode = 0
 size_flags_horizontal = 3

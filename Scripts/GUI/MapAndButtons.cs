@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Trains.Model.Common;
 using static Trains.Model.Common.Enums;
+using System.Linq;
 
 namespace Trains
 {
@@ -10,35 +11,29 @@ namespace Trains
 	{
 		private Events events;
 		private Control productsMenu;
-		private Dictionary<MainButtonType, Control> btnToBtnZone;
+		private Dictionary<MainButtonType, Control> buttonMenuDict;
 
 		public override void _Ready()
 		{
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 
-			btnToBtnZone = new Dictionary<MainButtonType, Control>
+			buttonMenuDict = new Dictionary<MainButtonType, Control>
 			{
+				[MainButtonType.BuildRail] = GetNode<Control>("BuildRailMenu"),
+				[MainButtonType.BuildStation] = GetNode<Control>("BuildStationMenu"),
 				[MainButtonType.ShowProductMap] = GetNode<Control>("ProductsMenu")
 			};
-
-			
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			btnToBtnZone[buttonType].Visible = !btnToBtnZone[buttonType].Visible;
+			buttonMenuDict.Values
+				.Where(menu => menu != buttonMenuDict[buttonType])
+				.ToList()
+				.ForEach(menu => menu.Visible = false);
 
-			// switch (buttonType)
-			// {
-			// 	case MainButtonType.BuildRail:
-			// 		break;
-			// 	case MainButtonType.BuildStation:
-			// 		break;
-			// 	case MainButtonType.ShowProductMap:
-			// 		productsMenu.Visible = !productsMenu.Visible;
-			// 		break;
-			// }
+			buttonMenuDict[buttonType].Visible = !buttonMenuDict[buttonType].Visible;
 		}
 	}
 }
