@@ -17,8 +17,17 @@ namespace Trains.Model.Common
 		}
 
 
-		//Vector
+		//Vector2
 		public static Vector3 ToVec3(this Vector2 vec) => new Vector3(vec.x, 0, vec.y);
+
+		public static bool IsEqualAppox(this Vector2 first, Vector2 second, float accuracy)
+		{
+			var firstXEqualSecondX = Math.Abs(first.x - second.x) < accuracy;
+			var firstYEqualSecondY = Math.Abs(first.y - second.y) < accuracy;
+			return firstXEqualSecondX && firstYEqualSecondY;
+		}
+
+		//Vector3
 		public static Vector2 ToVec2(this Vector3 vec) => new Vector2(vec.x, vec.z);
 
 

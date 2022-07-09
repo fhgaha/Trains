@@ -139,11 +139,10 @@ namespace Trains.Model.Builders
 				return true;
 
 			//prevent drawing behind start
-			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
-			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
-			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
-			bool isBehindStart = tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0;
-			return isBehindStart;
+			var tangetApproxEqualsStart = tangent.IsEqualAppox(start, 0.01f);
+			var endIsBehindStartDir = prevDir.Dot(startEndDir) < 0;
+			bool curveGoesBehindStartDir = tangetApproxEqualsStart && endIsBehindStartDir;
+			return curveGoesBehindStartDir;
 		}
 
 		private void RemoveCirclePointsAfterTangent(Vector2 tangent)
