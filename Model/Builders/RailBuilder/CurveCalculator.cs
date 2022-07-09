@@ -14,8 +14,16 @@ namespace Trains.Model.Builders
 		private MeshInstance center;
 		private MeshInstance tangent;
 
+		//constants
+		private const float accuracy = 0.1f;
+
 		//vars
-		
+		private Vector2 start;
+		private Vector2 end;
+		private float radius;
+		private Vector2 prevDir;
+		private bool firstSegmentIsPlaced;
+		private List<Vector2> points;
 
 		public override void _Ready()
 		{
@@ -26,29 +34,39 @@ namespace Trains.Model.Builders
 
 		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, float radius, Vector2 prevDir, bool firstSegmentIsPlaced)
 		{
-			var points = new List<Vector2>();
+			this.start = start;
+			this.end = end;
+			this.radius = radius;
+			this.prevDir = prevDir;
+			this.firstSegmentIsPlaced = firstSegmentIsPlaced;
+			points = new List<Vector2>();
+			return Calculate();
+		}
+
+		private List<Vector2> Calculate()
+		{
 			var tangent = Vector2.Zero;
-			var accuracy = 0.1f;
 
 			var rotationDeg = GetRotationDeg(prevDir);
 			var startEndDir = (end - start).Normalized();
 			var centerIsOnRight = prevDir.Rotated(Pi / 2).Dot(startEndDir) >= 0;   //-1, 0 or 1
-			Vector2 center = CalculateCenter(start, radius, rotationDeg, prevDir, centerIsOnRight);
+			Vector2 center = CalculateCenter(rotationDeg,  centerIsOnRight);
 
 			if (!firstSegmentIsPlaced)
 			{
-				GoStraight(start, end, points, accuracy);
+				GoStraight(start, end);
 				return points;
 			}
 
-			GoAlongCircle(radius, rotationDeg, centerIsOnRight, center, points);
-			tangent = CalculateTangent(end, points, accuracy, centerIsOnRight, center);
+			GoAlongCircle(rotationDeg, centerIsOnRight, center);
+			tangent = CalculateTangent(centerIsOnRight, center);
 
-			if (CurveShouldNotBeDrawnHere(start, tangent, prevDir, startEndDir)) return new List<Vector2>();
+			if (CurveShouldNotBeDrawnHere(tangent, startEndDir)) 
+				return new List<Vector2>();
 
-			RemoveCirclePointsAfterTangent(points, tangent);
-			GoStraight(tangent, end, points, accuracy);
-			UpdateHelpersPositions(prevDir, center, tangent);
+			RemoveCirclePointsAfterTangent(tangent);
+			GoStraight(tangent, end);
+			UpdateHelpersPositions(center, tangent);
 			return points;
 		}
 
@@ -62,41 +80,7 @@ namespace Trains.Model.Builders
 			return rotationDeg;
 		}
 
-		private void RemoveCirclePointsAfterTangent(List<Vector2> points, Vector2 tangent)
-		{
-			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
-		}
-
-		private static bool CurveShouldNotBeDrawnHere(Vector2 start, Vector2 tangent, Vector2 prevDir, Vector2 startEndDir)
-		{
-			//prevent drawing inside circle or from scene origin
-			if (tangent == Vector2.Zero)
-				return true;
-
-			//prevent drawing behind start
-			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
-			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
-			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
-			bool isBehindStart = tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0;
-			return isBehindStart;
-		}
-
-		private static Vector2 CalculateTangent(Vector2 end, List<Vector2> points, float accuracy, bool centerIsOnRight, Vector2 center)
-		{
-			Vector2 tangent;
-			tangent = points.FirstOrDefault(p =>
-			{
-				var dirPointToCenter = (center - p).Normalized();
-				var dirPointToEnd = (end - p).Normalized();
-				var dot = centerIsOnRight ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
-				var requiredVal = 0;
-				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;
-				return false;
-			});
-			return tangent;
-		}
-
-		private static Vector2 CalculateCenter(Vector2 start, float radius, float rotationDeg, Vector2 prevDir, bool centerIsOnRight)
+		private Vector2 CalculateCenter(float rotationDeg, bool centerIsOnRight)
 		{
 			var d = Pi / 180 * rotationDeg >= Pi / 2 && Pi / 180 * rotationDeg < 3 * Pi / 2 ? -1 : 1;
 			var prevDirPerp = new Vector2(d, -d * prevDir.x / prevDir.y).Normalized();
@@ -105,14 +89,19 @@ namespace Trains.Model.Builders
 			return center;
 		}
 
-		private void UpdateHelpersPositions(Vector2 prevDir, Vector2 center, Vector2 tangent)
+		private void GoStraight(Vector2 start, Vector2 end)
 		{
-			this.dir.Translation = prevDir.ToVec3();
-			this.center.Translation = center.ToVec3();
-			this.tangent.Translation = tangent.ToVec3();
+			var dirPointToEnd = (end - start).Normalized(); ;
+			var point = start;
+			while (point.DistanceSquaredTo(end) > accuracy)
+			{
+				point += dirPointToEnd * accuracy;
+				points.Add(point);
+			}
+			points.Add(end);
 		}
 
-		private static void GoAlongCircle(float radius, float rotationDeg, bool centerIsOnRight, Vector2 center, List<Vector2> points)
+		private void GoAlongCircle(float rotationDeg, bool centerIsOnRight, Vector2 center)
 		{
 			var startAngle = (centerIsOnRight ? Pi : 0) + Pi / 180 * rotationDeg;
 			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
@@ -128,17 +117,45 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private static void GoStraight(Vector2 start, Vector2 end, List<Vector2> points, float accuracy)
+		private Vector2 CalculateTangent(bool centerIsOnRight, Vector2 center)
 		{
-			//go straight
-			var dirPointToEnd = (end - start).Normalized(); ;
-			var point = start;
-			while (point.DistanceSquaredTo(end) > accuracy)
+			Vector2 tangent;
+			tangent = points.FirstOrDefault(p =>
 			{
-				point += dirPointToEnd * accuracy;
-				points.Add(point);
-			}
-			points.Add(end);
+				var dirPointToCenter = (center - p).Normalized();
+				var dirPointToEnd = (end - p).Normalized();
+				var dot = centerIsOnRight ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
+				var requiredVal = 0;
+				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;
+				return false;
+			});
+			return tangent;
+		}
+
+		private bool CurveShouldNotBeDrawnHere(Vector2 tangent, Vector2 startEndDir)
+		{
+			//prevent drawing inside circle or from scene origin
+			if (tangent == Vector2.Zero)
+				return true;
+
+			//prevent drawing behind start
+			var tangetXApproxEqualsStartX = Math.Abs(tangent.x - start.x) < 0.01f;
+			var tangetYApproxEqualsStartY = Math.Abs(tangent.y - start.y) < 0.01f;
+			var tangetApproxEqualsStart = tangetXApproxEqualsStartX && tangetYApproxEqualsStartY;
+			bool isBehindStart = tangetApproxEqualsStart && prevDir.Dot(startEndDir) < 0;
+			return isBehindStart;
+		}
+
+		private void RemoveCirclePointsAfterTangent(Vector2 tangent)
+		{
+			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
+		}
+
+		private void UpdateHelpersPositions(Vector2 center, Vector2 tangent)
+		{
+			this.dir.Translation = prevDir.ToVec3();
+			this.center.Translation = center.ToVec3();
+			this.tangent.Translation = tangent.ToVec3();
 		}
 
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
