@@ -9,9 +9,13 @@ namespace Trains.Model.Builders
 {
 	public class CurveCalculator : Spatial
 	{
+		//helpers
 		private MeshInstance dir;
 		private MeshInstance center;
 		private MeshInstance tangent;
+
+		//vars
+		
 
 		public override void _Ready()
 		{
@@ -20,13 +24,13 @@ namespace Trains.Model.Builders
 			tangent = GetNode<MeshInstance>("tangent");
 		}
 
-		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, float radius, float rotationDeg, bool firstSegmentIsPlaced)
+		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, float radius, Vector2 prevDir, bool firstSegmentIsPlaced)
 		{
 			var points = new List<Vector2>();
 			var tangent = Vector2.Zero;
 			var accuracy = 0.1f;
 
-			var prevDir = Vector2.Up.Rotated(Pi / 180 * rotationDeg);
+			var rotationDeg = GetRotationDeg(prevDir);
 			var startEndDir = (end - start).Normalized();
 			var centerIsOnRight = prevDir.Rotated(Pi / 2).Dot(startEndDir) >= 0;   //-1, 0 or 1
 			Vector2 center = CalculateCenter(start, radius, rotationDeg, prevDir, centerIsOnRight);
@@ -45,8 +49,17 @@ namespace Trains.Model.Builders
 			RemoveCirclePointsAfterTangent(points, tangent);
 			GoStraight(tangent, end, points, accuracy);
 			UpdateHelpersPositions(prevDir, center, tangent);
-
 			return points;
+		}
+
+		private float GetRotationDeg(Vector2 prevDir)
+		{
+			if (prevDir == Vector2.Zero) return 0f;
+
+			var rotationDeg = 0f;
+			rotationDeg = Vector2.Up.AngleTo(prevDir) * 180 / Pi;
+			if (rotationDeg < 0) rotationDeg += 360;
+			return rotationDeg;
 		}
 
 		private void RemoveCirclePointsAfterTangent(List<Vector2> points, Vector2 tangent)
@@ -75,7 +88,6 @@ namespace Trains.Model.Builders
 			{
 				var dirPointToCenter = (center - p).Normalized();
 				var dirPointToEnd = (end - p).Normalized();
-				//var dot = dirPointToCenter.Dot(dirPointToEnd);
 				var dot = centerIsOnRight ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
 				var requiredVal = 0;
 				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;

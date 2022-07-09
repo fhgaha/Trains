@@ -125,11 +125,11 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
 			//blueprint.Start.Position = mousePos;
-			prevDir = TrySnap(mousePos);  //path should begin from snapped point with no offset
+			prevDir = SnapIfNecessary(mousePos);  //path should begin from snapped point with no offset
 			state = State.SelectEnd;
 		}
 
-		private Vector3 TrySnap(Vector3 mousePos)
+		private Vector3 SnapIfNecessary(Vector3 mousePos)
 		{
 			foreach (var path in pathList)
 			{
@@ -165,7 +165,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			TrySnap(mousePos);
+			SnapIfNecessary(mousePos);
 
 			//set base color
 			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
@@ -178,12 +178,20 @@ namespace Trains.Model.Builders
 		private void DrawBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			//blueprint.Translation = blueprint.Start.Position;
-
 			var continuing = !(currentPath is null);
-			var points = calculator.CalculateCurvePoints(
-				blueprint.Translation.ToVec2(), mousePos.ToVec2(), 1f, GetRotationDeg(), continuing);
+			var points = calculator.CalculateCurvePoints
+			(
+				start: blueprint.Translation.ToVec2(),
+				end: mousePos.ToVec2(),
+				radius: 1f,
+				prevDir: prevDir.ToVec2(),
+				firstSegmentIsPlaced: continuing
+			);
+			blueprint.Curve = BuildBlueprintCurve(points);
+		}
 
+		private RailCurve BuildBlueprintCurve(List<Vector2> points)
+		{
 			var curve = new RailCurve();
 			if (points.Count() > 0)
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
@@ -193,18 +201,7 @@ namespace Trains.Model.Builders
 				curve.AddPoint(Vector3.Zero);
 				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			}
-			blueprint.Curve = curve;
-		}
-
-		private float GetRotationDeg()
-		{
-			var rotationDeg = 0f;
-			if (prevDir != Vector3.Zero)
-			{
-				rotationDeg = Vector2.Up.AngleTo(prevDir.ToVec2()) * 180 / Pi;
-				if (rotationDeg < 0) rotationDeg += 360;
-			}
-			return rotationDeg;
+			return curve;
 		}
 
 		protected void PlaceObject()
@@ -251,7 +248,7 @@ namespace Trains.Model.Builders
 
 			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
-			DrawBlueprint();   
+			DrawBlueprint();
 		}
 
 		private void onUndoRailPressed()
@@ -259,7 +256,7 @@ namespace Trains.Model.Builders
 			GD.Print("onUndoRailPressed");
 
 
-			
+
 		}
 	}
 }
