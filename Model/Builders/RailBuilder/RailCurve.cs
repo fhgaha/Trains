@@ -26,44 +26,40 @@ namespace Trains.Model.Builders
 
 		public void PrependCurve(Vector3 origin, Curve3D curve)
 		{
-			//this is not correct. how are you gonna to pick a segment from a tesselated thing?
-			var tesselated = curve.Tessellate();
-			var segmentsTesselated = new List<CurveSegment>();
-
-			for (int i = 0; i < tesselated.Length; i++)
-			{
-				Vector3 p = tesselated[i];
-				AddPoint(origin + p, atPosition: 0);
-
-				if (i > 0)
-				{
-					var segment = new CurveSegment(new Vector3[] { tesselated[i - 1], tesselated[i] });
-					segmentsTesselated.Add(segment);
-				}
-			}
-
-			Segments.InsertRange(0, segmentsTesselated);
+			var indexWhereInsertTo = 0;
+			PlaceOnMap(origin, curve, _atPosition: 0);
+			AddToSegments(curve, indexWhereInsertTo);
 		}
 
 		public void AppendCurve(Vector3 origin, Curve3D curve)
 		{
-			//this is not correct. how are you gonna to pick a segment from a tesselated thing?
-			var tesselated = curve.Tessellate();
+			var indexWhereInsertTo = Segments.Count == 0 ? 0 : Segments.IndexOf(Segments.Last());
+			PlaceOnMap(origin, curve);
+			AddToSegments(curve, indexWhereInsertTo);
+		}
+
+		public void AddToSegments(Curve3D curve, int index)
+		{
+			var points = curve.Tessellate();
 			var segmentsTesselated = new List<CurveSegment>();
 
-			for (int i = 0; i < tesselated.Length; i++)
+			for (int i = 1; i < points.Length; i++)
 			{
-				Vector3 p = tesselated[i];
-				AddPoint(origin + p);
-
-				if (i > 0)
-				{
-					var segment = new CurveSegment(new Vector3[] { tesselated[i - 1], tesselated[i] });
-					segmentsTesselated.Add(segment);
-				}
+				var segment = new CurveSegment(points[i - 1], points[i]);
+				segmentsTesselated.Add(segment);
 			}
 
-			Segments.AddRange(segmentsTesselated);
+			Segments.InsertRange(index, segmentsTesselated);
+		}
+
+		public void PlaceOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
+		{
+			var points = curve.Tessellate();
+
+			for (int i = 0; i < points.Length; i++)
+			{
+				AddPoint(origin + points[i], atPosition: _atPosition);
+			}
 		}
 	}
 }

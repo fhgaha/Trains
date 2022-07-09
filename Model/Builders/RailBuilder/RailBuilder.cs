@@ -224,19 +224,19 @@ namespace Trains.Model.Builders
 
 			//copy blueprint
 			var pathOriginToBpOrigin = blueprint.Translation - currentPath.Translation;
-			var partCurve = new RailCurve(blueprint);
+			var curveToAdd = new RailCurve(blueprint);
 			var railCurve = (RailCurve)currentPath.Curve;
 			var newDir = prevDir;
 
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
-				railCurve.PrependCurve(pathOriginToBpOrigin, partCurve);
+				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
 				newDir = currentPath.DirFromStart;
 			}
 
 			if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
-				railCurve.AppendCurve(pathOriginToBpOrigin, partCurve);
+				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				newDir = currentPath.DirFromEnd;
 			}
 

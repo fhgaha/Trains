@@ -20,5 +20,11 @@ namespace Trains.Model.Builders
 
 			Points = points.ToArray();
 		}
+
+		public CurveSegment(Vector3 first, Vector3 second)
+		{
+			Points[0] = first;
+			Points[1] = second;
+		}
 	}
 }
