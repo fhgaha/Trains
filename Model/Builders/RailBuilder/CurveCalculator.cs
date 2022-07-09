@@ -40,10 +40,17 @@ namespace Trains.Model.Builders
 			this.prevDir = prevDir;
 			this.firstSegmentIsPlaced = firstSegmentIsPlaced;
 			points = new List<Vector2>();
-			return Calculate();
+
+			if (!firstSegmentIsPlaced)
+			{
+				GoStraight(start, end);
+				return points;
+			}
+
+			return CalculateCircleBasedCurve();
 		}
 
-		private List<Vector2> Calculate()
+		private List<Vector2> CalculateCircleBasedCurve()
 		{
 			var tangent = Vector2.Zero;
 
@@ -51,12 +58,6 @@ namespace Trains.Model.Builders
 			var startEndDir = (end - start).Normalized();
 			var centerIsOnRight = prevDir.Rotated(Pi / 2).Dot(startEndDir) >= 0;   //-1, 0 or 1
 			Vector2 center = CalculateCenter(rotationDeg,  centerIsOnRight);
-
-			if (!firstSegmentIsPlaced)
-			{
-				GoStraight(start, end);
-				return points;
-			}
 
 			GoAlongCircle(rotationDeg, centerIsOnRight, center);
 			tangent = CalculateTangent(centerIsOnRight, center);
