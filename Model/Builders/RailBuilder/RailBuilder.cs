@@ -183,7 +183,6 @@ namespace Trains.Model.Builders
 			(
 				start: blueprint.Translation.ToVec2(),
 				end: mousePos.ToVec2(),
-				radius: 1f,
 				prevDir: prevDir.ToVec2(),
 				firstSegmentIsPlaced: continuing
 			);

@@ -32,11 +32,11 @@ namespace Trains.Model.Builders
 			tangent = GetNode<MeshInstance>("tangent");
 		}
 
-		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, float radius, Vector2 prevDir, bool firstSegmentIsPlaced)
+		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, Vector2 prevDir, bool firstSegmentIsPlaced)
 		{
 			this.start = start;
 			this.end = end;
-			this.radius = radius;
+			this.radius = 1f;
 			this.prevDir = prevDir;
 			this.firstSegmentIsPlaced = firstSegmentIsPlaced;
 			points = new List<Vector2>();
@@ -52,17 +52,16 @@ namespace Trains.Model.Builders
 
 		private List<Vector2> CalculateCircleBasedCurve()
 		{
-			var tangent = Vector2.Zero;
-
-			var rotationDeg = GetRotationDeg(prevDir);
+			var rotationDeg = GetRotationDeg();
 			var startEndDir = (end - start).Normalized();
-			var centerIsOnRight = prevDir.Rotated(Pi / 2).Dot(startEndDir) >= 0;   //-1, 0 or 1
-			Vector2 center = CalculateCenter(rotationDeg,  centerIsOnRight);
+			var prevDirPerp = prevDir.Rotated(Pi / 2);
+			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
+			Vector2 center = CalculateCenter(rotationDeg, centerIsOnRight);
 
 			GoAlongCircle(rotationDeg, centerIsOnRight, center);
-			tangent = CalculateTangent(centerIsOnRight, center);
+			var tangent = CalculateTangent(centerIsOnRight, center);
 
-			if (CurveShouldNotBeDrawnHere(tangent, startEndDir)) 
+			if (CurveShouldNotBeDrawnHere(tangent, startEndDir))
 				return new List<Vector2>();
 
 			RemoveCirclePointsAfterTangent(tangent);
@@ -71,7 +70,7 @@ namespace Trains.Model.Builders
 			return points;
 		}
 
-		private float GetRotationDeg(Vector2 prevDir)
+		private float GetRotationDeg()
 		{
 			if (prevDir == Vector2.Zero) return 0f;
 
@@ -120,14 +119,15 @@ namespace Trains.Model.Builders
 
 		private Vector2 CalculateTangent(bool centerIsOnRight, Vector2 center)
 		{
-			Vector2 tangent;
+			Vector2 tangent = Vector2.Zero;
 			tangent = points.FirstOrDefault(p =>
 			{
 				var dirPointToCenter = (center - p).Normalized();
 				var dirPointToEnd = (end - p).Normalized();
 				var dot = centerIsOnRight ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
-				var requiredVal = 0;
-				if (dot > requiredVal - accuracy && dot < requiredVal + accuracy) return true;
+				var perpendicularDot = 0;
+				var tangentIsAhead = dot > perpendicularDot - accuracy && dot < perpendicularDot + accuracy;
+				if (tangentIsAhead) return true;
 				return false;
 			});
 			return tangent;
