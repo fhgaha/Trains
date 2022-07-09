@@ -15,8 +15,7 @@ namespace Trains.Model.Builders
 
 		public CurveSegment(IEnumerable<Vector3> points)
 		{
-			if (points.Count() != 2)
-				throw new ArgumentException("Point count should be 2");
+			if (points.Count() != 2) throw new ArgumentException("Point count should be 2");
 
 			Points = points.ToArray();
 		}
