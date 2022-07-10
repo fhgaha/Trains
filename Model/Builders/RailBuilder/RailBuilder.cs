@@ -112,9 +112,8 @@ namespace Trains.Model.Builders
 			ReinitStateAndBlueprint();
 
 			var curve = (RailCurve)currentPath.Curve;
-			//after casting Segemnts is empty
 			curve.AddToSegments(curve, 0);
-			curve.RemoveSegment();
+			curve.RemoveLastSegment();
 			//ResetStateAndBlueprint() sets currentPath = null
 		}
 
@@ -153,12 +152,19 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			//blueprint.Start.Position = mousePos;
-			prevDir = SnapIfNecessary(mousePos);  //path should begin from snapped point with no offset
+			SnapIfNecessary(mousePos);  //path should begin from snapped point with no offset
+
+			prevDir = snappedDir;
+			if (!(snappedPath is null))
+				currentPath = snappedPath;
+				
 			state = State.SelectEnd;
 		}
 
-		private Vector3 SnapIfNecessary(Vector3 mousePos)
+		private RailPath snappedPath = null;
+		private Vector3 snappedDir = Vector3.Zero;
+
+		private void SnapIfNecessary(Vector3 mousePos)
 		{
 			foreach (var path in pathList)
 			{
@@ -168,26 +174,26 @@ namespace Trains.Model.Builders
 				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
 				{
 					MoveBpUpdateStartAndPrevDir(start);
-					return path.DirFromStart;
+					snappedDir = path.DirFromStart;
+					return;
 				}
 
 				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
 				{
 					MoveBpUpdateStartAndPrevDir(end);
-					return path.DirFromEnd;
-
+					snappedDir = path.DirFromEnd;
+					return;
 				}
 
 				void MoveBpUpdateStartAndPrevDir(Vector3 point)
 				{
 					blueprint.Translation = point;
-					//blueprint.Start.Position = point;
-					currentPath = path;
+					snappedPath = path;
 				}
 			}
 
-			currentPath = null;
-			return Vector3.Zero;
+			snappedPath = null;
+			snappedDir = Vector3.Zero;
 		}
 
 		private void UpdateBlueprint()
