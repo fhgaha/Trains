@@ -104,7 +104,11 @@ namespace Trains.Model.Builders
 		{
 			GD.Print("onUndoRailPressed");
 
+			//onStartNewRoadPressed();
+
 			var curve = (RailCurve)currentPath.Curve;
+			//after casting Segemnts is empty
+			curve.AddToSegments(curve, 0);
 			curve.RemoveSegment();
 			//ResetStateAndBlueprint() sets currentPath = null
 		}

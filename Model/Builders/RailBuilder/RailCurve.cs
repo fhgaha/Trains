@@ -10,7 +10,10 @@ namespace Trains.Model.Builders
 	{
 		public List<CurveSegment> Segments { get; set; } = new List<CurveSegment>();
 
-		public RailCurve() { }
+		public RailCurve() 
+		{ 
+			
+		}
 
 		public RailCurve(IEnumerable<Vector3> points)
 		{
@@ -64,17 +67,24 @@ namespace Trains.Model.Builders
 
 		public void RemoveSegment(CurveSegment segment = null)
 		{
-			int index = Segments.IndexOf(Segments.Last());
-			RemoveFromMap(index);
+			var lastSegment = Segments.Last();
+			var i = GetPointCount() - 1;
+			RemovePoint(i);
+			RemovePoint(i - 1);
+			Segments.Remove(lastSegment);
+
+			// int index = Segments.IndexOf(Segments.Last());
+			// RemoveFromMap(index);
 			//Segments.Remove(segment);
-			Segments.Remove(Segments.Last());
+			//Segments.Remove(Segments.Last());
 		}
 
 		private void RemoveFromMap(int index)
 		{
-			var points = GetBakedPoints().Cast<Vector3>().ToList();
-			var i = points.IndexOf(points.Last());
-			RemovePoint(i);
+			//var points = Segments;
+			//var i = points.IndexOf(points.Last());
+			RemovePoint(0);
+			RemovePoint(1);
 		}
 	}
 }
