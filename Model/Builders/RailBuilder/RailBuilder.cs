@@ -62,6 +62,7 @@ namespace Trains.Model.Builders
 			if (buttonType != MainButtonType.BuildRail)
 			{
 				ResetStateAndBlueprint();
+				currentPath = null;
 				return;
 			}
 
@@ -70,6 +71,7 @@ namespace Trains.Model.Builders
 			{
 				Global.MainButtonMode = null;
 				ResetStateAndBlueprint();
+				currentPath = null;
 				return;
 			}
 
@@ -83,7 +85,7 @@ namespace Trains.Model.Builders
 			blueprint?.QueueFree();
 			blueprint = null;
 			prevDir = Vector3.Zero;
-			currentPath = null;
+			
 		}
 
 		private void InitStateAndBlueprint()
@@ -96,15 +98,18 @@ namespace Trains.Model.Builders
 
 		private void onStartNewRoadPressed()
 		{
+			ReinitStateAndBlueprint();
+		}
+
+		private void ReinitStateAndBlueprint()
+		{
 			ResetStateAndBlueprint();
 			InitStateAndBlueprint();
 		}
 
 		private void onUndoRailPressed()
 		{
-			GD.Print("onUndoRailPressed");
-
-			//onStartNewRoadPressed();
+			ReinitStateAndBlueprint();
 
 			var curve = (RailCurve)currentPath.Curve;
 			//after casting Segemnts is empty
