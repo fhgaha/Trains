@@ -13,7 +13,6 @@ namespace Trains.Model.Builders
 
 	public class RailBuilder : Spatial
 	{
-		private const float snapDistance = 1f;
 		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
 		private const float rayLength = 1000f;
@@ -25,6 +24,7 @@ namespace Trains.Model.Builders
 		private Camera camera;
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
+		private Snapper snapper;
 
 		private List<RailPath> pathList = new List<RailPath>();
 		private Vector3 prevDir = Vector3.Zero;
@@ -45,6 +45,7 @@ namespace Trains.Model.Builders
 			this.objectHolder = objectHolder;
 			this.camera = camera;
 			this.scene = scene;
+			snapper = new Snapper();
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
@@ -85,7 +86,7 @@ namespace Trains.Model.Builders
 			blueprint?.QueueFree();
 			blueprint = null;
 			prevDir = Vector3.Zero;
-			
+
 		}
 
 		private void InitStateAndBlueprint()
@@ -152,55 +153,20 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			SnapIfNecessary(mousePos);  //path should begin from snapped point with no offset
+			snapper.SnapIfNecessary(mousePos, pathList, blueprint);  //path should begin from snapped point with no offset
 
-			prevDir = snappedDir;
-			if (!(snappedPath is null))
-				currentPath = snappedPath;
-				
+			prevDir = snapper.SnappedDir;
+			if (!(snapper.SnappedPath is null))
+				currentPath = snapper.SnappedPath;
+
 			state = State.SelectEnd;
-		}
-
-		private RailPath snappedPath = null;
-		private Vector3 snappedDir = Vector3.Zero;
-
-		private void SnapIfNecessary(Vector3 mousePos)
-		{
-			foreach (var path in pathList)
-			{
-				var start = path.Start;
-				var end = path.End;
-
-				if (start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos))
-				{
-					MoveBpUpdateStartAndPrevDir(start);
-					snappedDir = path.DirFromStart;
-					return;
-				}
-
-				if (end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos))
-				{
-					MoveBpUpdateStartAndPrevDir(end);
-					snappedDir = path.DirFromEnd;
-					return;
-				}
-
-				void MoveBpUpdateStartAndPrevDir(Vector3 point)
-				{
-					blueprint.Translation = point;
-					snappedPath = path;
-				}
-			}
-
-			snappedPath = null;
-			snappedDir = Vector3.Zero;
 		}
 
 		private void UpdateBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			SnapIfNecessary(mousePos);
+			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
 
 			//set base color
 			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
