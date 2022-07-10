@@ -47,7 +47,7 @@ namespace Trains.Model.Builders
 			this.scene = scene;
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
-			events.Connect(nameof(Events.StopBuildingCurrentRoadPressed), this, nameof(onStopBuildingCurrentRoadPressed));
+			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
 			calculator = GetNode<CurveCalculator>("Calculator");
 		}
@@ -94,7 +94,7 @@ namespace Trains.Model.Builders
 			blueprint.Name = "blueprint";
 		}
 
-		private void onStopBuildingCurrentRoadPressed()
+		private void onStartNewRoadPressed()
 		{
 			ResetStateAndBlueprint();
 			InitStateAndBlueprint();

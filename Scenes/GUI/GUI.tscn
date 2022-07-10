@@ -179,23 +179,23 @@ margin_bottom = 23.0
 text = "build rail menu"
 align = 1
 
-[node name="Undo" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildRailMenu"]
-margin_left = 137.0
+[node name="StartNewRoad" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildRailMenu"]
+margin_left = 37.0
 margin_top = 40.0
-margin_right = 196.0
+margin_right = 133.0
+margin_bottom = 89.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "NewRoad"
+
+[node name="Undo" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildRailMenu"]
+margin_left = 153.0
+margin_top = 40.0
+margin_right = 212.0
 margin_bottom = 89.0
 focus_mode = 0
 enabled_focus_mode = 0
 text = "Undo"
-
-[node name="StopBuildingCurrentRoad" type="Button" parent="CanvasLayer/VBoxContainer/MapAndButtons/BuildRailMenu"]
-margin_left = 37.0
-margin_top = 40.0
-margin_right = 96.0
-margin_bottom = 89.0
-focus_mode = 0
-enabled_focus_mode = 0
-text = "Stop"
 
 [node name="BuildStationMenu" type="Control" parent="CanvasLayer/VBoxContainer/MapAndButtons"]
 visible = false

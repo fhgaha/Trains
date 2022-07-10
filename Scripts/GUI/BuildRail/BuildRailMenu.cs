@@ -7,22 +7,22 @@ namespace Trains
 	public class BuildRailMenu : Control
 	{
 		private Events events;
-		private Button stopBuildingCurrentRoad;
+		private Button startNewRoadBtn;
 		private Button undoBtn;
 
 		public override void _Ready()
 		{
 			events = GetNode<Events>("/root/Events");
-			stopBuildingCurrentRoad = GetNode<Button>("StopBuildingCurrentRoad");
+			startNewRoadBtn = GetNode<Button>("StartNewRoad");
 			undoBtn = GetNode<Button>("Undo");
 
-			stopBuildingCurrentRoad.Connect("pressed", this, nameof(onStopBuildingCurrentRoadPressed));
+			startNewRoadBtn.Connect("pressed", this, nameof(onStartNewRoadPressed));
 			undoBtn.Connect("pressed", this, nameof(onUndoPressed));
 		}
 
-		private void onStopBuildingCurrentRoadPressed()
+		private void onStartNewRoadPressed()
 		{
-			events.EmitSignal(nameof(Events.StopBuildingCurrentRoadPressed));
+			events.EmitSignal(nameof(Events.StartNewRoadPressed));
 		}
 
 		private void onUndoPressed()
