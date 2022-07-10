@@ -25,5 +25,23 @@ namespace Trains.Model.Builders
 			Points[0] = first;
 			Points[1] = second;
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+
+			var segment = (CurveSegment)obj;
+			return segment.Points[0].Equals(this.Points[0])
+				&& segment.Points[1].Equals(this.Points[1]);
+		}
+
+		public override int GetHashCode()
+		{
+			int hash = 17;
+			hash = hash * 23 + Points[0].GetHashCode();
+			hash = hash * 23 + Points[1].GetHashCode();
+			return hash;
+		}
 	}
 }

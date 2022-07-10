@@ -10,6 +10,7 @@ using static Godot.Mathf;
 namespace Trains.Model.Builders
 {
 	enum State { None, SelectStart, SelectEnd }
+
 	public class RailBuilder : Spatial
 	{
 		private const float snapDistance = 1f;
@@ -46,6 +47,7 @@ namespace Trains.Model.Builders
 			this.scene = scene;
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.StopBuildingCurrentRoadPressed), this, nameof(onStopBuildingCurrentRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
 			calculator = GetNode<CurveCalculator>("Calculator");
 		}
@@ -59,7 +61,7 @@ namespace Trains.Model.Builders
 			//other button is pressed
 			if (buttonType != MainButtonType.BuildRail)
 			{
-				ResetBlueprint();
+				ResetStateAndBlueprint();
 				return;
 			}
 
@@ -67,26 +69,44 @@ namespace Trains.Model.Builders
 			if (Global.MainButtonMode is MainButtonType.BuildRail)
 			{
 				Global.MainButtonMode = null;
-				ResetBlueprint();
+				ResetStateAndBlueprint();
 				return;
 			}
 
 			Global.MainButtonMode = MainButtonType.BuildRail;
-			state = State.SelectStart;
-
-			//init blueprint
-			blueprint = scene.Instance<RailPath>();
-			AddChild(blueprint);
-			blueprint.Name = "blueprint";
+			InitStateAndBlueprint();
 		}
 
-		private void ResetBlueprint()
+		private void ResetStateAndBlueprint()
 		{
 			state = State.None;
 			blueprint?.QueueFree();
 			blueprint = null;
 			prevDir = Vector3.Zero;
 			currentPath = null;
+		}
+
+		private void InitStateAndBlueprint()
+		{
+			state = State.SelectStart;
+			blueprint = scene.Instance<RailPath>();
+			AddChild(blueprint);
+			blueprint.Name = "blueprint";
+		}
+
+		private void onStopBuildingCurrentRoadPressed()
+		{
+			ResetStateAndBlueprint();
+			InitStateAndBlueprint();
+		}
+
+		private void onUndoRailPressed()
+		{
+			GD.Print("onUndoRailPressed");
+
+			var curve = (RailCurve)currentPath.Curve;
+			curve.RemoveSegment();
+			//ResetStateAndBlueprint() sets currentPath = null
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -208,17 +228,24 @@ namespace Trains.Model.Builders
 			//place first segment
 			if (currentPath is null)
 			{
-				//init path
-				currentPath = scene.Instance<RailPath>();
-				AddChild(currentPath);
-				pathList.Add(currentPath);
-				currentPath.Init(blueprint);
-
-				SaveVarsRedrawBlueprint(currentPath, currentPath.DirFromEnd);
+				InitPath();
 				return;
 			}
+			AddNewCurveToCurrentPath();
+		}
 
-			//copy blueprint
+		private void InitPath()
+		{
+			currentPath = scene.Instance<RailPath>();
+			AddChild(currentPath);
+			pathList.Add(currentPath);
+			currentPath.Init(blueprint);
+
+			SaveVarsRedrawBlueprint(currentPath.DirFromEnd);
+		}
+
+		private void AddNewCurveToCurrentPath()
+		{
 			var pathOriginToBpOrigin = blueprint.Translation - currentPath.Translation;
 			var curveToAdd = new RailCurve(blueprint);
 			var railCurve = (RailCurve)currentPath.Curve;
@@ -236,13 +263,12 @@ namespace Trains.Model.Builders
 				newDir = currentPath.DirFromEnd;
 			}
 
-			SaveVarsRedrawBlueprint(currentPath, newDir);
+			SaveVarsRedrawBlueprint(newDir);
 		}
 
-		private void SaveVarsRedrawBlueprint(RailPath path, Vector3 direction)
+		private void SaveVarsRedrawBlueprint(Vector3 direction)
 		{
 			blueprint.Translation = blueprint.End;
-			currentPath = path;
 			prevDir = direction;
 
 			//this is called so that there is no overlap of blueprint and path or 
@@ -250,12 +276,5 @@ namespace Trains.Model.Builders
 			DrawBlueprint();
 		}
 
-		private void onUndoRailPressed()
-		{
-			GD.Print("onUndoRailPressed");
-
-
-
-		}
 	}
 }

@@ -61,5 +61,20 @@ namespace Trains.Model.Builders
 				AddPoint(origin + points[i], atPosition: _atPosition);
 			}
 		}
+
+		public void RemoveSegment(CurveSegment segment = null)
+		{
+			int index = Segments.IndexOf(Segments.Last());
+			RemoveFromMap(index);
+			//Segments.Remove(segment);
+			Segments.Remove(Segments.Last());
+		}
+
+		private void RemoveFromMap(int index)
+		{
+			var points = GetBakedPoints().Cast<Vector3>().ToList();
+			var i = points.IndexOf(points.Last());
+			RemovePoint(i);
+		}
 	}
 }
