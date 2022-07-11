@@ -1,9 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using Trains.Model.Builders;
 
-namespace Trains
+namespace Trains.Model.Builders
 {
 	public class Snapper : Node
 	{
@@ -11,43 +10,49 @@ namespace Trains
 		public RailPath SnappedPath = null;
 		public Vector3 SnappedDir = Vector3.Zero;
 
+		private Vector3 mousePos;
+
 		public Snapper()
 		{
-			
+
 		}
 
 		public void SnapIfNecessary(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
+			this.mousePos = mousePos;
+
 			foreach (var path in pathList)
 			{
 				var start = path.Start;
 				var end = path.End;
-				bool cursorIsOnStart = start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos);
-				bool cursorIsOnEnd = end.DistanceTo(mousePos) < snapDistance && end.DistanceTo(mousePos) < start.DistanceTo(mousePos);
-				
-				if (cursorIsOnStart)
+
+				if (IsCursorOn(start, end))
 				{
-					SnapAndUpdateVars(start);
-					SnappedDir = path.DirFromStart;
+					blueprint.Translation = start;
+					UpdateVars(path, path.DirFromStart);
 					return;
 				}
 
-				if (cursorIsOnEnd)
+				if (IsCursorOn(end, start))
 				{
-					SnapAndUpdateVars(end);
-					SnappedDir = path.DirFromEnd;
+					blueprint.Translation = end;
+					UpdateVars(path, path.DirFromEnd);
 					return;
-				}
-
-				void SnapAndUpdateVars(Vector3 point)
-				{
-					blueprint.Translation = point;
-					SnappedPath = path;
 				}
 			}
 
-			SnappedPath = null;
-			SnappedDir = Vector3.Zero;
+			UpdateVars(null, Vector3.Zero);
+		}
+
+		private bool IsCursorOn(Vector3 start, Vector3 end)
+		{
+			return start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos);
+		}
+
+		private void UpdateVars(RailPath path, Vector3 newDir)
+		{
+			SnappedPath = path;
+			SnappedDir = newDir;
 		}
 	}
 }
