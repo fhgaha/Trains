@@ -6,8 +6,8 @@ namespace Trains.Model.Builders
 {
 	public class Snapper : Node
 	{
-		public RailPath SnappedPath = null;
-		public Vector3 SnappedDir = Vector3.Zero;
+		public RailPath SnappedPath {get; set;} = null;
+		public Vector3 SnappedDir {get; set;} = Vector3.Zero;
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
