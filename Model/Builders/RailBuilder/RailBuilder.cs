@@ -153,9 +153,9 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			snapper.SnapIfNecessary(mousePos, pathList, blueprint);  //path should begin from snapped point with no offset
 
-			//if (snapper.SnappedDir != Vector3.Zero)
+			snapper.SnapIfNecessary(mousePos, pathList, blueprint);  //path should begin from snapped point with no offset
+			if (snapper.SnappedDir != Vector3.Zero)
 				prevDir = snapper.SnappedDir;
 			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;

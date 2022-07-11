@@ -6,10 +6,10 @@ namespace Trains.Model.Builders
 {
 	public class Snapper : Node
 	{
-		private const float snapDistance = 1f;
 		public RailPath SnappedPath = null;
 		public Vector3 SnappedDir = Vector3.Zero;
 
+		private const float snapDistance = 1f;
 		private Vector3 mousePos;
 
 		public Snapper()
