@@ -25,7 +25,7 @@ namespace Trains.Model.Builders
 		private Spatial objectHolder;   //Rails
 		private State state = State.None;
 		private Snapper snapper;
-
+		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
 		private List<RailPath> pathList = new List<RailPath>();
 		private Vector3 prevDir = Vector3.Zero;
 		private RailPath currentPath;   //path from which railbuilding is being continued
@@ -64,6 +64,7 @@ namespace Trains.Model.Builders
 			{
 				ResetStateAndBlueprint();
 				currentPath = null;
+				undoStack.Clear();
 				return;
 			}
 
@@ -73,6 +74,7 @@ namespace Trains.Model.Builders
 				Global.MainButtonMode = null;
 				ResetStateAndBlueprint();
 				currentPath = null;
+				undoStack.Clear();
 				return;
 			}
 
@@ -86,7 +88,6 @@ namespace Trains.Model.Builders
 			blueprint?.QueueFree();
 			blueprint = null;
 			prevDir = Vector3.Zero;
-
 		}
 
 		private void InitStateAndBlueprint()
@@ -112,10 +113,12 @@ namespace Trains.Model.Builders
 		{
 			ReinitStateAndBlueprint();
 
+			if (undoStack.Count == 0) return;
+
+			var curveToDelete = undoStack.Pop();
 			var curve = (RailCurve)currentPath.Curve;
-			curve.AddCurveToSegments(curve, 0);
-			curve.RemoveLastSegment();
-			//ResetStateAndBlueprint() sets currentPath = null
+			curve.AddCurveToSegments(currentPath.Curve, 0);
+			curve.RemoveCurve(curveToDelete);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -153,6 +156,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
+			state = State.SelectEnd;
 
 			//snap
 			snapper.SnapIfNecessary(mousePos, pathList, blueprint);  //path should begin from snapped point with no offset
@@ -160,8 +164,6 @@ namespace Trains.Model.Builders
 				prevDir = snapper.SnappedDir;
 			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;
-
-			state = State.SelectEnd;
 		}
 
 		private void UpdateBlueprint()
@@ -246,6 +248,7 @@ namespace Trains.Model.Builders
 				newDir = currentPath.DirFromEnd;
 			}
 
+			undoStack.Push(curveToAdd);
 			SaveVarsRedrawBlueprint(newDir);
 		}
 

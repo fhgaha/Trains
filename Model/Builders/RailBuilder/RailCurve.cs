@@ -41,6 +41,12 @@ namespace Trains.Model.Builders
 		public void AddCurveToSegments(Curve3D curve, int index)
 		{
 			var points = curve.Tessellate();
+			List<CurveSegment> segmentsTesselated = ToSegments(points);
+			Segments.InsertRange(index, segmentsTesselated);
+		}
+
+		private static List<CurveSegment> ToSegments(Vector3[] points)
+		{
 			var segmentsTesselated = new List<CurveSegment>();
 
 			for (int i = 1; i < points.Length; i++)
@@ -49,7 +55,7 @@ namespace Trains.Model.Builders
 				segmentsTesselated.Add(segment);
 			}
 
-			Segments.InsertRange(index, segmentsTesselated);
+			return segmentsTesselated;
 		}
 
 		public void PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
@@ -80,9 +86,14 @@ namespace Trains.Model.Builders
 			RemovePoint(index - 1);
 		}
 
-		public void RemoveLastCurve()
+		public void RemoveCurve(RailCurve curveToDelete)
 		{
-
+			var index = GetPointCount() - 1;
+			foreach (var segm in curveToDelete.Segments)
+			{
+				Segments.Remove(segm);
+				RemoveLastSegment();
+			}
 		}
 	}
 }
