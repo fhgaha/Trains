@@ -113,7 +113,7 @@ namespace Trains.Model.Builders
 			ReinitStateAndBlueprint();
 
 			var curve = (RailCurve)currentPath.Curve;
-			curve.AddToSegments(curve, 0);
+			curve.AddCurveToSegments(curve, 0);
 			curve.RemoveLastSegment();
 			//ResetStateAndBlueprint() sets currentPath = null
 		}
