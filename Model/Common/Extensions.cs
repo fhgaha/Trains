@@ -21,20 +21,40 @@ namespace Trains.Model.Common
 		//Vector2
 		public static Vector3 ToVec3(this Vector2 vec) => new Vector3(vec.x, 0, vec.y);
 
-		public static bool IsEqualAppox(this Vector2 first, Vector2 second, float accuracy)
+		public static bool IsEqualApprox(this Vector2 first, Vector2 second, float accuracy)
 		{
-			var firstXEqualSecondX = Math.Abs(first.x - second.x) < accuracy;
-			var firstYEqualSecondY = Math.Abs(first.y - second.y) < accuracy;
-			return firstXEqualSecondX && firstYEqualSecondY;
+			var equalByX = Math.Abs(first.x - second.x) < accuracy;
+			var equalByY = Math.Abs(first.y - second.y) < accuracy;
+			return equalByX && equalByY;
 		}
 
 		//Vector3
 		public static Vector2 ToVec2(this Vector3 vec) => new Vector2(vec.x, vec.z);
 
+		public static bool IsEqualApprox(this Vector3 first, Vector3 second, float accuracy)
+		{
+			var equalByX = Math.Abs(first.x - second.x) < accuracy;
+			var equalByY = Math.Abs(first.y - second.y) < accuracy;
+			var equalByZ = Math.Abs(first.z - second.z) < accuracy;
+			return equalByX && equalByY && equalByZ;
+		}
 
 		//Curve3D
-		public static Vector3 First(this Curve3D curve) => curve.GetPointPosition(0);
-		public static Vector3 Last(this Curve3D curve) => curve.GetPointPosition(curve.GetPointCount() - 1);
+		public static Vector3 First(this Curve3D curve)
+		{
+			if (curve.GetPointCount() == 0)
+				throw new ArgumentOutOfRangeException("curve point count is zero");
+
+			return curve.GetPointPosition(0);
+		}
+
+		public static Vector3 Last(this Curve3D curve)
+		{
+			if (curve.GetPointCount() == 0)
+				throw new ArgumentOutOfRangeException("curve point count is zero");
+
+			return curve.GetPointPosition(curve.GetPointCount() - 1);
+		}
 
 		public static List<Vector3> TakeFirst(this Curve3D curve, int amount)
 		{

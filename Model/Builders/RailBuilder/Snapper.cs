@@ -23,6 +23,8 @@ namespace Trains.Model.Builders
 
 			foreach (var path in pathList)
 			{
+				if (path.Curve.GetPointCount() == 0) continue;
+
 				var start = path.Start;
 				var end = path.End;
 

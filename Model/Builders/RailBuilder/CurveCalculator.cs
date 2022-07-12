@@ -140,7 +140,7 @@ namespace Trains.Model.Builders
 				return true;
 
 			//prevent drawing behind start
-			var tangetApproxEqualsStart = tangent.IsEqualAppox(start, 0.01f);
+			var tangetApproxEqualsStart = tangent.IsEqualApprox(start, 0.01f);
 			var endIsBehindStartDir = prevDir.Dot(startEndDir) < 0;
 			bool curveGoesBehindStartDir = tangetApproxEqualsStart && endIsBehindStartDir;
 			return curveGoesBehindStartDir;

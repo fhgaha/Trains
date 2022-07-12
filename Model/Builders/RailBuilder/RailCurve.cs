@@ -70,12 +70,37 @@ namespace Trains.Model.Builders
 
 		public void RemoveCurve(Curve3D curveToDelete)
 		{
-			var pointsToDeleteAmount = curveToDelete.GetPointCount();
-			for (int i = 0; i < pointsToDeleteAmount; i++)
-			{
-				var index = GetPointCount() - 1;
-				RemovePoint(index);
-			}
+			var accuracy = 1f;
+
+			var ctdFirst = curveToDelete.First();
+			var ctdLast = curveToDelete.Last();
+			var thisFirst = this.First();
+			var thisLast = this.Last();
+
+			GD.Print("ctdFirst: " + ctdFirst);
+			GD.Print("ctdLast: " + ctdLast);
+			GD.Print("thisFirst: " + thisFirst);
+			GD.Print("thisLast: " + thisLast);
+			GD.Print();
+			GD.Print("curveToDelete.First().IsEqualApprox(this.First()): " 
+					+ curveToDelete.First().IsEqualApprox(this.First(), accuracy));
+			GD.Print("curveToDelete.First().IsEqualApprox(this.Last()): " 
+					+ curveToDelete.First().IsEqualApprox(this.Last(), accuracy));
+			GD.Print("curveToDelete.Last().IsEqualApprox(this.First()): " 
+					+ curveToDelete.Last().IsEqualApprox(this.First(), accuracy));
+			GD.Print("curveToDelete.Last().IsEqualApprox(this.Last()): " 
+					+ curveToDelete.Last().IsEqualApprox(this.Last(), accuracy));
+			GD.Print();
+
+			
+			// var pointsToDeleteAmount = curveToDelete.GetPointCount();
+			// for (int i = 0; i < pointsToDeleteAmount; i++)
+			// {
+			// 	var lastPointIndex = GetPointCount() - 1;
+			// 	RemovePoint(lastPointIndex);
+			// }
+
+
 		}
 	}
 }

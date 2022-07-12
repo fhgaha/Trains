@@ -101,6 +101,7 @@ namespace Trains.Model.Builders
 		private void onStartNewRoadPressed()
 		{
 			ReinitStateAndBlueprint();
+			undoStack.Clear();
 		}
 
 		private void ReinitStateAndBlueprint()
@@ -191,7 +192,9 @@ namespace Trains.Model.Builders
 				prevDir: prevDir.ToVec2(),
 				firstSegmentIsPlaced: continuing
 			);
-			blueprint.Curve = BuildBlueprintCurve(points);
+			var newCurve = BuildBlueprintCurve(points);
+			blueprint.Curve = newCurve;
+
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)
@@ -210,13 +213,12 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject()
 		{
-			//place first segment
 			if (currentPath is null)
-			{
 				InitPath();
-				return;
-			}
-			AddNewCurveToCurrentPath();
+			else
+				AddNewCurveToCurrentPath();
+
+			undoStack.Push((RailCurve)blueprint.Curve);
 		}
 
 		private void InitPath()
@@ -225,7 +227,7 @@ namespace Trains.Model.Builders
 			AddChild(currentPath);
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
-			undoStack.Push((RailCurve)blueprint.Curve);
+
 
 			SaveVarsRedrawBlueprint(currentPath.DirFromEnd);
 		}
@@ -237,6 +239,8 @@ namespace Trains.Model.Builders
 			var curveToAdd = (RailCurve)blueprint.Curve;
 			var railCurve = (RailCurve)currentPath.Curve;
 			var newDir = prevDir;
+
+			if (curveToAdd.GetPointCount() == 0) return;
 
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
@@ -250,7 +254,6 @@ namespace Trains.Model.Builders
 				newDir = currentPath.DirFromEnd;
 			}
 
-			undoStack.Push(curveToAdd);
 			SaveVarsRedrawBlueprint(newDir);
 		}
 
@@ -262,6 +265,7 @@ namespace Trains.Model.Builders
 			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
 			DrawBlueprint();
+
 		}
 
 	}
