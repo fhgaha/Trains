@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
-<testsuites failures="0" name="TestXML" tests="1" time="0.197">
-	<testsuite name="TestsRailBuilder" failures="0"  tests="1" time="0">
-		<testcase name="RailCurveAddsNewSegmentToSegmentsListTest" time="0"></testcase>
+<testsuites failures="0" name="TestXML" tests="1" time="0.173">
+	<testsuite name="RailBuilder Tests" failures="0"  tests="3" time="0">
+		<testcase name="BuildSegmentUsingVectorsTest" time="0"></testcase>
+		<testcase name="BuildSegmentUsingCollectionTest" time="0"></testcase>
+		<testcase name="AddCurveToSegmentsTest" time="0"></testcase>
 	</testsuite>
 
 </testsuites>
