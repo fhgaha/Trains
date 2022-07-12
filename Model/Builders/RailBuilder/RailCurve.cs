@@ -10,14 +10,9 @@ namespace Trains.Model.Builders
 	{
 		public List<CurveSegment> Segments { get; set; } = new List<CurveSegment>();
 		private List<Vector3> points = new List<Vector3>();
+		public Vector3 Origin { get; set; }
 
 		public RailCurve() { }
-
-		public void AddCurveToSegments(Curve3D curve, int index)
-		{
-			var segments = curve.ToSegments();
-			Segments.InsertRange(index, segments);
-		}
 
 		public RailCurve(Curve3D curve)
 		{
@@ -50,55 +45,55 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		public void RemoveLastSegment()
+		public void AddCurveToSegments(Curve3D curve, int index)
 		{
-			if (GetPointCount() < 2)
-				return;
-
-			var lastSegment = Segments.Last();
-			Segments.Remove(lastSegment);
-
-			var index = GetPointCount() - 1;
-			RemoveSegmentFromMap(index);
+			var segments = curve.ToSegments();
+			Segments.InsertRange(index, segments);
 		}
 
-		private void RemoveSegmentFromMap(int index)
+		public void RemoveCurve(RailCurve ctd)
 		{
-			RemovePoint(index);
-			RemovePoint(index - 1);
-		}
+			// var accuracy = 1f;
 
-		public void RemoveCurve(Curve3D curveToDelete)
-		{
-			var accuracy = 1f;
+			// var ctdFirst = ctd.First();
+			// var ctdLast = ctd.Last();
+			// var thisFirst = this.First();
+			// var thisLast = this.Last();
 
-			var ctdFirst = curveToDelete.First();
-			var ctdLast = curveToDelete.Last();
-			var thisFirst = this.First();
-			var thisLast = this.Last();
+			// Vector3 ctdPoint, thisPoint;
 
-			GD.Print("ctdFirst: " + ctdFirst);
-			GD.Print("ctdLast: " + ctdLast);
-			GD.Print("thisFirst: " + thisFirst);
-			GD.Print("thisLast: " + thisLast);
-			GD.Print();
-			GD.Print("curveToDelete.First().IsEqualApprox(this.First()): " 
-					+ curveToDelete.First().IsEqualApprox(this.First(), accuracy));
-			GD.Print("curveToDelete.First().IsEqualApprox(this.Last()): " 
-					+ curveToDelete.First().IsEqualApprox(this.Last(), accuracy));
-			GD.Print("curveToDelete.Last().IsEqualApprox(this.First()): " 
-					+ curveToDelete.Last().IsEqualApprox(this.First(), accuracy));
-			GD.Print("curveToDelete.Last().IsEqualApprox(this.Last()): " 
-					+ curveToDelete.Last().IsEqualApprox(this.Last(), accuracy));
-			GD.Print();
+			// GD.Print("ctdFirst: " + ctdFirst);
+			// GD.Print("ctdLast: " + ctdLast);
+			// GD.Print("thisFirst: " + thisFirst);
+			// GD.Print("thisLast: " + thisLast);
+			// GD.Print();
 
-			
-			// var pointsToDeleteAmount = curveToDelete.GetPointCount();
-			// for (int i = 0; i < pointsToDeleteAmount; i++)
-			// {
-			// 	var lastPointIndex = GetPointCount() - 1;
-			// 	RemovePoint(lastPointIndex);
-			// }
+			// var ctdOr = ctd.Origin;
+			// var or = Origin;
+			// ctdPoint = ctd.First() + ctd.Origin;
+			// thisPoint = this.First() + Origin;
+			// GD.Print("curveToDelete.First().IsEqualApprox(this.First()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
+
+			// ctdPoint = ctd.First() + ctd.Origin;
+			// thisPoint = this.Last() + Origin;
+			// GD.Print("curveToDelete.First().IsEqualApprox(this.Last()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
+
+			// ctdPoint = ctd.Last() + ctd.Origin;
+			// thisPoint = this.First() + Origin;
+			// GD.Print("curveToDelete.Last().IsEqualApprox(this.First()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
+
+			// ctdPoint = ctd.Last() + ctd.Origin;
+			// thisPoint = this.Last() + Origin;
+			// GD.Print("curveToDelete.Last().IsEqualApprox(this.Last()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
+			// GD.Print();
+
+
+			var pointsToDeleteAmount = ctd.GetPointCount();
+			for (int i = 0; i < pointsToDeleteAmount; i++)
+			{
+				var lastPointIndex = GetPointCount() - 1;
+				RemovePoint(lastPointIndex);
+			}
 
 
 		}
