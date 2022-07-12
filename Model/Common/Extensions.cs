@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 using System;
+using Trains.Model.Builders;
 
 namespace Trains.Model.Common
 {
@@ -62,6 +63,20 @@ namespace Trains.Model.Common
 
 			list.Reverse();
 			return list;
+		}
+
+		public static List<CurveSegment> ToSegments(this Curve3D curve)
+		{
+			var points = curve.Tessellate();
+			var segments = new List<CurveSegment>();
+
+			for (int i = 1; i < points.Length; i++)
+			{
+				var segment = new CurveSegment(points[i - 1], points[i]);
+				segments.Add(segment);
+			}
+
+			return segments;
 		}
 
 		//Spatial

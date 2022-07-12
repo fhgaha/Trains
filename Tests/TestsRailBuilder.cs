@@ -42,9 +42,9 @@ namespace Trains.Tests
 		{
 			var first = new Vector3(1, 0, 0);
 			var second = new Vector3(0, 1, 0);
-			var list = new List<Vector3> { first, second };
+			var collection = new List<Vector3> { first, second };
 
-			var segment = new CurveSegment(list);
+			var segment = new CurveSegment(collection);
 
 			Assert.IsEqual(segment.First, first, "segment.First should contain first passed parameter");
 			Assert.IsEqual(segment.Second, second, "segment.Second should contain second passed parameter");
@@ -72,7 +72,26 @@ namespace Trains.Tests
 			//are segments instantiated?
 		}
 
+		// [Test]
+		// public void RemoveCurveTest()
+		// {
+		// 	var p1 = new Vector3(0, 0, 0);
+		// 	var p2 = new Vector3(1, 0, 0);
+		// 	var p3 = new Vector3(0, 1, 0);
+		// 	var p4 = new Vector3(0, 0, 1);
+		// 	var curve = new RailCurve();
+		// 	curve.AddPoint(p1);
+		// 	curve.AddPoint(p2);
+		// 	curve.AddPoint(p3);
+		// 	curve.AddPoint(p4);
+		// 	var curveToRemove = new Curve3D();
+		// 	curveToRemove.AddPoint(p3);
+		// 	curveToRemove.AddPoint(p4);
 
+		// 	curve.RemoveCurve(curveToRemove);
+
+
+		// }
 
 
 

@@ -59,7 +59,7 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			//other button is pressed
+			//other main button is pressed
 			if (buttonType != MainButtonType.BuildRail)
 			{
 				ResetStateAndBlueprint();
@@ -225,6 +225,7 @@ namespace Trains.Model.Builders
 			AddChild(currentPath);
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
+			undoStack.Push((RailCurve)blueprint.Curve);
 
 			SaveVarsRedrawBlueprint(currentPath.DirFromEnd);
 		}
@@ -232,7 +233,8 @@ namespace Trains.Model.Builders
 		private void AddNewCurveToCurrentPath()
 		{
 			var pathOriginToBpOrigin = blueprint.Translation - currentPath.Translation;
-			var curveToAdd = new RailCurve(blueprint);
+			//var curveToAdd = new RailCurve(blueprint);
+			var curveToAdd = (RailCurve)blueprint.Curve;
 			var railCurve = (RailCurve)currentPath.Curve;
 			var newDir = prevDir;
 

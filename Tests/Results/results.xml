@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<testsuites failures="0" name="TestXML" tests="1" time="0.173">
+<testsuites failures="0" name="TestXML" tests="1" time="0.369">
 	<testsuite name="RailBuilder Tests" failures="0"  tests="3" time="0">
 		<testcase name="BuildSegmentUsingVectorsTest" time="0"></testcase>
 		<testcase name="BuildSegmentUsingCollectionTest" time="0"></testcase>

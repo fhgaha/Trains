@@ -9,12 +9,13 @@ namespace Trains.Model.Builders
 	public class RailCurve : Curve3D
 	{
 		public List<CurveSegment> Segments { get; set; } = new List<CurveSegment>();
+		private List<Vector3> points = new List<Vector3>();
 
 		public RailCurve() { }
 
 		public void AddCurveToSegments(Curve3D curve, int index)
 		{
-			var segments = ToSegments(curve);
+			var segments = curve.ToSegments();
 			Segments.InsertRange(index, segments);
 		}
 
@@ -37,20 +38,6 @@ namespace Trains.Model.Builders
 			var indexWhereInsertTo = Segments.Count == 0 ? 0 : Segments.IndexOf(Segments.Last());
 			PlaceCurveOnMap(origin, curve);
 			AddCurveToSegments(curve, indexWhereInsertTo);
-		}
-
-		private List<CurveSegment> ToSegments(Curve3D curve)
-		{
-			var points = curve.Tessellate();
-			var segments = new List<CurveSegment>();
-
-			for (int i = 1; i < points.Length; i++)
-			{
-				var segment = new CurveSegment(points[i - 1], points[i]);
-				segments.Add(segment);
-			}
-
-			return segments;
 		}
 
 		public void PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
@@ -81,13 +68,13 @@ namespace Trains.Model.Builders
 			RemovePoint(index - 1);
 		}
 
-		public void RemoveCurve(RailCurve curveToDelete)
+		public void RemoveCurve(Curve3D curveToDelete)
 		{
-			var index = GetPointCount() - 1;
-			foreach (var segm in curveToDelete.Segments)
+			var pointsToDeleteAmount = curveToDelete.GetPointCount();
+			for (int i = 0; i < pointsToDeleteAmount; i++)
 			{
-				Segments.Remove(segm);
-				//RemoveLastSegment();
+				var index = GetPointCount() - 1;
+				RemovePoint(index);
 			}
 		}
 	}
