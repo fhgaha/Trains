@@ -50,11 +50,14 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
+			events.Connect(nameof(Events.MainGUIPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
+			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
 			calculator = GetNode<CurveCalculator>("Calculator");
 		}
 
 		public override void _Process(float delta)
 		{
+
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -189,17 +192,21 @@ namespace Trains.Model.Builders
 		private void DrawBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			var continuing = !(currentPath is null);
-			var points = calculator.CalculateCurvePoints
-			(
-				start: blueprint.Translation.ToVec2(),
-				end: mousePos.ToVec2(),
-				prevDir: prevDir.ToVec2(),
-				firstSegmentIsPlaced: continuing
-			);
-			var newCurve = BuildBlueprintCurve(points);
-			blueprint.Curve = newCurve;
+			var points = new List<Vector2>();
 
+			var mousePosIsInBorders = mousePos != Vector3.Zero;
+			if (mousePosIsInBorders)
+			{
+				var continuing = !(currentPath is null);
+				points = calculator.CalculateCurvePoints
+				(
+					start: blueprint.Translation.ToVec2(),
+					end: mousePos.ToVec2(),
+					prevDir: prevDir.ToVec2(),
+					firstSegmentIsPlaced: continuing
+				);
+			}
+			blueprint.Curve = BuildBlueprintCurve(points);
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)
@@ -267,6 +274,18 @@ namespace Trains.Model.Builders
 			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
 			DrawBlueprint();
+		}
+
+		private void onMainGUIPanelMouseEntered()
+		{
+			if (blueprint is null) return;
+			blueprint.Visible = false;
+		}
+
+		private void onMainGUIPanelMouseExited()
+		{
+			if (blueprint is null) return;
+			blueprint.Visible = true;
 		}
 	}
 }

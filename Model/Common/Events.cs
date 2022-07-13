@@ -46,6 +46,10 @@ namespace Trains.Model.Common
 
 		[Signal] public delegate void UndoRailPressed();
 
+		[Signal] public delegate void MainGUIPanelMouseEntered();
+
+		[Signal] public delegate void MainGUIPanelMouseExited();
+
 
 		public override void _Ready()
 		{

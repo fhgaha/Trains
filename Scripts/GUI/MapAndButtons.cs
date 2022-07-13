@@ -25,10 +25,15 @@ namespace Trains
 				[MainButtonType.ShowProductMap] = GetNode<Control>("ProductsMenu")
 			};
 
-			buttonMenuDict.Values.ToList().ForEach(menu => menu.Visible = false); 
+			buttonMenuDict.Values.ToList().ForEach(menu => menu.Visible = false);
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
+		{
+			HideButtonsExeptSpecified(buttonType);
+		}
+
+		private void HideButtonsExeptSpecified(MainButtonType buttonType)
 		{
 			buttonMenuDict.Values
 				.Where(menu => menu != buttonMenuDict[buttonType])
@@ -36,8 +41,6 @@ namespace Trains
 				.ForEach(menu => menu.Visible = false);
 
 			buttonMenuDict[buttonType].Visible = !buttonMenuDict[buttonType].Visible;
-
-			//Global.MainButtonMode = MainButtonType.BuildStation;
 		}
 	}
 }
