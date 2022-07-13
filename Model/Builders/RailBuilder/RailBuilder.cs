@@ -117,9 +117,7 @@ namespace Trains.Model.Builders
 			if (undoStack.Count == 0) return;
 
 			var curveToDelete = undoStack.Pop();
-			var curve = (RailCurve)currentPath.Curve;
-			curve.Origin = currentPath.Translation;
-			//var origin = blueprint.Translation - currentPath.Translation;
+			var curve = RailCurve.GetFrom(currentPath);
 			curve.RemoveCurve(curveToDelete);
 		}
 
@@ -219,8 +217,7 @@ namespace Trains.Model.Builders
 			else
 				AddNewCurveToCurrentPath();
 
-			var curve = (RailCurve)blueprint.Curve;
-			curve.Origin = blueprint.Translation;
+			var curve = RailCurve.GetFrom(blueprint);
 			undoStack.Push(curve);
 
 			SaveVarsRedrawBlueprint(prevDir);

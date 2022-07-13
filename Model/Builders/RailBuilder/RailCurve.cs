@@ -12,12 +12,12 @@ namespace Trains.Model.Builders
 
 		public RailCurve() { }
 
-		public RailCurve(Curve3D curve)
+		public static RailCurve GetFrom(Path path)
 		{
-			AppendCurve(curve.First(), curve);
+			var curve = (RailCurve)path.Curve;
+			curve.Origin = path.Translation;
+			return curve;
 		}
-
-		public RailCurve(RailPath path) : this(path.Curve) { }
 
 		public void PrependCurve(Vector3 origin, Curve3D curve)
 		{
@@ -47,7 +47,7 @@ namespace Trains.Model.Builders
 			var accuracy = 1.5f;
 			var pointsToDeleteAmount = curveToDelete.GetPointCount();
 
-			PrintCurveIntersectionInfo(curveToDelete, accuracy);
+			//PrintCurveIntersectionInfo(curveToDelete, accuracy);
 
 			if (AreCurvePointsEqual(oldLast, ctdLast, accuracy))
 				RemovePointsFromEnd(pointsToDeleteAmount);
@@ -69,7 +69,7 @@ namespace Trains.Model.Builders
 
 		public static bool AreCurvePointsEqual(Vector3 first, Vector3 second, float accuracy)
 		{
-			return first.IsEqualApprox(second, accuracy);
+			return first.IsEqualApprox(second);
 		}
 
 		private void PrintCurveIntersectionInfo(RailCurve curveIntesected, float accuracy)
