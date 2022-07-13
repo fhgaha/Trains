@@ -19,10 +19,10 @@ namespace Trains.Model.Builders
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
-		private PackedScene scene;
-		private RailPath blueprint;
+		private PackedScene railPathScene;
 		private Camera camera;
-		private Spatial objectHolder;   //Rails
+		private RailPath blueprint;
+		private Spatial railsHolder;   //Rails
 		private State state = State.None;
 		private Snapper snapper;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
@@ -39,12 +39,12 @@ namespace Trains.Model.Builders
 		//4. a new blueprint will show up with start in the end of previous segment with the end following mouse pos.
 		//	 this time path will be curved.
 		//5. press lmb again to place blueprint road.
-		public void Init(List<Cell> cells, Camera camera, Spatial objectHolder, PackedScene scene)
+		public void Init(List<Cell> cells, Camera camera, Spatial railsHolder, PackedScene railPathScene)
 		{
 			this.cells = cells;
-			this.objectHolder = objectHolder;
+			this.railsHolder = railsHolder;
 			this.camera = camera;
-			this.scene = scene;
+			this.railPathScene = railPathScene;
 			snapper = new Snapper();
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
@@ -65,7 +65,7 @@ namespace Trains.Model.Builders
 			//other main button is pressed
 			if (buttonType != MainButtonType.BuildRail)
 			{
-				ResetStateAndBlueprint();
+				ResetStateBlueprintPrevDir();
 				currentPath = null;
 				undoStack.Clear();
 				return;
@@ -75,7 +75,7 @@ namespace Trains.Model.Builders
 			if (Global.MainButtonMode is MainButtonType.BuildRail)
 			{
 				Global.MainButtonMode = null;
-				ResetStateAndBlueprint();
+				ResetStateBlueprintPrevDir();
 				currentPath = null;
 				undoStack.Clear();
 				return;
@@ -85,7 +85,7 @@ namespace Trains.Model.Builders
 			InitStateAndBlueprint();
 		}
 
-		private void ResetStateAndBlueprint()
+		private void ResetStateBlueprintPrevDir()
 		{
 			state = State.None;
 			blueprint?.QueueFree();
@@ -96,7 +96,7 @@ namespace Trains.Model.Builders
 		private void InitStateAndBlueprint()
 		{
 			state = State.SelectStart;
-			blueprint = scene.Instance<RailPath>();
+			blueprint = railPathScene.Instance<RailPath>();
 			AddChild(blueprint);
 			blueprint.Name = "blueprint";
 		}
@@ -109,7 +109,7 @@ namespace Trains.Model.Builders
 
 		private void ReinitStateAndBlueprint()
 		{
-			ResetStateAndBlueprint();
+			ResetStateBlueprintPrevDir();
 			InitStateAndBlueprint();
 		}
 
@@ -117,11 +117,15 @@ namespace Trains.Model.Builders
 		{
 			ReinitStateAndBlueprint();
 
-			if (undoStack.Count == 0) return;
+			if (undoStack.Count == 0)
+				return;
 
 			var curveToDelete = undoStack.Pop();
 			var curve = RailCurve.GetFrom(currentPath);
 			curve.RemoveCurve(curveToDelete);
+
+			if (undoStack.Count == 0)
+				currentPath = null;
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -143,7 +147,7 @@ namespace Trains.Model.Builders
 			if (@event is InputEventMouseButton evMouseButton2 && evMouseButton2.IsActionPressed("rmb"))
 			{
 				if (state == State.SelectEnd)
-					ResetStateAndBlueprint();
+					ResetStateBlueprintPrevDir();
 			}
 
 			if (@event is InputEventMouseMotion evMouseMotion)
@@ -238,7 +242,7 @@ namespace Trains.Model.Builders
 
 		private void InitPath()
 		{
-			currentPath = scene.Instance<RailPath>();
+			currentPath = railPathScene.Instance<RailPath>();
 			AddChild(currentPath);
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
