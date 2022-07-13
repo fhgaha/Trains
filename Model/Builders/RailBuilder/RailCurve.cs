@@ -53,48 +53,40 @@ namespace Trains.Model.Builders
 
 		public void RemoveCurve(RailCurve ctd)
 		{
-			// var accuracy = 1f;
+			var accuracy = 1.5f;
 
-			// var ctdFirst = ctd.First();
-			// var ctdLast = ctd.Last();
-			// var thisFirst = this.First();
-			// var thisLast = this.Last();
+			var ctdFirst = ctd.First() + ctd.Origin;
+			var ctdLast = ctd.Last() + ctd.Origin;
+			var oldFirst = this.First() + Origin;
+			var oldLast = this.Last() + Origin;
 
-			// Vector3 ctdPoint, thisPoint;
+			GD.Print("ctdFirst: " + ctdFirst);
+			GD.Print("ctdLast: " + ctdLast);
+			GD.Print("oldFirst: " + oldFirst);
+			GD.Print("oldLast: " + oldLast);
+			GD.Print();
 
-			// GD.Print("ctdFirst: " + ctdFirst);
-			// GD.Print("ctdLast: " + ctdLast);
-			// GD.Print("thisFirst: " + thisFirst);
-			// GD.Print("thisLast: " + thisLast);
-			// GD.Print();
-
-			// var ctdOr = ctd.Origin;
-			// var or = Origin;
-			// ctdPoint = ctd.First() + ctd.Origin;
-			// thisPoint = this.First() + Origin;
-			// GD.Print("curveToDelete.First().IsEqualApprox(this.First()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
-
-			// ctdPoint = ctd.First() + ctd.Origin;
-			// thisPoint = this.Last() + Origin;
-			// GD.Print("curveToDelete.First().IsEqualApprox(this.Last()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
-
-			// ctdPoint = ctd.Last() + ctd.Origin;
-			// thisPoint = this.First() + Origin;
-			// GD.Print("curveToDelete.Last().IsEqualApprox(this.First()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
-
-			// ctdPoint = ctd.Last() + ctd.Origin;
-			// thisPoint = this.Last() + Origin;
-			// GD.Print("curveToDelete.Last().IsEqualApprox(this.Last()): " + ctdPoint.IsEqualApprox(thisPoint, accuracy));
-			// GD.Print();
-
+			GD.Print("ctdFirst.IsEqualApsprox(oldFirst): ", ctdFirst.IsEqualApprox(oldFirst, accuracy));
+			GD.Print("ctdFirst.IsEqualApprox(oldLast): " + ctdFirst.IsEqualApprox(oldLast, accuracy));
+			GD.Print("ctdLast.IsEqualApprox(oldFirst): " + ctdLast.IsEqualApprox(oldFirst, accuracy));
+			GD.Print("ctdLast.IsEqualApprox(oldLast): " + ctdLast.IsEqualApprox(oldLast, accuracy));
+			GD.Print();
 
 			var pointsToDeleteAmount = ctd.GetPointCount();
-			for (int i = 0; i < pointsToDeleteAmount; i++)
+			if (ctdLast.IsEqualApprox(oldLast, accuracy))
 			{
-				var lastPointIndex = GetPointCount() - 1;
-				RemovePoint(lastPointIndex);
+				for (int i = 0; i < pointsToDeleteAmount; i++)
+				{
+					RemovePoint(GetPointCount() - 1);
+				}
 			}
-
+			else if (ctdLast.IsEqualApprox(oldFirst, accuracy))
+			{
+				for (int i = 0; i < pointsToDeleteAmount; i++)
+				{
+					RemovePoint(0);
+				}
+			}
 
 		}
 	}
