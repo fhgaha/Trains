@@ -50,48 +50,6 @@ namespace Trains.Tests
 			Assert.IsEqual(segment.Second, second, "segment.Second should contain second passed parameter");
 		}
 
-		[Test]
-		public void AddCurveToSegmentsTest()
-		{
-			var p1 = new Vector3(0, 0, 0);
-			var p2 = new Vector3(1, 0, 0);
-			var p3 = new Vector3(0, 1, 0);
-			var curve = new RailCurve();
-			var curveToAdd = new Curve3D();
-			curveToAdd.AddPoint(p1);
-			curveToAdd.AddPoint(p2);
-			curveToAdd.AddPoint(p3);
-			var firstSegment = new CurveSegment(p1, p2);
-			var secondSegment = new CurveSegment(p2, p3);
-
-			curve.AddCurveToSegments(curveToAdd, 0);
-
-			Assert.IsEqual(curve.Segments.Count, 2, "two segments should be added");
-			Assert.IsEqual(curve.Segments[0], firstSegment, "first segment should be CurveSegment with correct points oreder");
-			Assert.IsEqual(curve.Segments[1], secondSegment, "second segment should be CurveSegment with correct points oreder");
-			//are segments instantiated?
-		}
-
-		// [Test]
-		// public void RemoveCurveTest()
-		// {
-		// 	var p1 = new Vector3(0, 0, 0);
-		// 	var p2 = new Vector3(1, 0, 0);
-		// 	var p3 = new Vector3(0, 1, 0);
-		// 	var p4 = new Vector3(0, 0, 1);
-		// 	var curve = new RailCurve();
-		// 	curve.AddPoint(p1);
-		// 	curve.AddPoint(p2);
-		// 	curve.AddPoint(p3);
-		// 	curve.AddPoint(p4);
-		// 	var curveToRemove = new Curve3D();
-		// 	curveToRemove.AddPoint(p3);
-		// 	curveToRemove.AddPoint(p4);
-
-		// 	curve.RemoveCurve(curveToRemove);
-
-
-		// }
 
 
 

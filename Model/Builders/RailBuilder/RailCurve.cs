@@ -8,8 +8,6 @@ namespace Trains.Model.Builders
 {
 	public class RailCurve : Curve3D
 	{
-		public List<CurveSegment> Segments { get; set; } = new List<CurveSegment>();
-		private List<Vector3> points = new List<Vector3>();
 		public Vector3 Origin { get; set; }
 
 		public RailCurve() { }
@@ -23,39 +21,28 @@ namespace Trains.Model.Builders
 
 		public void PrependCurve(Vector3 origin, Curve3D curve)
 		{
-			var indexWhereInsertTo = 0;
 			PlaceCurveOnMap(origin, curve, _atPosition: 0);
-			AddCurveToSegments(curve, indexWhereInsertTo);
 		}
 
 		public void AppendCurve(Vector3 origin, Curve3D curve)
 		{
-			var indexWhereInsertTo = Segments.Count == 0 ? 0 : Segments.IndexOf(Segments.Last());
 			PlaceCurveOnMap(origin, curve);
-			AddCurveToSegments(curve, indexWhereInsertTo);
 		}
 
 		public void PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
 		{
-			var points = curve.Tessellate();
-
-			for (int i = 0; i < points.Length; i++)
+			for (int i = 0; i < curve.GetPointCount(); i++)
 			{
-				AddPoint(origin + points[i], atPosition: _atPosition);
+				AddPoint(origin + curve.GetPointPosition(i), atPosition: _atPosition);
 			}
-		}
-
-		public void AddCurveToSegments(Curve3D curve, int index)
-		{
-			var segments = curve.ToSegments();
-			Segments.InsertRange(index, segments);
 		}
 
 		public void RemoveCurve(RailCurve curveToDelete)
 		{
+			var ctdFirst = curveToDelete.First() + curveToDelete.Origin;
 			var ctdLast = curveToDelete.Last() + curveToDelete.Origin;
-			var oldFirst = this.First() + this.Origin;
-			var oldLast = this.Last() + this.Origin;
+			var oldFirst = this.First() + Origin;
+			var oldLast = this.Last() + Origin;
 
 			var accuracy = 1.5f;
 			var pointsToDeleteAmount = curveToDelete.GetPointCount();

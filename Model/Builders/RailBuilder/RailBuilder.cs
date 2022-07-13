@@ -118,8 +118,8 @@ namespace Trains.Model.Builders
 
 			var curveToDelete = undoStack.Pop();
 			var curve = (RailCurve)currentPath.Curve;
-			curve.Origin = blueprint.Translation;
-			curve.AddCurveToSegments(currentPath.Curve, 0);
+			curve.Origin = currentPath.Translation;
+			//var origin = blueprint.Translation - currentPath.Translation;
 			curve.RemoveCurve(curveToDelete);
 		}
 
