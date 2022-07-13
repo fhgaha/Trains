@@ -15,7 +15,7 @@ namespace Trains.Model.Builders
 		private List<Cell> cells;
 		private Spatial stations;
 		private Events events;
-		private PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
+		private readonly PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 		private Spatial blueprint;
 		private const float rayLength = 1000f;
 		private Camera camera;
@@ -36,8 +36,6 @@ namespace Trains.Model.Builders
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
 			UpdateBlueprint();
 		}
-
-		bool validBuildPlace = false;
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
@@ -71,7 +69,7 @@ namespace Trains.Model.Builders
 			var area = blueprint.GetNode<Area>("Base/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
-			canBuild = bodies.Count() <= 0;
+			canBuild = !bodies.Any();
 			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
@@ -84,9 +82,9 @@ namespace Trains.Model.Builders
 				return;
 			}
 
-			if (Global.MainButtonMode is MainButtonType.BuildStation) 
+			if (Global.MainButtonMode is MainButtonType.BuildStation)
 				Global.MainButtonMode = null;
-			else 
+			else
 				Global.MainButtonMode = MainButtonType.BuildStation;
 
 			if (!(Global.MainButtonMode is MainButtonType.BuildStation))

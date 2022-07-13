@@ -57,7 +57,6 @@ namespace Trains.Model.Builders
 
 		public override void _Process(float delta)
 		{
-
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -150,7 +149,7 @@ namespace Trains.Model.Builders
 					ResetStateBlueprintPrevDir();
 			}
 
-			if (@event is InputEventMouseMotion evMouseMotion)
+			if (@event is InputEventMouseMotion)
 			{
 				switch (state)
 				{
@@ -188,7 +187,7 @@ namespace Trains.Model.Builders
 			//set base color
 			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
-			var canBuild = bodies.Count() <= 0;
+			var canBuild = !bodies.Any();
 			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
@@ -216,8 +215,10 @@ namespace Trains.Model.Builders
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)
 		{
 			var curve = new RailCurve();
-			if (points.Count() > 0)
+			if (points.Count > 0)
+			{
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
+			}
 			else
 			{
 				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"

@@ -4,7 +4,6 @@ using Godot;
 using Trains.Model.Cells;
 using Trains.Model.Common;
 using Trains.Model.Generators;
-using Trains.Scripts.CellScene;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Grids
@@ -15,8 +14,8 @@ namespace Trains.Model.Grids
 		public int CellsColsAmount { get; set; } = 10;
 		public Cell[,] Cells;
 		public List<Cell> CellList { get; private set; }
-		PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
-		PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
+		readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
+		readonly PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
 		// PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
 		// PackedScene stock = GD.Load<PackedScene>("res://Scenes/Buildings/Stock.tscn");
 		private Events events;

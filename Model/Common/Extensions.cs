@@ -17,7 +17,6 @@ namespace Trains.Model.Common
 			}
 		}
 
-
 		//Vector2
 		public static Vector3 ToVec3(this Vector2 vec) => new Vector3(vec.x, 0, vec.y);
 

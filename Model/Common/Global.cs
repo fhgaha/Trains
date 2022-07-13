@@ -4,8 +4,7 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Common
 {
-
-	public static class Global 
+	public static class Global
 	{
 		//Colors
 
@@ -26,10 +25,9 @@ namespace Trains.Model.Common
 
 		//decreasing amount per tick
 		public const float PriceDecay = 0.1f;
-		
+
 		public static ProductType? CurrentDisplayProductMode = null;
 		public static MainButtonType? MainButtonMode = null;
-
 
 		//min max prices
 		public const float LumberMinPrice = 30f;

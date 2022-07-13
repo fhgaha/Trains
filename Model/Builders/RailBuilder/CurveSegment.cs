@@ -7,9 +7,8 @@ namespace Trains.Model.Builders
 {
 	public class CurveSegment : Spatial
 	{
-		private Vector3 first, second;
-		public Vector3 First { get => first; private set => first = value; }
-		public Vector3 Second { get => second; private set => second = value; }
+		public Vector3 First { get; private set; }
+		public Vector3 Second { get; private set; }
 
 		//Godot requires parameterless constructor:  Cannot construct temporary 
 		// MonoObject because the class does not define a parameterless constructor
@@ -17,16 +16,16 @@ namespace Trains.Model.Builders
 
 		public CurveSegment(Vector3 first, Vector3 second)
 		{
-			this.first = first;
-			this.second = second;
+			First = first;
+			Second = second;
 		}
 
 		public CurveSegment(IEnumerable<Vector3> points)
 		{
 			if (points.Count() != 2) throw new ArgumentException("Point count should be 2");
 
-			first = points.ElementAt(0);
-			second = points.ElementAt(1);
+			First = points.ElementAt(0);
+			Second = points.ElementAt(1);
 		}
 
 		public override bool Equals(object obj)
@@ -35,21 +34,21 @@ namespace Trains.Model.Builders
 				return false;
 
 			var segment = (CurveSegment)obj;
-			return segment.First.Equals(this.first)
-				&& segment.Second.Equals(this.second);
+			return segment.First.Equals(this.First)
+				&& segment.Second.Equals(this.Second);
 		}
 
 		public override int GetHashCode()
 		{
 			int hash = 17;
-			hash = hash * 23 + first.GetHashCode();
-			hash = hash * 23 + second.GetHashCode();
+			hash = hash * 23 + First.GetHashCode();
+			hash = hash * 23 + Second.GetHashCode();
 			return hash;
 		}
 
 		public override string ToString()
 		{
-			return "{ " + first + "; " + second + " }";
+			return "{ " + First + "; " + Second + " }";
 		}
 	}
 }

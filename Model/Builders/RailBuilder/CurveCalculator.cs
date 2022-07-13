@@ -22,7 +22,6 @@ namespace Trains.Model.Builders
 		private Vector2 end;
 		private float radius;
 		private Vector2 prevDir;
-		private bool firstSegmentIsPlaced;
 		private List<Vector2> points;
 
 		public override void _Ready()
@@ -38,7 +37,6 @@ namespace Trains.Model.Builders
 			this.end = end;
 			this.radius = 1f;
 			this.prevDir = prevDir;
-			this.firstSegmentIsPlaced = firstSegmentIsPlaced;
 			points = new List<Vector2>();
 
 			if (!firstSegmentIsPlaced)
@@ -74,8 +72,7 @@ namespace Trains.Model.Builders
 		{
 			if (prevDir == Vector2.Zero) return 0f;
 
-			var rotationDeg = 0f;
-			rotationDeg = Vector2.Up.AngleTo(prevDir) * 180 / Pi;
+			var rotationDeg = Vector2.Up.AngleTo(prevDir) * 180 / Pi;
 			if (rotationDeg < 0) rotationDeg += 360;
 			return rotationDeg;
 		}
@@ -103,12 +100,12 @@ namespace Trains.Model.Builders
 
 		private void GoAlongCircle(float rotationDeg, bool centerIsOnRight, Vector2 center)
 		{
-			var startAngle = (centerIsOnRight ? Pi : 0) + Pi / 180 * rotationDeg;
+			var startAngle = (centerIsOnRight ? Pi : 0) + (Pi / 180 * rotationDeg);
 			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
 			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
-			Func<float, bool> condition = i => centerIsOnRight ? i < endAngle : i > endAngle;
+			bool EndAngleReachedIsNotReached(float angle) => centerIsOnRight ? angle < endAngle : angle > endAngle;
 
-			for (float i = startAngle; condition(i); i += dAngle)
+			for (float i = startAngle; EndAngleReachedIsNotReached(i); i += dAngle)
 			{
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
@@ -120,17 +117,15 @@ namespace Trains.Model.Builders
 		private Vector2 CalculateTangent(bool centerIsOnRight, Vector2 center)
 		{
 			Vector2 tangent = Vector2.Zero;
-			tangent = points.FirstOrDefault(p =>
+			return points.Find(p =>
 			{
 				var dirPointToCenter = (center - p).Normalized();
 				var dirPointToEnd = (end - p).Normalized();
 				var dot = centerIsOnRight ? dirPointToCenter.Dot(dirPointToEnd) : dirPointToCenter.Dot(-dirPointToEnd);
 				var perpendicularDot = 0;
 				var tangentIsAhead = dot > perpendicularDot - accuracy && dot < perpendicularDot + accuracy;
-				if (tangentIsAhead) return true;
-				return false;
+				return tangentIsAhead;
 			});
-			return tangent;
 		}
 
 		private bool CurveShouldNotBeDrawnHere(Vector2 tangent, Vector2 startEndDir)

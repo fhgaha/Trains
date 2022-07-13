@@ -34,7 +34,6 @@ namespace Trains.Model.Cells
 		public static float GetDistance(Cell first, Cell second)
 		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
 
-		//called from cargo
 		internal void CargoArrived(Cargo cargo, ProductType productType, float amount, Cell[,] cells)
 		{
 			Product product = GetProduct(productType);
@@ -61,7 +60,6 @@ namespace Trains.Model.Cells
 
 			Products = new Node();
 			ProductList = new List<Product>();
-			//AddChild(Products);
 
 			GetNode<Info>("Info").SetId(Id);
 
@@ -70,7 +68,6 @@ namespace Trains.Model.Cells
 				Product product = new Product(type, -1);
 				Products.AddChild(product);
 				ProductList.Add(product);
-				//product.Price = GetPriceFromNoise(row, col, noises, product.ProductType);
 				product.Price = 30f;
 
 				//connect product button to product
