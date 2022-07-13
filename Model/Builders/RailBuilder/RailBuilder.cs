@@ -222,6 +222,8 @@ namespace Trains.Model.Builders
 			var curve = (RailCurve)blueprint.Curve;
 			curve.Origin = blueprint.Translation;
 			undoStack.Push(curve);
+
+			SaveVarsRedrawBlueprint(prevDir);
 		}
 
 		private void InitPath()
@@ -230,34 +232,28 @@ namespace Trains.Model.Builders
 			AddChild(currentPath);
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
-
-
-			SaveVarsRedrawBlueprint(currentPath.DirFromEnd);
+			prevDir = currentPath.DirFromEnd;
 		}
 
 		private void AddNewCurveToCurrentPath()
 		{
 			var pathOriginToBpOrigin = blueprint.Translation - currentPath.Translation;
-			//var curveToAdd = new RailCurve(blueprint);
 			var curveToAdd = (RailCurve)blueprint.Curve;
 			var railCurve = (RailCurve)currentPath.Curve;
-			var newDir = prevDir;
 
 			if (curveToAdd.GetPointCount() == 0) return;
 
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
 				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
-				newDir = currentPath.DirFromStart;
+				prevDir = currentPath.DirFromStart;
 			}
 
 			if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
-				newDir = currentPath.DirFromEnd;
+				prevDir = currentPath.DirFromEnd;
 			}
-
-			SaveVarsRedrawBlueprint(newDir);
 		}
 
 		private void SaveVarsRedrawBlueprint(Vector3 direction)
@@ -268,8 +264,6 @@ namespace Trains.Model.Builders
 			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
 			DrawBlueprint();
-
 		}
-
 	}
 }
