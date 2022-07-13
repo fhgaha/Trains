@@ -51,28 +51,15 @@ namespace Trains.Model.Builders
 			Segments.InsertRange(index, segments);
 		}
 
-		public void RemoveCurve(RailCurve ctd)
+		public void RemoveCurve(RailCurve curveToDelete)
 		{
+			var ctdLast = curveToDelete.Last() + curveToDelete.Origin;
+			var oldFirst = this.First() + this.Origin;
+			var oldLast = this.Last() + this.Origin;
+		
 			var accuracy = 1.5f;
+			var pointsToDeleteAmount = curveToDelete.GetPointCount();
 
-			var ctdFirst = ctd.First() + ctd.Origin;
-			var ctdLast = ctd.Last() + ctd.Origin;
-			var oldFirst = this.First() + Origin;
-			var oldLast = this.Last() + Origin;
-
-			GD.Print("ctdFirst: " + ctdFirst);
-			GD.Print("ctdLast: " + ctdLast);
-			GD.Print("oldFirst: " + oldFirst);
-			GD.Print("oldLast: " + oldLast);
-			GD.Print();
-
-			GD.Print("ctdFirst.IsEqualApsprox(oldFirst): ", ctdFirst.IsEqualApprox(oldFirst, accuracy));
-			GD.Print("ctdFirst.IsEqualApprox(oldLast): " + ctdFirst.IsEqualApprox(oldLast, accuracy));
-			GD.Print("ctdLast.IsEqualApprox(oldFirst): " + ctdLast.IsEqualApprox(oldFirst, accuracy));
-			GD.Print("ctdLast.IsEqualApprox(oldLast): " + ctdLast.IsEqualApprox(oldLast, accuracy));
-			GD.Print();
-
-			var pointsToDeleteAmount = ctd.GetPointCount();
 			if (ctdLast.IsEqualApprox(oldLast, accuracy))
 			{
 				for (int i = 0; i < pointsToDeleteAmount; i++)
@@ -88,6 +75,26 @@ namespace Trains.Model.Builders
 				}
 			}
 
+		}
+
+		private void PrintCurveIntersectionInfo(RailCurve curveIntesected, float accuracy)
+		{
+			var ctdFirst = curveIntesected.First() + curveIntesected.Origin;
+			var ctdLast = curveIntesected.Last() + curveIntesected.Origin;
+			var oldFirst = this.First() + Origin;
+			var oldLast = this.Last() + Origin;
+
+			GD.Print("ctdFirst: " + ctdFirst);
+			GD.Print("ctdLast: " + ctdLast);
+			GD.Print("oldFirst: " + oldFirst);
+			GD.Print("oldLast: " + oldLast);
+			GD.Print();
+
+			GD.Print("ctdFirst.IsEqualApsprox(oldFirst): ", ctdFirst.IsEqualApprox(oldFirst, accuracy));
+			GD.Print("ctdFirst.IsEqualApprox(oldLast): " + ctdFirst.IsEqualApprox(oldLast, accuracy));
+			GD.Print("ctdLast.IsEqualApprox(oldFirst): " + ctdLast.IsEqualApprox(oldFirst, accuracy));
+			GD.Print("ctdLast.IsEqualApprox(oldLast): " + ctdLast.IsEqualApprox(oldLast, accuracy));
+			GD.Print();
 		}
 	}
 }
