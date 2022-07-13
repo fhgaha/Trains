@@ -57,14 +57,12 @@ namespace Trains.Tests
 
 		public void RunAfterTestMethod()
 		{
-			var text = "Developers may target a method with the" +
-			"[Post] attribute to execute code after each test method is run";
+			// Developers may target a method with the [Post] attribute to execute code after each test method is run
 		}
 
 		public void RunAfterTestClass()
 		{
-			var text = "Developers may target a method with the" +
-			"[End] attribute to execute after all tests method have run";
+			// Developers may target a method with the [End] attribute to execute after all tests method have run
 		}
 	}
 }

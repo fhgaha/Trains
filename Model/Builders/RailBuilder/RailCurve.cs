@@ -29,12 +29,10 @@ namespace Trains.Model.Builders
 			PlaceCurveOnMap(origin, curve);
 		}
 
-		public void PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
+		private void PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
 		{
 			for (int i = 0; i < curve.GetPointCount(); i++)
-			{
 				AddPoint(origin + curve.GetPointPosition(i), atPosition: _atPosition);
-			}
 		}
 
 		public void RemoveCurve(RailCurve curveToDelete)

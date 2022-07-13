@@ -10,3 +10,10 @@ export_presets.cfg
 .mono/
 data_*/
 Databases/
+
+# folders
+*fakesharperOutput
+
+# subfolders
+**/Tests/Metadata/
+**/Tests/Results/
