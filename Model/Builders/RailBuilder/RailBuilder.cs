@@ -29,6 +29,7 @@ namespace Trains.Model.Builders
 		private List<RailPath> pathList = new List<RailPath>();
 		private Vector3 prevDir = Vector3.Zero;
 		private RailPath currentPath;   //path from which railbuilding is being continued
+		private MeshInstance helperInst;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -53,6 +54,8 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainGUIPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
 			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
 			calculator = GetNode<CurveCalculator>("Calculator");
+
+			helperInst = GetNode<MeshInstance>("curvePont");
 		}
 
 		public override void _Process(float delta)
@@ -268,6 +271,16 @@ namespace Trains.Model.Builders
 			{
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
+			}
+
+
+			//helpers
+			var curve = RailCurve.GetFrom(currentPath);
+			for (int i = 0; i < curve.GetPointCount(); i++)
+			{
+				var helper = (MeshInstance)helperInst.Duplicate();
+				AddChild(helper);
+				helper.Translation = curve.GetPointPosition(i) + curve.Origin;
 			}
 		}
 
