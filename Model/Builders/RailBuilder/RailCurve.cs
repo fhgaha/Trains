@@ -56,25 +56,33 @@ namespace Trains.Model.Builders
 			var ctdLast = curveToDelete.Last() + curveToDelete.Origin;
 			var oldFirst = this.First() + this.Origin;
 			var oldLast = this.Last() + this.Origin;
-		
+
 			var accuracy = 1.5f;
 			var pointsToDeleteAmount = curveToDelete.GetPointCount();
 
-			if (ctdLast.IsEqualApprox(oldLast, accuracy))
-			{
-				for (int i = 0; i < pointsToDeleteAmount; i++)
-				{
-					RemovePoint(GetPointCount() - 1);
-				}
-			}
-			else if (ctdLast.IsEqualApprox(oldFirst, accuracy))
-			{
-				for (int i = 0; i < pointsToDeleteAmount; i++)
-				{
-					RemovePoint(0);
-				}
-			}
+			PrintCurveIntersectionInfo(curveToDelete, accuracy);
 
+			if (AreCurvePointsEqual(oldLast, ctdLast, accuracy))
+				RemovePointsFromEnd(pointsToDeleteAmount);
+			else if (AreCurvePointsEqual(oldFirst, ctdLast, accuracy))
+				RemovePointsFromStart(pointsToDeleteAmount);
+		}
+
+		private void RemovePointsFromStart(int pointsToDeleteAmount)
+		{
+			for (int i = 0; i < pointsToDeleteAmount; i++)
+				RemovePoint(0);
+		}
+
+		private void RemovePointsFromEnd(int pointsToDeleteAmount)
+		{
+			for (int i = 0; i < pointsToDeleteAmount; i++)
+				RemovePoint(GetPointCount() - 1);
+		}
+
+		public static bool AreCurvePointsEqual(Vector3 first, Vector3 second, float accuracy)
+		{
+			return first.IsEqualApprox(second, accuracy);
 		}
 
 		private void PrintCurveIntersectionInfo(RailCurve curveIntesected, float accuracy)
