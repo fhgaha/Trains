@@ -123,7 +123,7 @@ namespace Trains.Model.Builders
 
 		public override void _UnhandledInput(InputEvent @event)
 		{
-			if (@event is InputEventMouseButton evMouseButton && evMouseButton.IsActionPressed("lmb"))
+			if (@event is InputEventMouseButton evMouseButton1 && evMouseButton1.IsActionPressed("lmb"))
 			{
 				switch (state)
 				{
@@ -135,6 +135,12 @@ namespace Trains.Model.Builders
 						PlaceObject();
 						break;
 				}
+			}
+
+			if (@event is InputEventMouseButton evMouseButton2 && evMouseButton2.IsActionPressed("rmb"))
+			{
+				if (state == State.SelectEnd)
+					ResetStateAndBlueprint();
 			}
 
 			if (@event is InputEventMouseMotion evMouseMotion)
