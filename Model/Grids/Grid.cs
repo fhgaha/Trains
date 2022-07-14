@@ -71,9 +71,9 @@ namespace Trains.Model.Grids
 			}
 
 			//"Show Product Menu" button was pressed and we press it again
-			if (Global.MainButtonMode is MainButtonType.ShowProductMap)
+			if (Global.MainButtonMode == MainButtonType.ShowProductMap)
 			{
-				Global.MainButtonMode = null;
+				Global.MainButtonMode = MainButtonType.None;
 				Visible = false;
 				return;
 			}

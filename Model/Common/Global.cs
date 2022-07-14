@@ -29,7 +29,7 @@ namespace Trains.Model.Common
 		public const float PriceDecay = 0.1f;
 
 		public static ProductType? CurrentDisplayProductMode = null;
-		public static MainButtonType? MainButtonMode = null;
+		public static MainButtonType MainButtonMode = MainButtonType.None;
 
 		//min max prices
 		public const float LumberMinPrice = 30f;

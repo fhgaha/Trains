@@ -71,9 +71,9 @@ namespace Trains.Model.Builders
 			}
 
 			//"Build Rail" button was pressed and we press it again
-			if (Global.MainButtonMode is MainButtonType.BuildRail)
+			if (Global.MainButtonMode == MainButtonType.BuildRail)
 			{
-				Global.MainButtonMode = null;
+				Global.MainButtonMode = MainButtonType.None;
 				ResetStateBlueprintPrevDir();
 				currentPath = null;
 				undoStack.Clear();

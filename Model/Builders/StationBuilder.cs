@@ -33,9 +33,8 @@ namespace Trains.Model.Builders
 
 		public override void _PhysicsProcess(float delta)
 		{
-			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
-				return;
-			UpdateBlueprint();
+			if (Global.MainButtonMode == MainButtonType.BuildStation)
+				UpdateBlueprint();
 		}
 		public override void _UnhandledInput(InputEvent @event)
 		{
@@ -82,24 +81,25 @@ namespace Trains.Model.Builders
 		{
 			if (buttonType != MainButtonType.BuildStation)
 			{
-				blueprint?.QueueFree();
-				blueprint = null;
+				ResetBlueprint();
 				return;
 			}
 
-			if (Global.MainButtonMode is MainButtonType.BuildStation)
-				Global.MainButtonMode = null;
-			else
-				Global.MainButtonMode = MainButtonType.BuildStation;
-
-			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
+			if (Global.MainButtonMode == MainButtonType.BuildStation)
 			{
-				blueprint?.QueueFree();
-				blueprint = null;
+				Global.MainButtonMode = MainButtonType.None;
+				ResetBlueprint();
 				return;
 			}
 
+			Global.MainButtonMode = MainButtonType.BuildStation;
 			InitBlueprint();
+		}
+
+		private void ResetBlueprint()
+		{
+			blueprint?.QueueFree();
+			blueprint = null;
 		}
 
 		private void InitBlueprint()
