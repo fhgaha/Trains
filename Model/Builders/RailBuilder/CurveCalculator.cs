@@ -29,6 +29,10 @@ namespace Trains.Model.Builders
 			dir = GetNode<MeshInstance>("dir");
 			center = GetNode<MeshInstance>("center");
 			tangent = GetNode<MeshInstance>("tangent");
+
+			dir.Visible = Global.DebugMode;
+			center.Visible = Global.DebugMode;
+			tangent.Visible = Global.DebugMode;
 		}
 
 		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, Vector2 prevDir, bool firstSegmentIsPlaced)
@@ -64,7 +68,9 @@ namespace Trains.Model.Builders
 
 			RemoveCirclePointsAfterTangent(tangent);
 			GoStraight(tangent, end);
-			UpdateHelpersPositions(center, tangent);
+
+			if (Global.DebugMode)
+				UpdateHelpersPositions(center, tangent);
 			return points;
 		}
 
@@ -88,7 +94,7 @@ namespace Trains.Model.Builders
 
 		private void GoStraight(Vector2 start, Vector2 end)
 		{
-			var dirPointToEnd = (end - start).Normalized(); ;
+			var dirPointToEnd = (end - start).Normalized();
 			var point = start;
 			while (point.DistanceSquaredTo(end) > accuracy)
 			{

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Model/Builders/RailBuilder/RailBuilder.cs" type="Script" id=5]
 [ext_resource path="res://Scenes/_Obstacle.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Model/Builders/RailBuilder/CurveCalculator.cs" type="Script" id=7]
+[ext_resource path="res://Model/Builders/RailBuilder/DebugHelper.cs" type="Script" id=8]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -73,11 +74,6 @@ shape = SubResource( 8 )
 [node name="RailBuilder" type="Spatial" parent="."]
 script = ExtResource( 5 )
 
-[node name="curvePont" type="MeshInstance" parent="RailBuilder"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.98691, 0.5, 0.343641 )
-mesh = SubResource( 10 )
-material/0 = null
-
 [node name="Calculator" type="Spatial" parent="RailBuilder"]
 script = ExtResource( 7 )
 
@@ -98,6 +94,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.91735, 0.5, 0.479805 )
 mesh = SubResource( 13 )
 skeleton = NodePath("../..")
 material/0 = SubResource( 14 )
+
+[node name="DebugHelper" type="Spatial" parent="RailBuilder"]
+script = ExtResource( 8 )
+
+[node name="curvePont" type="MeshInstance" parent="RailBuilder/DebugHelper"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.98691, 0.5, 0.343641 )
+mesh = SubResource( 10 )
+skeleton = NodePath("../..")
+material/0 = null
 
 [node name="Rails" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.74975e-08, 0 )

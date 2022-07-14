@@ -29,7 +29,6 @@ namespace Trains.Model.Builders
 		private List<RailPath> pathList = new List<RailPath>();
 		private Vector3 prevDir = Vector3.Zero;
 		private RailPath currentPath;   //path from which railbuilding is being continued
-		private MeshInstance helperInst;
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -54,8 +53,6 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainGUIPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
 			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
 			calculator = GetNode<CurveCalculator>("Calculator");
-
-			helperInst = GetNode<MeshInstance>("curvePont");
 		}
 
 		public override void _Process(float delta)
@@ -239,7 +236,7 @@ namespace Trains.Model.Builders
 				AddNewCurveToCurrentPath();
 
 			if (Global.DebugMode)
-				DrawHelpers();
+				GetNode<DebugHelper>("DebugHelper").DrawHelpers(currentPath);
 
 			var curve = RailCurve.GetFrom(blueprint);
 			undoStack.Push(curve);
@@ -277,43 +274,7 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private void DrawHelpers()
-		{
-			var existingHelpers = GetChildren().Cast<Node>().Where(node => node.Name.Contains("curvePoint"));
-			foreach (var item in existingHelpers)
-			{
-				item.QueueFree();
-			}
-
-			var curve = RailCurve.GetFrom(currentPath);
-
-			//using actual points
-			// var amount = curve.Tessellate().Length;
-			// for (int i = 0; i < amount; i++)
-			// {
-			// 	var helper = (MeshInstance)helperInst.Duplicate();
-			// 	AddChild(helper);
-			// 	helper.Translation = curve.GetPointPosition(i) + curve.Origin;
-			// }
-
-			//using tesselated points
-			//var points = curve.Tessellate(5, 100);
-			// foreach (var p in points)
-			// {
-			// 	var helper = (MeshInstance)helperInst.Duplicate();
-			// 	AddChild(helper);
-			// 	helper.Translation = p + curve.Origin;
-			// }
-
-			//using bakedPoints
-			var points = curve.GetBakedPoints();
-			foreach (var p in points)
-			{
-				var helper = (MeshInstance)helperInst.Duplicate();
-				AddChild(helper);
-				helper.Translation = p + curve.Origin;
-			}
-		}
+		
 
 		private void SaveVarsRedrawBlueprint(Vector3 direction)
 		{
