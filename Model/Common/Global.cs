@@ -6,6 +6,8 @@ namespace Trains.Model.Common
 {
 	public static class Global
 	{
+		public static bool DebugMode = true;
+
 		//Colors
 
 		/// <summary>
