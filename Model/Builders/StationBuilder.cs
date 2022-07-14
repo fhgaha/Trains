@@ -33,7 +33,8 @@ namespace Trains.Model.Builders
 
 		public override void _PhysicsProcess(float delta)
 		{
-			if (!(Global.MainButtonMode is MainButtonType.BuildStation)) return;
+			if (!(Global.MainButtonMode is MainButtonType.BuildStation))
+				return;
 			UpdateBlueprint();
 		}
 		public override void _UnhandledInput(InputEvent @event)
@@ -42,18 +43,22 @@ namespace Trains.Model.Builders
 			{
 				if (!(blueprint is null) && canBuild)
 				{
-					//place station
-					var station = stationScene.Instance<Spatial>();
-					station.RemoveChild(station.GetNode("Base"));
-					station.Translation = blueprint.Translation;
-					station.Rotation = blueprint.Rotation;
-					station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
-					stations.AddChild(station);
+					PlaceStation();
 				}
 			}
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
+		}
+
+		private void PlaceStation()
+		{
+			var station = stationScene.Instance<Spatial>();
+			station.RemoveChild(station.GetNode("Base"));
+			station.Translation = blueprint.Translation;
+			station.Rotation = blueprint.Rotation;
+			station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
+			stations.AddChild(station);
 		}
 
 		private void UpdateBlueprint()
@@ -94,6 +99,11 @@ namespace Trains.Model.Builders
 				return;
 			}
 
+			InitBlueprint();
+		}
+
+		private void InitBlueprint()
+		{
 			blueprint = stationScene.Instance<Spatial>();
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
 			AddChild(blueprint);

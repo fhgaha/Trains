@@ -235,8 +235,7 @@ namespace Trains.Model.Builders
 			else
 				AddNewCurveToCurrentPath();
 
-			if (Global.DebugMode)
-				GetNode<DebugHelper>("DebugHelper").DrawHelpers(currentPath);
+			GetNode<DebugHelper>("DebugHelper").DrawHelpers(currentPath);
 
 			var curve = RailCurve.GetFrom(blueprint);
 			undoStack.Push(curve);
@@ -274,7 +273,7 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		
+
 
 		private void SaveVarsRedrawBlueprint(Vector3 direction)
 		{

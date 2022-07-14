@@ -7,17 +7,40 @@ namespace Trains
 {
 	public class DebugHelper : Spatial
 	{
+		[Export]
+		private bool showCurvePointsPosition = false;
 		private MeshInstance helperInst;
+		private Path currentPath;
+
+		public bool ShowCurvePointsPosition
+		{
+			get => showCurvePointsPosition;
+			set
+			{
+				if (value && currentPath != null)
+					Draw(currentPath);
+				else if (!value)
+					ClearDrawn();
+
+				showCurvePointsPosition = value;
+			}
+		}
 
 		public override void _Ready()
 		{
-			helperInst = GetNode<MeshInstance>("curvePont");
+			helperInst = GetNode<MeshInstance>("curvePoint");
 		}
 
 		public void DrawHelpers(Path currentPath)
 		{
-			ClearDawn();
+			this.currentPath = currentPath;
+			ClearDrawn();
+			if (showCurvePointsPosition)
+				Draw(currentPath);
+		}
 
+		private void Draw(Path currentPath)
+		{
 			var curve = RailCurve.GetFrom(currentPath);
 
 			// DrawUsingActualPoints(curve);
@@ -25,7 +48,7 @@ namespace Trains
 			DrawUsingBakedPoints(curve);
 		}
 
-		private void ClearDawn()
+		private void ClearDrawn()
 		{
 			var drawnHelpers = GetChildren().Cast<Node>().Where(node => node.Name.Contains("curvePoint"));
 			foreach (var item in drawnHelpers)

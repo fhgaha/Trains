@@ -27,13 +27,17 @@ namespace Trains.Scripts
 			timer.Start(timeSec);
 
 			//init station builder
-			stationBuilder = new StationBuilder();
-			AddChild(stationBuilder);
-			stationBuilder.Name = "StationBuilder";
+			// stationBuilder = new StationBuilder();
+			// AddChild(stationBuilder);
+			// stationBuilder.Name = "StationBuilder";
 			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
+			// stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
+
+			stationBuilder = GetNode<StationBuilder>("StationBuilder");
 			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
+
 
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");

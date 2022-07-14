@@ -21,6 +21,7 @@ namespace Trains.Model.Common
 		//GUI
 		public enum MainButtonType
 		{
+			None,
 			BuildRail,
 			BuildStation,
 			ShowProductMap
