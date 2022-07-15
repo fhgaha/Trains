@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Model/Builders/RailBuilder/RailPath.cs" type="Script" id=1]
-[ext_resource path="res://Assets/Rail/rail.glb" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Rail/track.material" type="Material" id=3]
 
 [sub_resource type="Curve3D" id=3]
@@ -15,13 +14,11 @@ _data = {
 curve = SubResource( 3 )
 script = ExtResource( 1 )
 
-[node name="CSGCombiner" type="CSGCombiner" parent="."]
-
-[node name="CSGPolygon" type="CSGPolygon" parent="CSGCombiner"]
+[node name="CSGPolygon" type="CSGPolygon" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12617, 0, 0 )
 polygon = PoolVector2Array( 0, 0, 0.04, 0.04, 0.234438, 0.0395485, 0.273, 0 )
 mode = 2
-path_node = NodePath("../..")
+path_node = NodePath("..")
 path_interval_type = 0
 path_interval = 1.0
 path_simplify_angle = 0.0
@@ -32,10 +29,6 @@ path_u_distance = 1.0
 path_joined = false
 material = ExtResource( 3 )
 
-[node name="rail" parent="CSGCombiner/CSGPolygon" instance=ExtResource( 2 )]
-transform = Transform( 0.242863, 0, 0, 0, 1, 0, 0, 0, 0.242863, 0, 0, 0 )
-visible = false
+[node name="Area" type="Area" parent="CSGPolygon"]
 
-[node name="Area" type="Area" parent="CSGCombiner/CSGPolygon"]
-
-[node name="CollisionPolygon" type="CollisionPolygon" parent="CSGCombiner/CSGPolygon/Area"]
+[node name="CollisionPolygon" type="CollisionPolygon" parent="CSGPolygon/Area"]
