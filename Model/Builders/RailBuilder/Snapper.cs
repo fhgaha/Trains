@@ -28,22 +28,20 @@ namespace Trains.Model.Builders
 				if (IsCursorOn(start, end))
 				{
 					blueprint.Translation = start;
-					blueprint.SetSimpleCurve(path.DirFromStart);
-
+					RotateBlueprint(blueprint, path.DirFromStart);
 					UpdateVars(path, path.DirFromStart);
 					return;
 				}
 				else if (IsCursorOn(end, start))
 				{
 					blueprint.Translation = end;
-					blueprint.SetSimpleCurve(path.DirFromEnd);
-
+					RotateBlueprint(blueprint, path.DirFromEnd);
 					UpdateVars(path, path.DirFromEnd);
 					return;
 				}
 				else
 				{
-					blueprint.SetOriginalBpCurve();
+					UnrotateBlueprint(blueprint);
 				}
 			}
 
@@ -53,6 +51,16 @@ namespace Trains.Model.Builders
 		private bool IsCursorOn(Vector3 start, Vector3 end)
 		{
 			return start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos);
+		}
+
+		private void RotateBlueprint(RailPath blueprint, Vector3 direction)
+		{
+			blueprint.SetSimpleCurve(Vector3.Zero, direction);
+		}
+
+		private void UnrotateBlueprint(RailPath blueprint)
+		{
+			blueprint.SetOriginalBpCurve();
 		}
 
 		private void UpdateVars(RailPath path, Vector3 direction)

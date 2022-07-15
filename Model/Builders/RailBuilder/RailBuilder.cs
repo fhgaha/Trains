@@ -136,6 +136,7 @@ namespace Trains.Model.Builders
 				switch (state)
 				{
 					case State.None:
+						break;
 					case State.SelectStart:
 						ProcessSelectedStart();
 						break;
