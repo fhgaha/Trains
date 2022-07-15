@@ -192,10 +192,12 @@ namespace Trains.Model.Builders
 			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
 
 			//set base color
-			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
+			// var area = blueprint.GetNode<Area>("CSGPolygon/Area");
+			var area = blueprint.GetNode<Area>("CSGCombiner/CSGPolygon/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			var canBuild = !bodies.Any();
-			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
+			//var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
+			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGCombiner/CSGPolygon").Material;
 			csgMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 

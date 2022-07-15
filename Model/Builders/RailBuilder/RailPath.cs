@@ -40,7 +40,8 @@ namespace Trains.Model.Builders
 		{
 			Transform = blueprint.Transform;
 			Curve = (RailCurve)blueprint.Curve;
-			GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+			//GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+			GetNode<CSGPolygon>("CSGCombiner/CSGPolygon").UseCollision = true;
 		}
 
 		public void SetSimpleCurve(Vector3 first, Vector3 second)
