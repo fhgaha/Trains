@@ -19,7 +19,7 @@ script = ExtResource( 1 )
 
 [node name="CSGPolygon" type="CSGPolygon" parent="CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12617, 0, 0 )
-polygon = PoolVector2Array( 0, 0, 0.0812698, 0.102208, 0.201457, 0.102208, 0.272933, -0.000506997 )
+polygon = PoolVector2Array( 0, 0, 0.04, 0.04, 0.234438, 0.0395485, 0.273, 0 )
 mode = 2
 path_node = NodePath("../..")
 path_interval_type = 0
