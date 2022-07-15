@@ -21,14 +21,17 @@ namespace Trains.Model.Builders
 		private Camera camera;
 		private bool canBuild = false;
 
+		public override void _Ready()
+		{
+			events = GetNode<Events>("/root/Events");
+			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+		}
+
 		public void Init(List<Cell> cells, Camera camera, Spatial stations)
 		{
 			this.cells = cells;
 			this.stations = stations;
 			this.camera = camera;
-			//cant get events if not in the scene
-			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
 
 		public override void _PhysicsProcess(float delta)

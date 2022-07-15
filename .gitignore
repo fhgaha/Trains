@@ -15,5 +15,5 @@ Databases/
 *fakesharperOutput
 
 # subfolders
-**/Tests/Metadata/
-**/Tests/Results/
+!**/Tests/Metadata/
+!**/Tests/Results/

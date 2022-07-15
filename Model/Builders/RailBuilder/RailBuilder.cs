@@ -19,14 +19,16 @@ namespace Trains.Model.Builders
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
+		private Snapper snapper;
 		private PackedScene railPathScene;
 		private Camera camera;
-		private RailPath blueprint;
 		private Spatial railsHolder;   //Rails
-		private State state = State.None;
-		private Snapper snapper;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
 		private List<RailPath> pathList = new List<RailPath>();
+
+		//Vars
+		private RailPath blueprint;
+		private State state = State.None;
 		private Vector3 prevDir = Vector3.Zero;
 		private RailPath currentPath;   //path from which railbuilding is being continued
 
@@ -133,9 +135,9 @@ namespace Trains.Model.Builders
 			{
 				switch (state)
 				{
-					case State.None: return;
+					case State.None:
 					case State.SelectStart:
-						SelectStart();
+						ProcessSelectedStart();
 						break;
 					case State.SelectEnd:
 						PlaceObject();
@@ -164,18 +166,22 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private void SelectStart()
+		private void ProcessSelectedStart()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			state = State.SelectEnd;
 
 			//snap
-			snapper.SnapIfNecessary(mousePos, pathList, blueprint);  //path should begin from snapped point with no offset
+			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
 			if (snapper.SnappedDir != Vector3.Zero)
+			{
 				prevDir = snapper.SnappedDir;
+			}
+
 			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;
+
+			state = State.SelectEnd;
 		}
 
 		private void UpdateBlueprint()
@@ -221,7 +227,6 @@ namespace Trains.Model.Builders
 			}
 			else
 			{
-				//add two points to prevent error "The faces count are 0, the mesh shape cannot be created"
 				curve.AddPoint(Vector3.Zero);
 				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			}
@@ -272,8 +277,6 @@ namespace Trains.Model.Builders
 				prevDir = currentPath.DirFromEnd;
 			}
 		}
-
-
 
 		private void SaveVarsRedrawBlueprint(Vector3 direction)
 		{

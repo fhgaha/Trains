@@ -27,13 +27,33 @@ namespace Trains.Model.Builders
 			}
 		}
 
+		private Curve3D originalBpCurve;
+
 		public RailPath() { }
+
+		public override void _Ready()
+		{
+			originalBpCurve = Curve;
+		}
 
 		public void Init(Path blueprint)
 		{
 			Transform = blueprint.Transform;
 			Curve = (RailCurve)blueprint.Curve;
 			GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+		}
+
+		public void SetSimpleCurve(Vector3 direction)
+		{
+			var curve = new Curve3D();
+			curve.AddPoint(Vector3.Zero);
+			curve.AddPoint(direction);
+			Curve = curve;
+		}
+
+		public void SetOriginalBpCurve()
+		{
+			Curve = originalBpCurve;
 		}
 	}
 }

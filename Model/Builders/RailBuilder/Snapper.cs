@@ -7,15 +7,12 @@ namespace Trains.Model.Builders
 	public class Snapper : Node
 	{
 		public RailPath SnappedPath { get; set; }
-		public Vector3 SnappedDir {get; set;} = Vector3.Zero;
+		public Vector3 SnappedDir { get; set; } = Vector3.Zero;
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
 
-		public Snapper()
-		{
-
-		}
+		public Snapper() { }
 
 		public void SnapIfNecessary(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
@@ -31,15 +28,22 @@ namespace Trains.Model.Builders
 				if (IsCursorOn(start, end))
 				{
 					blueprint.Translation = start;
+					blueprint.SetSimpleCurve(path.DirFromStart);
+
 					UpdateVars(path, path.DirFromStart);
 					return;
 				}
-
-				if (IsCursorOn(end, start))
+				else if (IsCursorOn(end, start))
 				{
 					blueprint.Translation = end;
+					blueprint.SetSimpleCurve(path.DirFromEnd);
+
 					UpdateVars(path, path.DirFromEnd);
 					return;
+				}
+				else
+				{
+					blueprint.SetOriginalBpCurve();
 				}
 			}
 
@@ -51,10 +55,10 @@ namespace Trains.Model.Builders
 			return start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos);
 		}
 
-		private void UpdateVars(RailPath path, Vector3 newDir)
+		private void UpdateVars(RailPath path, Vector3 direction)
 		{
 			SnappedPath = path;
-			SnappedDir = newDir;
+			SnappedDir = direction;
 		}
 	}
 }
