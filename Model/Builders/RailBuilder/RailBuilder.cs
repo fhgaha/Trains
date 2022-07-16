@@ -245,8 +245,8 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			var points = new List<Vector2>();
 
-			var mousePosIsInBorders = mousePos != Vector3.Zero;
-			if (mousePosIsInBorders)
+			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
+			if (mousePosIsInMapBorders)
 			{
 				var continuing = !(currentPath is null);
 				points = calculator.CalculateCurvePoints
@@ -258,6 +258,7 @@ namespace Trains.Model.Builders
 				);
 			}
 			blueprint.Curve = BuildBlueprintCurve(points);
+			//blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)

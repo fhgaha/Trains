@@ -29,6 +29,8 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
+					//align bp if starts from currentPath start
+					blueprint.Translate(new Vector3(0, 0, 0.273f));
 					UpdateVars(path, path.DirFromStart);
 					return;
 				}

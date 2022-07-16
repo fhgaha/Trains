@@ -109,9 +109,9 @@ namespace Trains.Model.Builders
 			var startAngle = (centerIsOnRight ? Pi : 0) + (Pi / 180 * rotationDeg);
 			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
 			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
-			bool EndAngleReachedIsNotReached(float angle) => centerIsOnRight ? angle < endAngle : angle > endAngle;
+			bool EndAngleIsNotReached(float angle) => centerIsOnRight ? angle < endAngle : angle > endAngle;
 
-			for (float i = startAngle; EndAngleReachedIsNotReached(i); i += dAngle)
+			for (float i = startAngle; EndAngleIsNotReached(i); i += dAngle)
 			{
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
