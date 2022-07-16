@@ -1,12 +1,19 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Trains.Model.Common;
 
 namespace Trains.Model.Builders
 {
 	public class RailPath : Path
 	{
+		[Export]
+		private Color bpColor;
+
+		[Export]
+		private Color notAllowedColor;
+
 		public Vector3 Start { get => Translation + Curve.First(); }
 		public Vector3 End { get => Translation + Curve.Last(); }
 
@@ -54,6 +61,15 @@ namespace Trains.Model.Builders
 		public void SetOriginalBpCurve()
 		{
 			Curve = originalBpCurve;
+		}
+
+		public void SetColor()
+		{
+			var area = GetNode<Area>("CSGPolygon/Area");
+			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
+			var canBuild = !bodies.Any();
+			var csgMaterial = (SpatialMaterial)GetNode<CSGPolygon>("CSGPolygon").Material;
+			csgMaterial.AlbedoColor = canBuild ? bpColor : notAllowedColor;
 		}
 	}
 }

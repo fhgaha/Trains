@@ -13,8 +13,6 @@ namespace Trains.Model.Builders
 
 	public class RailBuilder : Spatial
 	{
-		private Color yellow = new Color("86e3db6b");
-		private Color red = new Color("86e36b6b");
 		private const float rayLength = 1000f;
 		private List<Cell> cells;
 		private Events events;
@@ -55,10 +53,6 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainGUIPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
 			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
 			calculator = GetNode<CurveCalculator>("Calculator");
-		}
-
-		public override void _Process(float delta)
-		{
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
@@ -190,13 +184,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
 			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
-
-			//set base color
-			var area = blueprint.GetNode<Area>("CSGPolygon/Area");
-			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
-			var canBuild = !bodies.Any();
-			var csgMaterial = (SpatialMaterial)blueprint.GetNode<CSGPolygon>("CSGPolygon").Material;
-			csgMaterial.AlbedoColor = canBuild ? yellow : red;
+			blueprint.SetColor();
 		}
 
 		private void DrawBlueprint()
