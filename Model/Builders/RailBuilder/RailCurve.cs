@@ -10,7 +10,10 @@ namespace Trains.Model.Builders
 	{
 		public Vector3 Origin { get; set; }
 
-		public RailCurve() { }
+		public RailCurve()
+		{
+			BakeInterval = 1f;
+		}
 
 		public static RailCurve GetFrom(Path path)
 		{
@@ -93,6 +96,25 @@ namespace Trains.Model.Builders
 			GD.Print("ctdLast.IsEqualApprox(oldFirst): " + ctdLast.IsEqualApprox(oldFirst, accuracy));
 			GD.Print("ctdLast.IsEqualApprox(oldLast): " + ctdLast.IsEqualApprox(oldLast, accuracy));
 			GD.Print();
+		}
+
+		internal List<CurveSegment> GetSegments(Vector3 origin)
+		{
+			var segments = new List<CurveSegment>();
+			var baked = GetBakedPoints();
+
+			for (int i = 1; i < baked.Length; i++)
+			{
+				var first = origin + baked[i - 1];
+				var second = origin + baked[i];
+				var segment = new CurveSegment(first, second);
+				segments.Add(segment);
+			}
+
+			if (segments.Count == 0)
+				GD.PushWarning("RailCurve.GetSegments() returns empty list");
+
+			return segments;
 		}
 	}
 }

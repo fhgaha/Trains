@@ -168,7 +168,7 @@ namespace Trains.Model.Builders
 			blueprint.Translation = mousePos;
 
 			//snap
-			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
+			snapper.SnapBpIfNecessary(mousePos, pathList, blueprint);
 			if (snapper.SnappedDir != Vector3.Zero)
 				prevDir = snapper.SnappedDir;
 			if (!(snapper.SnappedPath is null))
@@ -236,7 +236,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
+			snapper.SnapBpIfNecessary(mousePos, pathList, blueprint);
 			blueprint.SetColor();
 		}
 

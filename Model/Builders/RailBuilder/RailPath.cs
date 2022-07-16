@@ -69,5 +69,15 @@ namespace Trains.Model.Builders
 			var csgMaterial = (SpatialMaterial)GetNode<CSGPolygon>("CSGPolygon").Material;
 			csgMaterial.AlbedoColor = canBuild ? bpColor : notAllowedColor;
 		}
+
+		public List<CurveSegment> GetSegments()
+		{
+			return ((RailCurve)Curve).GetSegments(Translation);
+		}
+
+		public float GetPolygonWidth()
+		{
+			return GetNode<CSGPolygon>("CSGPolygon").Polygon[1].x;
+		}
 	}
 }

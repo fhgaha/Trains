@@ -11,10 +11,10 @@ namespace Trains.Model.Builders
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
-
+		private CurveSegment foundSegment;
 		public Snapper() { }
 
-		public void SnapIfNecessary(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
+		public void SnapBpIfNecessary(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
 			this.mousePos = mousePos;
 
@@ -39,6 +39,13 @@ namespace Trains.Model.Builders
 					UpdateVars(path, path.DirFromEnd);
 					return;
 				}
+				else if (IsCursorOnAnySegment(path))
+				{
+					blueprint.Translation = foundSegment.First;
+					//blueprint.AcceptSegmentPosition();
+					var directionOutOfSegmentPoint = Vector3.Zero;
+					UpdateVars(path, directionOutOfSegmentPoint);
+				}
 				else
 				{
 					UnrotateBlueprint(blueprint);
@@ -56,6 +63,21 @@ namespace Trains.Model.Builders
 		private void RotateBlueprint(RailPath blueprint, Vector3 direction)
 		{
 			blueprint.SetSimpleCurve(Vector3.Zero, direction);
+		}
+
+		private bool IsCursorOnAnySegment(RailPath path)
+		{
+			foreach (var s in path.GetSegments())
+			{
+				if (IsCursorOn(s.First, s.Second))
+				{
+					foundSegment = s;
+					return true;
+				}
+			}
+
+			foundSegment = null;
+			return false;
 		}
 
 		private void UnrotateBlueprint(RailPath blueprint)
