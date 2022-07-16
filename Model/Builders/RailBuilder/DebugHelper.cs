@@ -7,45 +7,61 @@ namespace Trains
 {
 	public class DebugHelper : Spatial
 	{
-		[Export]
-		private bool showCurvePointsPosition = false;
-		private MeshInstance helperInst;
-		private Path currentPath;
+		[Export] PackedScene helper;
 
-		public bool ShowCurvePointsPosition
+		[Export] public bool ShowActualPoints
 		{
-			get => showCurvePointsPosition;
+			get => showActualPoints;
 			set
 			{
+				ClearDrawn();
 				if (value && currentPath != null)
-					Draw(currentPath);
-				else if (!value)
-					ClearDrawn();
+					DrawUsingActualPoints((RailCurve)currentPath.Curve);
 
-				showCurvePointsPosition = value;
+				showActualPoints = value;
 			}
 		}
 
+		[Export] public bool ShowBakedPoints
+		{
+			get => showBakedPoints;
+			set
+			{
+				ClearDrawn();
+				if (value && currentPath != null)
+					DrawUsingBakedPoints((RailCurve)currentPath.Curve);
+
+				showActualPoints = value;
+			}
+		}
+
+		[Export] public bool ShowTesselatedPoints
+		{
+			get => showTesselatedPoints;
+			set
+			{
+				ClearDrawn();
+				if (value && currentPath != null)
+					DrawUsingTesselatedPoints((RailCurve)currentPath.Curve);
+
+				showTesselatedPoints = value;
+			}
+		}
+
+		private bool showActualPoints = false;
+		private bool showBakedPoints = false;
+		private bool showTesselatedPoints = false;
+		private MeshInstance helperInst;
+		private Path currentPath;
+
 		public override void _Ready()
 		{
-			helperInst = GetNode<MeshInstance>("curvePoint");
+			helperInst = helper.Instance<MeshInstance>();
 		}
 
-		public void DrawHelpers(Path currentPath)
+		public void SetPath(Path currentPath)
 		{
 			this.currentPath = currentPath;
-			ClearDrawn();
-			if (showCurvePointsPosition)
-				Draw(currentPath);
-		}
-
-		private void Draw(Path currentPath)
-		{
-			var curve = RailCurve.GetFrom(currentPath);
-
-			// DrawUsingActualPoints(curve);
-			// DrawUsingTesselatedPoints(curve);
-			DrawUsingBakedPoints(curve);
 		}
 
 		private void ClearDrawn()
@@ -53,6 +69,17 @@ namespace Trains
 			var drawnHelpers = GetChildren().Cast<Node>().Where(node => node.Name.Contains("curvePoint"));
 			foreach (var item in drawnHelpers)
 				item.QueueFree();
+		}
+
+		private void DrawUsingActualPoints(RailCurve curve)
+		{
+			var amount = curve.Tessellate().Length;
+			for (int i = 0; i < amount; i++)
+			{
+				var helper = (MeshInstance)helperInst.Duplicate();
+				AddChild(helper);
+				helper.Translation = curve.GetPointPosition(i) + curve.Origin;
+			}
 		}
 
 		private void DrawUsingBakedPoints(RailCurve curve)
@@ -74,17 +101,6 @@ namespace Trains
 				var helper = (MeshInstance)helperInst.Duplicate();
 				AddChild(helper);
 				helper.Translation = p + curve.Origin;
-			}
-		}
-
-		private void DrawUsingActualPoints(RailCurve curve)
-		{
-			var amount = curve.Tessellate().Length;
-			for (int i = 0; i < amount; i++)
-			{
-				var helper = (MeshInstance)helperInst.Duplicate();
-				AddChild(helper);
-				helper.Translation = curve.GetPointPosition(i) + curve.Origin;
 			}
 		}
 	}

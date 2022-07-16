@@ -184,10 +184,10 @@ namespace Trains.Model.Builders
 			else
 				AddNewCurveToCurrentPath();
 
-			GetNode<DebugHelper>("DebugHelper").DrawHelpers(currentPath);
+			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 
-			var curve = RailCurve.GetFrom(blueprint);
-			undoStack.Push(curve);
+			var railCurve = RailCurve.GetFrom(blueprint);
+			undoStack.Push(railCurve);
 
 			SaveVarsRedrawBlueprint(prevDir);
 		}
