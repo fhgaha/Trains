@@ -77,7 +77,7 @@ namespace Trains.Model.Builders
 
 		public float GetPolygonWidth()
 		{
-			return GetNode<CSGPolygon>("CSGPolygon").Polygon[1].x;
+			return GetNode<CSGPolygon>("CSGPolygon").Polygon[3].x;
 		}
 	}
 }

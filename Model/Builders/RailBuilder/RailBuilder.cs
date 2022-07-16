@@ -258,7 +258,6 @@ namespace Trains.Model.Builders
 				);
 			}
 			blueprint.Curve = BuildBlueprintCurve(points);
-			//blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)
