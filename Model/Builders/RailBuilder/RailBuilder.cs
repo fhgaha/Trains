@@ -170,57 +170,11 @@ namespace Trains.Model.Builders
 			//snap
 			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
 			if (snapper.SnappedDir != Vector3.Zero)
-			{
 				prevDir = snapper.SnappedDir;
-			}
-
 			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;
 
 			state = State.SelectEnd;
-		}
-
-		private void UpdateBlueprint()
-		{
-			var mousePos = this.GetIntersection(camera, rayLength);
-			blueprint.Translation = mousePos;
-			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
-			blueprint.SetColor();
-		}
-
-		private void DrawBlueprint()
-		{
-			var mousePos = this.GetIntersection(camera, rayLength);
-			var points = new List<Vector2>();
-
-			var mousePosIsInBorders = mousePos != Vector3.Zero;
-			if (mousePosIsInBorders)
-			{
-				var continuing = !(currentPath is null);
-				points = calculator.CalculateCurvePoints
-				(
-					start: blueprint.Translation.ToVec2(),
-					end: mousePos.ToVec2(),
-					prevDir: prevDir.ToVec2(),
-					firstSegmentIsPlaced: continuing
-				);
-			}
-			blueprint.Curve = BuildBlueprintCurve(points);
-		}
-
-		private RailCurve BuildBlueprintCurve(List<Vector2> points)
-		{
-			var curve = new RailCurve();
-			if (points.Count > 0)
-			{
-				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
-			}
-			else
-			{
-				curve.AddPoint(Vector3.Zero);
-				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
-			}
-			return curve;
 		}
 
 		protected void PlaceObject()
@@ -276,6 +230,49 @@ namespace Trains.Model.Builders
 			//this is called so that there is no overlap of blueprint and path or 
 			//generally wrong bp display until next frame starts
 			DrawBlueprint();
+		}
+
+		private void UpdateBlueprint()
+		{
+			var mousePos = this.GetIntersection(camera, rayLength);
+			blueprint.Translation = mousePos;
+			snapper.SnapIfNecessary(mousePos, pathList, blueprint);
+			blueprint.SetColor();
+		}
+
+		private void DrawBlueprint()
+		{
+			var mousePos = this.GetIntersection(camera, rayLength);
+			var points = new List<Vector2>();
+
+			var mousePosIsInBorders = mousePos != Vector3.Zero;
+			if (mousePosIsInBorders)
+			{
+				var continuing = !(currentPath is null);
+				points = calculator.CalculateCurvePoints
+				(
+					start: blueprint.Translation.ToVec2(),
+					end: mousePos.ToVec2(),
+					prevDir: prevDir.ToVec2(),
+					firstSegmentIsPlaced: continuing
+				);
+			}
+			blueprint.Curve = BuildBlueprintCurve(points);
+		}
+
+		private RailCurve BuildBlueprintCurve(List<Vector2> points)
+		{
+			var curve = new RailCurve();
+			if (points.Count > 0)
+			{
+				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
+			}
+			else
+			{
+				curve.AddPoint(Vector3.Zero);
+				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
+			}
+			return curve;
 		}
 
 		private void onMainGUIPanelMouseEntered()
