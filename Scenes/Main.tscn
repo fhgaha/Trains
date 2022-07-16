@@ -99,6 +99,7 @@ material/0 = SubResource( 14 )
 
 [node name="DebugHelper" type="Spatial" parent="RailBuilder"]
 script = ExtResource( 8 )
+ToleranceDegrees = 4.0
 helper = ExtResource( 10 )
 
 [node name="curvePoint" parent="RailBuilder/DebugHelper" instance=ExtResource( 10 )]

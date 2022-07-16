@@ -9,7 +9,8 @@ namespace Trains
 	{
 		[Export] PackedScene helper;
 
-		[Export] public bool ShowActualPoints
+		[Export]
+		public bool ShowActualPoints
 		{
 			get => showActualPoints;
 			set
@@ -17,12 +18,12 @@ namespace Trains
 				ClearDrawn();
 				if (value && currentPath != null)
 					DrawUsingActualPoints((RailCurve)currentPath.Curve);
-
 				showActualPoints = value;
 			}
 		}
 
-		[Export] public bool ShowBakedPoints
+		[Export]
+		public bool ShowBakedPoints
 		{
 			get => showBakedPoints;
 			set
@@ -30,12 +31,12 @@ namespace Trains
 				ClearDrawn();
 				if (value && currentPath != null)
 					DrawUsingBakedPoints((RailCurve)currentPath.Curve);
-
-				showActualPoints = value;
+				showBakedPoints = value;
 			}
 		}
 
-		[Export] public bool ShowTesselatedPoints
+		[Export]
+		public bool ShowTesselatedPoints
 		{
 			get => showTesselatedPoints;
 			set
@@ -43,14 +44,46 @@ namespace Trains
 				ClearDrawn();
 				if (value && currentPath != null)
 					DrawUsingTesselatedPoints((RailCurve)currentPath.Curve);
-
 				showTesselatedPoints = value;
 			}
 		}
 
+		[Export]
+		public int MaxStages
+		{
+			get => maxStages;
+			set
+			{
+				ClearDrawn();
+				if (currentPath != null)
+				{
+					maxStages = value;
+					DrawUsingTesselatedPoints((RailCurve)currentPath.Curve);
+				}
+			}
+		}
+		[Export]
+		public float ToleranceDegrees
+		{
+			get => toleranceDegrees;
+			set
+			{
+				ClearDrawn();
+				if (currentPath != null)
+				{
+					toleranceDegrees = value;
+					DrawUsingTesselatedPoints((RailCurve)currentPath.Curve);
+				}
+			}
+		}
+
+		private int maxStages = 0;
+		private float toleranceDegrees = 0;
+
 		private bool showActualPoints = false;
 		private bool showBakedPoints = false;
 		private bool showTesselatedPoints = false;
+
 		private MeshInstance helperInst;
 		private Path currentPath;
 
@@ -95,7 +128,7 @@ namespace Trains
 
 		private void DrawUsingTesselatedPoints(RailCurve curve)
 		{
-			var points = curve.Tessellate();
+			var points = curve.Tessellate(MaxStages, ToleranceDegrees);
 			foreach (var p in points)
 			{
 				var helper = (MeshInstance)helperInst.Duplicate();
