@@ -73,7 +73,7 @@ namespace Trains
 
 		private void DrawUsingActualPoints(RailCurve curve)
 		{
-			var amount = curve.Tessellate().Length;
+			var amount = curve.GetPointCount();
 			for (int i = 0; i < amount; i++)
 			{
 				var helper = (MeshInstance)helperInst.Duplicate();
@@ -95,7 +95,7 @@ namespace Trains
 
 		private void DrawUsingTesselatedPoints(RailCurve curve)
 		{
-			var points = curve.Tessellate(5, 100);
+			var points = curve.Tessellate();
 			foreach (var p in points)
 			{
 				var helper = (MeshInstance)helperInst.Duplicate();
