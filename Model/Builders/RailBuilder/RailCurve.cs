@@ -35,7 +35,7 @@ namespace Trains.Model.Builders
 				AddPoint(origin + curve.GetPointPosition(i), atPosition: _atPosition);
 		}
 
-		public void RemoveCurve(RailCurve curveToDelete)
+		public void RemoveEdgeCurve(RailCurve curveToDelete)
 		{
 			var ctdFirst = curveToDelete.First() + curveToDelete.Origin;
 			var ctdLast = curveToDelete.Last() + curveToDelete.Origin;
@@ -65,9 +65,14 @@ namespace Trains.Model.Builders
 				RemovePoint(GetPointCount() - 1);
 		}
 
-		public static bool AreCurvePointsEqual(Vector3 first, Vector3 second, float accuracy)
+		public static bool AreCurvePointsEqual(Vector3 first, Vector3 second)
 		{
 			return first.IsEqualApprox(second);
+		}
+
+		public static bool AreCurvePointsEqual(Vector3 first, Vector3 second, float accuracy)
+		{
+			return first.IsEqualApprox(second, accuracy);
 		}
 
 		private void PrintCurveIntersectionInfo(RailCurve curveIntesected, float accuracy)

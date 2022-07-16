@@ -117,7 +117,7 @@ namespace Trains.Model.Builders
 
 			var curveToDelete = undoStack.Pop();
 			var curve = RailCurve.GetFrom(currentPath);
-			curve.RemoveCurve(curveToDelete);
+			curve.RemoveEdgeCurve(curveToDelete);
 
 			if (undoStack.Count == 0)
 				currentPath = null;
@@ -125,7 +125,7 @@ namespace Trains.Model.Builders
 
 		public override void _UnhandledInput(InputEvent @event)
 		{
-			if (@event is InputEventMouseButton evMouseButton1 && evMouseButton1.IsActionPressed("lmb"))
+			if (@event.IsActionPressed("lmb"))
 			{
 				switch (state)
 				{
@@ -140,7 +140,7 @@ namespace Trains.Model.Builders
 				}
 			}
 
-			if (@event is InputEventMouseButton evMouseButton2 && evMouseButton2.IsActionPressed("rmb"))
+			if (@event.IsActionPressed("rmb"))
 			{
 				if (state == State.SelectEnd)
 					ResetStateBlueprintPrevDir();
@@ -150,7 +150,8 @@ namespace Trains.Model.Builders
 			{
 				switch (state)
 				{
-					case State.None: return;
+					case State.None:
+						break;
 					case State.SelectStart:
 						UpdateBlueprint();
 						break;
