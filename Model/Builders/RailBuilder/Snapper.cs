@@ -30,7 +30,6 @@ namespace Trains.Model.Builders
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
 					AlignBpForStart(blueprint, path);
-
 					UpdateVars(path, path.DirFromStart);
 					return;
 				}
@@ -56,19 +55,6 @@ namespace Trains.Model.Builders
 			}
 
 			UpdateVars(null, Vector3.Zero);
-		}
-
-		public void AlignBpForStart(RailPath blueprint, RailPath path)
-		{
-			var angle = -Vector3.Right.SignedAngleTo(path.DirFromStart, Vector3.Up);
-			var x = path.GetPolygonWidth() * Mathf.Sin(angle);
-			var z = -path.GetPolygonWidth() * Mathf.Cos(angle);
-			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(x, 0, z);
-		}
-
-		public void AlignBpForEnd(RailPath blueprint)
-		{
-			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(0, 0, 0);
 		}
 
 		private bool IsCursorOn(Vector3 start, Vector3 end)
@@ -99,6 +85,22 @@ namespace Trains.Model.Builders
 		private void UnrotateBlueprint(RailPath blueprint)
 		{
 			blueprint.SetOriginalBpCurve();
+		}
+
+		public void AlignBpForStart(RailPath blueprint, RailPath path)
+		{
+			//polygon translation starts from (0, 0, 0). we need to find additional relative to parent path translation 
+			//for polygon. required translation depends of path rotation so trigonometry formulas come useful.
+			var angleFromRightClockwise = -Vector3.Right.SignedAngleTo(path.DirFromStart, Vector3.Up);
+			var x = path.GetPolygonWidth() * Mathf.Sin(angleFromRightClockwise);
+			var z = -path.GetPolygonWidth() * Mathf.Cos(angleFromRightClockwise);
+			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(x, 0, z);
+		}
+
+		public void AlignBpForEnd(RailPath blueprint)
+		{
+			//reset polygon position if previously it was translated
+			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(0, 0, 0);
 		}
 
 		private void UpdateVars(RailPath path, Vector3 direction)
