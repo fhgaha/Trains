@@ -29,18 +29,7 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
-
-					//align bp if starts from currentPath start
-					var angle = -Vector3.Right.SignedAngleTo(path.DirFromStart, Vector3.Up);
-					var x = path.GetPolygonWidth() * Mathf.Sin(angle);
-					var z = -path.GetPolygonWidth() * Mathf.Cos(angle);
-					blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(x, 0, z);
-
-					GD.PrintS(
-						"angle:", angle * 180 / Mathf.Pi,
-						"\nx:", x,
-						"\nz:", z
-						);
+					AlignBpForStart(blueprint, path);
 
 					UpdateVars(path, path.DirFromStart);
 					return;
@@ -49,6 +38,7 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = end;
 					RotateBlueprint(blueprint, path.DirFromEnd);
+					AlignBpForEnd(blueprint);
 					UpdateVars(path, path.DirFromEnd);
 					return;
 				}
@@ -66,6 +56,25 @@ namespace Trains.Model.Builders
 			}
 
 			UpdateVars(null, Vector3.Zero);
+		}
+
+		public void AlignBpForStart(RailPath blueprint, RailPath path)
+		{
+			var angle = -Vector3.Right.SignedAngleTo(path.DirFromStart, Vector3.Up);
+			var x = path.GetPolygonWidth() * Mathf.Sin(angle);
+			var z = -path.GetPolygonWidth() * Mathf.Cos(angle);
+			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(x, 0, z);
+
+			GD.PrintS(
+				"angle:", angle * 180 / Mathf.Pi,
+				"\nx:", x,
+				"\nz:", z
+				);
+		}
+
+		public void AlignBpForEnd(RailPath blueprint)
+		{
+			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(0, 0, 0);
 		}
 
 		private bool IsCursorOn(Vector3 start, Vector3 end)

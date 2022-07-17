@@ -213,18 +213,21 @@ namespace Trains.Model.Builders
 			{
 				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromStart;
+				snapper.AlignBpForStart(blueprint, currentPath);
 			}
 
 			if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
+				snapper.AlignBpForEnd(blueprint);
 			}
 		}
 
 		private void SaveVarsRedrawBlueprint(Vector3 direction)
 		{
 			blueprint.Translation = blueprint.End;
+			//snapper.AlignBpForStart(blueprint, currentPath);
 			prevDir = direction;
 
 			//this is called so that there is no overlap of blueprint and path or 
