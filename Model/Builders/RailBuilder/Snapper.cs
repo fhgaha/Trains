@@ -64,12 +64,6 @@ namespace Trains.Model.Builders
 			var x = path.GetPolygonWidth() * Mathf.Sin(angle);
 			var z = -path.GetPolygonWidth() * Mathf.Cos(angle);
 			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(x, 0, z);
-
-			GD.PrintS(
-				"angle:", angle * 180 / Mathf.Pi,
-				"\nx:", x,
-				"\nz:", z
-				);
 		}
 
 		public void AlignBpForEnd(RailPath blueprint)
