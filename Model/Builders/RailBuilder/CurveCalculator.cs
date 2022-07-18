@@ -9,6 +9,20 @@ namespace Trains.Model.Builders
 {
 	public class CurveCalculator : Spatial
 	{
+		[Export]
+		private bool ShowHelpers
+		{
+			get => showHelpers;
+			set
+			{
+				dir.Visible = value;
+				center.Visible = value;
+				tangent.Visible = value;
+				showHelpers = value;
+			}
+		}
+		private bool showHelpers = true;
+
 		//helpers
 		private MeshInstance dir;
 		private MeshInstance center;

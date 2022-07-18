@@ -192,7 +192,7 @@ namespace Trains.Model.Builders
 			blueprint.Translation = blueprint.End;
 			//redraw before next frame
 			DrawBlueprint();
-			//AlignBlueprint();
+			AlignBlueprint();
 
 			
 		}
