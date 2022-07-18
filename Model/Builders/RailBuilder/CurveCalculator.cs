@@ -15,6 +15,8 @@ namespace Trains.Model.Builders
 			get => showHelpers;
 			set
 			{
+				if (dir == null || center == null || tangent == null) return;
+
 				dir.Visible = value;
 				center.Visible = value;
 				tangent.Visible = value;
