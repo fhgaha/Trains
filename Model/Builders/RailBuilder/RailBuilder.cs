@@ -153,7 +153,7 @@ namespace Trains.Model.Builders
 					case State.None:
 						break;
 					case State.SelectStart:
-						UpdateBlueprint();
+						DrawEmptyBlueprint();
 						break;
 					case State.SelectEnd:
 						DrawBlueprint();
@@ -189,7 +189,12 @@ namespace Trains.Model.Builders
 			var railCurve = RailCurve.GetFrom(blueprint);
 			undoStack.Push(railCurve);
 
-			SaveVarsRedrawBlueprint(prevDir);
+			blueprint.Translation = blueprint.End;
+			//redraw before next frame
+			DrawBlueprint();
+			//AlignBlueprint();
+
+			
 		}
 
 		private void InitPath()
@@ -222,17 +227,6 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private void SaveVarsRedrawBlueprint(Vector3 direction)
-		{
-			blueprint.Translation = blueprint.End;
-			prevDir = direction;
-
-			//this is called so that there is no overlap of blueprint and path or 
-			//generally wrong bp display until next frame starts
-			DrawBlueprint();
-			AlignBlueprint();
-		}
-
 		private void AlignBlueprint()
 		{
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
@@ -242,7 +236,7 @@ namespace Trains.Model.Builders
 				snapper.AlignBpForEnd(blueprint);
 		}
 
-		private void UpdateBlueprint()
+		private void DrawEmptyBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;

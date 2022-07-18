@@ -17,7 +17,7 @@ bpColor = Color( 1, 0.917647, 0.027451, 1 )
 notAllowedColor = Color( 1, 0.054902, 0.054902, 1 )
 
 [node name="CSGPolygon" type="CSGPolygon" parent="."]
-polygon = PoolVector2Array( 0, 0, 0.04, 0.04, 0.234438, 0.0395485, 0.273, 0 )
+polygon = PoolVector2Array( 0, 0, 0.04, 0.04, 0.958, 0.04, 1, 0 )
 mode = 2
 path_node = NodePath("..")
 path_interval_type = 0
