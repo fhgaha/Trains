@@ -28,7 +28,8 @@ namespace Trains.Model.Builders
 		private RailPath blueprint;
 		private State state = State.None;
 		private Vector3 prevDir = Vector3.Zero;
-		private RailPath currentPath;   //path from which railbuilding is being continued
+		private RailPath currentPath;
+		private bool AreWeContinuingPath { get => currentPath != null; }
 
 		//!in editor for CSGPolygon property Path Local should be "On" to place polygon where the cursor is with no offset
 
@@ -168,7 +169,6 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
 
-			//snap
 			snapper.SnapBpIfNecessary(mousePos, pathList, blueprint);
 			if (snapper.SnappedDir != Vector3.Zero)
 				prevDir = snapper.SnappedDir;
@@ -181,17 +181,11 @@ namespace Trains.Model.Builders
 		protected void PlaceObject()
 		{
 			if (snapper.IsBlueprintSnappedOnSegment())
-			{
 				InitPath();
-			}
-			else if (currentPath is null)
-			{
+			else if (!AreWeContinuingPath)
 				InitPath();
-			}
 			else
-			{
 				AddNewCurveToCurrentPath();
-			}
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 
@@ -212,6 +206,8 @@ namespace Trains.Model.Builders
 			prevDir = currentPath.DirFromEnd;
 			snapper.Reset();
 		}
+
+
 
 		private void AddNewCurveToCurrentPath()
 		{
@@ -253,13 +249,12 @@ namespace Trains.Model.Builders
 
 			if (mousePosIsInMapBorders)
 			{
-				var continuingPath = currentPath != null;
 				points = calculator.CalculateCurvePoints
 				(
 					start: blueprint.Translation.ToVec2(),
 					end: mousePos.ToVec2(),
 					prevDir: prevDir.ToVec2(),
-					continuingPath: continuingPath
+					continuingPath: AreWeContinuingPath
 				);
 			}
 

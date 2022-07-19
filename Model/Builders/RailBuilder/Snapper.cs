@@ -12,6 +12,7 @@ namespace Trains.Model.Builders
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
+		
 		public Snapper() { }
 
 		public bool IsBlueprintSnappedOnSegment() => SnappedSegment != null;
