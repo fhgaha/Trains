@@ -180,7 +180,7 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject()
 		{
-			if (snapper.SnappedSegment != null)
+			if (snapper.IsBlueprintSnappedOnSegment())
 			{
 				InitPath();
 				snapper.Reset();
@@ -245,48 +245,25 @@ namespace Trains.Model.Builders
 		private void DrawBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			SetPrevDirIfSnappedOnSegment(mousePos);
 			var points = new List<Vector2>();
-
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
+
+			if (snapper.IsBlueprintSnappedOnSegment())
+				prevDir = snapper.GetSegmentToCursorDirUsingSnappedSegment(mousePos);
+
 			if (mousePosIsInMapBorders)
 			{
-				var continuing = !(currentPath is null);
+				var continuingPath = currentPath != null;
 				points = calculator.CalculateCurvePoints
 				(
 					start: blueprint.Translation.ToVec2(),
 					end: mousePos.ToVec2(),
 					prevDir: prevDir.ToVec2(),
-					firstSegmentIsPlaced: continuing
+					continuingPath: continuingPath
 				);
 			}
 
 			blueprint.Curve = BuildBlueprintCurve(points);
-		}
-
-		private void SetPrevDirIfSnappedOnSegment(Vector3 mousePos)
-		{
-			if (snapper.SnappedSegment != null)
-			{
-				var startToEnd = (snapper.SnappedSegment.Second - snapper.SnappedSegment.First).Normalized();
-				var endToStart = (snapper.SnappedSegment.First - snapper.SnappedSegment.Second).Normalized();
-				var startToCursor = (mousePos - snapper.SnappedSegment.First).Normalized();
-				var segmentAndCursorAreOneDirectional = startToEnd.Dot(startToCursor) > 0;
-
-				if (segmentAndCursorAreOneDirectional)
-					prevDir = startToEnd;
-				else
-					prevDir = endToStart;
-
-				//build mock path to create curved path
-				var mockPath = railPathScene.Instance<RailPath>();
-				mockPath.Curve = new Curve3D();
-				mockPath.Curve.AddPoint(snapper.SnappedSegment.First);
-				mockPath.Curve.AddPoint(snapper.SnappedSegment.Second);
-				mockPath.Init(currentPath);
-				AddChild(mockPath);
-				currentPath = mockPath;
-			}
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)

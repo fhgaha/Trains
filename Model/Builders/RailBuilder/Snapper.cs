@@ -14,6 +14,25 @@ namespace Trains.Model.Builders
 		private Vector3 mousePos;
 		public Snapper() { }
 
+		public bool IsBlueprintSnappedOnSegment() => SnappedSegment != null;
+
+		public void Reset() => SetVars(null, Vector3.Zero, null);
+
+		public Vector3 GetSegmentToCursorDirUsingSnappedSegment(Vector3 mousePos)
+		{
+			if (SnappedSegment is null) throw new NullReferenceException("Snapper.SnappedSegment is null");
+
+			var startToEnd = (SnappedSegment.Second - SnappedSegment.First).Normalized();
+			var endToStart = (SnappedSegment.First - SnappedSegment.Second).Normalized();
+			var startToCursor = (mousePos - SnappedSegment.First).Normalized();
+			var segmentAndCursorAreOneDirectional = startToEnd.Dot(startToCursor) > 0;
+
+			if (segmentAndCursorAreOneDirectional)
+				return startToEnd;
+			else
+				return endToStart;
+		}
+
 		public void SnapBpIfNecessary(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
 			this.mousePos = mousePos;
@@ -100,6 +119,6 @@ namespace Trains.Model.Builders
 			SnappedSegment = segment;
 		}
 
-		public void Reset() => SetVars(null, Vector3.Zero, null);
+
 	}
 }

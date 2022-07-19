@@ -51,7 +51,7 @@ namespace Trains.Model.Builders
 			tangent.Visible = Global.DebugMode;
 		}
 
-		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, Vector2 prevDir, bool firstSegmentIsPlaced)
+		public List<Vector2> CalculateCurvePoints(Vector2 start, Vector2 end, Vector2 prevDir, bool continuingPath)
 		{
 			this.start = start;
 			this.end = end;
@@ -59,7 +59,7 @@ namespace Trains.Model.Builders
 			this.prevDir = prevDir;
 			points = new List<Vector2>();
 
-			if (!firstSegmentIsPlaced)
+			if (!continuingPath)
 			{
 				GoStraight(start, end);
 				return points;
