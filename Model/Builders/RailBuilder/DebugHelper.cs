@@ -7,7 +7,7 @@ namespace Trains
 {
 	public class DebugHelper : Spatial
 	{
-		[Export] PackedScene helper;
+		[Export] private readonly PackedScene helper;
 
 		[Export]
 		public bool ShowActualPoints
@@ -62,6 +62,7 @@ namespace Trains
 				}
 			}
 		}
+
 		[Export]
 		public float ToleranceDegrees
 		{

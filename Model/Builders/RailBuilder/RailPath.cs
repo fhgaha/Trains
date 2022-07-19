@@ -8,9 +8,9 @@ namespace Trains.Model.Builders
 {
 	public class RailPath : Path
 	{
-		[Export] private Color bpColor;
+		[Export] private readonly Color bpColor;
 
-		[Export] private Color notAllowedColor;
+		[Export] private readonly Color notAllowedColor;
 
 		public Vector3 Start { get => Translation + Curve.First(); }
 		public Vector3 End { get => Translation + Curve.Last(); }

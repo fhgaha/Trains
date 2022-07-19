@@ -10,7 +10,6 @@ namespace Trains
 	public class MapAndButtons : HBoxContainer
 	{
 		private Events events;
-		private Control productsMenu;
 		private Dictionary<MainButtonType, Control> buttonMenuDict;
 
 		public override void _Ready()
