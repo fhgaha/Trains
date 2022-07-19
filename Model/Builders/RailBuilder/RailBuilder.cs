@@ -175,6 +175,7 @@ namespace Trains.Model.Builders
 			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;
 
+
 			state = State.SelectEnd;
 		}
 
@@ -237,6 +238,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			var points = new List<Vector2>();
+			SetPrevDirIfSnappedOnSegment(mousePos);
 
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 			if (mousePosIsInMapBorders)
@@ -250,30 +252,32 @@ namespace Trains.Model.Builders
 					firstSegmentIsPlaced: continuing
 				);
 			}
+
 			blueprint.Curve = BuildBlueprintCurve(points);
+		}
+
+		private void SetPrevDirIfSnappedOnSegment(Vector3 mousePos)
+		{
+			if (snapper.SnappedSegment != null)
+			{
+				var startToEnd = (snapper.SnappedSegment.Second - snapper.SnappedSegment.First).Normalized();
+				var endToStart = (snapper.SnappedSegment.First - snapper.SnappedSegment.Second).Normalized();
+				var startToCursor = (mousePos - snapper.SnappedSegment.First).Normalized();
+				var segmentAndCursorAreOneDirectional = startToEnd.Dot(startToCursor) > 0;
+
+				if (segmentAndCursorAreOneDirectional)
+					prevDir = startToEnd;
+				else
+					prevDir = endToStart;
+			}
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)
 		{
-			var points3d = points.ConvertAll(p => p.ToVec3());
-
-			//attempt aling
-			// if (currentPath != null)
-			// {
-			// 	for (int i = 1; i < points.Count; i++)
-			// 	{
-			// 		var dir = (points[i] - points[i - 1]).Normalized();
-			// 		var angle = -Vector3.Right.SignedAngleTo(dir.ToVec3(), Vector3.Up);
-			// 		var x = currentPath.GetPolygonWidth() * Sin(angle);
-			// 		var y = currentPath.GetPolygonWidth() * Cos(angle);
-			// 		points3d[i] = points[i].ToVec3() + new Vector3(x, 0, y);
-			// 	}
-			// }
-
 			var curve = new RailCurve();
-			if (points3d.Count > 0)
+			if (points.Count > 0)
 			{
-				points3d.ForEach(p => curve.AddPoint(p - blueprint.Translation));
+				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
 			}
 			else
 			{
@@ -281,18 +285,6 @@ namespace Trains.Model.Builders
 				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			}
 			return curve;
-
-			// var curve = new RailCurve();
-			// if (points.Count > 0)
-			// {
-			// 	points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
-			// }
-			// else
-			// {
-			// 	curve.AddPoint(Vector3.Zero);
-			// 	curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
-			// }
-			// return curve;
 		}
 
 		private void onMainGUIPanelMouseEntered()

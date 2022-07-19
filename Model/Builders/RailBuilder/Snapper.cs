@@ -8,6 +8,7 @@ namespace Trains.Model.Builders
 	{
 		public RailPath SnappedPath { get; set; }
 		public Vector3 SnappedDir { get; set; } = Vector3.Zero;
+		public CurveSegment SnappedSegment { get; set; }
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
@@ -38,19 +39,17 @@ namespace Trains.Model.Builders
 					UpdateVars(path, path.DirFromEnd);
 					return;
 				}
-				else
+				else if (TrySnapOnAnySegment(path))
 				{
-					var foundSegment = TrySnapOnAnySegment(path);
-					if (foundSegment is null) continue;
+					if (SnappedSegment is null) continue;
 
-					blueprint.Translation = foundSegment.First;
-					
-					var directionOutOfSegmentPoint = Vector3.Zero;
-					UpdateVars(path, directionOutOfSegmentPoint);
+					blueprint.Translation = SnappedSegment.First;
+					UpdateVars(path, Vector3.Zero);
 					return;
 				}
 			}
 
+			SnappedSegment = null;
 			UpdateVars(null, Vector3.Zero);
 		}
 
@@ -64,22 +63,18 @@ namespace Trains.Model.Builders
 			blueprint.SetSimpleCurve(Vector3.Zero, direction);
 		}
 
-		private CurveSegment TrySnapOnAnySegment(RailPath path)
+		private bool TrySnapOnAnySegment(RailPath path)
 		{
 			foreach (var s in path.GetSegments())
 			{
 				if (IsCursorOn(s.First, s.Second))
 				{
-					return s;
+					SnappedSegment = s;
+					return true;
 				}
 			}
 
-			return null;
-		}
-
-		private void UnrotateBlueprint(RailPath blueprint)
-		{
-			blueprint.SetOriginalBpCurve();
+			return false;
 		}
 
 		public void AlignBpForStart(RailPath blueprint, RailPath path)
