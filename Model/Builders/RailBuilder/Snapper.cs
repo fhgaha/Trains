@@ -29,7 +29,6 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
-					AlignBpForStart(blueprint, path);
 					UpdateVars(path, path.DirFromStart);
 					return;
 				}
@@ -37,17 +36,16 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = end;
 					RotateBlueprint(blueprint, path.DirFromEnd);
-					AlignBpForEnd(blueprint);
 					UpdateVars(path, path.DirFromEnd);
 					return;
 				}
-				else if (IsCursorOnAnySegment(path))
-				{
-					blueprint.Translation = foundSegment.First;
-					//blueprint.AcceptSegmentPosition();
-					var directionOutOfSegmentPoint = Vector3.Zero;
-					UpdateVars(path, directionOutOfSegmentPoint);
-				}
+				// else if (IsCursorOnAnySegment(path))
+				// {
+				// 	blueprint.Translation = foundSegment.First;
+				// 	//blueprint.AcceptSegmentPosition();
+				// 	var directionOutOfSegmentPoint = Vector3.Zero;
+				// 	UpdateVars(path, directionOutOfSegmentPoint);
+				// }
 				else
 				{
 					UnrotateBlueprint(blueprint);

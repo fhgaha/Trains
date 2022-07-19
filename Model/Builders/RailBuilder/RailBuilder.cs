@@ -192,7 +192,6 @@ namespace Trains.Model.Builders
 			blueprint.Translation = blueprint.End;
 			//redraw before next frame
 			DrawBlueprint();
-			AlignBlueprint();
 		}
 
 		private void InitPath()
@@ -223,15 +222,6 @@ namespace Trains.Model.Builders
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
 			}
-		}
-
-		private void AlignBlueprint()
-		{
-			if (blueprint.Start.IsEqualApprox(currentPath.Start))
-				snapper.AlignBpForStart(blueprint, currentPath);
-
-			if (blueprint.Start.IsEqualApprox(currentPath.End))
-				snapper.AlignBpForEnd(blueprint);
 		}
 
 		private void DrawEmptyBlueprint()
