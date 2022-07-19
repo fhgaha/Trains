@@ -100,6 +100,7 @@ namespace Trains.Model.Builders
 		{
 			ReinitStateAndBlueprint();
 			undoStack.Clear();
+			currentPath = null;
 		}
 
 		private void ReinitStateAndBlueprint()
