@@ -175,16 +175,24 @@ namespace Trains.Model.Builders
 			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;
 
-
 			state = State.SelectEnd;
 		}
 
 		protected void PlaceObject()
 		{
-			if (currentPath is null)
+			if (snapper.SnappedSegment != null)
+			{
 				InitPath();
+				snapper.Reset();
+			}
+			else if (currentPath is null)
+			{
+				InitPath();
+			}
 			else
+			{
 				AddNewCurveToCurrentPath();
+			}
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 
@@ -237,8 +245,8 @@ namespace Trains.Model.Builders
 		private void DrawBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			var points = new List<Vector2>();
 			SetPrevDirIfSnappedOnSegment(mousePos);
+			var points = new List<Vector2>();
 
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 			if (mousePosIsInMapBorders)
@@ -269,6 +277,15 @@ namespace Trains.Model.Builders
 					prevDir = startToEnd;
 				else
 					prevDir = endToStart;
+
+				//build mock path to create curved path
+				var mockPath = railPathScene.Instance<RailPath>();
+				mockPath.Curve = new Curve3D();
+				mockPath.Curve.AddPoint(snapper.SnappedSegment.First);
+				mockPath.Curve.AddPoint(snapper.SnappedSegment.Second);
+				mockPath.Init(currentPath);
+				AddChild(mockPath);
+				currentPath = mockPath;
 			}
 		}
 
