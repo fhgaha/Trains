@@ -9,6 +9,9 @@ namespace Trains.Model.Builders
 		public RailPath SnappedStartPath { get; set; }
 		public Vector3 SnappedStartDir { get; set; } = Vector3.Zero;
 		public CurveSegment SnappedStartSegment { get; set; }
+		public RailPath SnappedEndPath { get; set; }
+		public Vector3 SnappedEndDir { get; set; } = Vector3.Zero;
+		public CurveSegment SnappedEndSegment { get; set; }
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
@@ -17,7 +20,11 @@ namespace Trains.Model.Builders
 
 		public bool IsBpStartSnappedOnSegment() => SnappedStartSegment != null;
 
-		public void Reset() => SetVars(null, Vector3.Zero, null);
+		public void Reset()
+		{
+			SetStartVars(null, Vector3.Zero, null);
+			SetEndVars(null, Vector3.Zero, null);
+		}
 
 		public Vector3 GetBpStartSnappedSegmentToCursorDirection(Vector3 mousePos)
 		{
@@ -49,14 +56,14 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
-					SetVars(path, path.DirFromStart, null);
+					SetStartVars(path, path.DirFromStart, null);
 					return;
 				}
 				else if (IsCursorOn(end, start))
 				{
 					blueprint.Translation = end;
 					RotateBlueprint(blueprint, path.DirFromEnd);
-					SetVars(path, path.DirFromEnd, null);
+					SetStartVars(path, path.DirFromEnd, null);
 					return;
 				}
 				else if (TrySnapEmptyBpOnMidSegment(path))
@@ -64,13 +71,13 @@ namespace Trains.Model.Builders
 					if (SnappedStartSegment is null) continue;
 
 					blueprint.Translation = SnappedStartSegment.First;
-					SetVars(path, Vector3.Zero, SnappedStartSegment);
+					SetStartVars(path, Vector3.Zero, SnappedStartSegment);
 					return;
 				}
 			}
 
 			SnappedStartSegment = null;
-			SetVars(null, Vector3.Zero, null);
+			SetStartVars(null, Vector3.Zero, null);
 		}
 
 		private bool IsCursorOn(Vector3 start, Vector3 end)
@@ -103,11 +110,18 @@ namespace Trains.Model.Builders
 			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(0, 0, 0);
 		}
 
-		private void SetVars(RailPath path, Vector3 direction, CurveSegment segment)
+		private void SetStartVars(RailPath path, Vector3 direction, CurveSegment segment)
 		{
 			SnappedStartPath = path;
 			SnappedStartDir = direction;
 			SnappedStartSegment = segment;
+		}
+
+		private void SetEndVars(RailPath path, Vector3 direction, CurveSegment segment)
+		{
+			SnappedEndPath = path;
+			SnappedEndDir = direction;
+			SnappedEndSegment = segment;
 		}
 
 		public void TrySnapBpEnd(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
@@ -120,19 +134,28 @@ namespace Trains.Model.Builders
 				var end = path.End;
 
 				var calculator = new CurveCalculator();
-				
+
 				if (IsCursorOn(start, end))
 				{
-					
-					//кривая, пярмая, кривая
+					//blueprint.Translation = start;
+					//RotateBlueprint(blueprint, path.DirFromStart);
+					SetEndVars(path, path.DirFromStart, null);
+					return;
 				}
 				else if (IsCursorOn(end, start))
 				{
-					
+					//blueprint.Translation = end;
+					//RotateBlueprint(blueprint, path.DirFromEnd);
+					SetEndVars(path, path.DirFromEnd, null);
+					return;
 				}
 				else if (TrySnapEmptyBpOnMidSegment(path))
 				{
-					
+					if (SnappedStartSegment is null) continue;
+
+					//blueprint.Translation = SnappedStartSegment.First;
+					SetEndVars(path, Vector3.Zero, SnappedStartSegment);
+					return;
 				}
 			}
 		}

@@ -97,6 +97,7 @@ namespace Trains.Model.Builders
 
 			var rotationDeg = Vector2.Up.AngleTo(prevDir) * 180 / Pi;
 			if (rotationDeg < 0) rotationDeg += 360;
+
 			return rotationDeg;
 		}
 
@@ -124,7 +125,7 @@ namespace Trains.Model.Builders
 		private void GoAlongCircle(float rotationDeg, bool centerIsOnRight, Vector2 center)
 		{
 			var startAngle = (centerIsOnRight ? Pi : 0) + (Pi / 180 * rotationDeg);
-			var endAngle = (centerIsOnRight ? 2 * Pi + Pi / 2 : -Pi - Pi / 2) + Pi / 180 * rotationDeg;
+			var endAngle = (centerIsOnRight ? Pi + startAngle : -Pi - startAngle) + (Pi / 180 * rotationDeg);
 			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
 			bool EndAngleIsNotReached(float angle) => centerIsOnRight ? angle < endAngle : angle > endAngle;
 
@@ -132,8 +133,8 @@ namespace Trains.Model.Builders
 			{
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
-				var point = new Vector2(x, y);
-				points.Add(center + point);
+				var point = center + new Vector2(x, y);
+				points.Add(point);
 			}
 		}
 
