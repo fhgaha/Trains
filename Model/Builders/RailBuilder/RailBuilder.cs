@@ -158,7 +158,7 @@ namespace Trains.Model.Builders
 						DrawEmptyBlueprint();
 						break;
 					case State.SelectEnd:
-						DrawBlueprint();
+						DrawLongBlueprint();
 						break;
 				}
 			}
@@ -169,18 +169,18 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
 
-			snapper.SnapBpIfNecessary(mousePos, pathList, blueprint);
-			if (snapper.SnappedDir != Vector3.Zero)
-				prevDir = snapper.SnappedDir;
-			if (!(snapper.SnappedPath is null))
-				currentPath = snapper.SnappedPath;
+			snapper.TrySnapBpStart(mousePos, pathList, blueprint);
+			if (snapper.SnappedStartDir != Vector3.Zero)
+				prevDir = snapper.SnappedStartDir;
+			if (!(snapper.SnappedStartPath is null))
+				currentPath = snapper.SnappedStartPath;
 
 			state = State.SelectEnd;
 		}
 
 		protected void PlaceObject()
 		{
-			if (snapper.IsBlueprintSnappedOnSegment())
+			if (snapper.IsBpStartSnappedOnSegment())
 				InitPath();
 			else if (!AreWeContinuingPath)
 				InitPath();
@@ -194,7 +194,7 @@ namespace Trains.Model.Builders
 
 			blueprint.Translation = blueprint.End;
 			//redraw before next frame
-			DrawBlueprint();
+			DrawLongBlueprint();
 		}
 
 		private void InitPath()
@@ -232,18 +232,20 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			snapper.SnapBpIfNecessary(mousePos, pathList, blueprint);
+			snapper.TrySnapBpStart(mousePos, pathList, blueprint);
 			blueprint.SetColor();
 		}
 
-		private void DrawBlueprint()
+		private void DrawLongBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			var points = new List<Vector2>();
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
-			if (snapper.IsBlueprintSnappedOnSegment())
-				prevDir = snapper.GetSnappedSegmentToCursorDirection(mousePos);
+			//snapper.TrySnapBpEnd(mousePos, pathList, blueprint);
+
+			if (snapper.IsBpStartSnappedOnSegment())
+				prevDir = snapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
 
 			if (mousePosIsInMapBorders)
 			{
