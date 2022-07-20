@@ -172,7 +172,7 @@ namespace Trains.Model.Builders
 			snapper.SnapBpIfNecessary(mousePos, pathList, blueprint);
 			if (snapper.SnappedDir != Vector3.Zero)
 				prevDir = snapper.SnappedDir;
-			if (snapper.IsBlueprintSnappedOnSegment())
+			if (!(snapper.SnappedPath is null))
 				currentPath = snapper.SnappedPath;
 
 			state = State.SelectEnd;
@@ -181,11 +181,18 @@ namespace Trains.Model.Builders
 		protected void PlaceObject()
 		{
 			if (snapper.IsBlueprintSnappedOnSegment())
+			{
 				InitPath();
-			else if (!AreWeContinuingPath)
+				snapper.Reset();
+			}
+			else if (currentPath is null)
+			{
 				InitPath();
+			}
 			else
+			{
 				AddNewCurveToCurrentPath();
+			}
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 
@@ -204,7 +211,6 @@ namespace Trains.Model.Builders
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
 			prevDir = currentPath.DirFromEnd;
-			snapper.Reset();
 		}
 
 
