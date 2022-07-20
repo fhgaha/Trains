@@ -12,14 +12,14 @@ namespace Trains.Model.Builders
 
 		private const float snapDistance = 1f;
 		private Vector3 mousePos;
-		
+
 		public Snapper() { }
 
 		public bool IsBlueprintSnappedOnSegment() => SnappedSegment != null;
 
 		public void Reset() => SetVars(null, Vector3.Zero, null);
 
-		public Vector3 GetSegmentToCursorDirUsingSnappedSegment(Vector3 mousePos)
+		public Vector3 GetSnappedSegmentToCursorDirection(Vector3 mousePos)
 		{
 			if (SnappedSegment is null) throw new NullReferenceException("Snapper.SnappedSegment is null");
 

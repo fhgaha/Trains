@@ -245,7 +245,7 @@ namespace Trains.Model.Builders
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
 			if (snapper.IsBlueprintSnappedOnSegment())
-				prevDir = snapper.GetSegmentToCursorDirUsingSnappedSegment(mousePos);
+				prevDir = snapper.GetSnappedSegmentToCursorDirection(mousePos);
 
 			if (mousePosIsInMapBorders)
 			{
