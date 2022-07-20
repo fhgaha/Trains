@@ -17,7 +17,7 @@ namespace Trains.Model.Builders
 
 		public bool IsBlueprintSnappedOnSegment() => SnappedSegment != null;
 
-		public void Reset() => SetVars(null, Vector3.Zero, null);
+		public void Reset() => UpdateVars(null, Vector3.Zero);
 
 		public Vector3 GetSnappedSegmentToCursorDirection(Vector3 mousePos)
 		{
@@ -49,14 +49,14 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
-					SetVars(path, path.DirFromStart, null);
+					UpdateVars(path, path.DirFromStart);
 					return;
 				}
 				else if (IsCursorOn(end, start))
 				{
 					blueprint.Translation = end;
 					RotateBlueprint(blueprint, path.DirFromEnd);
-					SetVars(path, path.DirFromEnd, null);
+					UpdateVars(path, path.DirFromEnd);
 					return;
 				}
 				else if (TrySnapOnAnySegment(path))
@@ -64,13 +64,13 @@ namespace Trains.Model.Builders
 					if (SnappedSegment is null) continue;
 
 					blueprint.Translation = SnappedSegment.First;
-					SetVars(path, Vector3.Zero, SnappedSegment);
+					UpdateVars(path, Vector3.Zero);
 					return;
 				}
 			}
 
 			SnappedSegment = null;
-			SetVars(null, Vector3.Zero, null);
+			UpdateVars(null, Vector3.Zero);
 		}
 
 		private bool IsCursorOn(Vector3 start, Vector3 end)
@@ -113,13 +113,10 @@ namespace Trains.Model.Builders
 			blueprint.GetNode<CSGPolygon>("CSGPolygon").Translation = new Vector3(0, 0, 0);
 		}
 
-		private void SetVars(RailPath path, Vector3 direction, CurveSegment segment)
+		private void UpdateVars(RailPath path, Vector3 direction)
 		{
 			SnappedPath = path;
 			SnappedDir = direction;
-			SnappedSegment = segment;
 		}
-
-
 	}
 }
