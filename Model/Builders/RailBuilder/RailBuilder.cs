@@ -181,18 +181,11 @@ namespace Trains.Model.Builders
 		protected void PlaceObject()
 		{
 			if (snapper.IsBlueprintSnappedOnSegment())
-			{
 				InitPath();
-				snapper.Reset();
-			}
-			else if (currentPath is null)
-			{
+			else if (!AreWeContinuingPath)
 				InitPath();
-			}
 			else
-			{
 				AddNewCurveToCurrentPath();
-			}
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 
@@ -211,9 +204,8 @@ namespace Trains.Model.Builders
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
 			prevDir = currentPath.DirFromEnd;
+			snapper.Reset();
 		}
-
-
 
 		private void AddNewCurveToCurrentPath()
 		{
@@ -259,8 +251,7 @@ namespace Trains.Model.Builders
 				(
 					start: blueprint.Translation.ToVec2(),
 					end: mousePos.ToVec2(),
-					prevDir: prevDir.ToVec2(),
-					continuingPath: AreWeContinuingPath
+					prevDir: prevDir.ToVec2()
 				);
 			}
 
