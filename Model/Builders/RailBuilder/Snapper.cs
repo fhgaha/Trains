@@ -117,7 +117,7 @@ namespace Trains.Model.Builders
 
 		private void SetEndVars(RailPath path, Vector3 direction, CurveSegment segment)
 		{
-			GD.PrintS(path, direction, segment);
+			//GD.PrintS(DateTime.Now.Ticks, path, direction, segment);
 			SnappedEndPath = path;
 			SnappedEndDir = direction;
 			SnappedEndSegment = segment;
@@ -128,6 +128,7 @@ namespace Trains.Model.Builders
 			foreach (var path in pathList)
 			{
 				if (path.Curve.GetPointCount() == 0) continue;
+				if (mousePos.IsEqualApprox(blueprint.Start)) continue;
 
 				var start = path.Start;
 				var end = path.End;

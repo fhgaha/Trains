@@ -78,16 +78,17 @@ namespace Trains.Model.Builders
 			var center = CalculateCenter(rotationDeg, centerIsOnRight);
 
 			GoAlongCircle(rotationDeg, centerIsOnRight, center);
-			var tangent = CalculateTangent(centerIsOnRight, center);
+			var startingCircleTangent = CalculateTangent(centerIsOnRight, center);
+			var finishingCircleTangent = Vector3.Zero;
 
-			if (CurveShouldNotBeDrawnHere(tangent, startEndDir))
+			if (CurveShouldNotBeDrawnHere(startingCircleTangent, startEndDir))
 				return new List<Vector2>();
 
-			RemoveCirclePointsAfterTangent(tangent);
-			GoStraight(tangent, end);
+			RemoveCirclePointsAfterTangent(startingCircleTangent);
+			GoStraight(startingCircleTangent, end);
 
 			if (Global.DebugMode)
-				UpdateHelpersPositions(center, tangent);
+				UpdateHelpersPositions(center, startingCircleTangent);
 			return points;
 		}
 
@@ -177,6 +178,43 @@ namespace Trains.Model.Builders
 			this.tangent.Translation = tangent.ToVec3();
 		}
 
+		public void CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 prevDir)
+		{
+			this.start = start;
+			this.end = end;
+			this.radius = 1f;
+			this.prevDir = prevDir;
+			points = new List<Vector2>();
+
+			var startCirclePoints = new List<Vector2>();
+			var endCirclePoints = new List<Vector2>();
+			// var startTangent = GoAlongCircleGetTangent(startCirclePoints);
+			// var endTangent = GoAlongCircleEndCircleGetTangent(endCirclePoints);
+			// var starightPoints = _GoStraight(startTangent, endTangent);
+			// points = startTangent.Concat(starightPoints).Concat(endCirclePoints);
+		}
+		private List<Vector2> CalculateCircleBasedCurve()
+		{
+			var rotationDeg = GetRotationDeg();
+			var startEndDir = (end - start).Normalized();
+			var prevDirPerp = prevDir.Rotated(Pi / 2);
+			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
+			var center = CalculateCenter(rotationDeg, centerIsOnRight);
+
+			GoAlongCircle(rotationDeg, centerIsOnRight, center);
+			var startingCircleTangent = CalculateTangent(centerIsOnRight, center);
+			var finishingCircleTangent = Vector3.Zero;
+
+			if (CurveShouldNotBeDrawnHere(startingCircleTangent, startEndDir))
+				return new List<Vector2>();
+
+			RemoveCirclePointsAfterTangent(startingCircleTangent);
+			GoStraight(startingCircleTangent, end);
+
+			if (Global.DebugMode)
+				UpdateHelpersPositions(center, startingCircleTangent);
+			return points;
+		}
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
 		{
 			float gravity = -15f;
