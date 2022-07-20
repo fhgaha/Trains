@@ -175,13 +175,14 @@ namespace Trains.Model.Builders
 			if (snapper.IsBlueprintSnappedOnSegment())
 				currentPath = snapper.SnappedPath;
 
-
 			state = State.SelectEnd;
 		}
 
 		protected void PlaceObject()
 		{
-			if (currentPath is null)
+			if (snapper.IsBlueprintSnappedOnSegment())
+				InitPath();
+			else if (!AreWeContinuingPath)
 				InitPath();
 			else
 				AddNewCurveToCurrentPath();
@@ -241,8 +242,6 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			var points = new List<Vector2>();
-			SetPrevDirIfSnappedOnSegment(mousePos);
-
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
 			if (snapper.IsBlueprintSnappedOnSegment())
@@ -260,22 +259,6 @@ namespace Trains.Model.Builders
 			}
 
 			blueprint.Curve = BuildBlueprintCurve(points);
-		}
-
-		private void SetPrevDirIfSnappedOnSegment(Vector3 mousePos)
-		{
-			if (snapper.SnappedSegment != null)
-			{
-				var startToEnd = (snapper.SnappedSegment.Second - snapper.SnappedSegment.First).Normalized();
-				var endToStart = (snapper.SnappedSegment.First - snapper.SnappedSegment.Second).Normalized();
-				var startToCursor = (mousePos - snapper.SnappedSegment.First).Normalized();
-				var segmentAndCursorAreOneDirectional = startToEnd.Dot(startToCursor) > 0;
-
-				if (segmentAndCursorAreOneDirectional)
-					prevDir = startToEnd;
-				else
-					prevDir = endToStart;
-			}
 		}
 
 		private RailCurve BuildBlueprintCurve(List<Vector2> points)
