@@ -242,8 +242,8 @@ namespace Trains.Model.Builders
 			var points = new List<Vector2>();
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
-			snapper.TrySnapBpEnd(mousePos, pathList, blueprint);
-			var dirFromSnappedEnd = snapper.SnappedEndDir;
+			// snapper.TrySnapBpEnd(mousePos, pathList, blueprint);
+			// var dirFromSnappedEnd = snapper.SnappedEndDir;
 
 			if (snapper.IsBpStartSnappedOnSegment())
 				prevDir = snapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
@@ -257,6 +257,16 @@ namespace Trains.Model.Builders
 					prevDir: prevDir.ToVec2()
 				);
 			}
+			// else if (mousePosIsInMapBorders && snapper.SnappedEndPath != null)
+			// {
+			// 	points = calculator.CalculateCurvePointsWithSnappedEnd
+			// 	(
+			// 		start: blueprint.Translation.ToVec2(),
+			// 		end: mousePos.ToVec2(),
+			// 		startDir: prevDir.ToVec2(),
+			// 		finishDir: snapper.SnappedEndDir.ToVec2()
+			// 	);
+			// }
 
 			blueprint.Curve = BuildBlueprintCurve(points);
 		}

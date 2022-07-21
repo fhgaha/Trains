@@ -178,43 +178,44 @@ namespace Trains.Model.Builders
 			this.tangent.Translation = tangent.ToVec3();
 		}
 
-		public void CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 prevDir)
+		public List<Vector2> CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
 		{
 			this.start = start;
 			this.end = end;
 			this.radius = 1f;
-			this.prevDir = prevDir;
+			this.prevDir = startDir;
 			points = new List<Vector2>();
 
 			var startCirclePoints = new List<Vector2>();
-			var endCirclePoints = new List<Vector2>();
-			// var startTangent = GoAlongCircleGetTangent(startCirclePoints);
-			// var endTangent = GoAlongCircleEndCircleGetTangent(endCirclePoints);
-			// var starightPoints = _GoStraight(startTangent, endTangent);
-			// points = startTangent.Concat(starightPoints).Concat(endCirclePoints);
-		}
-		private List<Vector2> CalculateCircleBasedCurve()
-		{
+			var finishCirclePoints = new List<Vector2>();
+			var straightPoints = new List<Vector2>();
+
+			//вычисляем точку дуги от старта
+			//вычисляем направление дуги старта
+			//вычисляем точку дуги от конца
+			//вычисляем направление дуги конца
+			//сравниваем направления
+			//если направления противоположны, прерываемся, строим прямую от последней точки стартовой дуги
+			//к последней точке конечной дуги
+			//разворачиваем точки конечной дуги
+			//объединяем все в один список и возвращаем
+
 			var rotationDeg = GetRotationDeg();
 			var startEndDir = (end - start).Normalized();
 			var prevDirPerp = prevDir.Rotated(Pi / 2);
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
 			var center = CalculateCenter(rotationDeg, centerIsOnRight);
-
 			GoAlongCircle(rotationDeg, centerIsOnRight, center);
-			var startingCircleTangent = CalculateTangent(centerIsOnRight, center);
-			var finishingCircleTangent = Vector3.Zero;
 
-			if (CurveShouldNotBeDrawnHere(startingCircleTangent, startEndDir))
-				return new List<Vector2>();
 
-			RemoveCirclePointsAfterTangent(startingCircleTangent);
-			GoStraight(startingCircleTangent, end);
-
-			if (Global.DebugMode)
-				UpdateHelpersPositions(center, startingCircleTangent);
 			return points;
 		}
+
+		private void StartCircleMakeStep(List<Vector2> points)
+		{
+
+		}
+
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
 		{
 			float gravity = -15f;
