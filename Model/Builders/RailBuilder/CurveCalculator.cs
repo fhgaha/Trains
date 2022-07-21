@@ -62,8 +62,7 @@ namespace Trains.Model.Builders
 
 			if (prevDir == Vector2.Zero)
 			{
-				GoStraight(start, end);
-				return points;
+				return GoStraight(start, end).ToList();
 			}
 
 			return CalculateCircleBasedCurve();
@@ -77,19 +76,18 @@ namespace Trains.Model.Builders
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
 			var center = CalculateCenter(rotationDeg, centerIsOnRight);
 
-			GoAlongCircle(rotationDeg, centerIsOnRight, center);
-			var startingCircleTangent = CalculateTangent(centerIsOnRight, center);
-			var finishingCircleTangent = Vector3.Zero;
+			var circlePoints = GetCirclePoints(rotationDeg, centerIsOnRight, center).ToList();
+			var tangent = CalculateTangent(centerIsOnRight, center, circlePoints);
 
-			if (CurveShouldNotBeDrawnHere(startingCircleTangent, startEndDir))
+			if (CurveShouldNotBeDrawnHere(tangent, startEndDir))
 				return new List<Vector2>();
 
-			RemoveCirclePointsAfterTangent(startingCircleTangent);
-			GoStraight(startingCircleTangent, end);
+			RemoveCirclePointsAfterTangent(tangent, circlePoints);
+			var straightPoints = GoStraight(tangent, end);
 
 			if (Global.DebugMode)
-				UpdateHelpersPositions(center, startingCircleTangent);
-			return points;
+				UpdateHelpersPositions(center, tangent);
+			return circlePoints.Concat(straightPoints).ToList();
 		}
 
 		private float GetRotationDeg()
@@ -111,19 +109,21 @@ namespace Trains.Model.Builders
 			return center;
 		}
 
-		private void GoStraight(Vector2 start, Vector2 end)
+		private IEnumerable<Vector2> GoStraight(Vector2 start, Vector2 end)
 		{
 			var dirPointToEnd = (end - start).Normalized();
 			var point = start;
+			var points = new List<Vector2>();
 			while (point.DistanceSquaredTo(end) > accuracy)
 			{
 				point += dirPointToEnd * accuracy;
 				points.Add(point);
 			}
 			points.Add(end);
+			return points;
 		}
 
-		private void GoAlongCircle(float rotationDeg, bool centerIsOnRight, Vector2 center)
+		private IEnumerable<Vector2> GetCirclePoints(float rotationDeg, bool centerIsOnRight, Vector2 center)
 		{
 			var startAngle = (centerIsOnRight ? Pi : 0) + (Pi / 180 * rotationDeg);
 			var endAngle = (centerIsOnRight ? Pi + startAngle : -Pi - startAngle) + (Pi / 180 * rotationDeg);
@@ -135,14 +135,14 @@ namespace Trains.Model.Builders
 				var x = radius * Cos(i);
 				var y = radius * Sin(i);
 				var point = center + new Vector2(x, y);
-				points.Add(point);
+				yield return point;
 			}
 		}
 
-		private Vector2 CalculateTangent(bool centerIsOnRight, Vector2 center)
+		private Vector2 CalculateTangent(bool centerIsOnRight, Vector2 center, List<Vector2> circlePoints)
 		{
 			Vector2 tangent = Vector2.Zero;
-			return points.Find(p =>
+			return circlePoints.Find(p =>
 			{
 				var dirPointToCenter = (center - p).Normalized();
 				var dirPointToEnd = (end - p).Normalized();
@@ -166,7 +166,7 @@ namespace Trains.Model.Builders
 			return curveGoesBehindStartDir;
 		}
 
-		private void RemoveCirclePointsAfterTangent(Vector2 tangent)
+		private void RemoveCirclePointsAfterTangent(Vector2 tangent, List<Vector2> points)
 		{
 			points.RemoveAll(p => points.IndexOf(p) > points.IndexOf(tangent));
 		}
@@ -205,7 +205,7 @@ namespace Trains.Model.Builders
 			var prevDirPerp = prevDir.Rotated(Pi / 2);
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
 			var center = CalculateCenter(rotationDeg, centerIsOnRight);
-			GoAlongCircle(rotationDeg, centerIsOnRight, center);
+			GetCirclePoints(rotationDeg, centerIsOnRight, center);
 
 
 			return points;
