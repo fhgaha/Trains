@@ -242,7 +242,7 @@ namespace Trains.Model.Builders
 			var points = new List<Vector2>();
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
-			snapper.TrySnapBpEnd(mousePos, pathList, blueprint);
+			snapper.TrySnapBpEnd(mousePos, pathList, blueprint, currentPath);
 			var dirFromSnappedEnd = snapper.SnappedEndDir;
 
 			if (snapper.IsBpStartSnappedOnSegment())

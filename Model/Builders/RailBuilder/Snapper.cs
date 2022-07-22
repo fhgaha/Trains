@@ -15,7 +15,7 @@ namespace Trains.Model.Builders
 		public Vector3 SnappedEndDir { get; set; } = Vector3.Zero;
 		public CurveSegment SnappedEndMidSegment { get; set; }
 
-		private const float snapDistance = 1f;
+		private const float snapDistance = 0.5f;
 
 		public Snapper() { }
 
@@ -127,7 +127,7 @@ namespace Trains.Model.Builders
 			SnappedEndMidSegment = segment;
 		}
 
-		public void TrySnapBpEnd(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
+		public void TrySnapBpEnd(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint, RailPath currentPath)
 		{
 			foreach (var path in pathList)
 			{
@@ -136,8 +136,15 @@ namespace Trains.Model.Builders
 				var start = path.Start;
 				var end = path.End;
 
+				// GD.PrintS("\n",
+				// 	"end:", end, "\n",
+				// 	"mousePos:", mousePos, "\n",
+				// 	"IsCursorOn(end, start, mousePos):", IsCursorOn(end, start, mousePos), "\n",
+				// 	"!end.IsEqualApprox(mousePos, snapDistance):", !end.IsEqualApprox(mousePos, snapDistance)
+				// );
+
 				if (IsCursorOn(start, end, mousePos)
-				&& !start.IsEqualApprox(mousePos, snapDistance)
+				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance)
 				)
 				{
 					//blueprint.Translation = start;
@@ -147,7 +154,7 @@ namespace Trains.Model.Builders
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos)
-				&& !end.IsEqualApprox(mousePos, snapDistance)
+				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance)
 				)
 				{
 					//blueprint.Translation = end;
@@ -158,7 +165,7 @@ namespace Trains.Model.Builders
 
 					return;
 				}
-				else if (TrySnapEmptyBpOnMidSegment(path, mousePos))
+				else if (TrySnapFilledBpOnMidSegment(path, mousePos))
 				{
 					if (SnappedStartMidSegment is null) continue;
 
@@ -168,6 +175,20 @@ namespace Trains.Model.Builders
 					return;
 				}
 			}
+		}
+
+		private bool TrySnapFilledBpOnMidSegment(RailPath path, Vector3 mousePos)
+		{
+			foreach (var s in path.GetSegments())
+			{
+				if (IsCursorOn(s.First, s.Second, mousePos))
+				{
+					SnappedStartMidSegment = s;
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }

@@ -178,6 +178,8 @@ namespace Trains.Model.Builders
 
 		public List<Vector2> CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
 		{
+			return CalculateCurvePoints(start, end, startDir);
+
 			this.start = start;
 			this.end = end;
 			this.radius = 1f;

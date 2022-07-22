@@ -12,8 +12,8 @@ namespace Trains.Model.Builders
 
 		[Export] private readonly Color notAllowedColor;
 
-		public Vector3 Start { get => Translation + Curve.First(); }
-		public Vector3 End { get => Translation + Curve.Last(); }
+		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
+		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 
 		public Vector3 DirFromStart
 		{
