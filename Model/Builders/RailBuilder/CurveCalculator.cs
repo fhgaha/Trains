@@ -61,16 +61,14 @@ namespace Trains.Model.Builders
 			points = new List<Vector2>();
 
 			if (prevDir == Vector2.Zero)
-			{
 				return GoStraight(start, end).ToList();
-			}
 
 			return CalculateCircleBasedCurve();
 		}
 
 		private List<Vector2> CalculateCircleBasedCurve()
 		{
-			var rotationDeg = GetRotationDeg();
+			var rotationDeg = GetRotationAngleDeg(prevDir);
 			var startEndDir = (end - start).Normalized();
 			var prevDirPerp = prevDir.Rotated(Pi / 2);
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
@@ -90,7 +88,7 @@ namespace Trains.Model.Builders
 			return circlePoints.Concat(straightPoints).ToList();
 		}
 
-		private float GetRotationDeg()
+		private float GetRotationAngleDeg(Vector2 prevDir)
 		{
 			if (prevDir == Vector2.Zero) return 0f;
 
@@ -186,10 +184,6 @@ namespace Trains.Model.Builders
 			this.prevDir = startDir;
 			points = new List<Vector2>();
 
-			var startCirclePoints = new List<Vector2>();
-			var finishCirclePoints = new List<Vector2>();
-			var straightPoints = new List<Vector2>();
-
 			//вычисляем точку дуги от старта
 			//вычисляем направление дуги старта
 			//вычисляем точку дуги от конца
@@ -200,20 +194,39 @@ namespace Trains.Model.Builders
 			//разворачиваем точки конечной дуги
 			//объединяем все в один список и возвращаем
 
-			var rotationDeg = GetRotationDeg();
-			var startEndDir = (end - start).Normalized();
-			var prevDirPerp = prevDir.Rotated(Pi / 2);
-			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
-			var center = CalculateCenter(rotationDeg, centerIsOnRight);
-			GetCirclePoints(rotationDeg, centerIsOnRight, center);
+			var s_rotationAngleDeg = GetRotationAngleDeg(startDir);
+			var s_startEndDir = (end - start).Normalized();
+			var s_prevDirPerp = startDir.Rotated(Pi / 2);
+			var s_centerIsOnRight = s_prevDirPerp.Dot(s_startEndDir) >= 0;   //-1, 0 or 1
+			var s_center = CalculateCenter(s_rotationAngleDeg, s_centerIsOnRight);
+			var startCirclePoints = GetCirclePoints(s_rotationAngleDeg, s_centerIsOnRight, s_center).ToList();
 
+			var s_tangent = CalculateTangent(s_centerIsOnRight, s_center, startCirclePoints);
+			if (CurveShouldNotBeDrawnHere(s_tangent, s_startEndDir))
+				return new List<Vector2>();
+			RemoveCirclePointsAfterTangent(s_tangent, startCirclePoints);
 
-			return points;
-		}
+			// return startCirclePoints;
 
-		private void StartCircleMakeStep(List<Vector2> points)
-		{
+			var f_rotationDeg = GetRotationAngleDeg(finishDir);
+			var f_startEndDir = (start - end).Normalized();
+			var f_finishDirPerp = finishDir.Rotated(Pi / 2);
+			var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
+			var f_center = CalculateCenter(f_rotationDeg, f_centerIsOnRight);
+			var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
+			finishCirclePoints.Reverse();
 
+			var f_tangent = CalculateTangent(f_centerIsOnRight, f_center, finishCirclePoints);
+			if (CurveShouldNotBeDrawnHere(f_tangent, f_startEndDir))
+				return new List<Vector2>();
+			RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
+
+			var straightPoints = GoStraight(s_tangent, f_tangent);
+
+			return startCirclePoints
+				.Concat(straightPoints)
+				.Concat(finishCirclePoints)
+				.ToList();
 		}
 
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
