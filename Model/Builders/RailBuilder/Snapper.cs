@@ -94,11 +94,19 @@ namespace Trains.Model.Builders
 
 		private bool TrySnapEmptyBpOnMidSegment(RailPath path, Vector3 mousePos)
 		{
-			foreach (var s in path.GetSegments())
+			//snapping can be done to path start or path end. 
+			//so we dont want to snap on mid segment if there is only one segment in path.
+			//also we dont want to snap on the first segment, cause we would snap on the first point.
+			//thats why we skip first point of path or here the first segment.
+
+			var segments = path.GetSegments();
+			if (segments.Count < 2) return false;
+
+			for (int i = 1; i < segments.Count; i++)
 			{
-				if (IsCursorOn(s.First, s.Second, mousePos))
+				if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
 				{
-					SnappedStartMidSegment = s;
+					SnappedStartMidSegment = segments[i];
 					return true;
 				}
 			}
