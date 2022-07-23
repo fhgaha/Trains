@@ -178,6 +178,11 @@ namespace Trains.Model.Builders
 
 		public List<Vector2> CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
 		{
+			//дуги могут иметь разное кол-во т-к, поэтому направляения чаще всего сходиться 
+			//не будутю нужно расчитать сперва полностью окружность одной дуги, затем расчитываеть точки другой 
+			//и когда первая точка первой окр-ти окажется на прямой, выходящей из направления второй окружности, 
+			//тогда цикл надо прерывать и удалть все точки после найденной
+
 			//return CalculateCurvePoints(start, end, startDir);
 
 			this.start = start;
@@ -185,27 +190,11 @@ namespace Trains.Model.Builders
 			this.radius = 1f;
 			this.prevDir = startDir;
 
-			//вычисляем точку дуги от старта
-			//вычисляем направление дуги старта
-			//вычисляем точку дуги от конца
-			//вычисляем направление дуги конца
-			//сравниваем направления
-			//если направления противоположны, прерываемся, строим прямую от последней точки стартовой дуги
-			//к последней точке конечной дуги
-			//разворачиваем точки конечной дуги
-			//объединяем все в один список и возвращаем
-
 			var s_rotationAngleDeg = GetRotationAngleDeg(startDir);
 			var s_startEndDir = (end - start).Normalized();
 			var s_prevDirPerp = startDir.Rotated(Pi / 2);
 			var s_centerIsOnRight = s_prevDirPerp.Dot(s_startEndDir) >= 0;   //-1, 0 or 1
 			var s_center = CalculateCenter(s_rotationAngleDeg, s_centerIsOnRight, start);
-			// var startCirclePoints = GetCirclePoints(s_rotationAngleDeg, s_centerIsOnRight, s_center).ToList();
-
-			// var s_tangent = CalculateTangent(s_centerIsOnRight, s_center, startCirclePoints);
-			// if (CurveShouldNotBeDrawnHere(s_tangent, s_startEndDir))
-			// 	return new List<Vector2>();
-			// RemoveCirclePointsAfterTangent(s_tangent, startCirclePoints);
 
 			var f_rotationDeg = GetRotationAngleDeg(finishDir);
 			var f_startEndDir = (start - end).Normalized();
@@ -213,29 +202,34 @@ namespace Trains.Model.Builders
 			// var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
 			var f_centerIsOnRight = !s_centerIsOnRight;
 			var f_center = CalculateCenter(f_rotationDeg, f_centerIsOnRight, end);
-			// var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
-			// finishCirclePoints.Reverse();
 
+			var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
 			// var f_tangent = CalculateTangent(f_centerIsOnRight, f_center, finishCirclePoints);
 			// if (CurveShouldNotBeDrawnHere(f_tangent, f_startEndDir))
 			// 	return new List<Vector2>();
 			// RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
+			//finishCirclePoints.Reverse();
 
-			var startCirclePoints = new List<Vector2>();
-			var finishCirclePoints = new List<Vector2>();
+			var startCirclePoints = GetCirclePoints(s_rotationAngleDeg, s_centerIsOnRight, s_center).ToList();
+			var firstAndLastStraightPoints = CalculateFirstAndLastStraightLinepoints(
+				s_centerIsOnRight, s_center, startCirclePoints, finishCirclePoints);
 
-			//неправильно. дуги могут иметь разное кол-во т-к, поэтому направляения чаще всего сходиться 
-			//не будутю нужно расчитать сперва полностью окружность одной дуги, затем расчитываеть точки другой 
-			//и когда первая точка первой окр-ти окажется на прямой, выходящей из направления второй окружности, 
-			//тогда цикл надо прерывать и удалть все точки после найденной
+			if (firstAndLastStraightPoints.Length < 2)
+				return new List<Vector2>();
 
-			CalculateStartAndFinishCirclePoints(startCirclePoints, finishCirclePoints,
-			s_rotationAngleDeg, s_centerIsOnRight, s_center,
-			f_rotationDeg, f_centerIsOnRight, f_center);
+			var s_tangent = firstAndLastStraightPoints[0];
+			var f_tangent = firstAndLastStraightPoints[1];
+
+			if (CurveShouldNotBeDrawnHere(s_tangent, s_startEndDir))
+				return new List<Vector2>();
+			//RemoveCirclePointsAfterTangent(s_tangent, startCirclePoints);
+			RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
+
+
+			//CalculateStartAndFinishCirclePoints(startCirclePoints, finishCirclePoints,
+			// s_rotationAngleDeg, s_centerIsOnRight, s_center,
+			// f_rotationDeg, f_centerIsOnRight, f_center);
 			finishCirclePoints.Reverse();
-
-			var s_tangent = startCirclePoints.Last();
-			var f_tangent = finishCirclePoints.First();
 
 			var straightPoints = GoStraight(s_tangent, f_tangent);
 
@@ -247,6 +241,51 @@ namespace Trains.Model.Builders
 				.ToList();
 
 			return new List<Vector2>();
+		}
+
+		private Vector2[] CalculateFirstAndLastStraightLinepoints(
+			bool centerIsOnRight,
+			Vector2 center,
+			List<Vector2> circlePoints,
+			List<Vector2> pointsToPickFrom)
+		{
+			var lastPoint = circlePoints[circlePoints.Count - 1];
+			var prelastPoint = circlePoints[circlePoints.Count - 2];
+			var direction = lastPoint - prelastPoint;
+			var ray = direction * 1000;
+
+			var lastAngle = centerIsOnRight ? 2 * Pi : -2 * Pi;
+			bool notReachedLasAngle(float i) => centerIsOnRight ? i < lastAngle : i > lastAngle;
+			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
+
+			for (float i = 0; notReachedLasAngle(i); i += dAngle)
+			{
+				foreach (var p in pointsToPickFrom)
+				{
+					if (IsPointOnLineApprox(lastPoint, ray, p))
+						return new Vector2[] { lastPoint, p };
+				}
+
+				ray = ray.Rotated(i);
+			}
+
+			return new Vector2[0];
+		}
+
+		private bool IsPointOnLineApprox(Vector2 a, Vector2 b, Vector2 p)
+		{
+			float accuracy = 0.1f;
+
+			//https://lms2.sseu.ru/courses/eresmat/gloss/g115.htm
+			//Даны две точки M1 (x1, y1) и M2 (x2, y2). Уравнение прямой, проходящей через две данные точки:
+			// (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
+
+			var yk = (p.y - a.y) / (b.y - a.y);
+			var xk = (p.x - a.x) / (b.x - a.x);
+			var pointBelongsPresisely = yk == xk;
+
+			var pointBelongsApprox = Math.Abs(yk - xk) > accuracy && Math.Abs(xk - yk) < accuracy;
+			return pointBelongsApprox;
 		}
 
 		private void CalculateStartAndFinishCirclePoints(
@@ -301,8 +340,6 @@ namespace Trains.Model.Builders
 				s_startAngle += s_dAngle;
 				f_startAngle += f_dAngle;
 			}
-
-
 		}
 
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
