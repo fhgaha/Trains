@@ -199,20 +199,15 @@ namespace Trains.Model.Builders
 			var f_rotationDeg = GetRotationAngleDeg(finishDir);
 			var f_startEndDir = (start - end).Normalized();
 			var f_finishDirPerp = finishDir.Rotated(Pi / 2);
-			// var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
-			var f_centerIsOnRight = !s_centerIsOnRight;
+			var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
 			var f_center = CalculateCenter(f_rotationDeg, f_centerIsOnRight, end);
-
 			var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
-			// var f_tangent = CalculateTangent(f_centerIsOnRight, f_center, finishCirclePoints);
-			// if (CurveShouldNotBeDrawnHere(f_tangent, f_startEndDir))
-			// 	return new List<Vector2>();
-			// RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
-			//finishCirclePoints.Reverse();
 
-			var startCirclePoints = GetCirclePoints(s_rotationAngleDeg, s_centerIsOnRight, s_center).ToList();
-			var firstAndLastStraightPoints = CalculateFirstAndLastStraightLinepoints(
-				s_centerIsOnRight, s_center, startCirclePoints, finishCirclePoints);
+			var startCirclePoints = new List<Vector2>();
+			var firstAndLastStraightPoints = new Vector2[2];
+			firstAndLastStraightPoints = CalculateStartCirclePointsAndFirstAndLastStarightPoints(
+				s_rotationAngleDeg, s_centerIsOnRight, s_center,
+				finishCirclePoints, startCirclePoints, firstAndLastStraightPoints);
 
 			if (firstAndLastStraightPoints.Length < 2)
 				return new List<Vector2>();
@@ -225,12 +220,7 @@ namespace Trains.Model.Builders
 			//RemoveCirclePointsAfterTangent(s_tangent, startCirclePoints);
 			RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
 
-
-			//CalculateStartAndFinishCirclePoints(startCirclePoints, finishCirclePoints,
-			// s_rotationAngleDeg, s_centerIsOnRight, s_center,
-			// f_rotationDeg, f_centerIsOnRight, f_center);
 			finishCirclePoints.Reverse();
-
 			var straightPoints = GoStraight(s_tangent, f_tangent);
 
 			//return finishCirclePoints;
@@ -243,22 +233,52 @@ namespace Trains.Model.Builders
 			return new List<Vector2>();
 		}
 
+		private Vector2[] CalculateStartCirclePointsAndFirstAndLastStarightPoints(
+			float s_rotationAngleDeg, bool s_centerIsOnRight, Vector2 s_center,
+			List<Vector2> finishCirclePoints, List<Vector2> startCirclePoints,
+			Vector2[] firstAndLastStraightPoints)
+		{
+			var startAngle = (s_centerIsOnRight ? Pi : 0) + (Pi / 180 * s_rotationAngleDeg);
+			var endAngle = (s_centerIsOnRight ? Pi + startAngle : -Pi - startAngle) + (Pi / 180 * s_rotationAngleDeg);
+			var dAngle = s_centerIsOnRight ? 0.1f : -0.1f;
+			bool EndAngleIsNotReached(float angle) => s_centerIsOnRight ? angle < endAngle : angle > endAngle;
+
+			for (float i = startAngle; EndAngleIsNotReached(i); i += dAngle)
+			{
+				var x = radius * Cos(i);
+				var y = radius * Sin(i);
+				var point = s_center + new Vector2(x, y);
+				startCirclePoints.Add(point);
+
+				if (startCirclePoints.Count > 1)
+				{
+					firstAndLastStraightPoints = CalculateFirstAndLastStraightLinepoints(
+						s_centerIsOnRight, s_center, startCirclePoints, finishCirclePoints);
+
+					if (firstAndLastStraightPoints.Length == 2)
+						break;
+				}
+			}
+
+			return firstAndLastStraightPoints;
+		}
+
 		private Vector2[] CalculateFirstAndLastStraightLinepoints(
 			bool centerIsOnRight,
 			Vector2 center,
 			List<Vector2> circlePoints,
 			List<Vector2> pointsToPickFrom)
 		{
-			var lastPoint = circlePoints[circlePoints.Count - 1];
+			var lastPoint = circlePoints[circlePoints.Count - 1];   //this is wrong
 			var prelastPoint = circlePoints[circlePoints.Count - 2];
 			var direction = lastPoint - prelastPoint;
 			var ray = direction * 1000;
 
 			var lastAngle = centerIsOnRight ? 2 * Pi : -2 * Pi;
-			bool notReachedLasAngle(float i) => centerIsOnRight ? i < lastAngle : i > lastAngle;
+			bool notReachedLastAngle(float i) => centerIsOnRight ? i < lastAngle : i > lastAngle;
 			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
 
-			for (float i = 0; notReachedLasAngle(i); i += dAngle)
+			for (float i = 0; notReachedLastAngle(i); i += dAngle)
 			{
 				foreach (var p in pointsToPickFrom)
 				{
@@ -274,7 +294,7 @@ namespace Trains.Model.Builders
 
 		private bool IsPointOnLineApprox(Vector2 a, Vector2 b, Vector2 p)
 		{
-			float accuracy = 0.1f;
+			float accuracy = 0.01f;
 
 			//https://lms2.sseu.ru/courses/eresmat/gloss/g115.htm
 			//Даны две точки M1 (x1, y1) и M2 (x2, y2). Уравнение прямой, проходящей через две данные точки:
