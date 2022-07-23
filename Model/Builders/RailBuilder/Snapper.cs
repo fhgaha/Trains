@@ -58,6 +58,7 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
+					Reset();
 					SetStartVars(path, path.DirFromStart, null);
 					return;
 				}
@@ -65,6 +66,7 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = end;
 					RotateBlueprint(blueprint, path.DirFromEnd);
+					Reset();
 					SetStartVars(path, path.DirFromEnd, null);
 					return;
 				}
@@ -73,13 +75,11 @@ namespace Trains.Model.Builders
 					if (SnappedStartMidSegment is null) continue;
 
 					blueprint.Translation = SnappedStartMidSegment.First;
+					Reset();
 					SetStartVars(path, Vector3.Zero, SnappedStartMidSegment);
 					return;
 				}
 			}
-
-			SnappedStartMidSegment = null;
-			SetStartVars(null, Vector3.Zero, null);
 		}
 
 		private bool IsCursorOn(Vector3 start, Vector3 end, Vector3 mousePos)
@@ -157,6 +157,7 @@ namespace Trains.Model.Builders
 				{
 					//blueprint.Translation = start;
 					//RotateBlueprint(blueprint, path.DirFromStart);
+					Reset();
 					SetEndVars(path, path.DirFromStart, null);
 					GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path start");
 					return;
@@ -167,6 +168,7 @@ namespace Trains.Model.Builders
 				{
 					//blueprint.Translation = end;
 					//RotateBlueprint(blueprint, path.DirFromEnd);
+					Reset();
 					SetEndVars(path, path.DirFromEnd, null);
 
 					GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path end");
@@ -178,11 +180,13 @@ namespace Trains.Model.Builders
 					if (SnappedStartMidSegment is null) continue;
 
 					//blueprint.Translation = SnappedStartSegment.First;
+					Reset();
 					SetEndVars(path, Vector3.Zero, SnappedStartMidSegment);
 					GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path mid segment");
 					return;
 				}
 			}
+			Reset();
 		}
 
 		private bool TrySnapFilledBpOnMidSegment(RailPath path, Vector3 mousePos)

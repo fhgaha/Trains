@@ -284,7 +284,7 @@ namespace Trains.Model.Builders
 			var xk = (p.x - a.x) / (b.x - a.x);
 			var pointBelongsPresisely = yk == xk;
 
-			var pointBelongsApprox = Math.Abs(yk - xk) > accuracy && Math.Abs(xk - yk) < accuracy;
+			var pointBelongsApprox = Math.Abs(yk - xk) < accuracy && Math.Abs(xk - yk) < accuracy;
 			return pointBelongsApprox;
 		}
 
