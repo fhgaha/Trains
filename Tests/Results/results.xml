@@ -1,8 +1,9 @@
 <?xml version="1.0" ?>
-<testsuites failures="0" name="TestXML" tests="2" time="0.385">
-	<testsuite name="CurveCalculator Tests" failures="0"  tests="2" time="0">
+<testsuites failures="0" name="TestXML" tests="2" time="0.459">
+	<testsuite name="CurveCalculator Tests" failures="0"  tests="3" time="0">
 		<testcase name="PointIsOnLineApprox" time="0"></testcase>
 		<testcase name="PointIsOffLineApprox" time="0"></testcase>
+		<testcase name="NoDivisionByZeroInIsPointOnLineApproxMethod" time="0"></testcase>
 	</testsuite>
 
 	<testsuite name="PointsParser Tests" failures="0"  tests="4" time="0">

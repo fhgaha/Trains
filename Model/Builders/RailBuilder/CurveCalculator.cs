@@ -282,7 +282,7 @@ namespace Trains.Model.Builders
 			{
 				foreach (var p in pointsToPickFrom)
 				{
-					if (IsPointOnLineApprox(lastPoint, ray, p))
+					if (IsPointOnLineApprox(lastPoint, ray, p, 0.01f))
 						return new Vector2[] { lastPoint, p };
 				}
 
@@ -292,18 +292,16 @@ namespace Trains.Model.Builders
 			return new Vector2[0];
 		}
 
-		private bool IsPointOnLineApprox(Vector2 a, Vector2 b, Vector2 p)
+		private bool IsPointOnLineApprox(Vector2 lineStartPoint, Vector2 lineEndPoint, Vector2 p, float accuracy)
 		{
-			float accuracy = 0.01f;
-
 			//https://lms2.sseu.ru/courses/eresmat/gloss/g115.htm
 			//Даны две точки M1 (x1, y1) и M2 (x2, y2). Уравнение прямой, проходящей через две данные точки:
 			// (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
 
-			var yk = (p.y - a.y) / (b.y - a.y);
-			var xk = (p.x - a.x) / (b.x - a.x);
-			var pointBelongsPresisely = yk == xk;
+			float yk = (p.y - lineStartPoint.y) / (lineEndPoint.y - lineStartPoint.y);
+			float xk = (p.x - lineStartPoint.x) / (lineEndPoint.x - lineStartPoint.x);
 
+			var pointBelongsPresisely = yk == xk;
 			var pointBelongsApprox = Math.Abs(yk - xk) < accuracy && Math.Abs(xk - yk) < accuracy;
 			return pointBelongsApprox;
 		}

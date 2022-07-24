@@ -41,21 +41,23 @@ namespace Trains.Tests
 			;
 
 			var points = PointsParser.Parse(text).ToList();
-			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator, new object[] { points[0], points[1], p });
+			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator,
+				new object[] { points[0], points[1], p, 0.01f });
 
 			Assert.IsTrue(PointIsOnLine(new Vector2(2, 2)));
+			Assert.IsTrue(PointIsOnLine(new Vector2(2, 2.01f)));
+			Assert.IsTrue(PointIsOnLine(new Vector2(2.01f, 2)));
+			Assert.IsTrue(PointIsOnLine(new Vector2(2, 2.010f)));
 		}
 
 		[Test]
 		public void PointIsOffLineApprox()
 		{
-			var text = ""
-			+ "[0]:(0, 0)"
-			+ "[1]:(1, 1)"
-			;
+			var start = new Vector2(0, 0);
+			var end = new Vector2(1, 1);
 
-			var points = PointsParser.Parse(text).ToList();
-			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator, new object[] { points[0], points[1], p });
+			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator,
+				new object[] { start, end, p, 0.01f });
 
 			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
 			Assert.IsFalse(PointIsOnLine(new Vector2(2, 3)));
@@ -66,6 +68,28 @@ namespace Trains.Tests
 			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1.5f)));
 			Assert.IsFalse(PointIsOnLine(new Vector2(1.5f, 2)));
 			Assert.IsFalse(PointIsOnLine(new Vector2(2.5f, 2)));
+
+			Assert.IsFalse(PointIsOnLine(new Vector2(2, 2.011f)));
+		}
+
+		[Test]
+		public void NoDivisionByZeroInIsPointOnLineApproxMethod()
+		{
+			var start = new Vector2(0, 0);
+			var end = new Vector2(1, 0);
+
+			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator,
+				new object[] { start, end, p, 0.01f });
+
+			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
+
+			start = new Vector2(1, 0);
+			end = new Vector2(0, 0);
+			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
+
+			start = new Vector2(0, 0);
+			end = new Vector2(0, 0);
+			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
