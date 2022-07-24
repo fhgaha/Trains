@@ -240,14 +240,14 @@ namespace Trains.Model.Builders
 			Vector2[] firstAndLastStraightPoints)
 		{
 			var startAngleDeg = (s_centerIsOnRight ? 90 : 0) + (int)s_rotationAngleDeg;
-			var endAngleRad = (s_centerIsOnRight ? 180 + startAngleDeg : -180 - startAngleDeg) + s_rotationAngleDeg;
-			var dAngleRad = s_centerIsOnRight ? 1 : -1;
-			bool EndAngleIsNotReached(int angleDeg) => s_centerIsOnRight ? angleDeg < endAngleRad : angleDeg > endAngleRad;
+			var endAngleDeg = (s_centerIsOnRight ? startAngleDeg + 180 : startAngleDeg - 180) + s_rotationAngleDeg;
+			var dAngleDeg = s_centerIsOnRight ? 1 : -1;
+			bool EndAngleIsNotReached(int angleDeg) => s_centerIsOnRight ? angleDeg < endAngleDeg : angleDeg > endAngleDeg;
 
-			for (int i = startAngleDeg; EndAngleIsNotReached(i); i += dAngleRad)
+			for (int i = startAngleDeg; EndAngleIsNotReached(i); i += dAngleDeg)
 			{
-				var x = radius * Cos(i * Pi/180);
-				var y = radius * Sin(i * Pi/180);
+				var x = radius * Cos(i * Pi / 180);
+				var y = radius * Sin(i * Pi / 180);
 				var point = s_center + new Vector2(x, y);
 				startCirclePoints.Add(point);
 
