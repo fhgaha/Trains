@@ -201,8 +201,9 @@ namespace Trains.Model.Builders
 			var f_finishDirPerp = finishDir.Rotated(Pi / 2);
 			var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
 			var f_center = CalculateCenter(f_rotationDeg, f_centerIsOnRight, end);
-			var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
 
+			//do
+			var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
 			var startCirclePoints = new List<Vector2>();
 			var firstAndLastStraightPoints = new Vector2[2];
 			firstAndLastStraightPoints = CalculateStartCirclePointsAndFirstAndLastStarightPoints(
@@ -238,15 +239,15 @@ namespace Trains.Model.Builders
 			List<Vector2> finishCirclePoints, List<Vector2> startCirclePoints,
 			Vector2[] firstAndLastStraightPoints)
 		{
-			var startAngle = (s_centerIsOnRight ? Pi : 0) + (Pi / 180 * s_rotationAngleDeg);
-			var endAngle = (s_centerIsOnRight ? Pi + startAngle : -Pi - startAngle) + (Pi / 180 * s_rotationAngleDeg);
-			var dAngle = s_centerIsOnRight ? 0.1f : -0.1f;
-			bool EndAngleIsNotReached(float angle) => s_centerIsOnRight ? angle < endAngle : angle > endAngle;
+			var startAngleDeg = (s_centerIsOnRight ? 90 : 0) + (int)s_rotationAngleDeg;
+			var endAngleRad = (s_centerIsOnRight ? 180 + startAngleDeg : -180 - startAngleDeg) + s_rotationAngleDeg;
+			var dAngleRad = s_centerIsOnRight ? 1 : -1;
+			bool EndAngleIsNotReached(int angleDeg) => s_centerIsOnRight ? angleDeg < endAngleRad : angleDeg > endAngleRad;
 
-			for (float i = startAngle; EndAngleIsNotReached(i); i += dAngle)
+			for (int i = startAngleDeg; EndAngleIsNotReached(i); i += dAngleRad)
 			{
-				var x = radius * Cos(i);
-				var y = radius * Sin(i);
+				var x = radius * Cos(i * Pi/180);
+				var y = radius * Sin(i * Pi/180);
 				var point = s_center + new Vector2(x, y);
 				startCirclePoints.Add(point);
 
