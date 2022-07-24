@@ -1,8 +1,6 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Trains.Model.Builders;
 using Trains.Model.Common;
 
 namespace Trains.Tests
@@ -77,18 +75,23 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void Parse48PointsTest()
+		public void ParsedPointsCountIsCorrect()
 		{
 			var points = PointsParser.Parse(text48);
-
 			Assert.IsEqual(points.Count(), 48);
+		}
+
+		[Test]
+		public void SomeParsedPointsAreCorrect()
+		{
+			var points = PointsParser.Parse(text48);
 			Assert.IsEqual(points.ElementAt(0), new Vector2(7.618713f, -0.5984715f));
 			Assert.IsEqual(points.ElementAt(28), new Vector2(7.928698f, 1.347898f));
 			Assert.IsEqual(points.ElementAt(47), new Vector2(6.605853f, 0.4009708f));
 		}
 
 		[Test]
-		public void ParseWrongTextTest()
+		public void RandomTextIsNotParsed()
 		{
 			const string text = "some innaproppriate text";
 			var points = PointsParser.Parse(text);
@@ -96,7 +99,7 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void ParseEmptyStringTest()
+		public void EmptyStringIsNotParsed()
 		{
 			const string text = "";
 			var points = PointsParser.Parse(text);
