@@ -239,12 +239,12 @@ namespace Trains.Model.Builders
 			List<Vector2> finishCirclePoints, List<Vector2> startCirclePoints,
 			Vector2[] firstAndLastStraightPoints)
 		{
-			var startAngleDeg = (s_centerIsOnRight ? 90 : 0) + (int)s_rotationAngleDeg;
-			var endAngleDeg = (s_centerIsOnRight ? startAngleDeg + 180 : startAngleDeg - 180) + s_rotationAngleDeg;
+			var startAngleDeg = (s_centerIsOnRight ? 90 : 0) + s_rotationAngleDeg;
+			var endAngleDeg = s_centerIsOnRight ? startAngleDeg + 180 : startAngleDeg - 180;
 			var dAngleDeg = s_centerIsOnRight ? 1 : -1;
-			bool EndAngleIsNotReached(int angleDeg) => s_centerIsOnRight ? angleDeg < endAngleDeg : angleDeg > endAngleDeg;
+			bool EndAngleIsNotReached(float angleDeg) => s_centerIsOnRight ? angleDeg < endAngleDeg : angleDeg > endAngleDeg;
 
-			for (int i = startAngleDeg; EndAngleIsNotReached(i); i += dAngleDeg)
+			for (float i = startAngleDeg; EndAngleIsNotReached(i); i += dAngleDeg)
 			{
 				var x = radius * Cos(i * Pi / 180);
 				var y = radius * Sin(i * Pi / 180);
@@ -275,11 +275,11 @@ namespace Trains.Model.Builders
 			var direction = lastPoint - prelastPoint;
 			var ray = direction * 1000;
 
-			var lastAngle = centerIsOnRight ? 2 * Pi : -2 * Pi;
-			bool notReachedLastAngle(float i) => centerIsOnRight ? i < lastAngle : i > lastAngle;
-			var dAngle = centerIsOnRight ? 0.1f : -0.1f;
+			var lastAngleDeg = centerIsOnRight ? 180 : -180;
+			bool notReachedLastAngle(float i) => centerIsOnRight ? i < lastAngleDeg : i > lastAngleDeg;
+			var dAngleDeg = centerIsOnRight ? 1f : -1f;
 
-			for (float i = 0; notReachedLastAngle(i); i += dAngle)
+			for (float i = 0; notReachedLastAngle(i); i += dAngleDeg)
 			{
 				foreach (var p in pointsToPickFrom)
 				{
