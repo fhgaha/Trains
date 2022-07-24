@@ -14,27 +14,11 @@ namespace Trains.Model.Common
 		{
 			foreach (var vec in ParseUsingRegex(text))
 				yield return vec;
-
-			// var coordsString = text.Split('[', ':')
-			// 	.Where(s => s.Length > 0 && s.First() == '(' && s.Last() == ')')
-			// 	.Select(s => s.Remove(0, 1))
-			// 	.Select(s => s.Remove(s.Length - 1, 1))
-			// 	.Select(s => s.Trim())
-			// 	.ToList();
-
-			// //s example: "7.618713, -0.5984715"
-			// foreach (var s in coordsString)
-			// {
-			// 	var coords = s.Split(", ");
-			// 	yield return new Vector2(
-			// 		Convert.ToSingle(coords[0], CultureInfo.InvariantCulture),
-			// 		Convert.ToSingle(coords[1], CultureInfo.InvariantCulture));
-			// }
 		}
 
-		public static IEnumerable<Vector2> ParseUsingRegex(string text)
+		private static IEnumerable<Vector2> ParseUsingRegex(string text)
 		{
-			var regexPatternToSplitString = @"\[\d+\]\:\(([+-]?[0-9]*[.]?[0-9]+)\,\ ([+-]?[0-9]*[.]?[0-9]+)\)";
+			const string regexPatternToSplitString = @"\[\d+\]\:\(([+-]?[0-9]*[.]?[0-9]+)\,\ ([+-]?[0-9]*[.]?[0-9]+)\)";
 
 			foreach (System.Text.RegularExpressions.Match m in
 				System.Text.RegularExpressions.Regex.Matches(text, regexPatternToSplitString))
@@ -44,6 +28,25 @@ namespace Trains.Model.Common
 				yield return new Vector2(
 					Convert.ToSingle(xString, CultureInfo.InvariantCulture),
 					Convert.ToSingle(yString, CultureInfo.InvariantCulture));
+			}
+		}
+
+		private static IEnumerable<Vector2> ParseUsingLinq(string text)
+		{
+			var coordsString = text.Split('[', ':')
+				.Where(s => s.Length > 0 && s.First() == '(' && s.Last() == ')')
+				.Select(s => s.Remove(0, 1))
+				.Select(s => s.Remove(s.Length - 1, 1))
+				.Select(s => s.Trim())
+				.ToList();
+
+			//s example: "7.618713, -0.5984715"
+			foreach (var s in coordsString)
+			{
+				var coords = s.Split(", ");
+				yield return new Vector2(
+					Convert.ToSingle(coords[0], CultureInfo.InvariantCulture),
+					Convert.ToSingle(coords[1], CultureInfo.InvariantCulture));
 			}
 		}
 	}

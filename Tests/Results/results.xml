@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<testsuites failures="0" name="TestXML" tests="1" time="0.134">
+<testsuites failures="0" name="TestXML" tests="1" time="0.126">
 	<testsuite name="PointsParser Tests" failures="0"  tests="2" time="0">
 		<testcase name="Parse48PointsTest" time="0"></testcase>
 		<testcase name="ParseWrongTextTest" time="0"></testcase>
