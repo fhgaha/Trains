@@ -9,7 +9,7 @@ using System;
 
 namespace Trains
 {
-	public class DubinsDebug : Node
+	public class DubinsDebug : Spatial
 	{
 		// //Everything we need to add in the editor
 		// //Circles
