@@ -26,9 +26,9 @@ namespace Trains.Model.Builders
 		private bool showHelpers = true;
 
 		//helpers
-		private MeshInstance dir;
-		private MeshInstance center;
-		private MeshInstance tangent;
+		private MeshInstance dir;		//green big
+		private MeshInstance center;	//green small
+		private MeshInstance tangent;	//light blue
 
 		//constants
 		private const float accuracy = 0.1f;
@@ -101,6 +101,12 @@ namespace Trains.Model.Builders
 		private Vector2 CalculateCenter(float rotationDeg, bool centerIsOnRight, Vector2 start)
 		{
 			var k = rotationDeg >= 90 && rotationDeg < 270 ? -1 : 1;
+
+			if (prevDir.x == 0)
+			{
+				//not a digit
+			}
+
 			var prevDirPerp = new Vector2(k, -k * prevDir.x / prevDir.y).Normalized();
 			var radVec = radius * (centerIsOnRight ? prevDirPerp : prevDirPerp.Rotated(Pi));
 			var center = start + radVec;
@@ -379,14 +385,14 @@ namespace Trains.Model.Builders
 			var s_center = CalculateCenter(s_rotationAngleDeg, s_centerIsOnRight, start);
 
 			var f_rotationAngleDeg = GetRotationAngleDeg(finishDir);
-			var f_startEndDir = (start - end).Normalized();
+			var f_endStartDir = (start - end).Normalized();
 			var f_finishDirPerp = finishDir.Rotated(Pi / 2);
-			var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
+			var f_centerIsOnRight = f_finishDirPerp.Dot(f_endStartDir) >= 0;   //-1, 0 or 1
 			var f_center = CalculateCenter(f_rotationAngleDeg, f_centerIsOnRight, end);
 
 			var startCenterToFinishCenterDir = (f_center - s_center).Normalized();
 			var s_tangent = s_center + startCenterToFinishCenterDir.Rotated(90 * Pi / 180) * radius;
-			var f_tangent = f_center + startCenterToFinishCenterDir.Rotated(-90 * Pi / 180) * radius;
+			var f_tangent = f_center + startCenterToFinishCenterDir.Rotated(90 * Pi / 180) * radius;
 
 			//do
 			var startCirclePoints = CalculateCirclePointsUntilReachedStraightLinePoint(
@@ -397,13 +403,13 @@ namespace Trains.Model.Builders
 
 			if (CurveShouldNotBeDrawnHere(s_tangent, s_startEndDir))
 				return new List<Vector2>();
-			//RemoveCirclePointsAfterTangent(s_tangent, startCirclePoints);
-			//RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
 
-			finishCirclePoints.Reverse();
+			//finishCirclePoints.Reverse();
 			var straightPoints = GoStraight(s_tangent, f_tangent);
 
-			//return finishCirclePoints;
+			UpdateHelpersPositions(f_center, f_tangent);
+
+			return finishCirclePoints;
 
 			return startCirclePoints
 				.Concat(straightPoints)
@@ -418,7 +424,7 @@ namespace Trains.Model.Builders
 			float rotationAngleDeg, bool centerIsOnRight, Vector2 center, Vector2 borderPoint)
 		{
 			List<Vector2> pointsToBuild = new List<Vector2>();
-			var startAngleDeg = (centerIsOnRight ? 90 : 0) + rotationAngleDeg;
+			var startAngleDeg = rotationAngleDeg;
 			var endAngleDeg = centerIsOnRight ? startAngleDeg + 180 : startAngleDeg - 180;
 			var dAngleDeg = centerIsOnRight ? 1 : -1;
 			bool EndAngleIsNotReached(float angleDeg) => centerIsOnRight ? angleDeg < endAngleDeg : angleDeg > endAngleDeg;
@@ -436,7 +442,6 @@ namespace Trains.Model.Builders
 
 			return pointsToBuild;
 		}
-
 
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
 		{

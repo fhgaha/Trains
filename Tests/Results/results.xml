@@ -1,9 +1,11 @@
 <?xml version="1.0" ?>
-<testsuites failures="0" name="TestXML" tests="2" time="0.459">
-	<testsuite name="CurveCalculator Tests" failures="0"  tests="3" time="0">
+<testsuites failures="1" name="TestXML" tests="2" time="0.488">
+	<testsuite name="CurveCalculator Tests" failures="1"  tests="4" time="0">
 		<testcase name="PointIsOnLineApprox" time="0"></testcase>
 		<testcase name="PointIsOffLineApprox" time="0"></testcase>
 		<testcase name="NoDivisionByZeroInIsPointOnLineApproxMethod" time="0"></testcase>
+		<testcase name="CalculateCenterTest" time="0">
+			<failure message="EXPECTED: |Godot.Vector2| (не число, не число) is equal to |Godot.Vector3|(0, 0, 0) but GOT |Godot.Vector2| (не число, не число) is not equal to |Godot.Vector3|(0, 0, 0)"></failure></testcase>
 	</testsuite>
 
 	<testsuite name="PointsParser Tests" failures="0"  tests="4" time="0">

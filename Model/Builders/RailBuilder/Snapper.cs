@@ -159,7 +159,7 @@ namespace Trains.Model.Builders
 					//RotateBlueprint(blueprint, path.DirFromStart);
 					Reset();
 					SetEndVars(path, path.DirFromStart, null);
-					GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path start");
+					//GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path start");
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos)
@@ -171,7 +171,7 @@ namespace Trains.Model.Builders
 					Reset();
 					SetEndVars(path, path.DirFromEnd, null);
 
-					GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path end");
+					//GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path end");
 
 					return;
 				}
@@ -182,7 +182,7 @@ namespace Trains.Model.Builders
 					//blueprint.Translation = SnappedStartSegment.First;
 					Reset();
 					SetEndVars(path, Vector3.Zero, SnappedStartMidSegment);
-					GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path mid segment");
+					//GD.PrintS(DateTime.Now.Ticks, "snapped bp end to path mid segment");
 					return;
 				}
 			}

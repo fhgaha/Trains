@@ -17,7 +17,7 @@ namespace Trains.Tests
 	public class TestCurveCalculator : WAT.Test
 	{
 		CurveCalculator calculator;
-		MethodInfo methodInfo;
+		MethodInfo isPointOnLineApproxMethodInfo;
 
 		//Developers may target a method with the [Start] attribute to execute code before any test method is run
 		public void RunBeforeTestClass()
@@ -28,7 +28,7 @@ namespace Trains.Tests
 		public void RunBeforeTestMethod()
 		{
 			calculator = new CurveCalculator();
-			methodInfo = typeof(CurveCalculator).GetMethod(
+			isPointOnLineApproxMethodInfo = typeof(CurveCalculator).GetMethod(
 				"IsPointOnLineApprox", BindingFlags.NonPublic | BindingFlags.Instance);
 		}
 
@@ -41,7 +41,7 @@ namespace Trains.Tests
 			;
 
 			var points = PointsParser.Parse(text).ToList();
-			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator,
+			bool PointIsOnLine(Vector2 p) => (bool)isPointOnLineApproxMethodInfo.Invoke(calculator,
 				new object[] { points[0], points[1], p, 0.01f });
 
 			Assert.IsTrue(PointIsOnLine(new Vector2(2, 2)));
@@ -56,7 +56,7 @@ namespace Trains.Tests
 			var start = new Vector2(0, 0);
 			var end = new Vector2(1, 1);
 
-			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator,
+			bool PointIsOnLine(Vector2 p) => (bool)isPointOnLineApproxMethodInfo.Invoke(calculator,
 				new object[] { start, end, p, 0.01f });
 
 			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
@@ -78,7 +78,7 @@ namespace Trains.Tests
 			var start = new Vector2(0, 0);
 			var end = new Vector2(1, 0);
 
-			bool PointIsOnLine(Vector2 p) => (bool)methodInfo.Invoke(calculator,
+			bool PointIsOnLine(Vector2 p) => (bool)isPointOnLineApproxMethodInfo.Invoke(calculator,
 				new object[] { start, end, p, 0.01f });
 
 			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
@@ -92,11 +92,25 @@ namespace Trains.Tests
 			Assert.IsFalse(PointIsOnLine(new Vector2(2, 1)));
 		}
 
+		[Test]
+		public void CalculateCenterTest()
+		{
+			var methodInfo = typeof(CurveCalculator).GetMethod(
+				"CalculateCenter", BindingFlags.NonPublic | BindingFlags.Instance);
+			Vector2 CalculateCenter(float rotationDeg, bool centerIsOnRight, Vector2 start)
+		  		=> (Vector2)methodInfo.Invoke(calculator, new object[] { rotationDeg, centerIsOnRight, start });
+
+			Assert.IsEqual(CalculateCenter(0, true, Vector2.Zero), Vector3.Zero);
+		}
+
+
+
+
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
 		public void RunAfterTestMethod()
 		{
 			calculator = null;
-			methodInfo = null;
+			isPointOnLineApproxMethodInfo = null;
 		}
 
 		// Developers may target a method with the [End] attribute to execute after all tests method have run

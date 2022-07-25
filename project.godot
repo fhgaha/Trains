@@ -49,7 +49,6 @@ DragDropController="res://Scripts/DragDrop/DragDropController.cs"
 
 [display]
 
-window/size/always_on_top=true
 window/dpi/allow_hidpi=true
 
 [editor_plugins]
