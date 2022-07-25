@@ -176,7 +176,8 @@ namespace Trains.Model.Builders
 			this.tangent.Translation = tangent.ToVec3();
 		}
 
-		public List<Vector2> CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
+		#region 2nd try
+		public List<Vector2> CalculateCurvePointsWithSnappedEnd2nd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
 		{
 			//дуги могут иметь разное кол-во т-к, поэтому направляения чаще всего сходиться 
 			//не будутю нужно расчитать сперва полностью окружность одной дуги, затем расчитываеть точки другой 
@@ -206,7 +207,7 @@ namespace Trains.Model.Builders
 			var finishCirclePoints = GetCirclePoints(f_rotationDeg, f_centerIsOnRight, f_center).ToList();
 			var startCirclePoints = new List<Vector2>();
 			var firstAndLastStraightPoints = new Vector2[2];
-			firstAndLastStraightPoints = CalculateStartCirclePointsAndFirstAndLastStarightPoints(
+			firstAndLastStraightPoints = CalculateStartCirclePointsAndFirstAndLastStarightPoints2ndTry(
 				s_rotationAngleDeg, s_centerIsOnRight, s_center,
 				finishCirclePoints, startCirclePoints, firstAndLastStraightPoints);
 
@@ -234,7 +235,7 @@ namespace Trains.Model.Builders
 			return new List<Vector2>();
 		}
 
-		private Vector2[] CalculateStartCirclePointsAndFirstAndLastStarightPoints(
+		private Vector2[] CalculateStartCirclePointsAndFirstAndLastStarightPoints2ndTry(
 			float s_rotationAngleDeg, bool s_centerIsOnRight, Vector2 s_center,
 			List<Vector2> finishCirclePoints, List<Vector2> startCirclePoints,
 			Vector2[] firstAndLastStraightPoints)
@@ -306,6 +307,7 @@ namespace Trains.Model.Builders
 			var pointBelongsApprox = Math.Abs(yk - xk) < accuracy && Math.Abs(xk - yk) < accuracy;
 			return pointBelongsApprox;
 		}
+		#endregion
 
 		private void CalculateStartAndFinishCirclePoints(
 			List<Vector2> startCirclePoints,
@@ -360,6 +362,81 @@ namespace Trains.Model.Builders
 				f_startAngle += f_dAngle;
 			}
 		}
+
+		public List<Vector2> CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
+		{
+			//return CalculateCurvePoints(start, end, startDir);
+
+			this.start = start;
+			this.end = end;
+			this.radius = 1f;
+			this.prevDir = startDir;
+
+			var s_rotationAngleDeg = GetRotationAngleDeg(startDir);
+			var s_startEndDir = (end - start).Normalized();
+			var s_prevDirPerp = startDir.Rotated(Pi / 2);
+			var s_centerIsOnRight = s_prevDirPerp.Dot(s_startEndDir) >= 0;   //-1, 0 or 1
+			var s_center = CalculateCenter(s_rotationAngleDeg, s_centerIsOnRight, start);
+
+			var f_rotationAngleDeg = GetRotationAngleDeg(finishDir);
+			var f_startEndDir = (start - end).Normalized();
+			var f_finishDirPerp = finishDir.Rotated(Pi / 2);
+			var f_centerIsOnRight = f_finishDirPerp.Dot(f_startEndDir) >= 0;   //-1, 0 or 1
+			var f_center = CalculateCenter(f_rotationAngleDeg, f_centerIsOnRight, end);
+
+			var startCenterToFinishCenterDir = (f_center - s_center).Normalized();
+			var s_tangent = s_center + startCenterToFinishCenterDir.Rotated(90 * Pi / 180) * radius;
+			var f_tangent = f_center + startCenterToFinishCenterDir.Rotated(-90 * Pi / 180) * radius;
+
+			//do
+			var startCirclePoints = CalculateCirclePointsUntilReachedStraightLinePoint(
+				s_rotationAngleDeg, s_centerIsOnRight, s_center, s_tangent);
+
+			var finishCirclePoints = CalculateCirclePointsUntilReachedStraightLinePoint(
+				f_rotationAngleDeg, f_centerIsOnRight, f_center, f_tangent);
+
+			if (CurveShouldNotBeDrawnHere(s_tangent, s_startEndDir))
+				return new List<Vector2>();
+			//RemoveCirclePointsAfterTangent(s_tangent, startCirclePoints);
+			//RemoveCirclePointsAfterTangent(f_tangent, finishCirclePoints);
+
+			finishCirclePoints.Reverse();
+			var straightPoints = GoStraight(s_tangent, f_tangent);
+
+			//return finishCirclePoints;
+
+			return startCirclePoints
+				.Concat(straightPoints)
+				.Concat(finishCirclePoints)
+				.ToList()
+				;
+
+			return new List<Vector2>();
+		}
+
+		private List<Vector2> CalculateCirclePointsUntilReachedStraightLinePoint(
+			float rotationAngleDeg, bool centerIsOnRight, Vector2 center, Vector2 borderPoint)
+		{
+			List<Vector2> pointsToBuild = new List<Vector2>();
+			var startAngleDeg = (centerIsOnRight ? 90 : 0) + rotationAngleDeg;
+			var endAngleDeg = centerIsOnRight ? startAngleDeg + 180 : startAngleDeg - 180;
+			var dAngleDeg = centerIsOnRight ? 1 : -1;
+			bool EndAngleIsNotReached(float angleDeg) => centerIsOnRight ? angleDeg < endAngleDeg : angleDeg > endAngleDeg;
+
+			for (float i = startAngleDeg; EndAngleIsNotReached(i); i += dAngleDeg)
+			{
+				var x = radius * Cos(i * Pi / 180);
+				var y = radius * Sin(i * Pi / 180);
+				var point = center + new Vector2(x, y);
+				pointsToBuild.Add(point);
+
+				if (point.IsEqualApprox(borderPoint, accuracy))
+					break;
+			}
+
+			return pointsToBuild;
+		}
+
 
 		public List<Vector2> CalculateBezierPoints(Vector2 startPos, Vector2 endPos, int numPoints)
 		{
