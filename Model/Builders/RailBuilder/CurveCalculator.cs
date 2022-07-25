@@ -373,6 +373,13 @@ namespace Trains.Model.Builders
 		{
 			//return CalculateCurvePoints(start, end, startDir);
 
+			var dubinsPathGenerator = new DubinsGeneratePaths();
+			var paths = dubinsPathGenerator.GetAllDubinsPaths(
+				start.ToVec3(), startDir.AngleTo(Vector2.Down), end.ToVec3(), finishDir.AngleTo(Vector2.Down));
+			var points = new List<Vector2>();
+			return paths.First().pathCoordinates.Select(p => p.ToVec2()).ToList();
+
+
 			this.start = start;
 			this.end = end;
 			this.radius = 1f;

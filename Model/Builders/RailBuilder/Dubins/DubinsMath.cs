@@ -16,7 +16,7 @@ namespace Trains
 		//Is used to generate the coordinates of a path
 		public static float driveDistance = 0.02f;
 		//The radius the car can turn 360 degrees with
-		public static float turningRadius = 11f;
+		public static float turningRadius = 1f;
 
 		public static Vector3 GetRightCircleCenterPos(Vector3 carPos, float heading)
 		{

@@ -264,7 +264,7 @@ namespace Trains.Model.Builders
 					start: blueprint.Translation.ToVec2(),
 					end: mousePos.ToVec2(),
 					startDir: prevDir.ToVec2(),
-					finishDir: dirFromSnappedEnd.ToVec2()
+					finishDir: dirFromSnappedEnd.ToVec2().Rotated(Pi)
 				);
 			}
 

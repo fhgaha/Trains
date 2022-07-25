@@ -89,7 +89,7 @@ namespace Trains
                 Get_LSL_Length();
             }
 
-            //RSL and LSR is only working of the circles don't intersect
+            //RSL and LSR is only working if the circles don't intersect
             float comparisonSqr = DubinsMath.turningRadius * 2f * DubinsMath.turningRadius * 2f;
 
             //RSL
@@ -132,9 +132,7 @@ namespace Trains
 
             //Calculate lengths
             float length1 = DubinsMath.GetArcLength(startRightCircle, startPos, startTangent, false);
-
             float length2 = (startTangent - goalTangent).Length();
-
             float length3 = DubinsMath.GetArcLength(goalRightCircle, goalTangent, goalPos, false);
 
             //Save the data
@@ -162,9 +160,7 @@ namespace Trains
 
             //Calculate lengths
             float length1 = DubinsMath.GetArcLength(startLeftCircle, startPos, startTangent, true);
-
             float length2 = (startTangent - goalTangent).Length();
-
             float length3 = DubinsMath.GetArcLength(goalLeftCircle, goalTangent, goalPos, true);
 
             //Save the data
@@ -191,9 +187,7 @@ namespace Trains
 
             //Calculate lengths
             float length1 = DubinsMath.GetArcLength(startRightCircle, startPos, startTangent, false);
-
             float length2 = (startTangent - goalTangent).Length();
-
             float length3 = DubinsMath.GetArcLength(goalLeftCircle, goalTangent, goalPos, true);
 
             //Save the data
@@ -220,9 +214,7 @@ namespace Trains
 
             //Calculate lengths
             float length1 = DubinsMath.GetArcLength(startLeftCircle, startPos, startTangent, true);
-
             float length2 = (startTangent - goalTangent).Length();
-
             float length3 = DubinsMath.GetArcLength(goalRightCircle, goalTangent, goalPos, false);
 
             //Save the data
@@ -257,9 +249,7 @@ namespace Trains
 
             //Calculate lengths
             float length1 = DubinsMath.GetArcLength(startRightCircle, startPos, startTangent, false);
-
             float length2 = DubinsMath.GetArcLength(middleCircle, startTangent, goalTangent, true);
-
             float length3 = DubinsMath.GetArcLength(goalRightCircle, goalTangent, goalPos, false);
 
             //Save the data
