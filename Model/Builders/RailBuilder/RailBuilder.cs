@@ -243,7 +243,6 @@ namespace Trains.Model.Builders
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
 			snapper.TrySnapBpEnd(mousePos, pathList, blueprint, currentPath);
-			var dirFromSnappedEnd = snapper.SnappedEndDir;
 
 			if (snapper.IsBpStartSnappedOnSegment())
 				prevDir = snapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
@@ -264,7 +263,7 @@ namespace Trains.Model.Builders
 					start: blueprint.Translation.ToVec2(),
 					end: mousePos.ToVec2(),
 					startDir: prevDir.ToVec2(),
-					finishDir: dirFromSnappedEnd.ToVec2().Rotated(Pi)
+					finishDir: snapper.SnappedEndDir.ToVec2().Rotated(Pi)
 				);
 			}
 
