@@ -174,7 +174,7 @@ namespace Trains.Model.Builders
 			bpStartSnapper.TrySnap(mousePos, pathList, blueprint);
 			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd)
 				prevDir = bpStartSnapper.SnappedDir;
-			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd || bpStartSnapper.IsSnappedOnSegment)
+			if (bpStartSnapper.IsSnapped)
 				currentPath = bpStartSnapper.SnappedPath;
 
 			state = State.SelectEnd;
@@ -242,11 +242,10 @@ namespace Trains.Model.Builders
 		private void DrawFilledBlueprint()
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
-			var points = new List<Vector2>();
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
-
 			if (!mousePosIsInMapBorders) return;
 
+			var points = new List<Vector2>();
 			bpEndSnapper.TrySnap(mousePos, pathList, blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
