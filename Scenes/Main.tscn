@@ -125,6 +125,6 @@ visible = false
 script = ExtResource( 1 )
 
 [node name="MainCameraController" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.37053, 9.01066, 13.5739 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.37053, -0.619339, 1.8239 )
 
 [node name="MainTimer" type="Timer" parent="."]

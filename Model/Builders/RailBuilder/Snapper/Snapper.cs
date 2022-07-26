@@ -3,7 +3,7 @@ using System;
 
 namespace Trains.Model.Builders
 {
-	public class Snapper : Node
+	public abstract class Snapper : Node
 	{
 		protected const float snapDistance = 0.5f;
 
@@ -11,8 +11,6 @@ namespace Trains.Model.Builders
 		public Vector3 SnappedPoint { get; set; } = Vector3.Zero;	//not used in StartSnapper
 		public RailPath SnappedPath { get; set; }
 		public CurveSegment SnappedMidSegment { get; set; }
-
-		public Snapper() { }
 
 		public void Reset()
 		{

@@ -25,7 +25,6 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = start;
 					RotateBlueprint(blueprint, path.DirFromStart);
-					Reset();
 					SetVars(path.DirFromStart, default, path, default);
 					return;
 				}
@@ -33,7 +32,6 @@ namespace Trains.Model.Builders
 				{
 					blueprint.Translation = end;
 					RotateBlueprint(blueprint, path.DirFromEnd);
-					Reset();
 					SetVars(path.DirFromEnd, default, path, default);
 					return;
 				}
@@ -42,7 +40,6 @@ namespace Trains.Model.Builders
 					if (SnappedMidSegment is null) continue;
 
 					blueprint.Translation = SnappedMidSegment.First;
-					Reset();
 					SetVars(default, default, path, SnappedMidSegment);
 					return;
 				}
