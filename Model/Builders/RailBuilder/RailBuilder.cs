@@ -261,7 +261,7 @@ namespace Trains.Model.Builders
 				points = calculator.CalculateCurvePointsWithSnappedEnd
 				(
 					start: blueprint.Translation.ToVec2(),
-					end: mousePos.ToVec2(),
+					end: snapper.SnappedEndPoint.ToVec2(),
 					startDir: prevDir.ToVec2(),
 					finishDir: snapper.SnappedEndDir.ToVec2().Rotated(Pi)
 				);

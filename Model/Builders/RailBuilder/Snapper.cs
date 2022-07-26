@@ -156,8 +156,7 @@ namespace Trains.Model.Builders
 				// );
 
 				if (IsCursorOn(start, end, mousePos)
-				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance)
-				)
+				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance))
 				{
 					//blueprint.Translation = start;
 					//RotateBlueprint(blueprint, path.DirFromStart);
@@ -167,8 +166,7 @@ namespace Trains.Model.Builders
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos)
-				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance)
-				)
+				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance))
 				{
 					//blueprint.Translation = end;
 					//RotateBlueprint(blueprint, path.DirFromEnd);
