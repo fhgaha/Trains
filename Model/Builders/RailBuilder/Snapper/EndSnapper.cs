@@ -26,14 +26,12 @@ namespace Trains.Model.Builders
 				if (IsCursorOn(start, end, mousePos)
 				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance))
 				{
-					Reset();
 					SetVars(path.DirFromStart, start, path, default);
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos)
 				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance))
 				{
-					Reset();
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
 				}
@@ -41,8 +39,7 @@ namespace Trains.Model.Builders
 				{
 					if (SnappedMidSegment is null) continue;
 
-					Reset();
-					SetVars(default, default, path, SnappedMidSegment);
+					SetVars(default, SnappedMidSegment.First, path, SnappedMidSegment);
 					return;
 				}
 			}
