@@ -7,13 +7,14 @@ namespace Trains.Model.Builders
 {
 	public class EndSnapper : Snapper
 	{
-		public bool IsBpSnappedOnPathStartOrPathEnd
+		public bool IsSnappedOnPathStartOrPathEnd
 		=> SnappedDir != Vector3.Zero && SnappedPoint != Vector3.Zero && SnappedPath != null;
-		public bool IsBpSnappedOnSegment => SnappedMidSegment != null;
+		public bool IsSnappedOnSegment => SnappedPath != null && SnappedMidSegment != null;
+		public bool IsSnapped => IsSnappedOnPathStartOrPathEnd || IsSnappedOnSegment;
 
 		public EndSnapper() { }
 
-		public void TrySnapBpEnd(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint, RailPath currentPath)
+		public void TrySnap(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
 			foreach (var path in pathList)
 			{
@@ -36,7 +37,7 @@ namespace Trains.Model.Builders
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
 				}
-				else if (TrySnapFilledBpOnMidSegment(path, mousePos))
+				else if (TrySnapOnMidSegment(path, mousePos))
 				{
 					if (SnappedMidSegment is null) continue;
 
@@ -48,13 +49,16 @@ namespace Trains.Model.Builders
 			Reset();
 		}
 
-		private bool TrySnapFilledBpOnMidSegment(RailPath path, Vector3 mousePos)
+		private bool TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
 		{
-			foreach (var s in path.GetSegments())
+			var segments = path.GetSegments();
+			if (segments.Count < 2) return false;
+
+			for (int i = 1; i < segments.Count; i++)
 			{
-				if (IsCursorOn(s.First, s.Second, mousePos))
+				if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
 				{
-					SnappedMidSegment = s;
+					SnappedMidSegment = segments[i];
 					return true;
 				}
 			}

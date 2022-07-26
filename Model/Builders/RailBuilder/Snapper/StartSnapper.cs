@@ -6,12 +6,13 @@ namespace Trains.Model.Builders
 {
 	public class StartSnapper : Snapper
 	{
-		public bool IsBpSnappedOnPathStartOrPathEnd => SnappedDir != Vector3.Zero && SnappedPath != null;
-		public bool IsBpSnappedOnSegment => SnappedMidSegment != null;
+		public bool IsSnappedOnPathStartOrPathEnd => SnappedDir != Vector3.Zero && SnappedPath != null;
+		public bool IsSnappedOnSegment => SnappedPath != null && SnappedMidSegment != null;
+		public bool IsSnapped => IsSnappedOnPathStartOrPathEnd || IsSnappedOnSegment;
 
 		public StartSnapper() : base() { }
 
-		public void TrySnapBpStart(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
+		public void TrySnap(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
 			foreach (var path in pathList)
 			{
@@ -36,7 +37,7 @@ namespace Trains.Model.Builders
 					SetVars(path.DirFromEnd, default, path, default);
 					return;
 				}
-				else if (TrySnapEmptyBpOnMidSegment(path, mousePos))
+				else if (TrySnapOnMidSegment(path, mousePos))
 				{
 					if (SnappedMidSegment is null) continue;
 
@@ -48,7 +49,7 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private bool TrySnapEmptyBpOnMidSegment(RailPath path, Vector3 mousePos)
+		private bool TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
 		{
 			//snapping can be done to path start or path end. 
 			//so we dont want to snap on mid segment if there is only one segment in path.
