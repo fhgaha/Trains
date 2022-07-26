@@ -23,7 +23,6 @@ namespace Trains
 			events.EmitSignal(nameof(Events.MainButtonPressed), GetButtonType());
 		}
 
-
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
 			if (buttonType != GetButtonType()) Unpress();
@@ -33,9 +32,9 @@ namespace Trains
 		{
 			switch (Text)
 			{
-				case "BR": return MainButtonType.BuildRail; 
-				case "BS": return MainButtonType.BuildStation; 
-				default: return MainButtonType.ShowProductMap; 
+				case "BR": return MainButtonType.BuildRail;
+				case "BS": return MainButtonType.BuildStation;
+				default: return MainButtonType.ShowProductMap;
 			}
 		}
 

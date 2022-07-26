@@ -216,6 +216,17 @@ mouse_filter = 1
 enabled_focus_mode = 0
 text = "Undo"
 
+[node name="Remove" type="Button" parent="CanvasLayer/MainPanel/MapAndButtons/BuildRailMenu"]
+margin_left = 231.0
+margin_top = 40.0
+margin_right = 290.0
+margin_bottom = 89.0
+focus_mode = 0
+mouse_filter = 1
+toggle_mode = true
+enabled_focus_mode = 0
+text = "Remove"
+
 [node name="BuildStationMenu" type="Control" parent="CanvasLayer/MainPanel/MapAndButtons"]
 visible = false
 margin_left = 358.0

@@ -8,9 +8,10 @@ namespace Trains.Scripts
 {
 	public class Main : Spatial
 	{
+		private const float timeSec = 0.1f;
+		private Timer timer;
 		private Events events;
 		private ProductMigrationManager mover;
-		private float timeSec = 0.1f;
 		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
 		private StationBuilder stationBuilder;
 		private RailBuilder railBuilder;
@@ -20,24 +21,20 @@ namespace Trains.Scripts
 			FloatDisplayDotsInsteadOfCommas();
 
 			events = GetNode<Events>("/root/Events");
+			events.Connect(nameof(Events.RemoveRailPressed), this, nameof(onRemoveRailPressed));
+
 			mover = new ProductMigrationManager();
-			var c = GetChildren();
-			var timer = GetNode<Timer>("MainTimer");
+			timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
 			timer.Start(timeSec);
 
 			//init station builder
-			// stationBuilder = new StationBuilder();
-			// AddChild(stationBuilder);
-			// stationBuilder.Name = "StationBuilder";
 			var cells = GetNode<Grid>("Grid").CellList;
 			var camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
-			// stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
 
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
 			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
-
 
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");
@@ -72,6 +69,11 @@ namespace Trains.Scripts
 				= (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
 			customCulture.NumberFormat.NumberDecimalSeparator = ".";
 			System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+		}
+
+		private void onRemoveRailPressed()
+		{
+			GD.Print("onRemoveRailPressed");
 		}
 	}
 }
