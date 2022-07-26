@@ -39,7 +39,12 @@ namespace Trains.Model.Builders
 				{
 					if (segment is null) continue;
 
-					SetVars(default, segment.First, path, segment);
+					var bpStartCursorDir = (mousePos - blueprint.Start).Normalized();
+					var codirectionalVector = bpStartCursorDir.Dot(segment.Direction) < 0
+						? segment.Direction
+						: segment.Direction.Rotated(Vector3.Up, Mathf.Pi);
+
+					SetVars(codirectionalVector, segment.First, path, segment);
 					return;
 				}
 			}

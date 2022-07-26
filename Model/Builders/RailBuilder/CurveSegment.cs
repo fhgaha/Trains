@@ -10,6 +10,8 @@ namespace Trains.Model.Builders
 		public Vector3 First { get; private set; }
 		public Vector3 Second { get; private set; }
 
+		public Vector3 Direction => (Second - First).Normalized();
+
 		//Godot requires parameterless constructor:  Cannot construct temporary 
 		// MonoObject because the class does not define a parameterless constructor
 		public CurveSegment() { }
