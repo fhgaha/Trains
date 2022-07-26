@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Model/Builders/RailBuilder/DebugHelper.cs" type="Script" id=8]
 [ext_resource path="res://Model/Builders/StationBuilder.cs" type="Script" id=9]
 [ext_resource path="res://Scenes/Heplers/curvePoint.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Removers/RailRemover.tscn" type="PackedScene" id=11]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -126,5 +127,7 @@ script = ExtResource( 1 )
 
 [node name="MainCameraController" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.37053, 2.11066, 4.8139 )
+
+[node name="RailRemover" parent="." instance=ExtResource( 11 )]
 
 [node name="MainTimer" type="Timer" parent="."]
