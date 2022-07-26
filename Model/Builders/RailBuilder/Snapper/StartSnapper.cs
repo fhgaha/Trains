@@ -35,18 +35,18 @@ namespace Trains.Model.Builders
 					SetVars(path.DirFromEnd, default, path, default);
 					return;
 				}
-				else if (TrySnapOnMidSegment(path, mousePos))
+				else if (TrySnapOnMidSegment(path, mousePos) is CurveSegment segment)
 				{
-					if (SnappedMidSegment is null) continue;
+					if (segment is null) continue;
 
-					blueprint.Translation = SnappedMidSegment.First;
-					SetVars(default, default, path, SnappedMidSegment);
+					blueprint.Translation = segment.First;
+					SetVars(default, default, path, segment);
 					return;
 				}
 			}
 		}
 
-		private bool TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
+		private CurveSegment TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
 		{
 			//snapping can be done to path start or path end. 
 			//so we dont want to snap on mid segment if there is only one segment in path.
@@ -54,18 +54,17 @@ namespace Trains.Model.Builders
 			//thats why we skip first point of path or here the first segment.
 
 			var segments = path.GetSegments();
-			if (segments.Count < 2) return false;
+			if (segments.Count < 2) return null;
 
 			for (int i = 1; i < segments.Count; i++)
 			{
 				if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
 				{
-					SnappedMidSegment = segments[i];
-					return true;
+					return segments[i];
 				}
 			}
 
-			return false;
+			return null;
 		}
 
 		public Vector3 GetBpStartSnappedSegmentToCursorDirection(Vector3 mousePos)
