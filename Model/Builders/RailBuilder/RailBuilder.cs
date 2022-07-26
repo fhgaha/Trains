@@ -17,7 +17,8 @@ namespace Trains.Model.Builders
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
-		private Snapper snapper;
+		private StartSnapper startSnapper;
+		private EndSnapper endSnapper;
 		private PackedScene railPathScene;
 		private Camera camera;
 		private Spatial railsHolder;   //Rails
@@ -46,7 +47,8 @@ namespace Trains.Model.Builders
 			this.railsHolder = railsHolder;
 			this.camera = camera;
 			this.railPathScene = railPathScene;
-			snapper = new Snapper();
+			startSnapper = new StartSnapper();
+			endSnapper = new EndSnapper();
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
@@ -169,18 +171,18 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
 
-			snapper.TrySnapBpStart(mousePos, pathList, blueprint);
-			if (snapper.SnappedStartDir != Vector3.Zero)
-				prevDir = snapper.SnappedStartDir;
-			if (!(snapper.SnappedStartPath is null))
-				currentPath = snapper.SnappedStartPath;
+			startSnapper.TrySnapBpStart(mousePos, pathList, blueprint);
+			if (startSnapper.SnappedDir != Vector3.Zero)
+				prevDir = startSnapper.SnappedDir;
+			if (!(startSnapper.SnappedPath is null))
+				currentPath = startSnapper.SnappedPath;
 
 			state = State.SelectEnd;
 		}
 
 		protected void PlaceObject()
 		{
-			if (snapper.IsBpStartSnappedOnSegment())
+			if (startSnapper.IsBpSnappedOnSegment)
 				InitPath();
 			else if (!AreWeContinuingPath)
 				InitPath();
@@ -204,7 +206,8 @@ namespace Trains.Model.Builders
 			pathList.Add(currentPath);
 			currentPath.Init(blueprint);
 			prevDir = currentPath.DirFromEnd;
-			snapper.Reset();
+			startSnapper.Reset();
+			endSnapper.Reset();
 		}
 
 		private void AddNewCurveToCurrentPath()
@@ -232,7 +235,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera, rayLength);
 			blueprint.Translation = mousePos;
-			snapper.TrySnapBpStart(mousePos, pathList, blueprint);
+			startSnapper.TrySnapBpStart(mousePos, pathList, blueprint);
 			blueprint.SetColor();
 		}
 
@@ -242,12 +245,12 @@ namespace Trains.Model.Builders
 			var points = new List<Vector2>();
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 
-			snapper.TrySnapBpEnd(mousePos, pathList, blueprint, currentPath);
+			endSnapper.TrySnapBpEnd(mousePos, pathList, blueprint, currentPath);
 
-			if (snapper.IsBpStartSnappedOnSegment())
-				prevDir = snapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
+			if (startSnapper.IsBpSnappedOnSegment)
+				prevDir = startSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
 
-			if (mousePosIsInMapBorders && snapper.SnappedEndPath == null)
+			if (mousePosIsInMapBorders && endSnapper.SnappedPath == null)
 			{
 				points = calculator.CalculateCurvePoints
 				(
@@ -256,14 +259,14 @@ namespace Trains.Model.Builders
 					prevDir: prevDir.ToVec2()
 				);
 			}
-			else if (mousePosIsInMapBorders && snapper.SnappedEndPath != null)
+			else if (mousePosIsInMapBorders && endSnapper.SnappedPath != null)
 			{
 				points = calculator.CalculateCurvePointsWithSnappedEnd
 				(
 					start: blueprint.Translation.ToVec2(),
-					end: snapper.SnappedEndPoint.ToVec2(),
+					end: endSnapper.SnappedPoint.ToVec2(),
 					startDir: prevDir.ToVec2(),
-					finishDir: snapper.SnappedEndDir.ToVec2().Rotated(Pi)
+					finishDir: endSnapper.SnappedDir.ToVec2().Rotated(Pi)
 				);
 			}
 
