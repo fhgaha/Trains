@@ -35,32 +35,29 @@ namespace Trains.Model.Builders
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
 				}
-				else if (TrySnapOnMidSegment(path, mousePos))
+				else if (TrySnapOnMidSegment(path, mousePos) is CurveSegment segment)
 				{
-					if (SnappedMidSegment is null) continue;
+					if (segment is null) continue;
 
-					SetVars(default, SnappedMidSegment.First, path, SnappedMidSegment);
+					SetVars(default, segment.First, path, segment);
 					return;
 				}
 			}
 			Reset();
 		}
 
-		private bool TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
+		private CurveSegment TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
 		{
 			var segments = path.GetSegments();
-			if (segments.Count < 2) return false;
+			if (segments.Count < 2) return null;
 
 			for (int i = 1; i < segments.Count; i++)
 			{
 				if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
-				{
-					SnappedMidSegment = segments[i];
-					return true;
-				}
+					return segments[i];
 			}
 
-			return false;
+			return null;
 		}
 	}
 }

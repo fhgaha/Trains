@@ -14,7 +14,7 @@ namespace Trains.Model.Builders
 
 		public void Reset()
 		{
-			SetVars(direction: Vector3.Zero, endPoint: Vector3.Zero, path: null, segment: null);
+			SetVars(direction: Vector3.Zero, point: Vector3.Zero, path: null, segment: null);
 		}
 
 		protected bool IsCursorOn(Vector3 start, Vector3 end, Vector3 mousePos)
@@ -22,10 +22,10 @@ namespace Trains.Model.Builders
 			return start.DistanceTo(mousePos) < snapDistance && start.DistanceTo(mousePos) < end.DistanceTo(mousePos);
 		}
 
-		protected void SetVars(Vector3 direction, Vector3 endPoint, RailPath path, CurveSegment segment)
+		protected void SetVars(Vector3 direction, Vector3 point, RailPath path, CurveSegment segment)
 		{
 			SnappedDir = direction;
-			SnappedPoint = endPoint;
+			SnappedPoint = point;
 			SnappedPath = path;
 			SnappedMidSegment = segment;
 		}
