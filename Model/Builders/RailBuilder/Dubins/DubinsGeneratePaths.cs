@@ -148,7 +148,6 @@ namespace Trains
             pathDataList.Add(pathData);
         }
 
-
         //LSL
         void Get_LSL_Length()
         {
