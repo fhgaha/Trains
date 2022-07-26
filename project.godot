@@ -53,7 +53,7 @@ window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/EditorFlyCam/plugin.cfg", "res://addons/WAT/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/WAT/plugin.cfg" )
 
 [importer_defaults]
 
