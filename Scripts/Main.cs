@@ -13,6 +13,8 @@ namespace Trains.Scripts
 		private Events events;
 		private ProductMigrationManager mover;
 		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
+		private PackedScene railRemoverScene = GD.Load<PackedScene>("res://Scenes/Removers/RailRemover.tscn");
+		private RailRemover railRemover;
 		private StationBuilder stationBuilder;
 		private RailBuilder railBuilder;
 
@@ -71,9 +73,19 @@ namespace Trains.Scripts
 			System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 		}
 
-		private void onRemoveRailPressed()
+		private void onRemoveRailPressed(bool isPressed)
 		{
-			GD.Print("onRemoveRailPressed");
+			if (isPressed)
+			{
+				GD.Print("onRemoveRailPressed");
+
+				railRemover = railRemoverScene.Instance<RailRemover>();
+				AddChild(railRemover);
+			}
+			else
+			{
+				railRemover.QueueFree();
+			}
 		}
 	}
 }

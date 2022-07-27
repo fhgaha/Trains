@@ -7,15 +7,16 @@ namespace Trains
 	public class RailRemover : Spatial
 	{
 		private Camera camera;
+		private CollisionShape collider;
+
+		public override void _Ready()
+		{
+			collider = GetNode<CollisionShape>("Circle/RailCollider/CollisionShape");
+		}
 
 		public void Init(Camera camera)
 		{
 			this.camera = camera;
-		}
-
-		public void Do()
-		{
-			var mousePos = this.GetIntersection(camera);
 		}
 	}
 }

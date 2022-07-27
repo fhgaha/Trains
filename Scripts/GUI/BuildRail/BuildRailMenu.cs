@@ -35,7 +35,7 @@ namespace Trains
 
 		private void onRemovePressed()
 		{
-			events.EmitSignal(nameof(Events.RemoveRailPressed));
+			events.EmitSignal(nameof(Events.RemoveRailPressed), removeBtn.Pressed);
 		}
 	}
 }

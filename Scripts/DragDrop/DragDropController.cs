@@ -42,9 +42,9 @@ namespace Trains.Scripts.DragDrop
 			var from = camera.ProjectRayOrigin(mouse);
 			var to = from + camera.ProjectRayNormal(mouse) * Global.RayLength;
 
-			var cast = camera.GetWorld().DirectSpaceState.IntersectRay(from, to, 
+			var cast = camera.GetWorld().DirectSpaceState.IntersectRay(from, to,
 				new Godot.Collections.Array { dragging.GetParent() }, dragging.GetParent<CollisionObject>().CollisionMask, true, true);
-			
+
 			if (cast.Count != 0) dragging.onHover(cast);
 		}
 	}
