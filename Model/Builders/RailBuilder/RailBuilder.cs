@@ -21,10 +21,9 @@ namespace Trains.Model.Builders
 		private EndSnapper bpEndSnapper;
 		private PackedScene railPathScene;
 		private Camera camera;
-		private Rails railsHolder;   //Rails
+		private RailsHolder railsHolder;   //Rails
 		private RailRemover railRemover;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
-		private List<RailPath> pathList = new List<RailPath>();
 
 		//Vars
 		private RailPath blueprint;
@@ -42,7 +41,7 @@ namespace Trains.Model.Builders
 		//4. a new blueprint will show up with start in the end of previous segment with the end following mouse pos.
 		//	 this time path will be curved.
 		//5. press lmb again to place blueprint road.
-		public void Init(List<Cell> cells, Camera camera, Spatial railsHolder, PackedScene railPathScene)
+		public void Init(List<Cell> cells, Camera camera, RailsHolder railsHolder, PackedScene railPathScene)
 		{
 			this.cells = cells;
 			this.railsHolder = railsHolder;
@@ -196,7 +195,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 
-			bpStartSnapper.TrySnap(mousePos, pathList, blueprint);
+			bpStartSnapper.TrySnap(mousePos, railsHolder.PathList, blueprint);
 			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd)
 				prevDir = bpStartSnapper.SnappedDir;
 			if (bpStartSnapper.IsSnapped)
@@ -226,9 +225,9 @@ namespace Trains.Model.Builders
 
 		private void InitPath()
 		{
+			//duplicate does not work for some reason
 			currentPath = railPathScene.Instance<RailPath>();
-			AddChild(currentPath);
-			pathList.Add(currentPath);
+			railsHolder.AddPath(currentPath);
 			currentPath.Init(blueprint);
 			prevDir = currentPath.DirFromEnd;
 
@@ -262,7 +261,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
-			bpStartSnapper.TrySnap(mousePos, pathList, blueprint);
+			bpStartSnapper.TrySnap(mousePos, railsHolder.PathList, blueprint);
 			blueprint.SetColor();
 		}
 
@@ -273,7 +272,7 @@ namespace Trains.Model.Builders
 			if (!mousePosIsInMapBorders) return;
 
 			var points = new List<Vector2>();
-			bpEndSnapper.TrySnap(mousePos, pathList, blueprint);
+			bpEndSnapper.TrySnap(mousePos, railsHolder.PathList, blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);

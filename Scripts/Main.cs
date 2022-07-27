@@ -18,6 +18,12 @@ namespace Trains.Scripts
 		private StationBuilder stationBuilder;
 		private RailBuilder railBuilder;
 
+		public override void _EnterTree()
+		{
+			//do this here since it doesnt work if set it in editor
+			OS.SetWindowAlwaysOnTop(true);
+		}
+
 		public override void _Ready()
 		{
 			FloatDisplayDotsInsteadOfCommas();
@@ -40,7 +46,7 @@ namespace Trains.Scripts
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
-			railBuilder.Init(cells, camera, GetNode<Spatial>("Rails"), scene);
+			railBuilder.Init(cells, camera, GetNode<RailsHolder>("Rails"), scene);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
