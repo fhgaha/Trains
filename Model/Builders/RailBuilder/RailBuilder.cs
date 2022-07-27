@@ -13,7 +13,6 @@ namespace Trains.Model.Builders
 
 	public class RailBuilder : Spatial
 	{
-		private const float rayLength = 1000f;
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
@@ -168,7 +167,7 @@ namespace Trains.Model.Builders
 
 		private void ProcessSelectedStart()
 		{
-			var mousePos = this.GetIntersection(camera, rayLength);
+			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 
 			bpStartSnapper.TrySnap(mousePos, pathList, blueprint);
@@ -235,7 +234,7 @@ namespace Trains.Model.Builders
 
 		private void DrawEmptyBlueprint()
 		{
-			var mousePos = this.GetIntersection(camera, rayLength);
+			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 			bpStartSnapper.TrySnap(mousePos, pathList, blueprint);
 			blueprint.SetColor();
@@ -243,7 +242,7 @@ namespace Trains.Model.Builders
 
 		private void DrawFilledBlueprint()
 		{
-			var mousePos = this.GetIntersection(camera, rayLength);
+			var mousePos = this.GetIntersection(camera);
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 			if (!mousePosIsInMapBorders) return;
 

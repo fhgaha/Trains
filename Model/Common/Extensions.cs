@@ -99,13 +99,13 @@ namespace Trains.Model.Common
 		}
 
 		//Spatial
-		public static Vector3 GetIntersection(this Spatial spatial, Camera camera, float rayLength)
+		public static Vector3 GetIntersection(this Spatial spatial, Camera camera)
 		{
 			PhysicsDirectSpaceState spaceState = spatial.GetWorld().DirectSpaceState;
 			Vector2 mousePosition = spatial.GetViewport().GetMousePosition();
 			Vector3 rayOrigin = camera.ProjectRayOrigin(mousePosition);
 			Vector3 rayNormal = camera.ProjectRayNormal(mousePosition);
-			Vector3 rayEnd = rayOrigin + rayNormal * rayLength;
+			Vector3 rayEnd = rayOrigin + rayNormal * Global.RayLength;
 			var intersection = spaceState.IntersectRay(rayOrigin, rayEnd);
 
 			if (intersection.Count == 0)

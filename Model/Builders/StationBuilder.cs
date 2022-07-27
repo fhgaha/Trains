@@ -17,7 +17,6 @@ namespace Trains.Model.Builders
 		private Events events;
 		private readonly PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 		private Spatial blueprint;
-		private const float rayLength = 1000f;
 		private Camera camera;
 		private bool canBuild = false;
 
@@ -68,7 +67,7 @@ namespace Trains.Model.Builders
 			if (blueprint is null) return;
 
 			//set blueprint position
-			var pos = this.GetIntersection(camera, rayLength);
+			var pos = this.GetIntersection(camera);
 			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
 			blueprint.Translation = closestCell.Translation;
 

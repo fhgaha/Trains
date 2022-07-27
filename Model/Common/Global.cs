@@ -6,6 +6,7 @@ namespace Trains.Model.Common
 {
 	public static class Global
 	{
+		public const float RayLength = 1000f;
 		public static bool DebugMode = true;
 
 		//Colors

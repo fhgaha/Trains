@@ -2,12 +2,12 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Trains.Model.Common;
 
 namespace Trains.Scripts.DragDrop
 {
 	public class DragDropController : Node
 	{
-		private int rayLength = 1000;
 		private List<Draggable> draggables = new List<Draggable>();
 		private Camera camera;
 		private Draggable dragging;
@@ -40,7 +40,7 @@ namespace Trains.Scripts.DragDrop
 		{
 			var mouse = GetViewport().GetMousePosition();
 			var from = camera.ProjectRayOrigin(mouse);
-			var to = from + camera.ProjectRayNormal(mouse) * rayLength;
+			var to = from + camera.ProjectRayNormal(mouse) * Global.RayLength;
 
 			var cast = camera.GetWorld().DirectSpaceState.IntersectRay(from, to, 
 				new Godot.Collections.Array { dragging.GetParent() }, dragging.GetParent<CollisionObject>().CollisionMask, true, true);
