@@ -13,6 +13,7 @@ namespace Trains.Model.Builders
 
 	public class RailBuilder : Spatial
 	{
+		private PackedScene railRemoverScene = GD.Load<PackedScene>("res://Scenes/Removers/RailRemover.tscn");
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
@@ -21,6 +22,7 @@ namespace Trains.Model.Builders
 		private PackedScene railPathScene;
 		private Camera camera;
 		private Spatial railsHolder;   //Rails
+		private RailRemover railRemover;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
 		private List<RailPath> pathList = new List<RailPath>();
 
@@ -48,17 +50,21 @@ namespace Trains.Model.Builders
 			this.railPathScene = railPathScene;
 			bpStartSnapper = new StartSnapper();
 			bpEndSnapper = new EndSnapper();
+			calculator = GetNode<CurveCalculator>("Calculator");
+
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
+			events.Connect(nameof(Events.RemoveRailPressed), this, nameof(onRemoveRailPressed));
 			events.Connect(nameof(Events.MainGUIPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
 			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
-			calculator = GetNode<CurveCalculator>("Calculator");
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
+			RemoveRailRemoverIsExists();
+
 			//other main button is pressed
 			if (buttonType != MainButtonType.BuildRail)
 			{
@@ -101,6 +107,7 @@ namespace Trains.Model.Builders
 		private void onStartNewRoadPressed()
 		{
 			ReinitStateAndBlueprint();
+			RemoveRailRemoverIsExists();
 			undoStack.Clear();
 			currentPath = null;
 		}
@@ -114,6 +121,7 @@ namespace Trains.Model.Builders
 		private void onUndoRailPressed()
 		{
 			ReinitStateAndBlueprint();
+			RemoveRailRemoverIsExists();
 
 			if (undoStack.Count == 0)
 				return;
@@ -124,6 +132,24 @@ namespace Trains.Model.Builders
 
 			if (undoStack.Count == 0)
 				currentPath = null;
+		}
+
+		private void onRemoveRailPressed()
+		{
+			if (railRemover is null)
+			{
+				// GD.Print("onRemoveRailPressed");
+				ResetStateBlueprintPrevDir();
+				railRemover = railRemoverScene.Instance<RailRemover>();
+				AddChild(railRemover);
+				railRemover.Init(camera);
+			}
+		}
+
+		private void RemoveRailRemoverIsExists()
+		{
+			railRemover?.QueueFree();
+			railRemover = null;
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

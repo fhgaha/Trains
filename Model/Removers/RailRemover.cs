@@ -18,5 +18,11 @@ namespace Trains
 		{
 			this.camera = camera;
 		}
+
+		public override void _PhysicsProcess(float delta)
+		{
+			var mousePos = this.GetIntersection(camera);
+			Translation = mousePos;
+		}
 	}
 }
