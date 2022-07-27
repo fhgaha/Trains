@@ -44,6 +44,10 @@ namespace Trains.Model.Builders
 					SetVars(default, default, path, segment);
 					return;
 				}
+				else
+				{
+					blueprint.SetOriginalBpCurve();
+				}
 			}
 		}
 
