@@ -298,22 +298,15 @@ namespace Trains.Model.Builders
 				);
 			}
 
-			blueprint.Curve = BuildBlueprintCurve(points);
+			BuildBlueprintCurve(points);
 		}
 
-		private RailCurve BuildBlueprintCurve(List<Vector2> points)
+		private void BuildBlueprintCurve(List<Vector2> points)
 		{
-			var curve = new RailCurve();
 			if (points.Count > 0)
-			{
-				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
-			}
+				blueprint.Curve = RailCurve.GetFrom(points, blueprint.Translation);
 			else
-			{
-				curve.AddPoint(Vector3.Zero);
-				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
-			}
-			return curve;
+				blueprint.SetSimpleCurve(Vector3.Zero, prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 		}
 
 		private void onMainGUIPanelMouseEntered()
