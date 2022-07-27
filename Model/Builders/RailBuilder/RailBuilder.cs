@@ -21,7 +21,7 @@ namespace Trains.Model.Builders
 		private EndSnapper bpEndSnapper;
 		private PackedScene railPathScene;
 		private Camera camera;
-		private Spatial railsHolder;   //Rails
+		private Rails railsHolder;   //Rails
 		private RailRemover railRemover;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
 		private List<RailPath> pathList = new List<RailPath>();
@@ -298,22 +298,23 @@ namespace Trains.Model.Builders
 				);
 			}
 
-			blueprint.Curve = BuildBlueprintCurve(points);
+			BuildBlueprintCurve(points);
 		}
 
-		private RailCurve BuildBlueprintCurve(List<Vector2> points)
+		private void BuildBlueprintCurve(List<Vector2> points)
 		{
 			var curve = new RailCurve();
 			if (points.Count > 0)
 			{
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
+				blueprint.Curve = curve;
 			}
 			else
 			{
 				curve.AddPoint(Vector3.Zero);
 				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			}
-			return curve;
+			blueprint.Curve = curve;
 		}
 
 		private void onMainGUIPanelMouseEntered()

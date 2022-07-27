@@ -46,6 +46,9 @@ script = ExtResource( 4 )
 
 [node name="Origin" type="Spatial" parent="."]
 transform = Transform( 0.26, 0, 0, 0, 0.120397, 0, 0, 0, 0.290166, 0, 0.120397, 0 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="MeshInstance" type="MeshInstance" parent="Origin"]
 transform = Transform( 0.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
