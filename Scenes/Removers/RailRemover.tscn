@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/img/RailRemover/whiteDottedCirclepng.png" type="Texture" id=1]
 [ext_resource path="res://Assets/img/RailRemover/Bulldozer.png" type="Texture" id=2]
-[ext_resource path="res://Model/Removers/RailRemover.cs" type="Script" id=3]
+[ext_resource path="res://Model/Builders/RailBuilder/RailRemover.cs" type="Script" id=3]
 
 [sub_resource type="CylinderShape" id=2]
 radius = 0.33
