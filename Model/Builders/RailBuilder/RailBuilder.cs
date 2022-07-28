@@ -214,21 +214,12 @@ namespace Trains.Model.Builders
 				AddNewCurveToCurrentPath();
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
-
-			var railCurve = RailCurve.GetFrom(blueprint);
-			undoStack.Push(railCurve);
+			undoStack.Push(RailCurve.GetFrom(blueprint));
 
 			if (currentPath.CanBeJoined())
-			{
-				currentPath.JoinStartToEnd();
-				ResetStateBlueprintPrevDir();
-			}
+				JoinCurrentPath();
 			else
-			{
-				blueprint.Translation = blueprint.End;
-				//redraw before next frame
-				DrawFilledBlueprint();
-			}
+				TranslateAndRedrawBp();
 		}
 
 		private void InitPath()
@@ -264,6 +255,19 @@ namespace Trains.Model.Builders
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
 			}
+		}
+
+		private void JoinCurrentPath()
+		{
+			currentPath.JoinStartToEnd();
+			ResetStateBlueprintPrevDir();
+		}
+
+		private void TranslateAndRedrawBp()
+		{
+			blueprint.Translation = blueprint.End;
+			//redraw before next frame
+			DrawFilledBlueprint();
 		}
 
 		private void DrawEmptyBlueprint()
