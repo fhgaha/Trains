@@ -15,6 +15,8 @@ namespace Trains.Model.Builders
 		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 
+		public bool IsJoined { get; private set; }
+
 		public Vector3 DirFromStart
 		{
 			get
@@ -32,6 +34,8 @@ namespace Trains.Model.Builders
 			}
 		}
 
+		private CSGPolygon polygon;
+
 		private Curve3D originalBpCurve;
 
 		public RailPath() { }
@@ -39,13 +43,14 @@ namespace Trains.Model.Builders
 		public override void _Ready()
 		{
 			originalBpCurve = Curve;
+			polygon = GetNode<CSGPolygon>("CSGPolygon");
 		}
 
 		public void Init(Path blueprint)
 		{
 			Transform = blueprint.Transform;
 			Curve = (RailCurve)blueprint.Curve;
-			GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+			polygon.UseCollision = true;
 		}
 
 		public void SetOriginalBpCurve()
@@ -58,7 +63,7 @@ namespace Trains.Model.Builders
 			var area = GetNode<Area>("CSGPolygon/Area");
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			var canBuild = !bodies.Any();
-			var csgMaterial = (SpatialMaterial)GetNode<CSGPolygon>("CSGPolygon").Material;
+			var csgMaterial = (SpatialMaterial)polygon.Material;
 			csgMaterial.AlbedoColor = canBuild ? bpColor : notAllowedColor;
 		}
 
@@ -69,7 +74,18 @@ namespace Trains.Model.Builders
 
 		public float GetPolygonWidth()
 		{
-			return GetNode<CSGPolygon>("CSGPolygon").Polygon[3].x;
+			return polygon.Polygon[3].x;
+		}
+
+		public void JoinStartToEnd()
+		{
+			polygon.PathJoined = true;
+			IsJoined = true;
+		}
+
+		public bool CanBeJoined()
+		{
+			return Start.IsEqualApprox(End);
 		}
 	}
 }

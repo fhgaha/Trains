@@ -225,6 +225,8 @@ namespace Trains.Model.Builders
 
 		private void InitPath()
 		{
+			if (blueprint.Curve.GetPointCount() < 2) return;
+
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
 			railsHolder.AddPath(currentPath);
@@ -249,12 +251,14 @@ namespace Trains.Model.Builders
 				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromStart;
 			}
-
-			if (blueprint.Start.IsEqualApprox(currentPath.End))
+			else if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
 			}
+
+			if (currentPath.CanBeJoined())
+				currentPath.JoinStartToEnd();
 		}
 
 		private void DrawEmptyBlueprint()
