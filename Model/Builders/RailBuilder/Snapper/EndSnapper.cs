@@ -8,8 +8,15 @@ namespace Trains.Model.Builders
 	public class EndSnapper : Snapper
 	{
 		public bool IsSnappedOnPathStartOrPathEnd
-		=> SnappedDir != Vector3.Zero && SnappedPoint != Vector3.Zero && SnappedPath != null;
-		public bool IsSnappedOnSegment => SnappedPath != null && SnappedMidSegment != null;
+			=> SnappedDir != default
+			&& SnappedPoint != default
+			&& SnappedPath != default
+			&& SnappedMidSegment == default;
+		public bool IsSnappedOnSegment
+			=> SnappedDir != default
+			&& SnappedPoint != default
+			&& SnappedPath != default
+			&& SnappedMidSegment != default;
 		public bool IsSnapped => IsSnappedOnPathStartOrPathEnd || IsSnappedOnSegment;
 
 		public EndSnapper() { }

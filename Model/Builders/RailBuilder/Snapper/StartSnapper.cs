@@ -6,8 +6,16 @@ namespace Trains.Model.Builders
 {
 	public class StartSnapper : Snapper
 	{
-		public bool IsSnappedOnPathStartOrPathEnd => SnappedDir != Vector3.Zero && SnappedPath != null;
-		public bool IsSnappedOnSegment => SnappedPath != null && SnappedMidSegment != null;
+		public bool IsSnappedOnPathStartOrPathEnd
+			=> SnappedDir != default
+			&& SnappedPoint == default
+			&& SnappedPath != default
+			&& SnappedMidSegment == default;
+		public bool IsSnappedOnSegment
+			=> SnappedDir == default
+			&& SnappedPoint == default
+			&& SnappedPath != default
+			&& SnappedMidSegment != default;
 		public bool IsSnapped => IsSnappedOnPathStartOrPathEnd || IsSnappedOnSegment;
 
 		public StartSnapper() : base() { }

@@ -216,7 +216,12 @@ namespace Trains.Model.Builders
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 			undoStack.Push(RailCurve.GetFrom(blueprint));
 
-			if (/*bpStartSnapper.IsSnapped && bpEndSnapper.IsSnapped && */currentPath.CanBeJoined())
+			var bpStartSnapped = bpStartSnapper.IsSnappedOnPathStartOrPathEnd;
+			var bpEndSnapped = bpEndSnapper.IsSnappedOnPathStartOrPathEnd;
+
+			if (
+				bpStartSnapped && bpEndSnapped && 
+				currentPath.CanBeJoined())
 				JoinCurrentPath();
 			else
 				TranslateAndRedrawBp();
