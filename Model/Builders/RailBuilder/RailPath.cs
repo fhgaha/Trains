@@ -83,18 +83,11 @@ namespace Trains.Model.Builders
 			IsJoined = true;
 		}
 
-		public bool CanBeJoined()
+		public bool CanBeJoined(StartSnapper startSnapper, EndSnapper endSnapper)
 		{
-			return Start.IsEqualApprox(End);
-
-			// foreach (var path in pathList)
-			// {
-			// 	if (
-			// 		Start.IsEqualApprox(path.End)
-			// 		|| Start.IsEqualApprox(path.Start)
-				
-			// 	)
-			// }
+			return startSnapper.IsSnappedOnPathStartOrPathEnd
+				&& endSnapper.IsSnappedOnPathStartOrPathEnd
+				&& Start.IsEqualApprox(End);
 		}
 	}
 }

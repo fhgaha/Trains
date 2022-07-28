@@ -216,12 +216,7 @@ namespace Trains.Model.Builders
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 			undoStack.Push(RailCurve.GetFrom(blueprint));
 
-			var bpStartSnapped = bpStartSnapper.IsSnappedOnPathStartOrPathEnd;
-			var bpEndSnapped = bpEndSnapper.IsSnappedOnPathStartOrPathEnd;
-
-			if (
-				bpStartSnapped && bpEndSnapped && 
-				currentPath.CanBeJoined())
+			if (currentPath.CanBeJoined(bpStartSnapper, bpEndSnapper))
 				JoinCurrentPath();
 			else
 				TranslateAndRedrawBp();
@@ -271,6 +266,7 @@ namespace Trains.Model.Builders
 		private void TranslateAndRedrawBp()
 		{
 			blueprint.Translation = blueprint.End;
+			bpStartSnapper.TrySnap(blueprint.Translation, railsHolder.PathList, blueprint);
 			//redraw before next frame
 			DrawFilledBlueprint();
 		}
