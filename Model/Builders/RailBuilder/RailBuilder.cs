@@ -257,8 +257,16 @@ namespace Trains.Model.Builders
 				prevDir = currentPath.DirFromEnd;
 			}
 
+			TryMakePathJoined();
+		}
+
+		private void TryMakePathJoined()
+		{
 			if (currentPath.CanBeJoined())
+			{
 				currentPath.JoinStartToEnd();
+				ResetStateBlueprintPrevDir();
+			}
 		}
 
 		private void DrawEmptyBlueprint()
