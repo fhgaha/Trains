@@ -22,15 +22,14 @@ namespace Trains.Model.Builders
 
 				var start = path.Start;
 				var end = path.End;
+				bool cursorIsOnBpStart = mousePos.IsEqualApprox(blueprint.Start, snapDistance);
 
-				if (IsCursorOn(start, end, mousePos)
-				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance))
+				if (IsCursorOn(start, end, mousePos) && !cursorIsOnBpStart)
 				{
 					SetVars(path.DirFromStart, start, path, default);
 					return;
 				}
-				else if (IsCursorOn(end, start, mousePos)
-				&& !mousePos.IsEqualApprox(blueprint.Start, snapDistance))
+				else if (IsCursorOn(end, start, mousePos) && !cursorIsOnBpStart)
 				{
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
@@ -39,12 +38,8 @@ namespace Trains.Model.Builders
 				{
 					if (segment is null) continue;
 
-					var bpStartCursorDir = (mousePos - blueprint.Start).Normalized();
-					var codirectionalVector = bpStartCursorDir.Dot(segment.Direction) < 0
-						? segment.Direction
-						: segment.Direction.Rotated(Vector3.Up, Mathf.Pi);
-
-					SetVars(codirectionalVector, segment.First, path, segment);
+					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
+					SetVars(bpEndDir, segment.First, path, segment);
 					return;
 				}
 			}
@@ -63,6 +58,15 @@ namespace Trains.Model.Builders
 			}
 
 			return null;
+		}
+
+		private static Vector3 GetBpEndDir(Vector3 mousePos, RailPath blueprint, CurveSegment segment)
+		{
+			var bpStartCursorDir = (mousePos - blueprint.Start).Normalized();
+			var codirectionalVector = bpStartCursorDir.Dot(segment.Direction) < 0
+				? segment.Direction
+				: segment.Direction.Rotated(Vector3.Up, Mathf.Pi);
+			return codirectionalVector;
 		}
 	}
 }

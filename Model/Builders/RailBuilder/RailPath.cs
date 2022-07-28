@@ -86,6 +86,15 @@ namespace Trains.Model.Builders
 		public bool CanBeJoined()
 		{
 			return Start.IsEqualApprox(End);
+
+			// foreach (var path in pathList)
+			// {
+			// 	if (
+			// 		Start.IsEqualApprox(path.End)
+			// 		|| Start.IsEqualApprox(path.Start)
+				
+			// 	)
+			// }
 		}
 	}
 }
