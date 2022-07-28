@@ -104,7 +104,6 @@ namespace Trains
                 Get_LSR_Length();
             }
 
-
             //With the LRL and RLR paths, the distance between the circles have to be less than 4 * r
             comparisonSqr = 4f * DubinsMath.turningRadius * 4f * DubinsMath.turningRadius;
 

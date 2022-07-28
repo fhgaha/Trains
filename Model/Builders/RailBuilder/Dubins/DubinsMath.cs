@@ -14,7 +14,7 @@ namespace Trains
 		//How far we are driving each update, the accuracy will improve if we lower the driveDistance
 		//But not too low because rounding errors will appear
 		//Is used to generate the coordinates of a path
-		public static float driveDistance = 0.02f;
+		public static float driveDistance = 0.1f;
 		//The radius the car can turn 360 degrees with
 		public static float turningRadius = 1f;
 
