@@ -262,7 +262,7 @@ namespace Trains.Model.Builders
 
 		private void TryMakePathJoined()
 		{
-			if (currentPath.CanBeJoined())
+			if (currentPath?.CanBeJoined() == true)
 			{
 				currentPath.JoinStartToEnd();
 				ResetStateBlueprintPrevDir();
