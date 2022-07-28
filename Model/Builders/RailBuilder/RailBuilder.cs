@@ -225,7 +225,7 @@ namespace Trains.Model.Builders
 
 		private void InitPath()
 		{
-			//duplicate does not work for some reason
+			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
 			railsHolder.AddPath(currentPath);
 			currentPath.Init(blueprint);
@@ -304,15 +304,9 @@ namespace Trains.Model.Builders
 		{
 			var curve = new RailCurve();
 			if (points.Count > 0)
-			{
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
-				blueprint.Curve = curve;
-			}
 			else
-			{
-				curve.AddPoint(Vector3.Zero);
-				curve.AddPoint(prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
-			}
+				curve = RailCurve.GetSimpleCurve(Vector3.Zero, prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
 			blueprint.Curve = curve;
 		}
 

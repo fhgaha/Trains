@@ -22,6 +22,14 @@ namespace Trains.Model.Builders
 			return curve;
 		}
 
+		public static RailCurve GetSimpleCurve(Vector3 first, Vector3 second)
+		{
+			var curve = new RailCurve();
+			curve.AddPoint(first);
+			curve.AddPoint(second);
+			return curve;
+		}
+
 		public void PrependCurve(Vector3 origin, Curve3D curve)
 		{
 			PlaceCurveOnMap(origin, curve, _atPosition: 0);

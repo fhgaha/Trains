@@ -48,14 +48,6 @@ namespace Trains.Model.Builders
 			GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
 
-		public void SetSimpleCurve(Vector3 first, Vector3 second)
-		{
-			var curve = new Curve3D();
-			curve.AddPoint(first);
-			curve.AddPoint(second);
-			Curve = curve;
-		}
-
 		public void SetOriginalBpCurve()
 		{
 			Curve = originalBpCurve;

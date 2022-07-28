@@ -89,7 +89,7 @@ namespace Trains.Model.Builders
 
 		private void RotateBlueprint(RailPath blueprint, Vector3 direction)
 		{
-			blueprint.SetSimpleCurve(Vector3.Zero, direction);
+			blueprint.Curve = RailCurve.GetSimpleCurve(Vector3.Zero, direction);
 		}
 	}
 }
