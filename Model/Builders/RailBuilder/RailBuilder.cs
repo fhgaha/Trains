@@ -218,9 +218,17 @@ namespace Trains.Model.Builders
 			var railCurve = RailCurve.GetFrom(blueprint);
 			undoStack.Push(railCurve);
 
-			blueprint.Translation = blueprint.End;
-			//redraw before next frame
-			DrawFilledBlueprint();
+			if (currentPath.CanBeJoined())
+			{
+				currentPath.JoinStartToEnd();
+				ResetStateBlueprintPrevDir();
+			}
+			else
+			{
+				blueprint.Translation = blueprint.End;
+				//redraw before next frame
+				DrawFilledBlueprint();
+			}
 		}
 
 		private void InitPath()
@@ -255,17 +263,6 @@ namespace Trains.Model.Builders
 			{
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
-			}
-
-			TryMakePathJoined();
-		}
-
-		private void TryMakePathJoined()
-		{
-			if (currentPath?.CanBeJoined() == true)
-			{
-				currentPath.JoinStartToEnd();
-				ResetStateBlueprintPrevDir();
 			}
 		}
 
