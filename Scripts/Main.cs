@@ -41,12 +41,12 @@ namespace Trains.Scripts
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"));
+			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"), GetNode<RailContainer>("Rails"));
 
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
-			railBuilder.Init(cells, camera, GetNode<RailsHolder>("Rails"), scene);
+			railBuilder.Init(cells, camera, GetNode<RailContainer>("Rails"), scene);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

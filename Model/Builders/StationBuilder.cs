@@ -12,10 +12,11 @@ namespace Trains.Model.Builders
 	{
 		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
+		private readonly PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 		private List<Cell> cells;
 		private Spatial stations;
+		private RailContainer railContainer;
 		private Events events;
-		private readonly PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 		private Spatial blueprint;
 		private Camera camera;
 		private bool canBuild = false;
@@ -26,10 +27,11 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
 
-		public void Init(List<Cell> cells, Camera camera, Spatial stations)
+		public void Init(List<Cell> cells, Camera camera, Spatial stations, RailContainer railsContainer)
 		{
 			this.cells = cells;
 			this.stations = stations;
+			this.railContainer = railsContainer;
 			this.camera = camera;
 		}
 
@@ -60,6 +62,11 @@ namespace Trains.Model.Builders
 			station.Rotation = blueprint.Rotation;
 			station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
 			stations.AddChild(station);
+
+			//add rail to holder and remove from here
+			var railPath = station.GetNode<RailPath>("RailPath");
+			railPath.Curve = RailCurve.GetFrom(railPath);
+			railContainer.AddExistingPath(railPath);
 		}
 
 		private void UpdateBlueprint()

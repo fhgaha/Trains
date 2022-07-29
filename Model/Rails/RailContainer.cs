@@ -5,7 +5,7 @@ using Trains.Model.Builders;
 
 namespace Trains
 {
-	public class RailsHolder : Spatial
+	public class RailContainer : Spatial
 	{
 		public List<RailPath> PathList = new List<RailPath>();
 
@@ -15,10 +15,14 @@ namespace Trains
 			AddChild(path);
 		}
 
+		internal void AddExistingPath(RailPath path)
+		{
+			PathList.Add(path);
+		}
+
 		internal void RemovePath(RailPath path)
 		{
 			PathList.Remove(path);
-
 		}
 	}
 }

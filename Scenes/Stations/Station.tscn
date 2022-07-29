@@ -38,5 +38,5 @@ transform = Transform( 0.45, 0, 0, 0, 0.029, 0, 0, 0, 0.45, 0, 0.00607387, 0 )
 shape = SubResource( 12 )
 
 [node name="RailPath" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.349089, 0, 0.189796 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.487319, 0, -0.0280967 )
 curve = SubResource( 13 )

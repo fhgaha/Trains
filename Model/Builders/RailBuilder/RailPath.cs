@@ -2,9 +2,10 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Trains.Model.Builders;
 using Trains.Model.Common;
 
-namespace Trains.Model.Builders
+namespace Trains
 {
 	public class RailPath : Path
 	{

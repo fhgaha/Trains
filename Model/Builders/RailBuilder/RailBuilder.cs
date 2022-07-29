@@ -21,7 +21,7 @@ namespace Trains.Model.Builders
 		private EndSnapper bpEndSnapper;
 		private PackedScene railPathScene;
 		private Camera camera;
-		private RailsHolder railsHolder;   //Rails
+		private RailContainer railContainer;   //Rails
 		private RailRemover railRemover;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
 
@@ -41,10 +41,10 @@ namespace Trains.Model.Builders
 		//4. a new blueprint will show up with start in the end of previous segment with the end following mouse pos.
 		//	 this time path will be curved.
 		//5. press lmb again to place blueprint road.
-		public void Init(List<Cell> cells, Camera camera, RailsHolder railsHolder, PackedScene railPathScene)
+		public void Init(List<Cell> cells, Camera camera, RailContainer railContainer, PackedScene railPathScene)
 		{
 			this.cells = cells;
-			this.railsHolder = railsHolder;
+			this.railContainer = railContainer;
 			this.camera = camera;
 			this.railPathScene = railPathScene;
 			bpStartSnapper = new StartSnapper();
@@ -195,7 +195,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 
-			bpStartSnapper.TrySnap(mousePos, railsHolder.PathList, blueprint);
+			bpStartSnapper.TrySnap(mousePos, railContainer.PathList, blueprint);
 			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd)
 				prevDir = bpStartSnapper.SnappedDir;
 			if (bpStartSnapper.IsSnapped)
@@ -228,7 +228,7 @@ namespace Trains.Model.Builders
 
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
-			railsHolder.AddPath(currentPath);
+			railContainer.AddPath(currentPath);
 			currentPath.Init(blueprint);
 			prevDir = currentPath.DirFromEnd;
 
@@ -266,7 +266,7 @@ namespace Trains.Model.Builders
 		private void TranslateAndRedrawBp()
 		{
 			blueprint.Translation = blueprint.End;
-			bpStartSnapper.TrySnap(blueprint.Translation, railsHolder.PathList, blueprint);
+			bpStartSnapper.TrySnap(blueprint.Translation, railContainer.PathList, blueprint);
 			//redraw before next frame
 			DrawFilledBlueprint();
 		}
@@ -275,7 +275,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
-			bpStartSnapper.TrySnap(mousePos, railsHolder.PathList, blueprint);
+			bpStartSnapper.TrySnap(mousePos, railContainer.PathList, blueprint);
 			blueprint.SetColor();
 		}
 
@@ -286,7 +286,7 @@ namespace Trains.Model.Builders
 			if (!mousePosIsInMapBorders) return;
 
 			var points = new List<Vector2>();
-			bpEndSnapper.TrySnap(mousePos, railsHolder.PathList, blueprint);
+			bpEndSnapper.TrySnap(mousePos, railContainer.PathList, blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);

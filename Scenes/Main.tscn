@@ -10,7 +10,7 @@
 [ext_resource path="res://Model/Builders/RailBuilder/DebugHelper.cs" type="Script" id=8]
 [ext_resource path="res://Model/Builders/StationBuilder.cs" type="Script" id=9]
 [ext_resource path="res://Scenes/Heplers/curvePoint.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Model/Rails/RailsHolder.cs" type="Script" id=11]
+[ext_resource path="res://Model/Rails/RailContainer.cs" type="Script" id=11]
 
 [sub_resource type="CubeMesh" id=9]
 

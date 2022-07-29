@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Trains.Model.Builders
+namespace Trains
 {
 	public class CurveSegment : Spatial
 	{
