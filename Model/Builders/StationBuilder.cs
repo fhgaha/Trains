@@ -123,6 +123,8 @@ namespace Trains.Model.Builders
 		private void InitBlueprint()
 		{
 			blueprint = stationScene.Instance<Spatial>();
+			//i add this and rail builds for all stations
+			//blueprint.GetNode<RailPath>("RailPath").Curve = RailCurve.GetFrom(blueprint.GetNode<RailPath>("RailPath"));
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
 			AddChild(blueprint);
 		}

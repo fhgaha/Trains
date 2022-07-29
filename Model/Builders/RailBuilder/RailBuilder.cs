@@ -126,7 +126,7 @@ namespace Trains.Model.Builders
 				return;
 
 			var curveToDelete = undoStack.Pop();
-			var curve = RailCurve.GetFrom(currentPath);
+			var curve = RailCurve.GetFrom(currentPath.Curve);
 			curve.RemoveEdgeCurve(curveToDelete);
 
 			if (undoStack.Count == 0)
@@ -214,7 +214,7 @@ namespace Trains.Model.Builders
 				AddNewCurveToCurrentPath();
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
-			undoStack.Push(RailCurve.GetFrom(blueprint));
+			undoStack.Push(RailCurve.GetFrom(blueprint.Curve));
 
 			if (currentPath.CanBeJoined(bpStartSnapper, bpEndSnapper))
 				JoinCurrentPath();
