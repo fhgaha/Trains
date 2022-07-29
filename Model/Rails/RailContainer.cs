@@ -9,13 +9,13 @@ namespace Trains
 	{
 		public List<RailPath> PathList = new List<RailPath>();
 
-		internal void AddPath(RailPath path)
+		internal void AddRailPath(RailPath path)
 		{
 			PathList.Add(path);
 			AddChild(path);
 		}
 
-		internal void AddExistingPath(RailPath path)
+		internal void AddToPathList(RailPath path)
 		{
 			PathList.Add(path);
 		}

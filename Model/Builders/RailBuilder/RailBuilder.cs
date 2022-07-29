@@ -228,7 +228,7 @@ namespace Trains.Model.Builders
 
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
-			railContainer.AddPath(currentPath);
+			railContainer.AddRailPath(currentPath);
 			currentPath.Init(blueprint);
 			prevDir = currentPath.DirFromEnd;
 

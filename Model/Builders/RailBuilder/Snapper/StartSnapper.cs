@@ -22,7 +22,7 @@ namespace Trains.Model.Builders
 
 		public void TrySnap(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
-			foreach (var path in pathList)
+			foreach (RailPath path in pathList)
 			{
 				if (path.Curve.GetPointCount() == 0) continue;
 				Reset();

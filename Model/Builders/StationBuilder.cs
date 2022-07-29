@@ -61,12 +61,20 @@ namespace Trains.Model.Builders
 			station.Translation = blueprint.Translation;
 			station.Rotation = blueprint.Rotation;
 			station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
-			stations.AddChild(station);
 
-			//add rail to holder and remove from here
 			var railPath = station.GetNode<RailPath>("RailPath");
+			var first = railPath.Curve.GetPointPosition(0) + GlobalTransform.origin;
+			var second = railPath.Curve.GetPointPosition(1) + GlobalTransform.origin;
 			railPath.Curve = RailCurve.GetFrom(railPath);
-			railContainer.AddExistingPath(railPath);
+
+			station.RemoveChild(railPath);
+			railContainer.AddRailPath(railPath);
+			railPath.Curve.SetPointPosition(0, first);
+			railPath.Curve.SetPointPosition(1, second);
+			//railPath.Translation = station.Translation + tr;
+			//railPath.Rotation = station.Rotation;
+
+			stations.AddChild(station);
 		}
 
 		private void UpdateBlueprint()
