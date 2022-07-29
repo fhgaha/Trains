@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Trains.Model.Common;
 
-namespace Trains.Model.Builders
+namespace Trains
 {
 	public class RailCurve : Curve3D
 	{
@@ -17,7 +17,11 @@ namespace Trains.Model.Builders
 
 		public static RailCurve GetFrom(Path path)
 		{
-			var curve = (RailCurve)path.Curve;
+			var curve = new RailCurve();
+
+			for (int i = 0; i < path.Curve.GetPointCount(); i++)
+				curve.AddPoint(path.Curve.GetPointPosition(i));
+
 			curve.Origin = path.Translation;
 			return curve;
 		}
