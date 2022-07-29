@@ -13,8 +13,8 @@ namespace Trains
 
 		[Export] private readonly Color notAllowedColor;
 
-		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
-		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
+		public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
+		public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 
 		public bool IsJoined { get; private set; }
 
@@ -47,7 +47,19 @@ namespace Trains
 			polygon = GetNode<CSGPolygon>("CSGPolygon");
 		}
 
-		public void Init(Path blueprint)
+		public RailPath Clone()
+		{
+			var p = (RailPath)this.Duplicate();
+			p.Curve = this.Curve;
+			p.IsJoined = this.IsJoined;
+			//Start = this.Start,
+			//End = this.End,
+			p.polygon = this.polygon;
+			p.originalBpCurve = this.originalBpCurve;
+			return p;
+		}
+
+		public void InitOnPlacement(Path blueprint)
 		{
 			Transform = blueprint.Transform;
 			Curve = (RailCurve)blueprint.Curve;

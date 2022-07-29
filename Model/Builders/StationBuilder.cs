@@ -62,17 +62,18 @@ namespace Trains.Model.Builders
 			station.Rotation = blueprint.Rotation;
 			station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
 
-			var railPath = station.GetNode<RailPath>("RailPath");
-			var first = railPath.Curve.GetPointPosition(0) + GlobalTransform.origin;
-			var second = railPath.Curve.GetPointPosition(1) + GlobalTransform.origin;
-			railPath.Curve = RailCurve.GetFrom(railPath);
+			var stationRailPath = station.GetNode<RailPath>("RailPath");
+			var bpRailPathClone = blueprint.GetNode<RailPath>("RailPath")
+				.Clone();
 
-			station.RemoveChild(railPath);
-			railContainer.AddRailPath(railPath);
-			railPath.Curve.SetPointPosition(0, first);
-			railPath.Curve.SetPointPosition(1, second);
-			//railPath.Translation = station.Translation + tr;
-			//railPath.Rotation = station.Rotation;
+			var f = bpRailPathClone.Curve.First().Rotated(Vector3.Up, blueprint.Rotation.y);
+			var s = bpRailPathClone.Curve.Last().Rotated(Vector3.Up, blueprint.Rotation.y);
+			bpRailPathClone.Curve = RailCurve.GetSimpleCurve(f, s);
+
+			bpRailPathClone.Translation = blueprint.Translation;
+
+			station.RemoveChild(stationRailPath);
+			railContainer.AddRailPath(bpRailPathClone);
 
 			stations.AddChild(station);
 		}
