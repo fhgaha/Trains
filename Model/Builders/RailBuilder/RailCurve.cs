@@ -15,12 +15,15 @@ namespace Trains
 			BakeInterval = 1f;
 		}
 
-		public static RailCurve GetFrom(Curve3D curve)
+		public static RailCurve GetFrom(Path path)
 		{
-			var newCurve = new RailCurve();
-			for (int i = 0; i < curve.GetPointCount(); i++)
-				curve.AddPoint(curve.GetPointPosition(i));
-			return newCurve;
+			var curve = new RailCurve();
+
+			for (int i = 0; i < path.Curve.GetPointCount(); i++)
+				curve.AddPoint(path.Curve.GetPointPosition(i));
+
+			curve.Origin = path.Translation;
+			return curve;
 		}
 
 		public static RailCurve GetSimpleCurve(Vector3 first, Vector3 second)

@@ -66,11 +66,11 @@ namespace Trains.Model.Builders
 			var bpRailPathClone = blueprint.GetNode<RailPath>("RailPath")
 				.Clone();
 
-			// var f = bpRailPathClone.Curve.First().Rotated(Vector3.Up, blueprint.Rotation.y);
-			// var s = bpRailPathClone.Curve.Last().Rotated(Vector3.Up, blueprint.Rotation.y);
-			// bpRailPathClone.Curve = RailCurve.GetSimpleCurve(f, s);
+			var f = bpRailPathClone.Curve.First().Rotated(Vector3.Up, blueprint.Rotation.y);
+			var s = bpRailPathClone.Curve.Last().Rotated(Vector3.Up, blueprint.Rotation.y);
+			bpRailPathClone.Curve = RailCurve.GetSimpleCurve(f, s);
 
-			bpRailPathClone.GlobalTransform = blueprint.GetNode<RailPath>("RailPath").GlobalTransform;
+			bpRailPathClone.Translation = blueprint.Translation;
 
 			station.RemoveChild(stationRailPath);
 			railContainer.AddRailPath(bpRailPathClone);
@@ -123,8 +123,6 @@ namespace Trains.Model.Builders
 		private void InitBlueprint()
 		{
 			blueprint = stationScene.Instance<Spatial>();
-			//i add this and rail builds for all stations
-			//blueprint.GetNode<RailPath>("RailPath").Curve = RailCurve.GetFrom(blueprint.GetNode<RailPath>("RailPath"));
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
 			AddChild(blueprint);
 		}
