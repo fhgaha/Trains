@@ -10,12 +10,9 @@ namespace Trains
 	public class RailPath : Path
 	{
 		[Export] public readonly Color BpColor;
-
 		[Export] public readonly Color NotAllowedColor;
-
 		public Vector3 Start { get => Translation + Curve.First(); }
 		public Vector3 End { get => Translation + Curve.Last(); }
-
 		public bool IsJoined { get; private set; }
 
 		public Vector3 DirFromStart
@@ -49,13 +46,15 @@ namespace Trains
 
 		public RailPath Clone()
 		{
+			//An instance stays linked to the original so when the original changes, the instance changes too.
 			var path = (RailPath)this.Duplicate();
 			var curve = RailCurve.GetFrom(Curve);
-			curve.Origin = Translation;
-			path.Curve = curve;
+			curve.Origin = GlobalTransform.origin;
 			path.IsJoined = this.IsJoined;
 			path.polygon = this.polygon;
 			path.originalBpCurve = this.originalBpCurve;
+			// path.GlobalTransform = this.GlobalTransform;
+			path.Curve = curve;
 			return path;
 		}
 

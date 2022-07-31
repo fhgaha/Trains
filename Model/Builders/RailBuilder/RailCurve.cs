@@ -17,7 +17,7 @@ namespace Trains
 
 		public static RailCurve GetFrom(Path path)
 		{
-			var curve =  GetFrom(path.Curve);
+			var curve = GetFrom(path.Curve);
 			curve.Origin = path.Translation;
 			return curve;
 		}
@@ -32,7 +32,6 @@ namespace Trains
 
 			return newCurve;
 		}
-
 
 		public static RailCurve GetSimpleCurve(Vector3 first, Vector3 second)
 		{
@@ -135,6 +134,15 @@ namespace Trains
 				GD.PushWarning("RailCurve.GetSegments() returns empty list");
 
 			return segments;
+		}
+
+		internal void Rotate(Vector3 axis, float angle)
+		{
+			for (int i = 0; i < GetPointCount(); i++)
+			{
+				var newPos = GetPointPosition(i).Rotated(Vector3.Up, Mathf.Pi/2);
+				SetPointPosition(i, newPos);
+			}
 		}
 	}
 }

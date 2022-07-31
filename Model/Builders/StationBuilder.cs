@@ -12,7 +12,8 @@ namespace Trains.Model.Builders
 	{
 		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
-		private readonly PackedScene stationScene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
+		[Export] private readonly PackedScene stationScene;
+		[Export] private readonly PackedScene railPathScene;
 		private List<Cell> cells;
 		private Spatial stations;
 		private RailContainer railContainer;
@@ -46,32 +47,46 @@ namespace Trains.Model.Builders
 			{
 				if (!(blueprint is null) && canBuild)
 				{
-					PlaceStation();
+					PlaceStationAndRailPath();
 				}
 			}
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
+			{
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
+				//rebuild bp path curve
+				var railCurve = (RailCurve)blueprint.GetNode<RailPath>("RailPath").Curve;
+				railCurve.Rotate(Vector3.Up, Mathf.Pi / 2);
+			}
 		}
 
-		private void PlaceStation()
+		private void PlaceStationAndRailPath()
 		{
 			var station = stationScene.Instance<Spatial>();
 			station.RemoveChild(station.GetNode("Base"));
-			station.Translation = blueprint.Translation;
-			station.Rotation = blueprint.Rotation;
+			station.GlobalTransform = blueprint.GlobalTransform;
 			station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
 
-			var stationRailPath = station.GetNode<RailPath>("RailPath");
-			var bpRailPathClone = blueprint.GetNode<RailPath>("RailPath")
-				.Clone();
-
-			bpRailPathClone.GlobalTransform = blueprint.GetNode<RailPath>("RailPath").GlobalTransform;
-
-			station.RemoveChild(stationRailPath);
-			railContainer.AddRailPath(bpRailPathClone);
-
+			var stationPath = station.GetNode<RailPath>("RailPath");
+			station.RemoveChild(stationPath);
 			stations.AddChild(station);
+
+			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
+			var path = railPathScene.Instance<RailPath>();
+			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
+			path.GlobalTransform = bpRailPath.GlobalTransform;
+			path.Rotation = Vector3.Zero;
+			railContainer.AddRailPath(path);
+
+			//GD.Print(path.RotationDegrees);
+
+			//print curve points
+			for (int i = 0; i < path.Curve.GetPointCount(); i++)
+			{
+				var p = path.Curve.GetPointPosition(i);
+				GD.Print(/*bpRailPathClone.GlobalTransform.origin +*/ p);
+			}
+			GD.Print();
 		}
 
 		private void UpdateBlueprint()
@@ -120,7 +135,8 @@ namespace Trains.Model.Builders
 		{
 			blueprint = stationScene.Instance<Spatial>();
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
-			//blueprint.GetNode<RailPath>("RailPath").Curve = RailCurve.GetFrom(blueprint.GetNode<RailPath>("RailPath"));
+			var bpPath = blueprint.GetNode<RailPath>("RailPath");
+			bpPath.Curve = RailCurve.GetFrom(bpPath.Curve);
 			AddChild(blueprint);
 			blueprint.Name = "blueprint";
 		}
