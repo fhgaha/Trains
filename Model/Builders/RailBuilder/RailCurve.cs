@@ -140,7 +140,7 @@ namespace Trains
 		{
 			for (int i = 0; i < GetPointCount(); i++)
 			{
-				var newPos = GetPointPosition(i).Rotated(Vector3.Up, Mathf.Pi/2);
+				var newPos = GetPointPosition(i).Rotated(axis, angle);
 				SetPointPosition(i, newPos);
 			}
 		}

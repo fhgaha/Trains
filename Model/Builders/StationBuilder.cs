@@ -53,10 +53,12 @@ namespace Trains.Model.Builders
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
 			{
+				//rotate station scene
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
-				//rebuild bp path curve
-				var railCurve = (RailCurve)blueprint.GetNode<RailPath>("RailPath").Curve;
-				railCurve.Rotate(Vector3.Up, Mathf.Pi / 2);
+
+				//rotate curve
+				// var bpRailCurve = (RailCurve)blueprint.GetNode<RailPath>("RailPath").Curve;
+				// bpRailCurve.Rotate(Vector3.Up, Mathf.Pi / 2);
 			}
 		}
 
@@ -76,6 +78,10 @@ namespace Trains.Model.Builders
 			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
 			path.GlobalTransform = bpRailPath.GlobalTransform;
 			path.Rotation = Vector3.Zero;
+
+			//last added
+			((RailCurve)path.Curve).Rotate(Vector3.Up, blueprint.Rotation.y * Mathf.Pi/180);
+			
 			railContainer.AddRailPath(path);
 
 			//GD.Print(path.RotationDegrees);
