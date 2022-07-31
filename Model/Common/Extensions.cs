@@ -98,6 +98,15 @@ namespace Trains.Model.Common
 			return segments;
 		}
 
+		public static Vector3[] ToArray(this Curve3D curve)
+		{
+			var amount = curve.GetPointCount();
+			var points = new Vector3[amount];
+			for (int i = 0; i < amount; i++)
+				points[i] = curve.GetPointPosition(i);
+			return points;
+		}
+
 		//Spatial
 		public static Vector3 GetIntersection(this Spatial spatial, Camera camera)
 		{

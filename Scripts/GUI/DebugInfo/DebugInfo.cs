@@ -7,7 +7,8 @@ namespace Trains.Scripts.GUI
 	{
 		public override void _Process(float delta)
 		{
-			GetNode<Label>("FPSCounter").Text = "FPS: " + Engine.GetFramesPerSecond();
+			GetNode<Label>("FPSCounter").Text = $"FPS: {Engine.GetFramesPerSecond()}";
+			//GetNode<Label>("mousePos").Text = $"mousePos: {}";
 		}
 	}
 }

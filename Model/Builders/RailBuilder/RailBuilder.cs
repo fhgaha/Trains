@@ -318,9 +318,18 @@ namespace Trains.Model.Builders
 		{
 			var curve = new RailCurve();
 			if (points.Count > 0)
+			{
+				//first point (4.033; 5.023) - bpTranslat (4.033112, -1.92047E-08, 3.023653) = (0;0;2)
+				//who messes with bpTranslation?
 				points.ForEach(p => curve.AddPoint(p.ToVec3() - blueprint.Translation));
+			}
 			else
-				curve = RailCurve.GetSimpleCurve(Vector3.Zero, prevDir == Vector3.Zero ? Vector3.Forward : prevDir);
+			{
+				var from = Vector3.Zero;
+				var to = prevDir == Vector3.Zero ? Vector3.Forward : prevDir;
+				curve = RailCurve.GetSimpleCurve(from, to);
+			}
+
 			blueprint.Curve = curve;
 		}
 

@@ -144,5 +144,7 @@ namespace Trains
 				SetPointPosition(i, newPos);
 			}
 		}
+
+		
 	}
 }
