@@ -39,7 +39,6 @@ namespace Trains.Model.Builders
 		private Vector2 end;
 		private float radius;
 		private Vector2 prevDir;
-		private List<Vector2> points;
 
 		public override void _Ready()
 		{
@@ -61,7 +60,6 @@ namespace Trains.Model.Builders
 			this.end = end;
 			this.radius = 1f;
 			this.prevDir = prevDir;
-			points = new List<Vector2>();
 
 			if (prevDir == Vector2.Zero)
 				return GoStraight(start, end).ToList();
@@ -71,13 +69,14 @@ namespace Trains.Model.Builders
 
 		private List<Vector2> CalculateCircleBasedCurve()
 		{
-			var rotationDeg = GetRotationAngleDeg(prevDir);
+			var rotationAngleDeg = GetRotationAngleDeg(prevDir);
 			var startEndDir = (end - start).Normalized();
 			var prevDirPerp = prevDir.Rotated(Pi / 2);
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
-			var center = CalculateCenter(rotationDeg, centerIsOnRight, start);
+			GD.PrintS(start, end);
+			var center = CalculateCenter(rotationAngleDeg, centerIsOnRight, start);
 
-			var circlePoints = GetCirclePoints(rotationDeg, centerIsOnRight, center).ToList();
+			var circlePoints = GetCirclePoints(rotationAngleDeg, centerIsOnRight, center).ToList();
 			var tangent = CalculateTangent(centerIsOnRight, center, circlePoints);
 
 			if (CurveShouldNotBeDrawnHere(tangent, startEndDir))

@@ -41,6 +41,7 @@ namespace Trains.Model.Builders
 			if (Global.MainButtonMode == MainButtonType.BuildStation)
 				UpdateBlueprint();
 		}
+
 		public override void _UnhandledInput(InputEvent @event)
 		{
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
@@ -77,7 +78,11 @@ namespace Trains.Model.Builders
 			path.Rotation = Vector3.Zero;
 
 			var curve = (RailCurve)path.Curve;
-			curve.Rotate(Vector3.Up, blueprint.Rotation.y);
+
+			//for some reason if i leave
+			//curve.Rotate(Vector3.Up, blueprint.Rotation.y);
+			//calculator counts centers of left/right circles on opposite positions
+			curve.Rotate(Vector3.Up, -blueprint.Rotation.y);
 
 			railContainer.AddRailPath(path);
 		}
