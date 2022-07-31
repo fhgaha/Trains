@@ -13,8 +13,8 @@ _data = {
 [node name="RailPath" type="Path" groups=["Rails"]]
 curve = SubResource( 3 )
 script = ExtResource( 1 )
-bpColor = Color( 1, 0.917647, 0.027451, 1 )
-notAllowedColor = Color( 1, 0.054902, 0.054902, 1 )
+BpColor = Color( 1, 0.917647, 0.027451, 1 )
+NotAllowedColor = Color( 1, 0.054902, 0.054902, 1 )
 
 [node name="CSGPolygon" type="CSGPolygon" parent="."]
 polygon = PoolVector2Array( -0.25, 0, -0.2, 0.04, 0.2, 0.04, 0.25, 0 )

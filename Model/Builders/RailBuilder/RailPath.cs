@@ -9,12 +9,12 @@ namespace Trains
 {
 	public class RailPath : Path
 	{
-		[Export] private readonly Color bpColor;
+		[Export] public readonly Color BpColor;
 
-		[Export] private readonly Color notAllowedColor;
+		[Export] public readonly Color NotAllowedColor;
 
-		public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
-		public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
+		public Vector3 Start { get => Translation + Curve.First(); }
+		public Vector3 End { get => Translation + Curve.Last(); }
 
 		public bool IsJoined { get; private set; }
 
@@ -49,14 +49,14 @@ namespace Trains
 
 		public RailPath Clone()
 		{
-			var p = (RailPath)this.Duplicate();
-			p.Curve = this.Curve;
-			p.IsJoined = this.IsJoined;
-			//Start = this.Start,
-			//End = this.End,
-			p.polygon = this.polygon;
-			p.originalBpCurve = this.originalBpCurve;
-			return p;
+			var path = (RailPath)this.Duplicate();
+			var curve = RailCurve.GetFrom(Curve);
+			curve.Origin = Translation;
+			path.Curve = curve;
+			path.IsJoined = this.IsJoined;
+			path.polygon = this.polygon;
+			path.originalBpCurve = this.originalBpCurve;
+			return path;
 		}
 
 		public void InitOnPlacement(Path blueprint)
@@ -77,7 +77,7 @@ namespace Trains
 			var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
 			var canBuild = !bodies.Any();
 			var csgMaterial = (SpatialMaterial)polygon.Material;
-			csgMaterial.AlbedoColor = canBuild ? bpColor : notAllowedColor;
+			csgMaterial.AlbedoColor = canBuild ? BpColor : NotAllowedColor;
 		}
 
 		public List<CurveSegment> GetSegments()

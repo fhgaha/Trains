@@ -66,10 +66,6 @@ namespace Trains.Model.Builders
 			var bpRailPathClone = blueprint.GetNode<RailPath>("RailPath")
 				.Clone();
 
-			// var f = bpRailPathClone.Curve.First().Rotated(Vector3.Up, blueprint.Rotation.y);
-			// var s = bpRailPathClone.Curve.Last().Rotated(Vector3.Up, blueprint.Rotation.y);
-			// bpRailPathClone.Curve = RailCurve.GetSimpleCurve(f, s);
-
 			bpRailPathClone.GlobalTransform = blueprint.GetNode<RailPath>("RailPath").GlobalTransform;
 
 			station.RemoveChild(stationRailPath);
@@ -124,7 +120,9 @@ namespace Trains.Model.Builders
 		{
 			blueprint = stationScene.Instance<Spatial>();
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
+			//blueprint.GetNode<RailPath>("RailPath").Curve = RailCurve.GetFrom(blueprint.GetNode<RailPath>("RailPath"));
 			AddChild(blueprint);
+			blueprint.Name = "blueprint";
 		}
 	}
 }

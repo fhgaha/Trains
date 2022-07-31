@@ -17,14 +17,22 @@ namespace Trains
 
 		public static RailCurve GetFrom(Path path)
 		{
-			var curve = new RailCurve();
-
-			for (int i = 0; i < path.Curve.GetPointCount(); i++)
-				curve.AddPoint(path.Curve.GetPointPosition(i));
-
+			var curve =  GetFrom(path.Curve);
 			curve.Origin = path.Translation;
 			return curve;
 		}
+
+		public static RailCurve GetFrom(Curve3D curve)
+		{
+			var newCurve = new RailCurve();
+
+			for (int i = 0; i < curve.GetPointCount(); i++)
+				newCurve.AddPoint(curve.GetPointPosition(i));
+			newCurve.Origin = curve.GetPointPosition(0);
+
+			return newCurve;
+		}
+
 
 		public static RailCurve GetSimpleCurve(Vector3 first, Vector3 second)
 		{
