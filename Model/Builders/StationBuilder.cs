@@ -52,18 +52,12 @@ namespace Trains.Model.Builders
 			}
 
 			if (!(blueprint is null) && @event.IsActionPressed("Rotate"))
-			{
-				//rotate station scene
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
-
-				//rotate curve
-				// var bpRailCurve = (RailCurve)blueprint.GetNode<RailPath>("RailPath").Curve;
-				// bpRailCurve.Rotate(Vector3.Up, Mathf.Pi / 2);
-			}
 		}
 
 		private void PlaceStationAndRailPath()
 		{
+			//place station
 			var station = stationScene.Instance<Spatial>();
 			station.RemoveChild(station.GetNode("Base"));
 			station.GlobalTransform = blueprint.GlobalTransform;
@@ -73,26 +67,17 @@ namespace Trains.Model.Builders
 			station.RemoveChild(stationPath);
 			stations.AddChild(station);
 
+			//place rail path
 			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
 			var path = railPathScene.Instance<RailPath>();
 			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
 			path.GlobalTransform = bpRailPath.GlobalTransform;
 			path.Rotation = Vector3.Zero;
 
-			//last added
-			((RailCurve)path.Curve).Rotate(Vector3.Up, blueprint.Rotation.y * Mathf.Pi/180);
-			
+			var curve = (RailCurve)path.Curve;
+			curve.Rotate(Vector3.Up, blueprint.Rotation.y);
+
 			railContainer.AddRailPath(path);
-
-			//GD.Print(path.RotationDegrees);
-
-			//print curve points
-			for (int i = 0; i < path.Curve.GetPointCount(); i++)
-			{
-				var p = path.Curve.GetPointPosition(i);
-				GD.Print(/*bpRailPathClone.GlobalTransform.origin +*/ p);
-			}
-			GD.Print();
 		}
 
 		private void UpdateBlueprint()
