@@ -47,7 +47,8 @@ namespace Trains.Model.Builders
 			{
 				if (!(blueprint is null) && canBuild)
 				{
-					PlaceStationAndRailPath();
+					PlaceStation();
+					PlaceRailPath();
 				}
 			}
 
@@ -55,9 +56,8 @@ namespace Trains.Model.Builders
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
 		}
 
-		private void PlaceStationAndRailPath()
+		private void PlaceStation()
 		{
-			//place station
 			var station = stationScene.Instance<Spatial>();
 			station.RemoveChild(station.GetNode("Base"));
 			station.GlobalTransform = blueprint.GlobalTransform;
@@ -66,8 +66,10 @@ namespace Trains.Model.Builders
 			var stationPath = station.GetNode<RailPath>("RailPath");
 			station.RemoveChild(stationPath);
 			stations.AddChild(station);
+		}
 
-			//place rail path
+		private void PlaceRailPath()
+		{
 			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
 			var path = railPathScene.Instance<RailPath>();
 			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
