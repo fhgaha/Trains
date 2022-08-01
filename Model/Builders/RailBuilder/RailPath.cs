@@ -50,6 +50,7 @@ namespace Trains
 		{
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = (RailCurve)blueprint.Curve;
+			// Curve = RailCurve.GetFrom(blueprint.Curve);
 			polygon.UseCollision = true;
 		}
 

@@ -66,6 +66,7 @@ namespace Trains.Model.Builders
 
 			var stationPath = station.GetNode<RailPath>("RailPath");
 			station.RemoveChild(stationPath);
+
 			stations.AddChild(station);
 		}
 
@@ -75,13 +76,9 @@ namespace Trains.Model.Builders
 			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
 			var path = railPathScene.Instance<RailPath>();
 
-			//for some reason if add path here all station paths rotates. but if i add it in the end 
-			//of this method station paths do not rotate.
-			railContainer.AddRailPath(path);
-
-			// path.GlobalTransform = bpRailPath.GlobalTransform;
-			// path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
-			path.InitOnPlacement(bpRailPath);
+			path.GlobalTransform = bpRailPath.GlobalTransform;
+			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
+			//path.InitOnPlacement(bpRailPath);
 
 			path.Rotation = Vector3.Zero;
 
@@ -89,8 +86,14 @@ namespace Trains.Model.Builders
 
 			//for some reason if i leave
 			//curve.Rotate(Vector3.Up, blueprint.Rotation.y);
-			//calculator counts centers of left/right circles on opposite positions
+			//calculator counts centers of left/right circles on opposite positions when path is horizontal 
+			//and goes left
 			curve.Rotate(Vector3.Up, -blueprint.Rotation.y);
+
+			//for some reason if add path right after instance the path all station paths rotates. 
+			//but if i add it in the end of this method station paths do not rotate.
+			railContainer.AddRailPath(path);
+			path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
 
 		private void UpdateBlueprint()
@@ -142,7 +145,6 @@ namespace Trains.Model.Builders
 			var bpPath = blueprint.GetNode<RailPath>("RailPath");
 			bpPath.Curve = RailCurve.GetFrom(bpPath.Curve);
 			AddChild(blueprint);
-			// bpPath.Curve.ResourceLocalToScene = true;
 			blueprint.Name = "blueprint";
 		}
 	}
