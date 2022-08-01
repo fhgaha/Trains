@@ -74,8 +74,15 @@ namespace Trains.Model.Builders
 			//unite this with RailPath.InitOnPlacement(Path blueprint) maybe?
 			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
 			var path = railPathScene.Instance<RailPath>();
-			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
-			path.GlobalTransform = bpRailPath.GlobalTransform;
+
+			//for some reason if add path here all station paths rotates. but if i add it in the end 
+			//of this method station paths do not rotate.
+			railContainer.AddRailPath(path);
+
+			// path.GlobalTransform = bpRailPath.GlobalTransform;
+			// path.Curve = RailCurve.GetFrom(bpRailPath.Curve);
+			path.InitOnPlacement(bpRailPath);
+
 			path.Rotation = Vector3.Zero;
 
 			var curve = (RailCurve)path.Curve;
@@ -84,8 +91,6 @@ namespace Trains.Model.Builders
 			//curve.Rotate(Vector3.Up, blueprint.Rotation.y);
 			//calculator counts centers of left/right circles on opposite positions
 			curve.Rotate(Vector3.Up, -blueprint.Rotation.y);
-
-			railContainer.AddRailPath(path);
 		}
 
 		private void UpdateBlueprint()
@@ -137,6 +142,7 @@ namespace Trains.Model.Builders
 			var bpPath = blueprint.GetNode<RailPath>("RailPath");
 			bpPath.Curve = RailCurve.GetFrom(bpPath.Curve);
 			AddChild(blueprint);
+			// bpPath.Curve.ResourceLocalToScene = true;
 			blueprint.Name = "blueprint";
 		}
 	}

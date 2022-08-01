@@ -48,7 +48,7 @@ namespace Trains
 
 		public void InitOnPlacement(Path blueprint)
 		{
-			Transform = blueprint.Transform;
+			GlobalTransform = blueprint.GlobalTransform;
 			Curve = (RailCurve)blueprint.Curve;
 			polygon.UseCollision = true;
 		}
