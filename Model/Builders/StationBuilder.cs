@@ -71,6 +71,7 @@ namespace Trains.Model.Builders
 
 		private void PlaceRailPath()
 		{
+			//unite this with RailPath.InitOnPlacement(Path blueprint) maybe?
 			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
 			var path = railPathScene.Instance<RailPath>();
 			path.Curve = RailCurve.GetFrom(bpRailPath.Curve);

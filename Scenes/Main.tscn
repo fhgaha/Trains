@@ -105,7 +105,6 @@ material/0 = SubResource( 14 )
 
 [node name="DebugHelper" type="Spatial" parent="RailBuilder"]
 script = ExtResource( 8 )
-ShowActualPoints = true
 MaxStages = 13
 ToleranceDegrees = 4.0
 helper = ExtResource( 10 )

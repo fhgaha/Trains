@@ -112,7 +112,7 @@ namespace Trains
 			{
 				var helper = (MeshInstance)helperInst.Duplicate();
 				AddChild(helper);
-				helper.Translation = curve.GetPointPosition(i) + curve.Origin;
+				helper.Translation = curve.Origin + curve.GetPointPosition(i);
 			}
 		}
 

@@ -43,20 +43,7 @@ namespace Trains
 		{
 			originalBpCurve = Curve;
 			polygon = GetNode<CSGPolygon>("CSGPolygon");
-		}
-
-		public RailPath Clone()
-		{
-			//An instance stays linked to the original so when the original changes, the instance changes too.
-			var path = (RailPath)this.Duplicate();
-			var curve = RailCurve.GetFrom(Curve);
-			curve.Origin = GlobalTransform.origin;
-			path.IsJoined = this.IsJoined;
-			path.polygon = this.polygon;
-			path.originalBpCurve = this.originalBpCurve;
-			// path.GlobalTransform = this.GlobalTransform;
-			path.Curve = curve;
-			return path;
+			Curve = RailCurve.GetFrom(Curve);
 		}
 
 		public void InitOnPlacement(Path blueprint)

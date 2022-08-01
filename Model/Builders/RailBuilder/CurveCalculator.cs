@@ -73,7 +73,6 @@ namespace Trains.Model.Builders
 			var startEndDir = (end - start).Normalized();
 			var prevDirPerp = prevDir.Rotated(Pi / 2);
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
-			GD.PrintS(start, end);
 			var center = CalculateCenter(rotationAngleDeg, centerIsOnRight, start);
 
 			var circlePoints = GetCirclePoints(rotationAngleDeg, centerIsOnRight, center).ToList();
