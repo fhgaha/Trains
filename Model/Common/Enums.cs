@@ -24,6 +24,7 @@ namespace Trains.Model.Common
 			None,
 			BuildRail,
 			BuildStation,
+			BuildTrain,
 			ShowProductMap
 		}
 	}

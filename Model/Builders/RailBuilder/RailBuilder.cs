@@ -62,26 +62,9 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			RemoveRailRemoverIsExists();
+			RemoveRailRemoverIfExists();
 
-			//other main button is pressed
-			if (buttonType != MainButtonType.BuildRail)
-			{
-				ResetStateBlueprintPrevDir();
-				currentPath = null;
-				undoStack.Clear();
-				return;
-			}
-
-			//"Build Rail" button was pressed and we press it again
-			if (Global.MainButtonMode == MainButtonType.BuildRail)
-			{
-				Global.MainButtonMode = MainButtonType.None;
-				ResetStateBlueprintPrevDir();
-				currentPath = null;
-				undoStack.Clear();
-				return;
-			}
+			if (IsWrongButtonPressed(buttonType)) return;
 
 			Global.MainButtonMode = MainButtonType.BuildRail;
 			InitStateAndBlueprint();
@@ -95,6 +78,29 @@ namespace Trains.Model.Builders
 			prevDir = Vector3.Zero;
 		}
 
+		private bool IsWrongButtonPressed(MainButtonType buttonType)
+		{
+			//other main button is pressed
+			if (buttonType != MainButtonType.BuildRail)
+			{
+				ResetStateBlueprintPrevDir();
+				currentPath = null;
+				undoStack.Clear();
+				return true;
+			}
+
+			//"Build Rail" button was pressed and we press it again
+			if (Global.MainButtonMode == MainButtonType.BuildRail)
+			{
+				Global.MainButtonMode = MainButtonType.None;
+				ResetStateBlueprintPrevDir();
+				currentPath = null;
+				undoStack.Clear();
+				return true;
+			}
+			return false;
+		}
+
 		private void InitStateAndBlueprint()
 		{
 			state = State.SelectStart;
@@ -106,7 +112,7 @@ namespace Trains.Model.Builders
 		private void onStartNewRoadPressed()
 		{
 			ReinitStateAndBlueprint();
-			RemoveRailRemoverIsExists();
+			RemoveRailRemoverIfExists();
 			undoStack.Clear();
 			currentPath = null;
 		}
@@ -120,7 +126,7 @@ namespace Trains.Model.Builders
 		private void onUndoRailPressed()
 		{
 			ReinitStateAndBlueprint();
-			RemoveRailRemoverIsExists();
+			RemoveRailRemoverIfExists();
 
 			if (undoStack.Count == 0)
 				return;
@@ -145,7 +151,7 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private void RemoveRailRemoverIsExists()
+		private void RemoveRailRemoverIfExists()
 		{
 			railRemover?.QueueFree();
 			railRemover = null;

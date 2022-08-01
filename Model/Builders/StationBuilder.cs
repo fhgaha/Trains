@@ -101,13 +101,13 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			if (IsPressedWrongButton(buttonType)) return;
+			if (IsWrongButtonPressed(buttonType)) return;
 
 			Global.MainButtonMode = MainButtonType.BuildStation;
 			InitEmptyBlueprint();
 		}
 
-		private bool IsPressedWrongButton(MainButtonType buttonType)
+		private bool IsWrongButtonPressed(MainButtonType buttonType)
 		{
 			if (buttonType != MainButtonType.BuildStation)
 			{

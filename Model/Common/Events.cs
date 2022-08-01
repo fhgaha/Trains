@@ -52,9 +52,6 @@ namespace Trains.Model.Common
 
 		[Signal] public delegate void MainGUIPanelMouseExited();
 
-		
-
-
 		public override void _Ready()
 		{
 			GD.Print("Events is ready");
