@@ -18,7 +18,7 @@ namespace Trains.Model.Builders
 		private Spatial stations;
 		private RailContainer railContainer;
 		private Events events;
-		private Spatial blueprint;
+		private Station blueprint;
 		private Camera camera;
 		private bool canBuild = false;
 
@@ -59,14 +59,8 @@ namespace Trains.Model.Builders
 
 		private void PlaceStation()
 		{
-			var station = stationScene.Instance<Spatial>();
-			station.RemoveChild(station.GetNode("Base"));
-			station.GlobalTransform = blueprint.GlobalTransform;
-			station.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
-
-			var stationPath = station.GetNode<RailPath>("RailPath");
-			station.RemoveChild(stationPath);
-
+			var station = stationScene.Instance<Station>();
+			station.Init(blueprint);
 			stations.AddChild(station);
 		}
 
@@ -93,7 +87,6 @@ namespace Trains.Model.Builders
 			//for some reason if add path right after instance the path all station paths rotates. 
 			//but if i add it in the end of this method station paths do not rotate.
 			railContainer.AddRailPath(path);
-			path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
 
 		private void UpdateBlueprint()
@@ -140,7 +133,7 @@ namespace Trains.Model.Builders
 
 		private void InitBlueprint()
 		{
-			blueprint = stationScene.Instance<Spatial>();
+			blueprint = stationScene.Instance<Station>();
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
 			var bpPath = blueprint.GetNode<RailPath>("RailPath");
 			bpPath.Curve = RailCurve.GetFrom(bpPath.Curve);

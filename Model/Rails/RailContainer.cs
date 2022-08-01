@@ -13,6 +13,7 @@ namespace Trains
 		{
 			PathList.Add(path);
 			AddChild(path);
+			path.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
 
 		internal void AddToPathList(RailPath path)

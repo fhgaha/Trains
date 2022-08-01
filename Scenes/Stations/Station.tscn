@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/Stations/TrainStationMesh.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Obstacle.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Rails/RailPath.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Model/Stations/Station.cs" type="Script" id=4]
 
 [sub_resource type="CubeMesh" id=8]
 
@@ -19,6 +20,7 @@ _data = {
 }
 
 [node name="Station" type="Spatial"]
+script = ExtResource( 4 )
 
 [node name="TrainStationMesh" parent="." instance=ExtResource( 1 )]
 transform = Transform( 0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, -0.0807939, 0, 0.155012 )
