@@ -229,7 +229,7 @@ namespace Trains.Model.Builders
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
 			railContainer.AddRailPath(currentPath);
-			currentPath.InitOnPlacement(blueprint);
+			currentPath.InitOnPlacementFromRailBuilder(blueprint);
 			prevDir = currentPath.DirFromEnd;
 
 			//i dont know why but without this mid snapping logic of bpStartSnpper breaks

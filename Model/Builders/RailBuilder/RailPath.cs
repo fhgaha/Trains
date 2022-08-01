@@ -46,12 +46,18 @@ namespace Trains
 			Curve = RailCurve.GetFrom(Curve);
 		}
 
-		public void InitOnPlacement(Path blueprint)
+		public void InitOnPlacementFromRailBuilder(Path blueprint)
 		{
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = (RailCurve)blueprint.Curve;
-			// Curve = RailCurve.GetFrom(blueprint.Curve);
 			polygon.UseCollision = true;
+		}
+
+		public void InitOnPlacementFromStationBuilder(RailPath blueprint)
+		{
+			GlobalTransform = blueprint.GlobalTransform;
+			Curve = RailCurve.GetFrom(blueprint.Curve);
+			Rotation = Vector3.Zero;
 		}
 
 		public void SetOriginalBpCurve()
