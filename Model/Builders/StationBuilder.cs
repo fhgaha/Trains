@@ -70,12 +70,11 @@ namespace Trains.Model.Builders
 			var path = railPathScene.Instance<RailPath>();
 			path.InitOnPlacementFromStationBuilder(bpRailPath);
 
-			var curve = (RailCurve)path.Curve;
-
 			//for some reason if i leave
 			//curve.Rotate(Vector3.Up, blueprint.Rotation.y);
 			//calculator counts centers of left/right circles on opposite positions when path is horizontal 
 			//and goes left
+			var curve = (RailCurve)path.Curve;
 			curve.Rotate(Vector3.Up, -blueprint.Rotation.y);
 
 			//for some reason if add path right after instance the path all station paths rotates. 
@@ -102,21 +101,27 @@ namespace Trains.Model.Builders
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
+			if (IsPressedWrongButton(buttonType)) return;
+
+			Global.MainButtonMode = MainButtonType.BuildStation;
+			InitEmptyBlueprint();
+		}
+
+		private bool IsPressedWrongButton(MainButtonType buttonType)
+		{
 			if (buttonType != MainButtonType.BuildStation)
 			{
 				ResetBlueprint();
-				return;
+				return true;
 			}
 
 			if (Global.MainButtonMode == MainButtonType.BuildStation)
 			{
 				Global.MainButtonMode = MainButtonType.None;
 				ResetBlueprint();
-				return;
+				return true;
 			}
-
-			Global.MainButtonMode = MainButtonType.BuildStation;
-			InitBlueprint();
+			return false;
 		}
 
 		private void ResetBlueprint()
@@ -125,7 +130,7 @@ namespace Trains.Model.Builders
 			blueprint = null;
 		}
 
-		private void InitBlueprint()
+		private void InitEmptyBlueprint()
 		{
 			blueprint = stationScene.Instance<Station>();
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
