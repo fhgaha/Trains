@@ -33,7 +33,7 @@ namespace Trains.Model.Grids
 			AddBuildings();
 
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
@@ -61,26 +61,19 @@ namespace Trains.Model.Grids
 
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonModeChanged(MainButtonType mode)
 		{
 			//other button is pressed
-			if (buttonType != MainButtonType.ShowProductMap)
+			if (mode == MainButtonType.ShowProductMap)
+			{
+				Visible = true;
+			}
+			else
 			{
 				Visible = false;
-				return;
 			}
-
-			//"Show Product Menu" button was pressed and we press it again
-			if (Global.MainButtonMode == MainButtonType.ShowProductMap)
-			{
-				Global.MainButtonMode = MainButtonType.None;
-				Visible = false;
-				return;
-			}
-
-			Global.MainButtonMode = MainButtonType.ShowProductMap;
-			Visible = true;
 		}
+
 		public void onSpecificProductButtonPressed(ProductType productType)
 		{
 			Global.CurrentDisplayProductMode = productType;

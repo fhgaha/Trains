@@ -52,7 +52,7 @@ namespace Trains.Model.Builders
 			calculator = GetNode<CurveCalculator>("Calculator");
 
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
 			events.Connect(nameof(Events.RemoveRailPressed), this, nameof(onRemoveRailPressed));
@@ -60,14 +60,22 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonModeChanged(MainButtonType mode)
 		{
 			RemoveRailRemoverIfExists();
 
-			if (IsWrongButtonPressed(buttonType)) return;
+			if (mode == MainButtonType.BuildRail)
+			{
+				InitStateAndBlueprint();
+			}
+			else
+			{
+				ResetStateBlueprintPrevDir();
+			}
 
-			Global.MainButtonMode = MainButtonType.BuildRail;
-			InitStateAndBlueprint();
+			//if (IsWrongButtonPressed(buttonType)) return;
+
+			// Global.MainButtonMode = MainButtonType.BuildRail;
 		}
 
 		private void ResetStateBlueprintPrevDir()
@@ -76,29 +84,6 @@ namespace Trains.Model.Builders
 			blueprint?.QueueFree();
 			blueprint = null;
 			prevDir = Vector3.Zero;
-		}
-
-		private bool IsWrongButtonPressed(MainButtonType buttonType)
-		{
-			//other main button is pressed
-			if (buttonType != MainButtonType.BuildRail)
-			{
-				ResetStateBlueprintPrevDir();
-				currentPath = null;
-				undoStack.Clear();
-				return true;
-			}
-
-			//"Build Rail" button was pressed and we press it again
-			if (Global.MainButtonMode == MainButtonType.BuildRail)
-			{
-				Global.MainButtonMode = MainButtonType.None;
-				ResetStateBlueprintPrevDir();
-				currentPath = null;
-				undoStack.Clear();
-				return true;
-			}
-			return false;
 		}
 
 		private void InitStateAndBlueprint()

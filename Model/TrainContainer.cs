@@ -15,36 +15,13 @@ namespace Trains
 		public override void _Ready()
 		{
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonModeChanged(MainButtonType mode)
 		{
-			if (IsWrongButtonPressed(buttonType)) return;
-
-			Global.MainButtonMode = MainButtonType.BuildTrain;
-			
 			//temp
 			//var train = trainScene.Instance<Train>();
-		}
-
-		private bool IsWrongButtonPressed(MainButtonType buttonType)
-		{
-			//other main button is pressed
-			if (buttonType != MainButtonType.BuildTrain)
-			{
-				//Reset something
-				return true;
-			}
-
-			//"Build Rail" button was pressed and we press it again
-			if (Global.MainButtonMode == MainButtonType.BuildTrain)
-			{
-				Global.MainButtonMode = MainButtonType.None;
-				//Reset something
-				return true;
-			}
-			return false;
 		}
 	}
 }

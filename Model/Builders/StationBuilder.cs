@@ -25,7 +25,7 @@ namespace Trains.Model.Builders
 		public override void _Ready()
 		{
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
 		public void Init(List<Cell> cells, Camera camera, Spatial stations, RailContainer railsContainer)
@@ -99,29 +99,16 @@ namespace Trains.Model.Builders
 			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonModeChanged(MainButtonType mode)
 		{
-			if (IsWrongButtonPressed(buttonType)) return;
-
-			Global.MainButtonMode = MainButtonType.BuildStation;
-			InitEmptyBlueprint();
-		}
-
-		private bool IsWrongButtonPressed(MainButtonType buttonType)
-		{
-			if (buttonType != MainButtonType.BuildStation)
+			if (mode == MainButtonType.BuildStation)
+			{
+				InitEmptyBlueprint();
+			}
+			else
 			{
 				ResetBlueprint();
-				return true;
 			}
-
-			if (Global.MainButtonMode == MainButtonType.BuildStation)
-			{
-				Global.MainButtonMode = MainButtonType.None;
-				ResetBlueprint();
-				return true;
-			}
-			return false;
 		}
 
 		private void ResetBlueprint()

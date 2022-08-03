@@ -15,32 +15,34 @@ namespace Trains
 		public override void _Ready()
 		{
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 
 			buttonMenuDict = new Dictionary<MainButtonType, Control>
 			{
 				[MainButtonType.BuildRail] = GetNode<Control>("HBoxContainer/BuildRailMenu"),
 				[MainButtonType.BuildStation] = GetNode<Control>("HBoxContainer/BuildStationMenu"),
-				[MainButtonType.ShowProductMap] = GetNode<Control>("HBoxContainer/ProductsMenu"),
-				[MainButtonType.BuildTrain] = GetNode<Control>("BuildTrainMenu")
+				[MainButtonType.BuildTrain] = GetNode<Control>("BuildTrainMenu"),
+				[MainButtonType.ShowProductMap] = GetNode<Control>("HBoxContainer/ProductsMenu")
 			};
 
 			buttonMenuDict.Values.ToList().ForEach(menu => menu.Visible = false);
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonModeChanged(MainButtonType mode)
 		{
-			HideButtonsExeptSpecified(buttonType);
+			HideMenusExeptSpecified(mode);
 		}
 
-		private void HideButtonsExeptSpecified(MainButtonType buttonType)
+		private void HideMenusExeptSpecified(MainButtonType mode)
 		{
 			buttonMenuDict.Values
-				.Where(menu => menu != buttonMenuDict[buttonType])
 				.ToList()
 				.ForEach(menu => menu.Visible = false);
 
-			buttonMenuDict[buttonType].Visible = !buttonMenuDict[buttonType].Visible;
+			if (mode != MainButtonType.None)
+			{
+				buttonMenuDict[mode].Visible = true;
+			}
 		}
 	}
 }

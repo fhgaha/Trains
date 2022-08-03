@@ -20,34 +20,19 @@ namespace Trains
 			minimapTexture = GetNode<TextureRect>("MarginContainer/GridContainer/StationSelectionMinimap/TextureRect");
 
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
-		private void onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonModeChanged(MainButtonType mode)
 		{
-			//this is wrong. it should be in train container .cs
-			// if (IsWrongButtonPressed(buttonType)) return;
-
-			// Global.MainButtonMode = MainButtonType.BuildTrain;
-			//do
-			var stations = GetTree().GetNodesInGroup("Stations").Cast<Station>();
-			GD.Print(stations.Count());
-			//foreach station add button
+			if (mode == MainButtonType.BuildTrain)
+			{
+				Visible = true;
+			}
+			else
+			{
+				Visible = false;
+			}
 		}
-
-		// private bool IsWrongButtonPressed(MainButtonType buttonType)
-		// {
-		// 	if (buttonType != MainButtonType.BuildTrain)
-		// 	{
-		// 		return true;
-		// 	}
-
-		// 	if (Global.MainButtonMode == MainButtonType.BuildTrain)
-		// 	{
-		// 		Global.MainButtonMode = MainButtonType.None;
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
 	}
 }

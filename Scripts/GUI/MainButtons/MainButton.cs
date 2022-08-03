@@ -8,7 +8,6 @@ namespace Trains
 	public class MainButton : Button
 	{
 		private Events events;
-		private bool wasPressed = false;
 
 		public override void _Ready()
 		{
@@ -19,17 +18,32 @@ namespace Trains
 
 		private void onButtonPressed()
 		{
-			wasPressed = true;
-			events.EmitSignal(nameof(Events.MainButtonPressed), GetButtonType());
+			events.EmitSignal(nameof(Events.MainButtonPressed), GetThisButtonType());
 		}
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			if (buttonType != GetButtonType())
+			//if the same button twice was pressed
+			if (buttonType == GetThisButtonType() && GetThisButtonType() == Global.MainButtonMode)
+			{
+				Global.MainButtonMode = MainButtonType.None;
+				events.EmitSignal(nameof(Events.MainButtonModeChanged), MainButtonType.None);
 				Unpress();
+			}
+			//if pressed this button once
+			else if (buttonType == GetThisButtonType())
+			{
+				Global.MainButtonMode = buttonType;
+				events.EmitSignal(nameof(Events.MainButtonModeChanged), buttonType);
+			}
+			//if other button was pressed
+			else
+			{
+				Unpress();
+			}
 		}
 
-		private MainButtonType GetButtonType()
+		private MainButtonType GetThisButtonType()
 		{
 			switch (Text)
 			{
@@ -42,7 +56,6 @@ namespace Trains
 
 		private void Unpress()
 		{
-			wasPressed = false;
 			Pressed = false;
 		}
 	}
