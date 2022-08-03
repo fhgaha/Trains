@@ -52,7 +52,8 @@ namespace Trains
 				case "BR": return MainButtonType.BuildRail;
 				case "BS": return MainButtonType.BuildStation;
 				case "BT": return MainButtonType.BuildTrain;
-				default: return MainButtonType.ShowProductMap;
+				case "P": return MainButtonType.ShowProductMap;
+				default: return MainButtonType.None;
 			}
 		}
 

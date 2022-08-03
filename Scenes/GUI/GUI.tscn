@@ -73,8 +73,8 @@ size_flags_vertical = 3
 script = ExtResource( 7 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainPanel/MapAndButtons"]
-margin_right = 354.0
-margin_bottom = 161.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="Minimap" type="ColorRect" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer"]
 margin_right = 200.0
@@ -182,7 +182,7 @@ text = "P"
 [node name="BuildRailMenu" type="Control" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer"]
 visible = false
 margin_left = 358.0
-margin_right = 358.0
+margin_right = 1014.0
 margin_bottom = 161.0
 mouse_filter = 1
 size_flags_horizontal = 3
@@ -235,7 +235,7 @@ text = "Remove"
 [node name="BuildStationMenu" type="Control" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer"]
 visible = false
 margin_left = 358.0
-margin_right = 358.0
+margin_right = 1014.0
 margin_bottom = 161.0
 mouse_filter = 1
 size_flags_horizontal = 3
