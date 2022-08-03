@@ -23,24 +23,26 @@ namespace Trains
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			//if the same button twice was pressed
-			if (buttonType == GetThisButtonType() && GetThisButtonType() == Global.MainButtonMode)
+			if (ThisButtonIsPressedSecondTimeInRow())
 			{
 				Global.MainButtonMode = MainButtonType.None;
 				events.EmitSignal(nameof(Events.MainButtonModeChanged), MainButtonType.None);
 				Unpress();
 			}
-			//if pressed this button once
-			else if (buttonType == GetThisButtonType())
+			else if (ThisButtonIsPressedFirstTime())
 			{
 				Global.MainButtonMode = buttonType;
 				events.EmitSignal(nameof(Events.MainButtonModeChanged), buttonType);
 			}
-			//if other button was pressed
 			else
 			{
 				Unpress();
 			}
+
+			bool ThisButtonIsPressedSecondTimeInRow()
+				=> buttonType == GetThisButtonType() && GetThisButtonType() == Global.MainButtonMode;
+
+			bool ThisButtonIsPressedFirstTime() => buttonType == GetThisButtonType();
 		}
 
 		private MainButtonType GetThisButtonType()
