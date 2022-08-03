@@ -574,3 +574,4 @@ mouse_filter = 1
 theme = SubResource( 1 )
 
 [node name="BuildTrainMenu" parent="CanvasLayer" instance=ExtResource( 10 )]
+visible = false
