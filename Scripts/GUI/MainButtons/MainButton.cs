@@ -25,7 +25,8 @@ namespace Trains
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			if (buttonType != GetButtonType()) Unpress();
+			if (buttonType != GetButtonType())
+				Unpress();
 		}
 
 		private MainButtonType GetButtonType()

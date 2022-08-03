@@ -20,6 +20,10 @@ namespace Trains
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
+			if (IsWrongButtonPressed(buttonType)) return;
+
+			Global.MainButtonMode = MainButtonType.BuildTrain;
+			
 			//temp
 			//var train = trainScene.Instance<Train>();
 		}

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Trains
 {
-	public class MapAndButtons : HBoxContainer
+	public class MapAndButtons : Control
 	{
 		private Events events;
 		private Dictionary<MainButtonType, Control> buttonMenuDict;
@@ -19,9 +19,10 @@ namespace Trains
 
 			buttonMenuDict = new Dictionary<MainButtonType, Control>
 			{
-				[MainButtonType.BuildRail] = GetNode<Control>("BuildRailMenu"),
-				[MainButtonType.BuildStation] = GetNode<Control>("BuildStationMenu"),
-				[MainButtonType.ShowProductMap] = GetNode<Control>("ProductsMenu")
+				[MainButtonType.BuildRail] = GetNode<Control>("HBoxContainer/BuildRailMenu"),
+				[MainButtonType.BuildStation] = GetNode<Control>("HBoxContainer/BuildStationMenu"),
+				[MainButtonType.ShowProductMap] = GetNode<Control>("HBoxContainer/ProductsMenu"),
+				[MainButtonType.BuildTrain] = GetNode<Control>("BuildTrainMenu")
 			};
 
 			buttonMenuDict.Values.ToList().ForEach(menu => menu.Visible = false);
