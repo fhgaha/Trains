@@ -25,28 +25,29 @@ namespace Trains
 
 		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			if (IsWrongButtonPressed(buttonType)) return;
+			//this is wrong. it should be in train container .cs
+			// if (IsWrongButtonPressed(buttonType)) return;
 
-			Global.MainButtonMode = MainButtonType.BuildTrain;
+			// Global.MainButtonMode = MainButtonType.BuildTrain;
 			//do
 			var stations = GetTree().GetNodesInGroup("Stations").Cast<Station>();
 			GD.Print(stations.Count());
 			//foreach station add button
 		}
 
-		private bool IsWrongButtonPressed(MainButtonType buttonType)
-		{
-			if (buttonType != MainButtonType.BuildTrain)
-			{
-				return true;
-			}
+		// private bool IsWrongButtonPressed(MainButtonType buttonType)
+		// {
+		// 	if (buttonType != MainButtonType.BuildTrain)
+		// 	{
+		// 		return true;
+		// 	}
 
-			if (Global.MainButtonMode == MainButtonType.BuildTrain)
-			{
-				Global.MainButtonMode = MainButtonType.None;
-				return true;
-			}
-			return false;
-		}
+		// 	if (Global.MainButtonMode == MainButtonType.BuildTrain)
+		// 	{
+		// 		Global.MainButtonMode = MainButtonType.None;
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
 	}
 }
