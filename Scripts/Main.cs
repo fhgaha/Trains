@@ -41,7 +41,7 @@ namespace Trains.Scripts
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(cells, camera, GetNode<Spatial>("Stations"), GetNode<RailContainer>("Rails"));
+			stationBuilder.Init(cells, camera, GetNode<StationContainer>("Stations"), GetNode<RailContainer>("Rails"));
 
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");

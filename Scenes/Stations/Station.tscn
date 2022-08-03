@@ -19,7 +19,7 @@ _data = {
 "tilts": PoolRealArray( 0, 0 )
 }
 
-[node name="Station" type="Spatial"]
+[node name="Station" type="Spatial" groups=["Stations"]]
 script = ExtResource( 4 )
 
 [node name="TrainStationMesh" parent="." instance=ExtResource( 1 )]

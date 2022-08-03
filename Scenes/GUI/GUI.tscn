@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scenes/GUI/ProductButtons/SpecificProductButtons/Button.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/GUI/ProductButtons/AllProductsButton.cs" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scripts/GUI/MapAndButtons.cs" type="Script" id=7]
 [ext_resource path="res://Scripts/GUI/BuildRail/BuildRailMenu.cs" type="Script" id=8]
 [ext_resource path="res://Scripts/GUI/MainPanel.cs" type="Script" id=9]
+[ext_resource path="res://Scenes/GUI/BuildTrainMenu/BuildTrainMenu.tscn" type="PackedScene" id=10]
 
 [sub_resource type="Theme" id=3]
 default_font = ExtResource( 4 )
@@ -571,3 +572,5 @@ margin_right = 1008.0
 margin_bottom = 195.0
 mouse_filter = 1
 theme = SubResource( 1 )
+
+[node name="BuildTrainMenu" parent="CanvasLayer" instance=ExtResource( 10 )]

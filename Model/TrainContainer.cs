@@ -18,9 +18,29 @@ namespace Trains
 			events.Connect(nameof(Events.MainButtonPressed), this, nameof(onMainButtonPressed));
 		}
 
-		private object onMainButtonPressed(MainButtonType buttonType)
+		private void onMainButtonPressed(MainButtonType buttonType)
 		{
-			throw new NotImplementedException();
+			//temp
+			//var train = trainScene.Instance<Train>();
+		}
+
+		private bool IsWrongButtonPressed(MainButtonType buttonType)
+		{
+			//other main button is pressed
+			if (buttonType != MainButtonType.BuildTrain)
+			{
+				//Reset something
+				return true;
+			}
+
+			//"Build Rail" button was pressed and we press it again
+			if (Global.MainButtonMode == MainButtonType.BuildTrain)
+			{
+				Global.MainButtonMode = MainButtonType.None;
+				//Reset something
+				return true;
+			}
+			return false;
 		}
 	}
 }

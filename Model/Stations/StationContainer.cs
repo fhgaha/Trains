@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Trains
 {
-	public class StationContainer : Node
+	public class StationContainer : Spatial
 	{
 		private List<Station> stations;
 	}
