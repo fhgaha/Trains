@@ -61,6 +61,7 @@ namespace Trains.Model.Builders
 		{
 			var station = stationScene.Instance<Station>();
 			station.Init(blueprint);
+			station.AddToGroup("Stations");
 			stations.AddChild(station);
 		}
 

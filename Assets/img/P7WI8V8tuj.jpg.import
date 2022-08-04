@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Rails0014_1_350.jpg-1adec731913b164ec5dbef54efcc2b27.stex"
+path="res://.import/P7WI8V8tuj.jpg-1836acf742d8f05cdc69ba3e58b712f7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Rail/Rails0014_1_350.jpg"
-dest_files=[ "res://.import/Rails0014_1_350.jpg-1adec731913b164ec5dbef54efcc2b27.stex" ]
+source_file="res://Assets/img/P7WI8V8tuj.jpg"
+dest_files=[ "res://.import/P7WI8V8tuj.jpg-1836acf742d8f05cdc69ba3e58b712f7.stex" ]
 
 [params]
 
@@ -19,7 +19,7 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
+flags/repeat=0
 flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false

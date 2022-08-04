@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -16,13 +16,15 @@
 [ext_resource path="res://Scenes/Trains/Train.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Model/TrainContainer.cs" type="Script" id=15]
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
+[ext_resource path="res://Assets/img/P7WI8V8tuj.jpg" type="Texture" id=17]
 
 [sub_resource type="CubeMesh" id=9]
 
-[sub_resource type="CubeMesh" id=2]
+[sub_resource type="SpatialMaterial" id=18]
+albedo_texture = ExtResource( 17 )
 
-[sub_resource type="SpatialMaterial" id=4]
-albedo_color = Color( 0.309804, 0.309804, 0.309804, 1 )
+[sub_resource type="PlaneMesh" id=17]
+material = SubResource( 18 )
 
 [sub_resource type="ConcavePolygonShape" id=8]
 data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
@@ -52,9 +54,6 @@ script = ExtResource( 4 )
 
 [node name="Origin" type="Spatial" parent="."]
 transform = Transform( 0.26, 0, 0, 0, 0.120397, 0, 0, 0, 0.290166, 0, 0.120397, 0 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="MeshInstance" type="MeshInstance" parent="Origin"]
 transform = Transform( 0.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
@@ -69,17 +68,15 @@ skeleton = NodePath("../..")
 material/0 = null
 
 [node name="Floor" type="MeshInstance" parent="Origin"]
-transform = Transform( 76.9231, 0, 0, 0, 8.30585, 0, 0, 0, 68.9261, 0, -9.30585, 0 )
-mesh = SubResource( 2 )
+transform = Transform( 374.399, 0, 0, 0, 9.24026, 0, 0, 0, 250.17, 372.712, -9.30585, 248.634 )
+mesh = SubResource( 17 )
 skeleton = NodePath("../..")
-material/0 = SubResource( 4 )
-__meta__ = {
-"_edit_lock_": true
-}
+material/0 = null
 
 [node name="StaticBody" type="StaticBody" parent="Origin/Floor"]
 
 [node name="CollisionShape" type="CollisionShape" parent="Origin/Floor/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16324e-08, -4.82192e-08, -7.27168e-09 )
 shape = SubResource( 8 )
 
 [node name="RailBuilder" type="Spatial" parent="."]
