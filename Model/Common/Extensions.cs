@@ -57,8 +57,11 @@ namespace Trains.Model.Common
 
 		public static List<Vector3> TakeFirst(this Curve3D curve, int amount)
 		{
-			if (amount > curve.GetPointCount()) throw new ArgumentException(
+			if (amount > curve.GetPointCount())
+			{
+				throw new ArgumentException(
 				"amount " + amount + " cannot be bigger that curve points count " + curve.GetPointCount());
+			}
 
 			var list = new List<Vector3>();
 
@@ -74,8 +77,11 @@ namespace Trains.Model.Common
 			var list = new List<Vector3>();
 			var startIndex = curve.GetPointCount() - 1;
 			var lastIndex = curve.GetPointCount() - amount;
-			if (lastIndex < 0) throw new ArgumentException(
+			if (lastIndex < 0)
+			{
+				throw new ArgumentException(
 				"amount " + amount + " cannot be bigger that curve points count " + curve.GetPointCount());
+			}
 
 			for (int i = startIndex; i >= lastIndex; i--)
 				list.Add(curve.GetPointPosition(i));

@@ -11,8 +11,38 @@ namespace Trains
 	{
 		[Export] public readonly Color BpColor;
 		[Export] public readonly Color NotAllowedColor;
-		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
-		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
+		[Export]
+		public Vector3 Start
+		{
+			#region getset
+			get
+			{
+				//have to do this cause without it it call error on build
+				if (Curve.GetPointCount() > 0)
+					return Translation + Curve.First();
+				else
+					return Translation;
+			}
+
+			set => Start = value;
+			#endregion
+		}
+		[Export]
+		public Vector3 End
+		{
+			#region getset
+			get
+			{
+				//have to do this cause without it it call error on build
+				if (Curve.GetPointCount() > 0)
+					return Translation + Curve.Last();
+				else
+					return Translation;
+			}
+
+			set => End = value;
+			#endregion
+		}
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
 		public bool IsJoined { get; private set; }
 

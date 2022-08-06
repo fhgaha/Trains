@@ -8,6 +8,8 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 3 )
+acceptBtn = NodePath("Buttons/AcceptButton")
+cancelBtn = NodePath("Buttons/CancelButton")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = 176.0
@@ -111,7 +113,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Accept"
 
-[node name="ResetButton" type="Button" parent="Buttons"]
+[node name="CancelButton" type="Button" parent="Buttons"]
 margin_left = 82.0
 margin_right = 160.0
 margin_bottom = 60.0

@@ -10,20 +10,26 @@ namespace Trains
 	public class BuildTrainMenu : Control
 	{
 		[Export] private float zoom = 1.5f;
+		[Export] private NodePath acceptBtn;
+		[Export] private NodePath cancelBtn;
 		private PackedScene selectStationButtonScene
 			= GD.Load<PackedScene>("res://Scenes/GUI/BuildTrainMenu/MinimapStationButton.tscn");
 
 		private Events events;
 		private TextureRect minimapTexture;
 		private Dictionary<TextureButton, Station> btnStationDict;
+		List<Station> stationsToConnect;
 
 		public override void _Ready()
 		{
 			minimapTexture = GetNode<TextureRect>("MarginContainer/GridContainer/StationSelectionMinimap/TextureRect");
 			btnStationDict = new Dictionary<TextureButton, Station>();
+			stationsToConnect = new List<Station>();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
+			 GetNode<Button>(acceptBtn).Connect("pressed", this, nameof(onAcceptButtonPressed));
+			 GetNode<Button>(cancelBtn).Connect("pressed", this, nameof(onCancelButtonPressed));
 		}
 
 		private void onMainButtonModeChanged(MainButtonType mode)
@@ -41,8 +47,7 @@ namespace Trains
 					var station = stations[i];
 					var btn = selectStationButtonScene.Instance<TextureButton>();
 					btn.RectPosition = station.Translation.ToVec2() * scaleCoeff;
-					
-					//GD.PrintS("btn:", btn.RectPosition, "station:", station.Translation);
+
 					minimapTexture.AddChild(btn);
 					btnStationDict.Add(btn, station);
 
@@ -58,28 +63,33 @@ namespace Trains
 			}
 		}
 
-		List<Station> stationsToConnect = new List<Station>();
-		int index = 1;
+		int btnNumber = 1;
 		private void onSelectionButtonPressed(TextureButton btn)
 		{
-			//first press: Pressed, second press: False
-			//if pressed - add somewhere, else - remove
-
 			if (btn.Pressed)
 			{
 				stationsToConnect.Add(btnStationDict[btn]);
-				btn.GetNode<Label>("Number").Text = index.ToString();
-				index++;
+				btn.GetNode<Label>("Number").Text = btnNumber.ToString();
+				btnNumber++;
 			}
 			else
 			{
 				stationsToConnect.Remove(btnStationDict[btn]);
 				btn.GetNode<Label>("Number").Text = "";
-				index--;
+				btnNumber--;
 			}
+		}
 
-			stationsToConnect.ForEach(s => GD.Print(s));
-			GD.Print();
+		private void onAcceptButtonPressed()
+		{
+			events.EmitSignal(nameof(Events.StationsAreSelected), stationsToConnect);
+			GD.Print("onAcceptButtonPressed");
+		}
+
+		private void onCancelButtonPressed()
+		{
+			stationsToConnect.Clear();
+			GD.Print("onCancelButtonPressed");
 		}
 	}
 }

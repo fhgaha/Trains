@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using Trains.Model.Cells;
 using static Trains.Model.Common.Enums;
 //change for temp commit
@@ -52,6 +53,8 @@ namespace Trains.Model.Common
 		[Signal] public delegate void MainGUIPanelMouseEntered();
 
 		[Signal] public delegate void MainGUIPanelMouseExited();
+
+		[Signal] public delegate void StationsAreSelected(List<Station> selectedStations);
 
 		public override void _Ready()
 		{
