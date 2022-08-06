@@ -30,14 +30,16 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void CalculateCenterThrowsExecptionWhenPrevDirZero()
+		public void CalculateCenter()
 		{
 			var methodInfo = typeof(CurveCalculator).GetMethod(
 				"CalculateCenter", BindingFlags.NonPublic | BindingFlags.Instance);
-			Vector2 CalculateCenter(float rotationDeg, bool centerIsOnRight, Vector2 start)
-		  		=> (Vector2)methodInfo.Invoke(calculator, new object[] { rotationDeg, centerIsOnRight, start });
+			Vector2 CalculateCenter(bool centerIsOnRight, Vector2 start)
+		  		=> (Vector2)methodInfo.Invoke(calculator, new object[] { centerIsOnRight, start });
 
-			Assert.Throws(() => CalculateCenter(rotationDeg: 0, centerIsOnRight: true, start: Vector2.Zero));
+			//in this case prevDir is always zero
+
+			Assert.IsEqual(Vector2.Right, CalculateCenter(centerIsOnRight: true, start: Vector2.Down));
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run

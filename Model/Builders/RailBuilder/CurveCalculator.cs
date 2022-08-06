@@ -73,7 +73,7 @@ namespace Trains.Model.Builders
 			var startEndDir = (end - start).Normalized();
 			var prevDirPerp = prevDir.Rotated(Pi / 2);
 			var centerIsOnRight = prevDirPerp.Dot(startEndDir) >= 0;   //-1, 0 or 1
-			var center = CalculateCenter(rotationAngleDeg, centerIsOnRight, start);
+			var center = CalculateCenter(centerIsOnRight, start);
 
 			var circlePoints = GetCirclePoints(rotationAngleDeg, centerIsOnRight, center).ToList();
 			var tangent = CalculateTangent(centerIsOnRight, center, circlePoints);
@@ -99,19 +99,11 @@ namespace Trains.Model.Builders
 			return rotationDeg;
 		}
 
-		private Vector2 CalculateCenter(float rotationDeg, bool centerIsOnRight, Vector2 start)
+		private Vector2 CalculateCenter(bool centerIsOnRight, Vector2 start)
 		{
-			if (prevDir.y == 0)
-			{
-				throw new NotFiniteNumberException($"prevDir.y == {prevDir.y} which cant be devided to. "
-				+ "If prevDir == Vector3.Zero it should not be in this method.");
-			}
-
-			var k = rotationDeg >= 90 && rotationDeg < 270 ? -1 : 1;
-			var prevDirPerp = new Vector2(k, -k * prevDir.x / prevDir.y).Normalized();
+			var prevDirPerp = prevDir.Rotated(Pi/2).Normalized();
 			var radVec = radius * (centerIsOnRight ? prevDirPerp : prevDirPerp.Rotated(Pi));
-			var center = start + radVec;
-			return center;
+			return start + radVec;
 		}
 
 		private IEnumerable<Vector2> GoStraight(Vector2 start, Vector2 end)
