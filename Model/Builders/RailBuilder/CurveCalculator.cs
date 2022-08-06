@@ -26,9 +26,9 @@ namespace Trains.Model.Builders
 		private bool showHelpers = true;
 
 		//helpers
-		private MeshInstance dir;		//green big
-		private MeshInstance center;	//green small
-		private MeshInstance tangent;	//light blue
+		private MeshInstance dir;       //green big
+		private MeshInstance center;    //green small
+		private MeshInstance tangent;   //light blue
 
 		//constants
 		private const float accuracy = 0.1f;
@@ -101,13 +101,13 @@ namespace Trains.Model.Builders
 
 		private Vector2 CalculateCenter(float rotationDeg, bool centerIsOnRight, Vector2 start)
 		{
-			var k = rotationDeg >= 90 && rotationDeg < 270 ? -1 : 1;
-
-			if (prevDir.x == 0)
+			if (prevDir.y == 0)
 			{
-				//not a digit
+				throw new NotFiniteNumberException($"prevDir.y == {prevDir.y} which cant be devided to. "
+				+ "If prevDir == Vector3.Zero it should not be in this method.");
 			}
 
+			var k = rotationDeg >= 90 && rotationDeg < 270 ? -1 : 1;
 			var prevDirPerp = new Vector2(k, -k * prevDir.x / prevDir.y).Normalized();
 			var radVec = radius * (centerIsOnRight ? prevDirPerp : prevDirPerp.Rotated(Pi));
 			var center = start + radVec;

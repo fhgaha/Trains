@@ -17,4 +17,6 @@ Databases/
 # subfolders
 !**/Tests/Metadata/
 !**/Tests/Results/
-Tests/Results/results.xml
+
+Tests/Metadata/
+Tests/Results/
