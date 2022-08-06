@@ -41,16 +41,14 @@ namespace Trains.Model.Common
 		//Curve3D
 		public static Vector3 First(this Curve3D curve)
 		{
-			if (curve.GetPointCount() == 0)
-				throw new ArgumentOutOfRangeException("curve point count is zero");
+			if (curve.GetPointCount() == 0) return Vector3.Zero;
 
 			return curve.GetPointPosition(0);
 		}
 
 		public static Vector3 Last(this Curve3D curve)
 		{
-			if (curve.GetPointCount() == 0)
-				throw new ArgumentOutOfRangeException("curve point count is zero");
+			if (curve.GetPointCount() == 0) return Vector3.Zero;
 
 			return curve.GetPointPosition(curve.GetPointCount() - 1);
 		}
