@@ -3,7 +3,7 @@ using System;
 
 namespace Trains
 {
-	public class MyPathFollow : PathFollow
+	public class RailPathFollow : PathFollow
 	{
 		[Export] private float speed = 2;
 

@@ -3,7 +3,7 @@
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Trains/Train.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Rails/RailPath.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scripts/PathFollow/MyPathFollow.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/PathFollow/RailPathFollow.cs" type="Script" id=4]
 
 [sub_resource type="Curve3D" id=1]
 resource_local_to_scene = true
@@ -41,7 +41,7 @@ speed = 5.0
 transform = Transform( 0.930259, -3.91415e-11, 1.48407e-08, 4.09419e-11, 0.707913, -3.30729e-12, -4.84371e-08, -1.17328e-11, 0.455341, 0.00513146, -9.01511e-09, -0.205159 )
 
 [node name="red" type="PathFollow" parent="RailPath"]
-transform = Transform( 0.280365, 1.99494e-05, -0.959893, -7.11134e-05, 1, 1.21924e-08, 0.959893, 6.82578e-05, 0.280365, 8.77379, -0.00102588, 2.74692 )
+transform = Transform( 0.280365, 1.99494e-05, -0.959893, -7.11133e-05, 1, 1.21923e-08, 0.959893, 6.82578e-05, 0.280365, 8.77383, -0.00102588, 2.7469 )
 offset = 22.5966
 rotation_mode = 4
 cubic_interp = false
