@@ -16,12 +16,21 @@ namespace Trains
 		{
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
+			events.Connect(nameof(Events.StationsAreSelected), this, nameof(onStationsAreSelected));
 		}
 
 		private void onMainButtonModeChanged(MainButtonType mode)
 		{
 			//temp
 			//var train = trainScene.Instance<Train>();
+		}
+
+		private void onStationsAreSelected(List<Station> stations)
+		{
+			//create trian that route is between these stations
+
+			var train = trainScene.Instance<Train>();
+			
 		}
 	}
 }

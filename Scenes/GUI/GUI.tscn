@@ -93,28 +93,30 @@ columns = 3
 [node name="BuildRail" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
 margin_left = 0.0
 margin_top = 0.0
-margin_right = 47.0
+margin_right = 48.0
 margin_bottom = 51.0
 mouse_filter = 1
 text = "BR"
 
 [node name="BuildStation" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
-margin_left = 51.0
+margin_left = 52.0
 margin_top = 0.0
-margin_right = 98.0
+margin_right = 99.0
 margin_bottom = 51.0
 mouse_filter = 1
 text = "BS"
 
 [node name="BuildTrain" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
+margin_left = 103.0
 margin_top = 0.0
+margin_right = 150.0
 margin_bottom = 51.0
 mouse_filter = 1
 text = "BT"
 
 [node name="Button4" type="Button" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons"]
 margin_top = 55.0
-margin_right = 47.0
+margin_right = 48.0
 margin_bottom = 106.0
 rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
@@ -125,9 +127,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button5" type="Button" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons"]
-margin_left = 51.0
+margin_left = 52.0
 margin_top = 55.0
-margin_right = 98.0
+margin_right = 99.0
 margin_bottom = 106.0
 rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
@@ -138,9 +140,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button6" type="Button" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons"]
-margin_left = 102.0
+margin_left = 103.0
 margin_top = 55.0
-margin_right = 149.0
+margin_right = 150.0
 margin_bottom = 106.0
 rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
@@ -152,7 +154,7 @@ enabled_focus_mode = 0
 
 [node name="Button7" type="Button" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons"]
 margin_top = 110.0
-margin_right = 47.0
+margin_right = 48.0
 margin_bottom = 161.0
 rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
@@ -163,9 +165,9 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Button8" type="Button" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons"]
-margin_left = 51.0
+margin_left = 52.0
 margin_top = 110.0
-margin_right = 98.0
+margin_right = 99.0
 margin_bottom = 161.0
 rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
@@ -176,6 +178,8 @@ toggle_mode = true
 enabled_focus_mode = 0
 
 [node name="Products" parent="CanvasLayer/MainPanel/MapAndButtons/HBoxContainer/MainButtons" instance=ExtResource( 5 )]
+margin_left = 103.0
+margin_right = 150.0
 mouse_filter = 1
 text = "P"
 
