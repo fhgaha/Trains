@@ -19,8 +19,6 @@ namespace Trains.Model.Builders
 			&& SnappedMidSegment != default;
 		public bool IsSnapped => IsSnappedOnPathStartOrPathEnd || IsSnappedOnSegment;
 
-		public EndSnapper() { }
-
 		public void TrySnap(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
 			foreach (var path in pathList)
@@ -33,11 +31,13 @@ namespace Trains.Model.Builders
 
 				if (IsCursorOn(start, end, mousePos) && !cursorIsOnBpStart)
 				{
+					path.RegisterCrossing(start);
 					SetVars(path.DirFromStart, start, path, default);
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos) && !cursorIsOnBpStart)
 				{
+					path.RegisterCrossing(end);
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
 				}
@@ -46,6 +46,7 @@ namespace Trains.Model.Builders
 					if (segment is null) continue;
 
 					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
+					path.RegisterCrossing(segment.First);
 					SetVars(bpEndDir, segment.First, path, segment);
 					return;
 				}

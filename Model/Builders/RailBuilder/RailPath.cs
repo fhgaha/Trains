@@ -14,6 +14,7 @@ namespace Trains
 		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
+		[Export] public CrossingsDict Crossings { get; set; } = new CrossingsDict();
 		public bool IsJoined { get; private set; }
 
 		public Vector3 DirFromStart
@@ -36,8 +37,6 @@ namespace Trains
 		private CSGPolygon polygon;
 
 		private Curve3D originalBpCurve;
-
-		public RailPath() { }
 
 		public override void _Ready()
 		{
@@ -96,5 +95,8 @@ namespace Trains
 				&& endSnapper.IsSnappedOnPathStartOrPathEnd
 				&& Start.IsEqualApprox(End);
 		}
+
+		internal void RegisterCrossing(Vector3 snappedPoint, RailPath pathThisPathIsConnectedWith)
+			=> Crossings.RegisterCrossing(snappedPoint, pathThisPathIsConnectedWith);
 	}
 }
