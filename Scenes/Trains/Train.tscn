@@ -9,7 +9,7 @@ data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1
 transform = Transform( 0.930259, 0, 0, 0, 0.707913, 0, 0, 0, 0.455341, 0, 0, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 0.492132, 0, 0, 0, 0.237193, 0, 0, 0, 0.341722, 0, 0.237, 0 )
+transform = Transform( 0.163968, 0, 0, 0, 0.237193, 0, 0, 0, 1.08449, 0, 0.237, 0 )
 mesh = SubResource( 1 )
 
 [node name="StaticBody" type="StaticBody" parent="MeshInstance"]

@@ -5,7 +5,7 @@ namespace Trains
 {
 	public class MyPathFollow : PathFollow
 	{
-		private float speed = 5;
+		[Export] private float speed = 2;
 
 		public override void _Process(float delta)
 		{
