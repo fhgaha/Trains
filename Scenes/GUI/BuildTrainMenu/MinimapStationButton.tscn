@@ -5,8 +5,10 @@
 [ext_resource path="res://Assets/img/BuildTrainMenu/yellowCircle.png" type="Texture" id=3]
 
 [node name="MinimapStationButton" type="TextureButton"]
-margin_right = 32.0
-margin_bottom = 32.0
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 16.0
 toggle_mode = true
 texture_normal = ExtResource( 3 )
 texture_pressed = ExtResource( 2 )
