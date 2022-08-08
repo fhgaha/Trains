@@ -10,7 +10,7 @@ namespace Trains
 	public class Station : Spatial
 	{
 		public int Id { get; set; }
-		public RailPath RailroadAlongside { get; set; }
+		public RailPath RailroadAlongside { get; private set; }
 		private Cell cell;
 
 		public void Init(Station blueprint)
@@ -18,7 +18,10 @@ namespace Trains
 			RemoveChild(GetNode("Base"));
 			GlobalTransform = blueprint.GlobalTransform;
 			GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
-			RemoveChild(GetNode<RailPath>("RailPath"));
+
+			var railPath = GetNode<RailPath>("RailPath");
+			RailroadAlongside = railPath;
+			RemoveChild(railPath);
 		}
 
 		public void LoadTrain() { }
@@ -37,9 +40,33 @@ namespace Trains
 	{
 		public static IEnumerable<Vector3> FindPaths(Vector3 start, Vector3 target, List<RailPath> RailPaths)
 		{
-			var vertices = RailPaths.SelectMany(p => new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
-			GD.Print(vertices);
+			var vertices = RailPaths.SelectMany(p 
+				//=> new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
+				=> p.Crossings.Keys);
+
+			GD.Print(RailPaths.Count);
+			
+			foreach (var path in RailPaths)
+			{
+				GD.Print(path.Crossings.Keys);
+
+				foreach (var k in path.Crossings.Keys)
+				{
+					GD.Print(k);
+				}
+			}
+
+			// GD.Print(vertices);
+			//GD.Print(vertices.Count());
+			foreach (var item in vertices)
+			{
+				GD.Print(item);
+			}
+
 			var paths = new HashSet<Vector3>();
+
+
+
 
 			return paths;
 

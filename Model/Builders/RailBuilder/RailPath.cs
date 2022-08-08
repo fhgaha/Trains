@@ -14,7 +14,7 @@ namespace Trains
 		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
-		[Export] public CrossingsDict Crossings { get; set; } = new CrossingsDict();
+		public CrossingsDict Crossings { get; set; }
 		public bool IsJoined { get; private set; }
 
 		public Vector3 DirFromStart
@@ -50,6 +50,12 @@ namespace Trains
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = (RailCurve)blueprint.Curve;
 			polygon.UseCollision = true;
+
+			Crossings = new CrossingsDict();
+			Crossings.RegisterCrossing(Start, null);
+			Crossings.RegisterCrossing(End, null);
+
+			Global.Rails.Add(this);
 		}
 
 		public void InitOnPlacementFromStationBuilder(RailPath blueprint)
@@ -57,6 +63,12 @@ namespace Trains
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = RailCurve.GetFrom(blueprint.Curve);
 			Rotation = Vector3.Zero;
+
+			Crossings = new CrossingsDict();
+			Crossings.RegisterCrossing(Start, null);
+			Crossings.RegisterCrossing(End, null);
+
+			Global.Rails.Add(this);
 		}
 
 		public void SetOriginalBpCurve()
