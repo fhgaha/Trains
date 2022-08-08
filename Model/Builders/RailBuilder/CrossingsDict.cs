@@ -75,7 +75,7 @@ namespace Trains
 			}
 			else
 			{
-				AddNewPath(path, point);
+				AddNewValue(path, point);
 			}
 		}
 
@@ -91,9 +91,22 @@ namespace Trains
 			}
 		}
 
-		private void AddNewPath(RailPath path, Vector3 point)
+		private void AddNewValue(RailPath path, Vector3 point)
 		{
 			crossings.Add(path, new List<Vector3> { point });
+		}
+
+		public void RemoveCrossing(RailPath path, Vector3 point)
+		{
+			if (!crossings.ContainsKey(path)) throw new ArgumentException("no such key in crossings");
+
+			crossings[path].Remove(point);
+		}
+
+		public void Update(RailPath currentPath, Vector3 oldPoint, Vector3 newPoint)
+		{
+			RemoveCrossing(currentPath, oldPoint);
+			RegisterCrossing(currentPath, newPoint);
 		}
 	}
 }

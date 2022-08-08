@@ -60,10 +60,8 @@ namespace Trains
 			}
 			GD.Print();
 
-			// foreach (var item in vertices)
-			// {
-			// 	GD.Print(item);
-			// }
+
+			
 
 
 
