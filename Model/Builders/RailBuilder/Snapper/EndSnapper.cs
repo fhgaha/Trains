@@ -31,13 +31,13 @@ namespace Trains.Model.Builders
 
 				if (IsCursorOn(start, end, mousePos) && !cursorIsOnBpStart)
 				{
-					path.RegisterCrossing(start);
+					path.RegisterCrossing(start, path);
 					SetVars(path.DirFromStart, start, path, default);
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos) && !cursorIsOnBpStart)
 				{
-					path.RegisterCrossing(end);
+					path.RegisterCrossing(end, path);
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
 				}
@@ -46,7 +46,7 @@ namespace Trains.Model.Builders
 					if (segment is null) continue;
 
 					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
-					path.RegisterCrossing(segment.First);
+					path.RegisterCrossing(segment.First, path);
 					SetVars(bpEndDir, segment.First, path, segment);
 					return;
 				}

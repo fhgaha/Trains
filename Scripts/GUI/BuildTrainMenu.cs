@@ -28,8 +28,8 @@ namespace Trains
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
-			 GetNode<Button>(acceptBtn).Connect("pressed", this, nameof(onAcceptButtonPressed));
-			 GetNode<Button>(cancelBtn).Connect("pressed", this, nameof(onCancelButtonPressed));
+			GetNode<Button>(acceptBtn).Connect("pressed", this, nameof(onAcceptButtonPressed));
+			GetNode<Button>(cancelBtn).Connect("pressed", this, nameof(onCancelButtonPressed));
 		}
 
 		private void onMainButtonModeChanged(MainButtonType mode)
@@ -39,12 +39,11 @@ namespace Trains
 				Visible = true;
 
 				//build select buttons
-				const float scaleCoeff = 3f;
+				const float scaleCoeff = 5f;
 				var stations = GetTree().GetNodesInGroup("Stations").Cast<Station>().ToList();
 
-				for (int i = 0; i < stations.Count; i++)
+				foreach (var station in stations)
 				{
-					var station = stations[i];
 					var btn = selectStationButtonScene.Instance<TextureButton>();
 					btn.RectPosition = station.Translation.ToVec2() * scaleCoeff;
 
@@ -68,9 +67,16 @@ namespace Trains
 		{
 			if (btn.Pressed)
 			{
-				stationsToConnect.Add(btnStationDict[btn]);
-				btn.GetNode<Label>("Number").Text = btnNumber.ToString();
-				btnNumber++;
+				if (StationIsSelectable(btnStationDict[btn]))
+				{
+					stationsToConnect.Add(btnStationDict[btn]);
+					btn.GetNode<Label>("Number").Text = btnNumber.ToString();
+					btnNumber++;
+				}
+				else
+				{
+					btn.Pressed = false;
+				}
 			}
 			else
 			{
@@ -78,6 +84,15 @@ namespace Trains
 				btn.GetNode<Label>("Number").Text = "";
 				btnNumber--;
 			}
+		}
+
+		private bool StationIsSelectable(Station station)
+		{
+			//statioin is selectable if it is only one on map or there are connected stations by road
+
+
+
+			return true;
 		}
 
 		private void onAcceptButtonPressed()

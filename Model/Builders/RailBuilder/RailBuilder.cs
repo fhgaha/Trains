@@ -72,10 +72,6 @@ namespace Trains.Model.Builders
 			{
 				ResetStateBlueprintPrevDir();
 			}
-
-			//if (IsWrongButtonPressed(buttonType)) return;
-
-			// Global.MainButtonMode = MainButtonType.BuildRail;
 		}
 
 		private void ResetStateBlueprintPrevDir()

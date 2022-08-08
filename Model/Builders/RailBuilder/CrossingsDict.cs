@@ -8,6 +8,8 @@ namespace Trains
 	{
 		private Dictionary<Vector3, List<RailPath>> crossings;
 
+		public List<Vector3> Keys { get; }
+
 		public CrossingsDict()
 		{
 			crossings = new Dictionary<Vector3, List<RailPath>>();
@@ -21,21 +23,24 @@ namespace Trains
 			}
 			else
 			{
-				crossings.Add(snappedPoint, new List<RailPath> { pathThisPathIsConnectedWith });
+				AddNewPath(snappedPoint, pathThisPathIsConnectedWith);
 			}
 		}
-
 		private void UpdateExistingKey(Vector3 snappedPoint, RailPath pathThisPathIsConnectedWith)
 		{
 			if (crossings[snappedPoint] is null)
 			{
-				crossings[snappedPoint] = new List<RailPath>();
-				crossings[snappedPoint].Add(pathThisPathIsConnectedWith);
+				crossings[snappedPoint] = new List<RailPath> { pathThisPathIsConnectedWith };
 			}
 			else if (!crossings[snappedPoint].Contains(pathThisPathIsConnectedWith))
 			{
 				crossings[snappedPoint].Add(pathThisPathIsConnectedWith);
 			}
+		}
+
+		private void AddNewPath(Vector3 snappedPoint, RailPath pathThisPathIsConnectedWith)
+		{
+			crossings.Add(snappedPoint, new List<RailPath> { pathThisPathIsConnectedWith });
 		}
 	}
 }
