@@ -244,6 +244,9 @@ namespace Trains.Model.Builders
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
 			}
+
+			currentPath.Crossings.RegisterCrossing(currentPath.Start, currentPath);
+			currentPath.Crossings.RegisterCrossing(currentPath.End, currentPath);
 		}
 
 		private void JoinCurrentPath()

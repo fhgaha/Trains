@@ -51,8 +51,8 @@ namespace Trains
 			Curve = RailCurve.GetFrom(blueprint.Curve);
 
 			Crossings = new CrossingsDict();
-			Crossings.RegisterCrossing(Start, null);
-			Crossings.RegisterCrossing(End, null);
+			Crossings.RegisterCrossing(Start, this);
+			Crossings.RegisterCrossing(End, this);
 
 			Global.Rails.Add(this);
 		}

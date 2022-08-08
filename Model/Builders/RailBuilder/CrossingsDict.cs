@@ -11,6 +11,11 @@ namespace Trains
 
 		public List<Vector3> Keys { get => crossings.Keys.ToList(); }
 
+		public List<RailPath> this[Vector3 key]
+		{
+			get => crossings[key];
+		}
+
 		public CrossingsDict()
 		{
 			crossings = new Dictionary<Vector3, List<RailPath>>();

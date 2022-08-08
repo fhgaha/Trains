@@ -31,7 +31,9 @@ namespace Trains
 
 		public bool IsConnectedWith(Station station)
 		{
-			var paths = Dijkstra.FindPaths(RailroadAlongside.Start, station.RailroadAlongside.Start, Global.Rails);
+			var from = RailroadAlongside.Start;
+			var to = station.RailroadAlongside.Start;
+			var paths = Dijkstra.FindPaths(from, to, Global.Rails);
 			return paths.Any();
 		}
 	}
@@ -44,10 +46,22 @@ namespace Trains
 				//=> new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
 				=> p.Crossings.Keys);
 
-			foreach (var item in vertices)
+			foreach (var p in RailPaths)
 			{
-				GD.Print(item);
+				foreach (var v in p.Crossings.Keys)
+				{
+					foreach (var list in p.Crossings[v])
+					{
+						GD.PrintS(v, list);
+					}
+				}
 			}
+			GD.Print();
+
+			// foreach (var item in vertices)
+			// {
+			// 	GD.Print(item);
+			// }
 
 			var paths = new HashSet<Vector3>();
 
