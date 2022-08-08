@@ -45,24 +45,10 @@ namespace Trains
 			Curve = RailCurve.GetFrom(Curve);
 		}
 
-		public void InitOnPlacementFromRailBuilder(Path blueprint)
-		{
-			GlobalTransform = blueprint.GlobalTransform;
-			Curve = (RailCurve)blueprint.Curve;
-			polygon.UseCollision = true;
-
-			Crossings = new CrossingsDict();
-			Crossings.RegisterCrossing(Start, null);
-			Crossings.RegisterCrossing(End, null);
-
-			Global.Rails.Add(this);
-		}
-
-		public void InitOnPlacementFromStationBuilder(RailPath blueprint)
+		public void InitOnPlacement(RailPath blueprint)
 		{
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = RailCurve.GetFrom(blueprint.Curve);
-			Rotation = Vector3.Zero;
 
 			Crossings = new CrossingsDict();
 			Crossings.RegisterCrossing(Start, null);

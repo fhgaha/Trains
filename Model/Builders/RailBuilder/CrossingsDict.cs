@@ -26,6 +26,7 @@ namespace Trains
 				AddNewPath(snappedPoint, pathThisPathIsConnectedWith);
 			}
 		}
+
 		private void UpdateExistingKey(Vector3 snappedPoint, RailPath pathThisPathIsConnectedWith)
 		{
 			if (crossings[snappedPoint] is null)

@@ -70,6 +70,7 @@ namespace Trains.Model.Builders
 			var bpRailPath = blueprint.GetNode<RailPath>("RailPath");
 			var path = railPathScene.Instance<RailPath>();
 			path.InitOnPlacementFromStationBuilder(bpRailPath);
+			path.Rotation = Vector3.Zero;
 
 			//for some reason if i leave
 			//curve.Rotate(Vector3.Up, blueprint.Rotation.y);
