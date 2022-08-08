@@ -94,7 +94,10 @@ namespace Trains
 				&& Start.IsEqualApprox(End);
 		}
 
-		internal void RegisterCrossing(Vector3 point, RailPath path)
+		public void RegisterCrossing(Vector3 point, RailPath path)
 			=> Crossings.RegisterCrossing(path, point);
+
+		public void UpdateCrossing(RailPath path, Vector3 oldPoint, Vector3 newPoint) 
+			=> Crossings.Update(path, oldPoint, newPoint);
 	}
 }

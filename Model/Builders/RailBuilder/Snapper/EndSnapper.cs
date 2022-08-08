@@ -45,8 +45,8 @@ namespace Trains.Model.Builders
 				{
 					if (segment is null) continue;
 
-					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
 					path.RegisterCrossing(segment.First, path);
+					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
 					SetVars(bpEndDir, segment.First, path, segment);
 					return;
 				}

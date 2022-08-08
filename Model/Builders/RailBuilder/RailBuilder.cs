@@ -239,14 +239,16 @@ namespace Trains.Model.Builders
 				var oldValue = currentPath.Start;
 				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromStart;
-				currentPath.Crossings.Update(currentPath, oldValue, currentPath.Start);
+
+				currentPath.UpdateCrossing(currentPath, oldValue, currentPath.Start);
 			}
 			else if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
 				var oldValue = currentPath.End;
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
-				currentPath.Crossings.Update(currentPath, oldValue, currentPath.End);
+				
+				currentPath.UpdateCrossing(currentPath, oldValue, currentPath.End);
 			}
 		}
 
