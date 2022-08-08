@@ -89,10 +89,9 @@ namespace Trains
 		private bool StationIsSelectable(Station station)
 		{
 			//statioin is selectable if it is only one on map or there are connected stations by road
-
-
-
-			return true;
+			if (stationsToConnect.Count == 0) return true;
+			if (stationsToConnect.Last().IsConnectedWith(station)) return true;
+			return false;
 		}
 
 		private void onAcceptButtonPressed()

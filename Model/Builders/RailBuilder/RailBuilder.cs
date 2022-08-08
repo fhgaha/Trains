@@ -222,6 +222,9 @@ namespace Trains.Model.Builders
 			//i dont know why but without this mid snapping logic of bpStartSnpper breaks
 			bpStartSnapper.Reset();
 			bpEndSnapper.Reset();
+
+
+			Global.Rails.Add(currentPath);
 		}
 
 		private void AddNewCurveToCurrentPath()

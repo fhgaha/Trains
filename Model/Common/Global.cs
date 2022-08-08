@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Common
@@ -42,5 +43,6 @@ namespace Trains.Model.Common
 		public const float DairyMinPrice = 100f;
 		public const float DairyMaxPrice = 300f;
 
+		public static List<RailPath> Rails { get; internal set; } = new List<RailPath>();
 	}
 }
