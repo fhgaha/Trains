@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Trains
 {
@@ -8,7 +9,7 @@ namespace Trains
 	{
 		private Dictionary<Vector3, List<RailPath>> crossings;
 
-		public List<Vector3> Keys { get; }
+		public List<Vector3> Keys { get => crossings.Keys.ToList(); }
 
 		public CrossingsDict()
 		{

@@ -44,20 +44,6 @@ namespace Trains
 				//=> new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
 				=> p.Crossings.Keys);
 
-			GD.Print(RailPaths.Count);
-			
-			foreach (var path in RailPaths)
-			{
-				GD.Print(path.Crossings.Keys);
-
-				foreach (var k in path.Crossings.Keys)
-				{
-					GD.Print(k);
-				}
-			}
-
-			// GD.Print(vertices);
-			//GD.Print(vertices.Count());
 			foreach (var item in vertices)
 			{
 				GD.Print(item);
