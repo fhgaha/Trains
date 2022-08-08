@@ -76,6 +76,14 @@ namespace Trains
 			return ((RailCurve)Curve).GetSegments(Translation);
 		}
 
+		public List<CurveSegment> GetMidSegments()
+		{
+			return GetSegments()
+				.Where(s => s.First != Start && s.First != End
+						 && s.Second != Start && s.Second != End)
+				.ToList();
+		}
+
 		public float GetPolygonWidth()
 		{
 			return polygon.Polygon[3].x;
@@ -97,7 +105,7 @@ namespace Trains
 		public void RegisterCrossing(Vector3 point, RailPath path)
 			=> Crossings.RegisterCrossing(path, point);
 
-		public void UpdateCrossing(RailPath path, Vector3 oldPoint, Vector3 newPoint) 
+		public void UpdateCrossing(RailPath path, Vector3 oldPoint, Vector3 newPoint)
 			=> Crossings.Update(path, oldPoint, newPoint);
 	}
 }

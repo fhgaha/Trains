@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Trains.Model.Common;
 
 namespace Trains.Model.Builders
@@ -31,19 +32,21 @@ namespace Trains.Model.Builders
 
 				if (IsCursorOn(start, end, mousePos) && !cursorIsOnBpStart)
 				{
-					path.RegisterCrossing(start, path);
+					//path.RegisterCrossing(start, path);
 					SetVars(path.DirFromStart, start, path, default);
 					return;
 				}
 				else if (IsCursorOn(end, start, mousePos) && !cursorIsOnBpStart)
 				{
-					path.RegisterCrossing(end, path);
+					//path.RegisterCrossing(end, path);
 					SetVars(path.DirFromEnd, end, path, default);
 					return;
 				}
 				else if (TrySnapOnMidSegment(path, mousePos) is CurveSegment segment)
 				{
 					if (segment is null) continue;
+
+					GD.Print("SnappedOnMidSegment");
 
 					path.RegisterCrossing(segment.First, path);
 					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
@@ -56,13 +59,12 @@ namespace Trains.Model.Builders
 
 		private CurveSegment TrySnapOnMidSegment(RailPath path, Vector3 mousePos)
 		{
-			var segments = path.GetSegments();
-			if (segments.Count < 2) return null;
+			var midSegments = path.GetMidSegments();
 
-			for (int i = 1; i < segments.Count; i++)
+			for (int i = 0; i < midSegments.Count; i++)
 			{
-				if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
-					return segments[i];
+				if (IsCursorOn(midSegments[i].First, midSegments[i].Second, mousePos))
+					return midSegments[i];
 			}
 
 			return null;
