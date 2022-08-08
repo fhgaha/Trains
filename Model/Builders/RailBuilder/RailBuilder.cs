@@ -216,7 +216,7 @@ namespace Trains.Model.Builders
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
 			railContainer.AddRailPath(currentPath);
-			currentPath.InitOnPlacementFromRailBuilder(blueprint);
+			currentPath.InitOnPlacement(blueprint);
 			prevDir = currentPath.DirFromEnd;
 
 			currentPath.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
