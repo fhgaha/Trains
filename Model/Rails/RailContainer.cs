@@ -82,15 +82,15 @@ namespace Trains
 		// 		yield return e;
 		// }
 
-		public static IEnumerable<Vector3> FindPaths(Vector3 start, Vector3 target, List<RailPath> RailPaths)
-		{
-			var vertices = RailPaths.SelectMany(p => new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
-			GD.Print(vertices);
-			var paths = new HashSet<Vector3>();
+		// public static IEnumerable<Vector3> FindPaths(Vector3 start, Vector3 target, List<RailPath> RailPaths)
+		// {
+		// 	var vertices = RailPaths.SelectMany(p => new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
+		// 	GD.Print(vertices);
+		// 	var paths = new HashSet<Vector3>();
 
-			return paths;
+		// 	return paths;
 
-		}
+		// }
 	}
 }
 

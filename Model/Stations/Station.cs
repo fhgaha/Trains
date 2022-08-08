@@ -42,17 +42,19 @@ namespace Trains
 	{
 		public static IEnumerable<Vector3> FindPaths(Vector3 start, Vector3 target, List<RailPath> RailPaths)
 		{
-			var vertices = RailPaths.SelectMany(p 
+			var paths = RailPaths.SelectMany(p
 				//=> new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
 				=> p.Crossings.Keys);
 
+
+
 			foreach (var p in RailPaths)
 			{
-				foreach (var v in p.Crossings.Keys)
+				foreach (var path in p.Crossings.Keys)
 				{
-					foreach (var list in p.Crossings[v])
+					foreach (var vec in p.Crossings[path])
 					{
-						GD.PrintS(v, list);
+						GD.PrintS(path, vec);
 					}
 				}
 			}
@@ -63,12 +65,9 @@ namespace Trains
 			// 	GD.Print(item);
 			// }
 
-			var paths = new HashSet<Vector3>();
 
 
-
-
-			return paths;
+			return new List<Vector3>();
 
 		}
 	}

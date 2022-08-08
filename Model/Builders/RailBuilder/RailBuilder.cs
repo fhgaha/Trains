@@ -245,8 +245,8 @@ namespace Trains.Model.Builders
 				prevDir = currentPath.DirFromEnd;
 			}
 
-			currentPath.Crossings.RegisterCrossing(currentPath.Start, currentPath);
-			currentPath.Crossings.RegisterCrossing(currentPath.End, currentPath);
+			currentPath.Crossings.RegisterCrossing(currentPath, currentPath.Start);
+			currentPath.Crossings.RegisterCrossing(currentPath, currentPath.End);
 		}
 
 		private void JoinCurrentPath()
