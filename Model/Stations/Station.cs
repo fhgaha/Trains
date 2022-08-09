@@ -42,12 +42,7 @@ namespace Trains
 	{
 		public static IEnumerable<Vector3> FindPaths(Vector3 start, Vector3 target, List<RailPath> RailPaths)
 		{
-			var paths = RailPaths.SelectMany(p
-				//=> new List<Vector3> { p.Start, p.End }.Union(p.Crossings.Keys));
-				=> p.Crossings.Keys);
-
-
-
+			//print
 			foreach (var p in RailPaths)
 			{
 				foreach (var path in p.Crossings.Keys)
@@ -60,7 +55,8 @@ namespace Trains
 			}
 			GD.Print();
 
-
+			//convert paths to graph
+			// var vetrex = RailPaths.SelectMany(p => p.Crossings.Values);
 			
 
 

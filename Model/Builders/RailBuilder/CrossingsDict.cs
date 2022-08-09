@@ -57,6 +57,8 @@ namespace Trains
 
 		public List<RailPath> Keys { get => crossings.Keys.ToList(); }
 
+		public List<List<Vector3>> Values { get => crossings.Values.ToList(); }
+
 		public List<Vector3> this[RailPath key]
 		{
 			get => crossings[key];

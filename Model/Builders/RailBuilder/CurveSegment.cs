@@ -43,8 +43,8 @@ namespace Trains
 		public override int GetHashCode()
 		{
 			int hash = 17;
-			hash = hash * 23 + First.GetHashCode();
-			hash = hash * 23 + Second.GetHashCode();
+			hash = (hash * 23) + First.GetHashCode();
+			hash = (hash * 23) + Second.GetHashCode();
 			return hash;
 		}
 
