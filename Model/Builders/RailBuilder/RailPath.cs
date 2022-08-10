@@ -14,7 +14,7 @@ namespace Trains
 		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
-		public CrossingsDictPathKeys Crossings { get; set; }
+		[Export] public List<Vector3> Crossings { get; private set; }
 		public bool IsJoined { get; private set; }
 
 		public Vector3 DirFromStart
@@ -50,10 +50,7 @@ namespace Trains
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = RailCurve.GetFrom(blueprint.Curve);
 
-			Crossings = new CrossingsDictPathKeys();
-			Crossings.RegisterCrossing(this, Start);
-			Crossings.RegisterCrossing(this, End);
-
+			Crossings = new List<Vector3>() { Start, End };
 			Global.Rails.Add(this);
 		}
 
@@ -102,10 +99,23 @@ namespace Trains
 				&& Start.IsEqualApprox(End);
 		}
 
-		public void RegisterCrossing(Vector3 point, RailPath path)
-			=> Crossings.RegisterCrossing(path, point);
+		public void EnlistCrossing(Vector3 point)
+		{
+			if (!Crossings.Contains(point))
+			{
+				Crossings.Add(point);
+			}
+		}
 
-		public void UpdateCrossing(RailPath path, Vector3 oldPoint, Vector3 newPoint)
-			=> Crossings.Update(path, oldPoint, newPoint);
+		public void DelistCrossing(Vector3 point)
+		{
+			Crossings.Remove(point);
+		}
+
+		public void UpdateCrossing(Vector3 oldValue, Vector3 newValue)
+		{
+			Crossings.Remove(oldValue);
+			EnlistCrossing(newValue);
+		}
 	}
 }

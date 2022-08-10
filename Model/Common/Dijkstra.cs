@@ -176,17 +176,12 @@ namespace Trains.Model.Common
 		{
 			foreach (var p in RailPaths)
 			{
-				foreach (var path in p.Crossings.Keys)
+				foreach (var vec in p.Crossings)
 				{
-					foreach (var vec in p.Crossings[path])
-					{
-						GD.PrintS(path, vec);
-					}
+					GD.PrintS(p, vec);
 				}
 			}
 			GD.Print();
 		}
-
-
 	}
 }

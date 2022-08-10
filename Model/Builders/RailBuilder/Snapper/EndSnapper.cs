@@ -46,9 +46,9 @@ namespace Trains.Model.Builders
 				{
 					if (segment is null) continue;
 
-					GD.Print("SnappedOnMidSegment");
-
-					path.RegisterCrossing(segment.First, path);
+					var pointToEnlist = segment.First;
+					path.EnlistCrossing(pointToEnlist);
+					
 					var bpEndDir = GetBpEndDir(mousePos, blueprint, segment);
 					SetVars(bpEndDir, segment.First, path, segment);
 					return;

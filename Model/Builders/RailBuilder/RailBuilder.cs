@@ -240,7 +240,7 @@ namespace Trains.Model.Builders
 				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromStart;
 
-				currentPath.UpdateCrossing(currentPath, oldValue, currentPath.Start);
+				currentPath.UpdateCrossing(oldValue, currentPath.Start);
 			}
 			else if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
@@ -248,7 +248,7 @@ namespace Trains.Model.Builders
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
 				
-				currentPath.UpdateCrossing(currentPath, oldValue, currentPath.End);
+				currentPath.UpdateCrossing(oldValue, currentPath.End);
 			}
 		}
 

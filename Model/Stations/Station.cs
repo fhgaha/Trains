@@ -37,8 +37,4 @@ namespace Trains
 			return paths.Count > 0;
 		}
 	}
-
-
-
-	
 }
