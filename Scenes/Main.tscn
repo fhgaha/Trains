@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://Scenes/Trains/Train.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Model/TrainContainer.cs" type="Script" id=15]
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
+[ext_resource path="res://ThrowAway/grid.tscn" type="PackedScene" id=17]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -51,6 +52,8 @@ albedo_color = Color( 0, 0.937255, 1, 1 )
 [node name="World" type="Spatial"]
 script = ExtResource( 4 )
 
+[node name="grid" parent="." instance=ExtResource( 17 )]
+
 [node name="Origin" type="Spatial" parent="."]
 transform = Transform( 0.26, 0, 0, 0, 0.120397, 0, 0, 0, 0.290166, 0, 0.120397, 0 )
 
@@ -66,6 +69,7 @@ skeleton = NodePath("../..")
 
 [node name="Floor" type="MeshInstance" parent="Origin"]
 transform = Transform( 374.399, 0, 0, 0, 9.24026, 0, 0, 0, 250.17, 372.712, -9.30585, 248.634 )
+visible = false
 mesh = SubResource( 17 )
 skeleton = NodePath("../..")
 
