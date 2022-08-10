@@ -52,30 +52,34 @@ albedo_color = Color( 0, 0.937255, 1, 1 )
 [node name="World" type="Spatial"]
 script = ExtResource( 4 )
 
-[node name="grid" parent="." instance=ExtResource( 17 )]
+[node name="Landmarks" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.120397, 0 )
 
-[node name="Origin" type="Spatial" parent="."]
-transform = Transform( 0.26, 0, 0, 0, 0.120397, 0, 0, 0, 0.290166, 0, 0.120397, 0 )
+[node name="grid" parent="Landmarks" instance=ExtResource( 17 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.120397, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Origin"]
-transform = Transform( 0.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+[node name="Origin" type="Spatial" parent="Landmarks"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.143, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Landmarks/Origin"]
+transform = Transform( 0.072, 0, 0, 0, 0.318, 0, 0, 0, 0.298, 0, 0, 0.251 )
 mesh = SubResource( 9 )
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="MeshInstance2" type="MeshInstance" parent="Origin"]
-transform = Transform( -8.74228e-09, 0, 1, 0, 1, 0, -0.2, 0, -4.37114e-08, 1, 0, -5.96046e-08 )
+[node name="MeshInstance2" type="MeshInstance" parent="Landmarks/Origin"]
+transform = Transform( -3.14722e-09, 0, 0.298, 0, 0.318, 0, -0.072, 0, -1.3026e-08, 0.231, 0, 0 )
 mesh = SubResource( 9 )
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="Floor" type="MeshInstance" parent="Origin"]
+[node name="Floor" type="MeshInstance" parent="Landmarks"]
 transform = Transform( 374.399, 0, 0, 0, 9.24026, 0, 0, 0, 250.17, 372.712, -9.30585, 248.634 )
 visible = false
 mesh = SubResource( 17 )
 skeleton = NodePath("../..")
 
-[node name="StaticBody" type="StaticBody" parent="Origin/Floor"]
+[node name="StaticBody" type="StaticBody" parent="Landmarks/Floor"]
 
-[node name="CollisionShape" type="CollisionShape" parent="Origin/Floor/StaticBody"]
+[node name="CollisionShape" type="CollisionShape" parent="Landmarks/Floor/StaticBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16324e-08, -4.82192e-08, -7.27168e-09 )
 shape = SubResource( 8 )
 

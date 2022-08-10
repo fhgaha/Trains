@@ -45,7 +45,6 @@ config/icon="res://icon.png"
 [autoload]
 
 Events="*res://Model/Common/Events.cs"
-DragDropController="res://Scripts/DragDrop/DragDropController.cs"
 
 [display]
 

@@ -116,7 +116,7 @@ namespace Trains.Model.Common
 		{
 			PrintCrossings(rails);
 
-			//List<RailPath> splitted = ConvertToSplittedRails(rails);
+			List<RailPath> splitted = ConvertToSplittedRails(rails);
 
 			return new List<Vector3> { Vector3.Zero };
 		}
@@ -133,9 +133,9 @@ namespace Trains.Model.Common
 				//split
 				var points = new List<Vector3>();
 
-				for (int i = 0; i < railPath.Curve.GetPointCount(); i++)
+				for (int i = 0; i < railPath.Curve.GetBakedPoints().Length; i++)
 				{
-					var currentPoint = railPath.GlobalTranslation + railPath.Curve.GetPointPosition(i);
+					var currentPoint = railPath.GlobalTranslation + railPath.Curve.GetBakedPoints()[i];
 					points.Add(currentPoint);
 
 					if (allCrossings.Any(c => currentPoint.IsEqualApprox(c)))
@@ -157,7 +157,7 @@ namespace Trains.Model.Common
 						}
 					}
 
-					if (i == railPath.Curve.GetPointCount() - 1)
+					if (i == railPath.Curve.GetBakedPoints().Length - 1)
 					{
 						//reached last point
 						dict[railPath].Add(points);
