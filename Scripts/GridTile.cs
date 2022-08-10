@@ -3,7 +3,7 @@ using System;
 
 namespace Trains
 {
-	public class gridTile : MeshInstance
+	public class GridTile : MeshInstance
 	{
 		private Label3D label;
 		
@@ -12,9 +12,5 @@ namespace Trains
 			label = GetNode<Label3D>("Label3D");
 			label.Text = GlobalTranslation.ToString();
 		}
-
-		// public override void _PhysicsProcess(float delta)
-		// {
-		// }
 	}
 }

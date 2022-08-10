@@ -16,7 +16,7 @@
 [ext_resource path="res://Scenes/Trains/Train.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Model/TrainContainer.cs" type="Script" id=15]
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
-[ext_resource path="res://ThrowAway/grid.tscn" type="PackedScene" id=17]
+[ext_resource path="res://Scenes/Heplers/grid.tscn" type="PackedScene" id=17]
 
 [sub_resource type="CubeMesh" id=9]
 
