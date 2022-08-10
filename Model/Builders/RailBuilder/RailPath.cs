@@ -17,6 +17,11 @@ namespace Trains
 		[Export] public List<Vector3> Crossings { get; private set; }
 		public bool IsJoined { get; private set; }
 
+		public RailPath()
+		{
+			Crossings = new List<Vector3>();
+		}
+
 		public Vector3 DirFromStart
 		{
 			get

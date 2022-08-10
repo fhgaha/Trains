@@ -143,17 +143,13 @@ namespace Trains.Model.Common
 						if (!currentPoint.IsEqualApprox(railPath.Start)
 						&& !currentPoint.IsEqualApprox(railPath.End))
 						{
-							if (dict[railPath] is null)
+							if (!dict.ContainsKey(railPath))
 							{
-								dict[railPath] = new List<List<Vector3>>();
-								dict[railPath].Add(points);
-								points.Clear();
+								dict.Add(railPath, new List<List<Vector3>>());
 							}
-							else
-							{
-								dict[railPath].Add(points);
-								points.Clear();
-							}
+
+							dict[railPath].Add(points);
+							points.Clear();
 						}
 					}
 
@@ -182,17 +178,20 @@ namespace Trains.Model.Common
 					}
 
 					newPath.Curve = RailCurve.GetFrom(newPath.Curve);
+					// newPath.Crossings = new List<Vector3>{newPath.Start, newPath.End};
+					newPath.EnlistCrossing(newPath.Start);
+					newPath.EnlistCrossing(newPath.End);
 					newList.Add(newPath);
 				}
 			}
 
 			//print
 			GD.Print("new list---------");
-			foreach (var p in newList)
+			foreach (var path in newList)
 			{
-				foreach (var c in p.Crossings)
+				foreach (var crossing in path.Crossings)
 				{
-					GD.PrintS(p, c);
+					GD.PrintS(path, crossing);
 				}
 			}
 			GD.Print("---------");
