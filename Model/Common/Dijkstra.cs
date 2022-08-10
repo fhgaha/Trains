@@ -115,7 +115,89 @@ namespace Trains.Model.Common
 		internal static List<Vector3> FindPaths(Vector3 from, Vector3 to, List<RailPath> rails)
 		{
 			PrintCrossings(rails);
+
+			//List<RailPath> splitted = ConvertToSplittedRails(rails);
+
 			return new List<Vector3> { Vector3.Zero };
+		}
+
+		private static List<RailPath> ConvertToSplittedRails(List<RailPath> rails)
+		{
+			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
+			var dict = new Dictionary<RailPath, List<List<Vector3>>>();
+
+			foreach (var railPath in rails)
+			{
+				if (railPath.Crossings.Count <= 2) continue;
+
+				//split
+				var points = new List<Vector3>();
+
+				for (int i = 0; i < railPath.Curve.GetPointCount(); i++)
+				{
+					var currentPoint = railPath.GlobalTranslation + railPath.Curve.GetPointPosition(i);
+					points.Add(currentPoint);
+
+					if (allCrossings.Any(c => currentPoint.IsEqualApprox(c)))
+					{
+						if (!currentPoint.IsEqualApprox(railPath.Start)
+						&& !currentPoint.IsEqualApprox(railPath.End))
+						{
+							if (dict[railPath] is null)
+							{
+								dict[railPath] = new List<List<Vector3>>();
+								dict[railPath].Add(points);
+								points.Clear();
+							}
+							else
+							{
+								dict[railPath].Add(points);
+								points.Clear();
+							}
+						}
+					}
+
+					if (i == railPath.Curve.GetPointCount() - 1)
+					{
+						//reached last point
+						dict[railPath].Add(points);
+					}
+				}
+			}
+
+			List<RailPath> newList = new List<RailPath>();
+
+			//remove old path add new paths
+			foreach (var path in rails)
+			{
+				if (path.Crossings.Count <= 2) continue;
+
+				foreach (var points in dict[path])
+				{
+					var newPath = new RailPath();
+
+					foreach (var p in points)
+					{
+						newPath.Curve.AddPoint(p);
+					}
+
+					newPath.Curve = RailCurve.GetFrom(newPath.Curve);
+					newList.Add(newPath);
+				}
+			}
+
+			//print
+			GD.Print("new list---------");
+			foreach (var p in newList)
+			{
+				foreach (var c in p.Crossings)
+				{
+					GD.PrintS(p, c);
+				}
+			}
+			GD.Print("---------");
+
+			return newList;
 		}
 
 		//input example

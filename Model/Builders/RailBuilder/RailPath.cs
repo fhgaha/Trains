@@ -50,7 +50,10 @@ namespace Trains
 			GlobalTransform = blueprint.GlobalTransform;
 			Curve = RailCurve.GetFrom(blueprint.Curve);
 
-			Crossings = new List<Vector3>() { Start, End };
+			Crossings = new List<Vector3>();
+			EnlistCrossing(Start);
+			EnlistCrossing(End);
+
 			Global.Rails.Add(this);
 		}
 
@@ -105,11 +108,6 @@ namespace Trains
 			{
 				Crossings.Add(point);
 			}
-		}
-
-		public void DelistCrossing(Vector3 point)
-		{
-			Crossings.Remove(point);
 		}
 
 		public void UpdateCrossing(Vector3 oldValue, Vector3 newValue)
