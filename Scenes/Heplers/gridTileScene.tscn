@@ -12,7 +12,7 @@ material = SubResource( 6 )
 [node name="MeshInstance" type="MeshInstance"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../../../..")
+skeleton = NodePath("")
 script = ExtResource( 2 )
 
 [node name="Label3D" type="Label3D" parent="."]

@@ -194,14 +194,22 @@ namespace Trains.Model.Builders
 		protected void PlaceObject()
 		{
 			if (bpStartSnapper.IsSnappedOnSegment)
+			{
 				InitPath();
+			}
 			else if (!AreWeContinuingPath)
+			{
 				InitPath();
+			}
 			else
+			{
 				AddNewCurveToCurrentPath();
+			}
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 			undoStack.Push(RailCurve.GetFrom(blueprint));
+
+			
 
 			if (currentPath.CanBeJoined(bpStartSnapper, bpEndSnapper))
 				JoinCurrentPath();
@@ -220,6 +228,11 @@ namespace Trains.Model.Builders
 			prevDir = currentPath.DirFromEnd;
 
 			currentPath.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+
+			if (bpEndSnapper.IsSnappedOnSegment)
+			{
+				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
+			}
 
 			//i dont know why but without this mid snapping logic of bpStartSnpper breaks
 			bpStartSnapper.Reset();
@@ -249,6 +262,11 @@ namespace Trains.Model.Builders
 				prevDir = currentPath.DirFromEnd;
 				
 				currentPath.UpdateCrossing(oldValue, currentPath.End);
+			}
+
+			if (bpEndSnapper.IsSnappedOnSegment)
+			{
+				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
 			}
 		}
 

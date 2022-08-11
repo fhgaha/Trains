@@ -113,6 +113,10 @@ namespace Trains
 			{
 				Crossings.Add(point);
 			}
+			
+			// GD.Print("!!!!!!!!!!!!!");
+			// GD.Print(System.Environment.StackTrace);
+			// GD.Print("!!!!!!!!!!!!!");
 		}
 
 		public void UpdateCrossing(Vector3 oldValue, Vector3 newValue)

@@ -125,10 +125,15 @@ namespace Trains.Model.Common
 		{
 			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
 			var dict = new Dictionary<RailPath, List<List<Vector3>>>();
+			var newRails = new List<RailPath>();
 
 			foreach (var railPath in rails)
 			{
-				if (railPath.Crossings.Count <= 2) continue;
+				if (railPath.Crossings.Count <= 2)
+				{
+					newRails.Add(railPath);
+					continue;
+				}
 
 				//split
 				var points = new List<Vector3>();
@@ -143,12 +148,10 @@ namespace Trains.Model.Common
 						if (!currentPoint.IsEqualApprox(railPath.Start)
 						&& !currentPoint.IsEqualApprox(railPath.End))
 						{
-							if (!dict.ContainsKey(railPath))
-							{
-								dict.Add(railPath, new List<List<Vector3>>());
-							}
+							//new path
+							var newPath = MakePath(points);
+							newRails.Add(newPath);
 
-							dict[railPath].Add(points);
 							points.Clear();
 						}
 					}
@@ -156,38 +159,17 @@ namespace Trains.Model.Common
 					if (i == railPath.Curve.GetBakedPoints().Length - 1)
 					{
 						//reached last point
-						dict[railPath].Add(points);
+						var newPath = MakePath(points);
+						newRails.Add(newPath);
+						
+						points.Clear();
 					}
-				}
-			}
-
-			List<RailPath> newList = new List<RailPath>();
-
-			//remove old path add new paths
-			foreach (var path in rails)
-			{
-				if (path.Crossings.Count <= 2) continue;
-
-				foreach (var points in dict[path])
-				{
-					var newPath = new RailPath();
-
-					foreach (var p in points)
-					{
-						newPath.Curve.AddPoint(p);
-					}
-
-					newPath.Curve = RailCurve.GetFrom(newPath.Curve);
-					// newPath.Crossings = new List<Vector3>{newPath.Start, newPath.End};
-					newPath.EnlistCrossing(newPath.Start);
-					newPath.EnlistCrossing(newPath.End);
-					newList.Add(newPath);
 				}
 			}
 
 			//print
 			GD.Print("new list---------");
-			foreach (var path in newList)
+			foreach (var path in newRails)
 			{
 				foreach (var crossing in path.Crossings)
 				{
@@ -196,7 +178,23 @@ namespace Trains.Model.Common
 			}
 			GD.Print("---------");
 
-			return newList;
+			return newRails;
+		}
+
+		private static RailPath MakePath(List<Vector3> points)
+		{
+			var newPath = new RailPath();
+
+			for (int i = 0; i < points.Count; i++)
+			{
+				//addpoint is wrong points are baked?
+				newPath.Curve.AddPoint(points[i]);
+			}
+
+			newPath.Curve = RailCurve.GetFrom(newPath.Curve);
+			newPath.EnlistCrossing(newPath.Start);
+			newPath.EnlistCrossing(newPath.End);
+			return newPath;
 		}
 
 		//input example
