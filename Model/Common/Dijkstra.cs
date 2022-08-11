@@ -143,15 +143,22 @@ namespace Trains.Model.Common
 					var currentPoint = railPath.GlobalTranslation + railPath.Curve.GetBakedPoints()[i];
 					points.Add(currentPoint);
 
-					if (allCrossings.Any(c => currentPoint.IsEqualApprox(c)))
-					{
-						if (!currentPoint.IsEqualApprox(railPath.Start)
+					if (allCrossings.Any(c => currentPoint.IsEqualApprox(c))
+						&& !currentPoint.IsEqualApprox(railPath.Start)
 						&& !currentPoint.IsEqualApprox(railPath.End))
-						{
-							//new path
-							var newPath = MakePath(points);
-							newRails.Add(newPath);
+					{
+						//new path
+						var newPath = MakePath(points);
+						newRails.Add(newPath);
 
+						if (points.Count > 0)
+						{
+							var lastPoint = points.Last();
+							points.Clear();
+							points.Add(lastPoint);
+						}
+						else
+						{
 							points.Clear();
 						}
 					}
@@ -161,7 +168,7 @@ namespace Trains.Model.Common
 						//reached last point
 						var newPath = MakePath(points);
 						newRails.Add(newPath);
-						
+
 						points.Clear();
 					}
 				}
