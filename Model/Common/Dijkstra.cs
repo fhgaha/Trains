@@ -151,16 +151,9 @@ namespace Trains.Model.Common
 						var newPath = MakePath(points);
 						newRails.Add(newPath);
 
-						if (points.Count > 0)
-						{
-							var lastPoint = points.Last();
-							points.Clear();
-							points.Add(lastPoint);
-						}
-						else
-						{
-							points.Clear();
-						}
+						var lastPoint = points.Last();
+						points.Clear();
+						points.Add(lastPoint);
 					}
 
 					if (i == railPath.Curve.GetBakedPoints().Length - 1)
