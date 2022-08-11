@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dark.png-c36d4147a4fe74269f46947cd97186d1.stex"
+path="res://.import/dark.png-06ee56508ea314c20acd64b8dbb70c25.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ThrowAway/dark.png"
-dest_files=[ "res://.import/dark.png-c36d4147a4fe74269f46947cd97186d1.stex" ]
+source_file="res://Assets/img/dark.png"
+dest_files=[ "res://.import/dark.png-06ee56508ea314c20acd64b8dbb70c25.stex" ]
 
 [params]
 
