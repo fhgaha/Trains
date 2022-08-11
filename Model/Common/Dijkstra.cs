@@ -118,7 +118,40 @@ namespace Trains.Model.Common
 
 			List<RailPath> splitted = ConvertToSplittedRails(rails);
 
-			return new List<Vector3> { Vector3.Zero };
+			//build graph
+			var allCrossings = splitted.SelectMany(rail => rail.Crossings);
+
+			var nodeNumbers = new Dictionary<Vector3, int>();
+			int index = 0;
+			foreach (var crossing in allCrossings)
+			{
+				if (!nodeNumbers.ContainsKey(crossing))
+				{
+					nodeNumbers.Add(crossing, index);
+					index++;
+				}
+			}
+
+			var graph = Graph.MakeGraph(nodeNumbers.Values.ToArray());
+
+			var weights = new Dictionary<Edge, double>();
+			var edges = graph.Edges.ToList();
+			for (int i = 0; i < edges.Count; i++)
+			{
+				weights[edges[i]] = splitted[i].Curve.GetPointCount();
+			}
+
+			var paths = FindPaths(graph, weights, graph[nodeNumbers[from]], graph[nodeNumbers[to]])
+				.Select(n => n.NodeNumber)
+				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
+				.ToList();
+
+			foreach (var item in paths)
+			{
+				GD.Print(new object[] {item + ", "});
+			}
+
+			return paths;
 		}
 
 		private static List<RailPath> ConvertToSplittedRails(List<RailPath> rails)
@@ -168,15 +201,15 @@ namespace Trains.Model.Common
 			}
 
 			//print
-			GD.Print("new list---------");
-			foreach (var path in newRails)
-			{
-				foreach (var crossing in path.Crossings)
-				{
-					GD.PrintS(path, crossing);
-				}
-			}
-			GD.Print("---------");
+			// GD.Print("new list---------");
+			// foreach (var path in newRails)
+			// {
+			// 	foreach (var crossing in path.Crossings)
+			// 	{
+			// 		GD.PrintS(path, crossing);
+			// 	}
+			// }
+			// GD.Print("---------");
 
 			return newRails;
 		}
@@ -196,15 +229,6 @@ namespace Trains.Model.Common
 			newPath.EnlistCrossing(newPath.End);
 			return newPath;
 		}
-
-		//input example
-		// [Path:6692] (1.976347, 1.95679E-08, 3.921086)
-		// [Path:6692] (4.985118, 0, 0.9936838)
-		// [Path:6692] (3.483387, 0, 1.693952)
-		// [Path:6799] (7.976347, 1.95679E-08, 3.921086)
-		// [Path:6799] (4.985118, 0, 0.9936838)
-		// [Path:12402] (3.483387, 4.74975E-08, 1.693952)
-		// [Path:12402] (4.354433, 4.74975E-08, 5.140459)
 
 		public static List<Node> FindPaths(Graph graph, Dictionary<Edge, double> weights, Node start, Node end)
 		{
