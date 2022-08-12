@@ -141,17 +141,33 @@ namespace Trains.Model.Common
 				weights[edges[i]] = splitted[i].Curve.GetPointCount();
 			}
 
-			var paths = FindPaths(graph, weights, graph[nodeNumbers[from]], graph[nodeNumbers[to]])
-				.Select(n => n.NodeNumber)
+			//'no key in dict' error if from == (9.976347, 0, 0.9210863) and
+			//nodeNumbers[from] == (9.976347, -4.74975E-08, 0.9210863)
+			//why are they different?
+			int startNodeNumber = nodeNumbers[from];
+			int endNodeNumber = nodeNumbers[to];
+
+			Node start = graph[startNodeNumber];
+			Node end = graph[endNodeNumber];
+
+			var paths = FindPaths(graph, weights, start, end);
+
+			if (paths is null)
+			{
+				GD.Print("no paths found");
+				return new List<Vector3>();
+			}
+
+			var existingPaths =	paths.Select(n => n.NodeNumber)
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
 				.ToList();
 
-			foreach (var item in paths)
+			foreach (var item in existingPaths)
 			{
-				GD.Print(new object[] {item + ", "});
+				GD.Print(new object[] { item + ", " });
 			}
 
-			return paths;
+			return existingPaths;
 		}
 
 		private static List<RailPath> ConvertToSplittedRails(List<RailPath> rails)

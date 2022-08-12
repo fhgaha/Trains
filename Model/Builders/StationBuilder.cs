@@ -57,12 +57,16 @@ namespace Trains.Model.Builders
 				blueprint.Rotate(Vector3.Up, Mathf.Pi / 2);
 		}
 
+		//this should be put in place somewhere
+		Station _station;
 		private void PlaceStation()
 		{
 			var station = stationScene.Instance<Station>();
 			station.Init(blueprint);
 			station.AddToGroup("Stations");
 			stations.AddChild(station);
+			
+			_station = station;
 		}
 
 		private void PlaceRailPath()
@@ -82,6 +86,8 @@ namespace Trains.Model.Builders
 			//for some reason if add path right after instance the path all station paths rotates. 
 			//but if i add it in the end of this method station paths do not rotate.
 			railContainer.AddRailPath(path);
+
+			_station.RailroadAlongside = path;
 		}
 
 		private void UpdateBlueprint()

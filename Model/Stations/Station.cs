@@ -10,7 +10,7 @@ namespace Trains
 	public class Station : Spatial
 	{
 		public int Id { get; set; }
-		public RailPath RailroadAlongside { get; private set; }
+		public RailPath RailroadAlongside { get; set; }
 		private Cell cell;
 
 		public void Init(Station blueprint)
