@@ -18,9 +18,15 @@ namespace Trains.Model.Common.GraphRelated
 
 			List<RailPath> splitted = ConvertToSplittedRails(rails);
 
-			//build graph
-			var allCrossings = splitted.SelectMany(rail => rail.Crossings);
-			var nodeNumbers = new Dictionary<Vector3, int>();
+			//build nodeNumbers dict
+			var allCrossings = new List<Vector3>();
+			foreach (var path in splitted)
+			{
+				allCrossings.Add(path.Start);
+				allCrossings.Add(path.End);
+			}
+
+			var nodeNumbers = new Dictionary<Vector3, int>(new MyVector3EqualityComparer());
 			int index = 0;
 			foreach (var crossing in allCrossings)
 			{
@@ -31,18 +37,17 @@ namespace Trains.Model.Common.GraphRelated
 				}
 			}
 
-			var graph = Graph.MakeGraph(nodeNumbers.Values.ToArray());
+			var allCrossingsAsIntegers = allCrossings.Select(cr => nodeNumbers[cr]).ToArray();
+
+			var graph = Graph.MakeGraph(allCrossingsAsIntegers);
 
 			var weights = new Dictionary<Edge, double>();
 			var edges = graph.Edges.ToList();
 			for (int i = 0; i < edges.Count; i++)
 			{
-				weights[edges[i]] = splitted[i].Curve.GetPointCount();
+				weights[edges[i]] = splitted[i].Curve.GetBakedLength();
 			}
 
-			//'no key in dict' error if from == (9.976347, 0, 0.9210863) and
-			//nodeNumbers[from] == (9.976347, -4.74975E-08, 0.9210863)
-			//why are they different?
 			int startNodeNumber = nodeNumbers[from];
 			int endNodeNumber = nodeNumbers[to];
 
@@ -57,7 +62,7 @@ namespace Trains.Model.Common.GraphRelated
 				return new List<Vector3>();
 			}
 
-			var existingPaths =	paths.Select(n => n.NodeNumber)
+			var existingPaths = paths.Select(n => n.NodeNumber)
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
 				.ToList();
 
@@ -200,6 +205,28 @@ namespace Trains.Model.Common.GraphRelated
 				}
 			}
 			GD.Print();
+		}
+	}
+
+	class MyVector3EqualityComparer : IEqualityComparer<Vector3>
+	{
+		public bool Equals(Vector3 v1, Vector3 v2)
+		{
+			if (v2 == null && v1 == null)
+				return true;
+			else if (v1 == null || v2 == null)
+				return false;
+			// else if (v1.IsEqualApprox(v2))
+			else if (v1.x == v2.x && v1.z == v2.z)
+				return true;
+			else
+				return false;
+		}
+
+		public int GetHashCode(Vector3 v)
+		{
+			// return v.x.GetHashCode() ^ v.y.GetHashCode() << 2 ^ v.z.GetHashCode() >> 2;
+			return 0;
 		}
 	}
 }
