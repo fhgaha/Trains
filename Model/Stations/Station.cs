@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Trains.Model.Cells;
 using Trains.Model.Common;
+using Trains.Model.Common.GraphRelated;
 
 namespace Trains
 {

@@ -2,9 +2,9 @@ using Godot;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Trains.Model.Common
+namespace Trains.Model.Common.GraphRelated
 {
-	public static partial class Dijkstra
+	public static class Dijkstra
 	{
 		class DijkstraData
 		{

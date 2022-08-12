@@ -1,56 +1,53 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Trains.Model.Common
+namespace Trains.Model.Common.GraphRelated
 {
-	public static partial class Dijkstra
+	public class Graph
 	{
-		public class Graph
+		private Node[] nodes;
+
+		public Graph(int nodesCount)
 		{
-			private Node[] nodes;
+			nodes = Enumerable.Range(0, nodesCount).Select(z => new Node(z)).ToArray();
+		}
 
-			public Graph(int nodesCount)
+		public int Length { get { return nodes.Length; } }
+
+		public Node this[int index] { get { return nodes[index]; } }
+
+		public IEnumerable<Node> Nodes
+		{
+			get
 			{
-				nodes = Enumerable.Range(0, nodesCount).Select(z => new Node(z)).ToArray();
+				foreach (var node in nodes) yield return node;
 			}
+		}
 
-			public int Length { get { return nodes.Length; } }
+		public void Connect(int index1, int index2)
+		{
+			Node.Connect(nodes[index1], nodes[index2], this);
+		}
 
-			public Node this[int index] { get { return nodes[index]; } }
+		public void Delete(Edge edge)
+		{
+			Node.Disconnect(edge);
+		}
 
-			public IEnumerable<Node> Nodes
+		public IEnumerable<Edge> Edges
+		{
+			get
 			{
-				get
-				{
-					foreach (var node in nodes) yield return node;
-				}
+				return nodes.SelectMany(z => z.IncidentEdges).Distinct();
 			}
+		}
 
-			public void Connect(int index1, int index2)
-			{
-				Node.Connect(nodes[index1], nodes[index2], this);
-			}
-
-			public void Delete(Edge edge)
-			{
-				Node.Disconnect(edge);
-			}
-
-			public IEnumerable<Edge> Edges
-			{
-				get
-				{
-					return nodes.SelectMany(z => z.IncidentEdges).Distinct();
-				}
-			}
-
-			public static Graph MakeGraph(params int[] incidentNodes)
-			{
-				var graph = new Graph(incidentNodes.Max() + 1);
-				for (int i = 0; i < incidentNodes.Length - 1; i += 2)
-					graph.Connect(incidentNodes[i], incidentNodes[i + 1]);
-				return graph;
-			}
+		public static Graph MakeGraph(params int[] incidentNodes)
+		{
+			var graph = new Graph(incidentNodes.Max() + 1);
+			for (int i = 0; i < incidentNodes.Length - 1; i += 2)
+				graph.Connect(incidentNodes[i], incidentNodes[i + 1]);
+			return graph;
 		}
 	}
 }
