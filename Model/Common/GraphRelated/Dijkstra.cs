@@ -12,7 +12,7 @@ namespace Trains.Model.Common.GraphRelated
 			public double Price { get; set; }
 		}
 
-		public static List<Vector3> FindPaths(Vector3 from, Vector3 to, List<RailPath> rails)
+		internal static List<Vector3> FindPaths(Vector3 from, Vector3 to, List<RailPath> rails)
 		{
 			PrintCrossings(rails);
 
