@@ -31,5 +31,27 @@ namespace Trains.Model.Common.GraphRelated
 			edge.From.edges.Remove(edge);
 			edge.To.edges.Remove(edge);
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+			var otherNode = (Node)obj;
+			return NodeNumber == otherNode.NodeNumber
+				//&& edges == otherNode.edges
+				;
+		}
+
+		public override int GetHashCode()
+		{
+			return NodeNumber.GetHashCode()
+				//^ 31 * edges.GetHashCode()
+				;
+		}
+
+		public override string ToString()
+		{
+			return "Node " + NodeNumber;
+		}
 	}
 }

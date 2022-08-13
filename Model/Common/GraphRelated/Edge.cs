@@ -21,5 +21,10 @@ namespace Trains.Model.Common.GraphRelated
 			if (From == node) return To;
 			return From;
 		}
+
+		public override string ToString()
+		{
+			return $"Edge [{From} - {To}]";
+		}
 	}
 }

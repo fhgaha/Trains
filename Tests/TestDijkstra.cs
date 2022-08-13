@@ -17,8 +17,6 @@ namespace Trains.Tests
 	//[Title("TestDijkstra")]
 	public class TestDijkstra : WAT.Test
 	{
-		CurveCalculator calculator;
-
 		//Developers may target a method with the [Start] attribute to execute code before any test method is run
 		public void RunBeforeTestClass()
 		{
