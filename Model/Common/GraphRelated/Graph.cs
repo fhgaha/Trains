@@ -24,9 +24,9 @@ namespace Trains.Model.Common.GraphRelated
 			}
 		}
 
-		public void Connect(int index1, int index2)
+		public Edge Connect(int index1, int index2)
 		{
-			Node.Connect(nodes[index1], nodes[index2], this);
+			return Node.Connect(nodes[index1], nodes[index2], this);
 		}
 
 		public void Delete(Edge edge)

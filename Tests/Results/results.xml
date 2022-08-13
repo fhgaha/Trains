@@ -1,8 +1,12 @@
 <?xml version="1.0" ?>
-<testsuites failures="1" name="TestXML" tests="2" time="0.682">
+<testsuites failures="1" name="TestXML" tests="3" time="0.422">
 	<testsuite name="CurveCalculator Tests" failures="1"  tests="1" time="0">
 		<testcase name="CalculateCenter" time="0">
 			<failure message="EXPECTED: |Godot.Vector2| (1, 0) is equal to |Godot.Vector2|(0, 1) but GOT |Godot.Vector2| (1, 0) is not equal to |Godot.Vector2|(0, 1)"></failure></testcase>
+	</testsuite>
+
+	<testsuite name="TestDijkstra" failures="0"  tests="1" time="0">
+		<testcase name="FindPath" time="0"></testcase>
 	</testsuite>
 
 	<testsuite name="PointsParser Tests" failures="0"  tests="4" time="0">

@@ -1,5 +1,6 @@
 {
 	"failed": [
-		"res://Tests/TestCurveCalculator.cs"
+		"res://Tests/TestCurveCalculator.cs",
+		"res://Tests/TestDijkstra.cs"
 	]
 }
