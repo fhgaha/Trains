@@ -22,13 +22,7 @@ namespace Trains.Model.Common.GraphRelated
 			var allCrossingsAsIntegers = ParseVectorsToNodeNumbers(allCrossings, nodeNumbers);
 
 			var graph = Graph.MakeGraph(allCrossingsAsIntegers);
-
-			var weights = new Dictionary<Edge, double>();
-			var edges = graph.Edges.ToList();
-			for (int i = 0; i < edges.Count; i++)
-			{
-				weights[edges[i]] = splitted[i].Curve.GetBakedLength();
-			}
+			var weights = GetWeightsOfPaths(splitted, graph);
 
 			int startNodeNumber = nodeNumbers[from];
 			int endNodeNumber = nodeNumbers[to];
@@ -56,6 +50,18 @@ namespace Trains.Model.Common.GraphRelated
 			GD.Print("------");
 
 			return existingPaths;
+		}
+
+		private static Dictionary<Edge, double> GetWeightsOfPaths(List<RailPath> splitted, Graph graph)
+		{
+			var weights = new Dictionary<Edge, double>();
+			var edges = graph.Edges.ToList();
+			for (int i = 0; i < edges.Count; i++)
+			{
+				weights[edges[i]] = splitted[i].Curve.GetBakedLength();
+			}
+
+			return weights;
 		}
 
 		private static int[] ParseVectorsToNodeNumbers(
