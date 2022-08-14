@@ -31,13 +31,6 @@ namespace Trains.Tests
 		public void FindPathSimpleDefault()
 		{
 			var graph = new Graph(4);
-			// var graph = Graph.MakeGraph(
-			// 	0, 1,
-			// 	0, 2,
-			// 	0, 3,
-			// 	1, 3,
-			// 	2, 3
-			// );
 			var weights = new Dictionary<Edge, double>
 			{
 				[graph.Connect(0, 1)] = 1,
@@ -54,7 +47,7 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void FindPathOneReversed()
+		public void FindPath()
 		{
 			var graph = Graph.MakeGraph(
 				0, 1,
@@ -65,17 +58,44 @@ namespace Trains.Tests
 			);
 			var weights = new Dictionary<Edge, double>
 			{
-				[graph.Connect(0, 1)] = 1,
-				[graph.Connect(0, 2)] = 2,
-				[graph.Connect(0, 3)] = 6,
-				[graph.Connect(1, 3)] = 4,
-				[graph.Connect(2, 3)] = 2
+				[graph.GetEdge(0, 1)] = 1,
+				[graph.GetEdge(0, 2)] = 2,
+				[graph.GetEdge(0, 3)] = 6,
+				[graph.GetEdge(1, 3)] = 4,
+				[graph.GetEdge(2, 3)] = 2
 			};
 
 			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3])
 				.Select(n => n.NodeNumber);
 
 			CollectionAssertAreEqual(new[] { 0, 2, 3 }, path);
+			// Assert.Throws(() => throw new TargetInvocationException( new KeyNotFoundException()));
+		}
+
+		[Test]
+		public void FindPathWantedCase()
+		{
+			var graph = Graph.MakeGraph(
+				0, 1,
+				1, 2,
+				// 1, 4,
+				// 2, 3
+				4, 1,
+				3, 2
+			);
+			var weights = new Dictionary<Edge, double>
+			{
+				[graph.GetEdge(0, 1)] = 2f,
+				[graph.GetEdge(1, 2)] = 3.2f,
+				[graph.GetEdge(1, 4)] = 5.62f,
+				[graph.GetEdge(2, 3)] = 6.57f,
+			};
+
+			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3])
+				.Select(n => n.NodeNumber);
+
+			CollectionAssertAreEqual(new[] { 0, 1, 2, 3 }, path);
+			// Assert.Throws(() => throw new TargetInvocationException( new KeyNotFoundException()));
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
@@ -90,7 +110,8 @@ namespace Trains.Tests
 
 		private void CollectionAssertAreEqual(IEnumerable<int> expected, IEnumerable<int> path)
 		{
-			Assert.IsEqual(3, path.Count());
+			// Assert.IsNotEqual(path, null);
+			Assert.IsEqual(expected.Count(), path.Count());
 			for (int i = 0; i < path.Count(); i++)
 			{
 				Assert.IsEqual(expected.ElementAt(i), path.ElementAt(i));

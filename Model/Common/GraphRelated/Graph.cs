@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,6 +49,16 @@ namespace Trains.Model.Common.GraphRelated
 			for (int i = 0; i < incidentNodes.Length - 1; i += 2)
 				graph.Connect(incidentNodes[i], incidentNodes[i + 1]);
 			return graph;
+		}
+
+		public Edge GetEdge(int index1, int index2)
+		{
+			var edge = Edges.FirstOrDefault(e =>
+				(e.From.NodeNumber == index1 && e.To.NodeNumber == index2)
+			 || (e.To.NodeNumber == index1 && e.From.NodeNumber == index2));
+
+			if (edge is null) throw new ArgumentException($"There is no such edge [{index1} - {index2}]");
+			return edge;
 		}
 	}
 }

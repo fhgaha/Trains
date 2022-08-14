@@ -61,6 +61,10 @@ namespace Trains.Model.Common.GraphRelated
 				GD.Print("no paths found");
 				return new List<Vector3>();
 			}
+			else
+			{
+				GD.Print("paths found!");
+			}
 
 			var existingPaths = paths.Select(n => n.NodeNumber)
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)

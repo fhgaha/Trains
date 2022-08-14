@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Trains.Model.Common.GraphRelated;
 
 namespace Trains.Tests
@@ -21,21 +23,23 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void MakeGraph()
+		public void TestMakeGraph()
 		{
 			var graph = Graph.MakeGraph(
 				0, 1,
-				0, 2,
-				0, 3,
-				1, 3,
+				1, 2,
+				4, 1,
 				2, 3
 			);
 
+			Assert.IsEqual(5, graph.Length);
 			Assert.IsEqual(graph[0], new Node(0));
 			Assert.IsEqual(graph[1], new Node(1));
 			Assert.IsEqual(graph[2], new Node(2));
 			Assert.IsEqual(graph[3], new Node(3));
 			Assert.IsEqual(graph[4], new Node(4));
+
+			Assert.IsEqual(4, graph.Edges.ToArray().Length);
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run

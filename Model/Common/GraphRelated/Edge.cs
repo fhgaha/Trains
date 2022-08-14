@@ -22,6 +22,20 @@ namespace Trains.Model.Common.GraphRelated
 			return From;
 		}
 
+		public override bool Equals(object obj)
+		{
+			
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+			var otherEdge = (Edge)obj;
+			return From == otherEdge.From && To == otherEdge.To;
+		}
+		
+		public override int GetHashCode()
+		{
+			return From.GetHashCode() + To.GetHashCode();
+		}
+
 		public override string ToString()
 		{
 			return $"Edge [{From} - {To}]";
