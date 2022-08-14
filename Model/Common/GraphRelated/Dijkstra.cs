@@ -12,42 +12,14 @@ namespace Trains.Model.Common.GraphRelated
 			public double Price { get; set; }
 		}
 
-		internal static List<Vector3> FindPaths(Vector3 from, Vector3 to, List<RailPath> rails)
+		internal static List<Vector3> FindPath(Vector3 from, Vector3 to, List<RailPath> rails)
 		{
 			PrintCrossings(rails);
 
-			List<RailPath> splitted = ConvertToSplittedRails(rails);
-
-			//build nodeNumbers dict
-			var allCrossings = new List<Vector3>();
-			foreach (var path in splitted)
-			{
-				allCrossings.Add(path.Start);
-				allCrossings.Add(path.End);
-			}
-
-			var nodeNumbers = new Dictionary<Vector3, int>(new MyVector3EqualityComparer());
-			int index = 0;
-			foreach (var crossing in allCrossings)
-			{
-				if (!nodeNumbers.ContainsKey(crossing))
-				{
-					nodeNumbers.Add(crossing, index);
-					index++;
-				}
-			}
-
-			var allCrossingsAsIntegers = allCrossings.Select(cr => nodeNumbers[cr]).ToArray();
-			for (int i = 0; i < allCrossingsAsIntegers.Length; i += 2)
-			{
-				if (allCrossingsAsIntegers[i] > allCrossingsAsIntegers[i + 1])
-				{
-					//swap
-					var temp = allCrossingsAsIntegers[i];
-					allCrossingsAsIntegers[i] = allCrossingsAsIntegers[i + 1];
-					allCrossingsAsIntegers[i + 1] = temp;
-				}
-			}
+			var splitted = ConvertToSplittedRails(rails);
+			var allCrossings = splitted.SelectMany(p => new[] { p.Start, p.End }).ToList();
+			var nodeNumbers = BuildNodeNumbers(allCrossings);
+			var allCrossingsAsIntegers = ParseVectorsToNodeNumbers(allCrossings, nodeNumbers);
 
 			var graph = Graph.MakeGraph(allCrossingsAsIntegers);
 
@@ -64,28 +36,61 @@ namespace Trains.Model.Common.GraphRelated
 			Node start = graph[startNodeNumber];
 			Node end = graph[endNodeNumber];
 
-			var paths = FindPaths(graph, weights, start, end);
+			var paths = FindPath(graph, weights, start, end);
 
 			if (paths is null)
 			{
-				GD.Print("no paths found");
+				GD.Print("path was not found");
 				return new List<Vector3>();
-			}
-			else
-			{
-				GD.Print("paths found!");
 			}
 
 			var existingPaths = paths.Select(n => n.NodeNumber)
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
 				.ToList();
 
+			GD.Print("---found path crossings: ---");
 			foreach (var item in existingPaths)
 			{
-				GD.Print(new object[] { item + ", " });
+				GD.Print(new[] { item + ", " });
 			}
+			GD.Print("------");
 
 			return existingPaths;
+		}
+
+		private static int[] ParseVectorsToNodeNumbers(
+			List<Vector3> allCrossings, Dictionary<Vector3, int> nodeNumbers)
+		{
+			var allCrossingsAsIntegers = allCrossings.Select(cr => nodeNumbers[cr]).ToArray();
+			//nodenumbers should be from lesser to greater
+			for (int i = 0; i < allCrossingsAsIntegers.Length; i += 2)
+			{
+				if (allCrossingsAsIntegers[i] > allCrossingsAsIntegers[i + 1])
+				{
+					//swap
+					var temp = allCrossingsAsIntegers[i];
+					allCrossingsAsIntegers[i] = allCrossingsAsIntegers[i + 1];
+					allCrossingsAsIntegers[i + 1] = temp;
+				}
+			}
+
+			return allCrossingsAsIntegers;
+		}
+
+		private static Dictionary<Vector3, int> BuildNodeNumbers(List<Vector3> allCrossings)
+		{
+			var nodeNumbers = new Dictionary<Vector3, int>(new MyVector3EqualityComparer());
+			int index = 0;
+			foreach (var crossing in allCrossings)
+			{
+				if (!nodeNumbers.ContainsKey(crossing))
+				{
+					nodeNumbers.Add(crossing, index);
+					index++;
+				}
+			}
+
+			return nodeNumbers;
 		}
 
 		private static List<RailPath> ConvertToSplittedRails(List<RailPath> rails)
@@ -108,7 +113,6 @@ namespace Trains.Model.Common.GraphRelated
 			return newRails;
 		}
 
-		//move to rail path
 		private static void SplitRailPath(RailPath railPath, List<Vector3> allCrossings, List<RailPath> newRails)
 		{
 			var points = new List<Vector3>();
@@ -138,18 +142,17 @@ namespace Trains.Model.Common.GraphRelated
 			}
 		}
 
-		private static void MakeNewPathAndUpdateNewRails(List<RailPath> newRails, List<Vector3> points)
-		{
-			var newPath = MakePath(points);
-			newRails.Add(newPath);
-		}
-
-		//move to railpath
 		private static bool RailPathHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
 		{
 			return allCrossings.Any(c => currentPoint.IsEqualApprox(c))
 								&& !currentPoint.IsEqualApprox(railPath.Start)
 								&& !currentPoint.IsEqualApprox(railPath.End);
+		}
+
+		private static void MakeNewPathAndUpdateNewRails(List<RailPath> newRails, List<Vector3> points)
+		{
+			var newPath = MakePath(points);
+			newRails.Add(newPath);
 		}
 
 		private static RailPath MakePath(List<Vector3> points)
@@ -168,7 +171,7 @@ namespace Trains.Model.Common.GraphRelated
 			return newPath;
 		}
 
-		public static List<Node> FindPaths(Graph graph, Dictionary<Edge, double> weights, Node start, Node end)
+		public static List<Node> FindPath(Graph graph, Dictionary<Edge, double> weights, Node start, Node end)
 		{
 			var notVisited = graph.Nodes.ToList();
 			var track = new Dictionary<Node, DijkstraData>();
@@ -235,6 +238,7 @@ namespace Trains.Model.Common.GraphRelated
 			else if (v1 == null || v2 == null)
 				return false;
 			// else if (v1.IsEqualApprox(v2))
+			//ignore y
 			else if (v1.x == v2.x && v1.z == v2.z)
 				return true;
 			else

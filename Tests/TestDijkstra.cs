@@ -40,7 +40,7 @@ namespace Trains.Tests
 				[graph.Connect(2, 3)] = 2
 			};
 
-			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3])
+			var path = Dijkstra.FindPath(graph, weights, graph[0], graph[3])
 				.Select(n => n.NodeNumber);
 
 			CollectionAssertAreEqual(new[] { 0, 2, 3 }, path);
@@ -65,7 +65,7 @@ namespace Trains.Tests
 				[graph.GetEdge(2, 3)] = 2
 			};
 
-			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3]);
+			var path = Dijkstra.FindPath(graph, weights, graph[0], graph[3]);
 
 			Assert.IsFalse(path is null);
 			Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
@@ -90,7 +90,7 @@ namespace Trains.Tests
 				[graph.GetEdge(2, 3)] = 6.57f,
 			};
 
-			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3]);
+			var path = Dijkstra.FindPath(graph, weights, graph[0], graph[3]);
 
 			Assert.IsFalse(path is null);
 			Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
@@ -116,7 +116,7 @@ namespace Trains.Tests
 				[graph.GetEdge(2, 3)] = 6.57f,
 			};
 
-			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3]);
+			var path = Dijkstra.FindPath(graph, weights, graph[0], graph[3]);
 
 			Assert.Throws(() => throw new TargetInvocationException(new NullReferenceException()));
 		}
