@@ -38,6 +38,16 @@ namespace Trains.Model.Common.GraphRelated
 			}
 
 			var allCrossingsAsIntegers = allCrossings.Select(cr => nodeNumbers[cr]).ToArray();
+			for (int i = 0; i < allCrossingsAsIntegers.Length; i += 2)
+			{
+				if(allCrossingsAsIntegers[i] > allCrossingsAsIntegers[i + 1])
+				{
+					//swap
+					var temp = allCrossingsAsIntegers[i];
+					allCrossingsAsIntegers[i] = allCrossingsAsIntegers[i + 1];
+					allCrossingsAsIntegers[i + 1] = temp;
+				}
+			}
 
 			var graph = Graph.MakeGraph(allCrossingsAsIntegers);
 
