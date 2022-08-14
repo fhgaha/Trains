@@ -40,6 +40,10 @@ namespace Trains.Tests
 			Assert.IsEqual(graph[4], new Node(4));
 
 			Assert.IsEqual(4, graph.Edges.ToArray().Length);
+			Assert.IsTrue(graph.GetEdge(0, 1).IsIncident(graph[0]));
+			Assert.IsTrue(graph.GetEdge(1, 2).IsIncident(graph[2]));
+			Assert.IsTrue(graph.GetEdge(4, 1).IsIncident(graph[1]));
+			Assert.IsTrue(graph.GetEdge(2, 3).IsIncident(graph[3]));
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run

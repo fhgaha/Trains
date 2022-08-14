@@ -65,11 +65,12 @@ namespace Trains.Tests
 				[graph.GetEdge(2, 3)] = 2
 			};
 
-			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3])
-				.Select(n => n.NodeNumber);
+			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3]);
 
-			CollectionAssertAreEqual(new[] { 0, 2, 3 }, path);
-			// Assert.Throws(() => throw new TargetInvocationException( new KeyNotFoundException()));
+			Assert.IsFalse(path is null);
+			Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
+
+			CollectionAssertAreEqual(new[] { 0, 2, 3 }, path.Select(n => n.NodeNumber));
 		}
 
 		[Test]
@@ -96,8 +97,6 @@ namespace Trains.Tests
 
 			if (path != null)
 				CollectionAssertAreEqual(new[] { 0, 1, 2, 3 }, path.Select(n => n.NodeNumber));
-
-			// Assert.Throws(() => throw new TargetInvocationException( new KeyNotFoundException()));
 		}
 
 		[Test]
@@ -106,8 +105,8 @@ namespace Trains.Tests
 			var graph = Graph.MakeGraph(
 				0, 1,
 				1, 2,
-				4, 1,
-				3, 2
+				4, 1,	//order is wrong
+				3, 2	//order is wrong
 			);
 			var weights = new Dictionary<Edge, double>
 			{
@@ -119,12 +118,7 @@ namespace Trains.Tests
 
 			var path = Dijkstra.FindPaths(graph, weights, graph[0], graph[3]);
 
-			// Assert.IsFalse(path is null);
-			// Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
-
-			// if (path != null)
-			// 	CollectionAssertAreEqual(new[] { 0, 1, 2, 3 }, path.Select(n => n.NodeNumber));
-			Assert.Throws(() => throw new TargetInvocationException( new NullReferenceException()));
+			Assert.Throws(() => throw new TargetInvocationException(new NullReferenceException()));
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
@@ -139,7 +133,6 @@ namespace Trains.Tests
 
 		private void CollectionAssertAreEqual(IEnumerable<int> expected, IEnumerable<int> path)
 		{
-			//i add this tests break
 			Assert.IsFalse(path is null);
 			Assert.IsEqual(expected.Count(), path.Count());
 			for (int i = 0; i < path.Count(); i++)
