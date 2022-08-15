@@ -193,7 +193,7 @@ namespace Trains.Model.Builders
 			state = State.SelectEnd;
 		}
 
-		protected void PlaceObject()
+		public void PlaceObject()
 		{
 			if (bpStartSnapper.IsSnappedOnSegment || !AreWeContinuingPath)
 				InitPath();

@@ -1,11 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Trains.Model.Builders;
-using Trains.Model.Common;
-using Trains.Model.Common.GraphRelated;
+using Trains.Model.Cells;
 
 namespace Trains.Tests
 {
@@ -14,34 +11,65 @@ namespace Trains.Tests
 	[Post(nameof(RunAfterTestMethod))]
 	[End(nameof(RunAfterTestClass))]
 
-	//[Title("TestDijkstra")]
 	public class TestRailBuilder : WAT.Test
 	{
 		//Developers may target a method with the [Start] attribute to execute code before any test method is run
 		public void RunBeforeTestClass()
 		{
+
 		}
 
 		// Developers may target a method with the [Pre] attribute to execute code before each test method is run;
 		public void RunBeforeTestMethod()
 		{
+
 		}
+
+		// [Test]
+		// public void BuildSegmentUsingVectorsTest()
+		// {
+		// 	var first = new Vector3(1, 0, 0);
+		// 	var second = new Vector3(0, 1, 0);
+
+		// 	var segment = new CurveSegment(first, second);
+
+		// 	Assert.IsEqual(segment.First, first, "segment.First should contain first passed parameter");
+		// 	Assert.IsEqual(segment.Second, second, "segment.Second should contain second passed parameter");
+		// }
+
+		// [Test]
+		// public void BuildSegmentUsingCollectionTest()
+		// {
+		// 	var first = new Vector3(1, 0, 0);
+		// 	var second = new Vector3(0, 1, 0);
+		// 	var collection = new List<Vector3> { first, second };
+
+		// 	var segment = new CurveSegment(collection);
+
+		// 	Assert.IsEqual(segment.First, first, "segment.First should contain first passed parameter");
+		// 	Assert.IsEqual(segment.Second, second, "segment.Second should contain second passed parameter");
+		// }
 
 		[Test]
-		public void foo()
+		public void PlaceObject()
 		{
+			var builder = new RailBuilder();
+			builder.Init(new List<Cell>(), new Camera(), new RailContainer(), new PackedScene());
+
 			Assert.IsTrue(true);
 		}
-	
 
-		// Developers may target a method with the [Post] attribute to execute code after each test method is run
+
+
+
 		public void RunAfterTestMethod()
 		{
+			// Developers may target a method with the [Post] attribute to execute code after each test method is run
 		}
 
-		// Developers may target a method with the [End] attribute to execute after all tests method have run
 		public void RunAfterTestClass()
 		{
+			// Developers may target a method with the [End] attribute to execute after all tests method have run
 		}
 	}
 }
