@@ -7,12 +7,6 @@ namespace Trains.Model.Common.GraphRelated
 {
 	public static class Dijkstra
 	{
-		class DijkstraData
-		{
-			public Node Previous { get; set; }
-			public double Price { get; set; }
-		}
-
 		internal static List<Vector3> FindPath(Vector3 from, Vector3 to, List<RailPath> rails)
 		{
 			PrintCrossings(rails);
@@ -141,6 +135,12 @@ namespace Trains.Model.Common.GraphRelated
 			return nodeNumbers;
 		}
 
+		class DijkstraData
+		{
+			public Node Previous { get; set; }
+			public double Price { get; set; }
+		}
+
 		public static List<Node> FindPath(Graph graph, Dictionary<Edge, double> weights, Node start, Node end)
 		{
 			var notVisited = graph.Nodes.ToList();
@@ -209,7 +209,6 @@ namespace Trains.Model.Common.GraphRelated
 				return true;
 			else if (v1 == null || v2 == null)
 				return false;
-			// else if (v1.IsEqualApprox(v2))
 			//ignore y
 			else if (v1.x == v2.x && v1.z == v2.z)
 				return true;
@@ -219,7 +218,6 @@ namespace Trains.Model.Common.GraphRelated
 
 		public int GetHashCode(Vector3 v)
 		{
-			// return v.x.GetHashCode() ^ v.y.GetHashCode() << 2 ^ v.z.GetHashCode() >> 2;
 			return 0;
 		}
 	}

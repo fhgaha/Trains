@@ -195,23 +195,13 @@ namespace Trains.Model.Builders
 
 		protected void PlaceObject()
 		{
-			if (bpStartSnapper.IsSnappedOnSegment)
-			{
+			if (bpStartSnapper.IsSnappedOnSegment || !AreWeContinuingPath)
 				InitPath();
-			}
-			else if (!AreWeContinuingPath)
-			{
-				InitPath();
-			}
 			else
-			{
 				AddNewCurveToCurrentPath();
-			}
 
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 			undoStack.Push(RailCurve.GetFrom(blueprint));
-
-			
 
 			if (currentPath.CanBeJoined(bpStartSnapper, bpEndSnapper))
 				JoinCurrentPath();
@@ -264,7 +254,7 @@ namespace Trains.Model.Builders
 				var oldValue = currentPath.End;
 				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
 				prevDir = currentPath.DirFromEnd;
-				
+
 				currentPath.UpdateCrossing(oldValue, currentPath.End);
 			}
 
