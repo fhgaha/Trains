@@ -29,7 +29,7 @@ namespace Trains
 		{
 			//create trian that route is between these stations
 
-			var train = trainScene.Instance<Train>();
+			
 			
 		}
 	}

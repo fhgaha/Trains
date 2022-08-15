@@ -18,7 +18,7 @@ namespace Trains
 		private Events events;
 		private TextureRect minimapTexture;
 		private Dictionary<TextureButton, Station> btnStationDict;
-		List<Station> stationsToConnect;
+		private List<Station> stationsToConnect;
 
 		public override void _Ready()
 		{
@@ -96,7 +96,9 @@ namespace Trains
 
 		private void onAcceptButtonPressed()
 		{
-			events.EmitSignal(nameof(Events.StationsAreSelected), stationsToConnect);
+			if (stationsToConnect.Count > 0)
+				events.EmitSignal(nameof(Events.StationsAreSelected), stationsToConnect);
+			
 			GD.Print("onAcceptButtonPressed");
 		}
 

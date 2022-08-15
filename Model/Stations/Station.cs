@@ -34,8 +34,8 @@ namespace Trains
 		{
 			var from = RailroadAlongside.Start;
 			var to = station.RailroadAlongside.Start;
-			var paths = Dijkstra.FindPath(from, to, Global.Rails);
-			return paths.Count > 0;
+			var path = Dijkstra.FindPath(from, to, Global.ActualRails);
+			return path.Count > 0;
 		}
 	}
 }

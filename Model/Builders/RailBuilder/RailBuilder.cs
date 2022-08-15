@@ -24,6 +24,7 @@ namespace Trains.Model.Builders
 		private RailContainer railContainer;   //Rails
 		private RailRemover railRemover;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
+		private ActualRailBuilder actualRailBuilder;
 
 		//Vars
 		private RailPath blueprint;
@@ -50,6 +51,7 @@ namespace Trains.Model.Builders
 			bpStartSnapper = new StartSnapper();
 			bpEndSnapper = new EndSnapper();
 			calculator = GetNode<CurveCalculator>("Calculator");
+			actualRailBuilder = new ActualRailBuilder();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
@@ -234,6 +236,8 @@ namespace Trains.Model.Builders
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
 			}
 
+			actualRailBuilder.UpdateActualRails();
+
 			//i dont know why but without this mid snapping logic of bpStartSnpper breaks
 			bpStartSnapper.Reset();
 			bpEndSnapper.Reset();
@@ -268,6 +272,8 @@ namespace Trains.Model.Builders
 			{
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
 			}
+
+			actualRailBuilder.UpdateActualRails();
 		}
 
 		private void JoinCurrentPath()

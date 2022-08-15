@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -17,6 +17,7 @@
 [ext_resource path="res://Model/TrainContainer.cs" type="Script" id=15]
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
 [ext_resource path="res://Scenes/Heplers/gridmapHelper.tscn" type="PackedScene" id=17]
+[ext_resource path="res://Scenes/ActualRailsContainer.cs" type="Script" id=18]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -132,6 +133,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.74975e-08, 0 )
 script = ExtResource( 11 )
 
 [node name="ActualRails" type="Spatial" parent="."]
+script = ExtResource( 18 )
 
 [node name="Trains" type="Spatial" parent="."]
 script = ExtResource( 15 )
