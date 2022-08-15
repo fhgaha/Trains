@@ -43,7 +43,7 @@ namespace Trains.Tests
 			var path = Dijkstra.FindPath(graph, weights, graph[0], graph[3])
 				.Select(n => n.NodeNumber);
 
-			Assert.CollectionsAreEqual(new[] { 0, 2, 3 }, new[] { 0, 1, 3 });
+			Assert.CollectionsAreEqual(new[] { 0, 2, 3 }, path);
 		}
 
 		[Test]
@@ -70,7 +70,7 @@ namespace Trains.Tests
 			Assert.IsFalse(path is null);
 			Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
 
-			CollectionAssertAreEqual(new[] { 0, 2, 3 }, path.Select(n => n.NodeNumber));
+			Assert.CollectionsAreEqual(new[] { 0, 2, 3 }, path.Select(n => n.NodeNumber));
 		}
 
 		[Test]
@@ -94,9 +94,7 @@ namespace Trains.Tests
 
 			Assert.IsFalse(path is null);
 			Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
-
-			if (path != null)
-				CollectionAssertAreEqual(new[] { 0, 1, 2, 3 }, path.Select(n => n.NodeNumber));
+			Assert.CollectionsAreEqual(new[] { 0, 1, 2, 3 }, path.Select(n => n.NodeNumber));
 		}
 
 		[Test]
@@ -129,16 +127,6 @@ namespace Trains.Tests
 		// Developers may target a method with the [End] attribute to execute after all tests method have run
 		public void RunAfterTestClass()
 		{
-		}
-
-		private void CollectionAssertAreEqual(IEnumerable<int> expected, IEnumerable<int> path)
-		{
-			Assert.IsFalse(path is null);
-			Assert.IsEqual(expected.Count(), path.Count());
-			for (int i = 0; i < path.Count(); i++)
-			{
-				Assert.IsEqual(expected.ElementAt(i), path.ElementAt(i));
-			}
 		}
 	}
 }

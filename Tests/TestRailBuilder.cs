@@ -43,15 +43,5 @@ namespace Trains.Tests
 		public void RunAfterTestClass()
 		{
 		}
-
-		private void CollectionAssertAreEqual(IEnumerable<int> expected, IEnumerable<int> path)
-		{
-			Assert.IsFalse(path is null);
-			Assert.IsEqual(expected.Count(), path.Count());
-			for (int i = 0; i < path.Count(); i++)
-			{
-				Assert.IsEqual(expected.ElementAt(i), path.ElementAt(i));
-			}
-		}
 	}
 }
