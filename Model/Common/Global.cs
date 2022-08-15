@@ -33,6 +33,7 @@ namespace Trains.Model.Common
 		public static ProductType? CurrentDisplayProductMode = null;
 		public static MainButtonType MainButtonMode = MainButtonType.None;
 
+
 		//min max prices
 		public const float LumberMinPrice = 30f;
 		public const float LumberMaxPrice = 100f;
@@ -44,6 +45,22 @@ namespace Trains.Model.Common
 		public const float DairyMaxPrice = 300f;
 
 		public static List<RailPath> CosmeticRails { get; internal set; } = new List<RailPath>();
-		public static List<RailPath> ActualRails { get; set; }
+
+		private static List<RailPath> actualRails;
+		public static List<RailPath> ActualRails
+		{
+			get { return actualRails; }
+			set
+			{
+				actualRails = value;
+
+				GD.Print("<--");
+				foreach (var item in value)
+				{
+					GD.Print(item);
+				}
+				GD.Print("-->");
+			}
+		}
 	}
 }

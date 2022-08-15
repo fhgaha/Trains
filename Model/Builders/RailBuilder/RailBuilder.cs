@@ -207,6 +207,8 @@ namespace Trains.Model.Builders
 				JoinCurrentPath();
 			else
 				TranslateAndRedrawBp();
+
+			actualRailBuilder.UpdateActualRails();
 		}
 
 		private void InitPath()
@@ -226,8 +228,6 @@ namespace Trains.Model.Builders
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
 			}
 
-			actualRailBuilder.UpdateActualRails();
-
 			//i dont know why but without this mid snapping logic of bpStartSnpper breaks
 			bpStartSnapper.Reset();
 			bpEndSnapper.Reset();
@@ -240,6 +240,8 @@ namespace Trains.Model.Builders
 			var railCurve = (RailCurve)currentPath.Curve;
 
 			if (curveToAdd.GetPointCount() == 0) return;
+
+			var oldCrossings = currentPath.Crossings;
 
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
@@ -263,7 +265,12 @@ namespace Trains.Model.Builders
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
 			}
 
-			actualRailBuilder.UpdateActualRails();
+			//i assume all crossings after appending curve will be shifted so i need to update them too
+			// for (int i = 0; i < oldCrossings.Count; i++)
+			// {
+			// 	var newCr = currentPath.GlobalTranslation + currentPath.Curve.GetClosestPoint(oldCrossings[i]);
+			// 	currentPath.UpdateCrossing(oldCrossings[i], newCr);
+			// }
 		}
 
 		private void JoinCurrentPath()

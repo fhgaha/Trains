@@ -87,6 +87,8 @@ mesh = SubResource( 17 )
 skeleton = NodePath("../..")
 
 [node name="StaticBody" type="StaticBody" parent="Landmarks/Floor"]
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionShape" type="CollisionShape" parent="Landmarks/Floor/StaticBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16324e-08, -4.82192e-08, -7.27168e-09 )

@@ -50,14 +50,14 @@ namespace Trains.Tests
 		// 	Assert.IsEqual(segment.Second, second, "segment.Second should contain second passed parameter");
 		// }
 
-		[Test]
-		public void PlaceObject()
-		{
-			var builder = new RailBuilder();
-			builder.Init(new List<Cell>(), new Camera(), new RailContainer(), new PackedScene());
+		// [Test]
+		// public void PlaceObject()
+		// {
+		// 	var builder = new RailBuilder();
+		// 	builder.Init(new List<Cell>(), new Camera(), new RailContainer(), new PackedScene());
 
-			Assert.IsTrue(true);
-		}
+		// 	Assert.IsTrue(true);
+		// }
 
 
 

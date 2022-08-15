@@ -10,10 +10,10 @@ namespace Trains.Model.Builders
 	{
 		public void UpdateActualRails()
 		{
-			Global.ActualRails = ConvertToSplittedRails(Global.CosmeticRails);
+			Global.ActualRails = SplitRails(Global.CosmeticRails);
 		}
 
-		private static List<RailPath> ConvertToSplittedRails(List<RailPath> rails)
+		private static List<RailPath> SplitRails(List<RailPath> rails)
 		{
 			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
 			var dict = new Dictionary<RailPath, List<List<Vector3>>>();
