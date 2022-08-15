@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,26 +31,65 @@ namespace Trains.Model.Common.GraphRelated
 			Node start = graph[startNodeNumber];
 			Node end = graph[endNodeNumber];
 
-			var paths = FindPath(graph, weights, start, end);
+			var turningNodes = FindPath(graph, weights, start, end);
 
-			if (paths is null)
+			if (turningNodes is null)
 			{
 				GD.Print("path was not found");
 				return new List<Vector3>();
 			}
 
-			var existingPaths = paths.Select(n => n.NodeNumber)
+			var turningPoints = turningNodes.Select(n => n.NodeNumber)
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
 				.ToList();
 
 			GD.Print("---found path crossings: ---");
-			foreach (var item in existingPaths)
+			foreach (var item in turningPoints)
 			{
 				GD.Print(new[] { item + ", " });
 			}
 			GD.Print("------");
+			
+			var result = BuildFinalPathAsPoints(splitted, turningPoints);
 
-			return existingPaths;
+			// GD.Print("<< Result:");
+			// foreach (var item in result)
+			// {
+			// 	GD.Print(item + ", ");
+			// }
+			// GD.PrintRaw(">>");
+
+			return result;
+		}
+
+		private static List<Vector3> BuildFinalPathAsPoints(List<RailPath> splitted, List<Vector3> turningPoints)
+		{
+			var result = new List<Vector3>();
+
+			for (int i = 0; i < turningPoints.Count - 1; i++)
+			{
+				var first = turningPoints[i];
+				var second = turningPoints[i + 1];
+
+				bool IsForward(RailPath p) => p.Start.IsEqualApprox(first) && p.End.IsEqualApprox(second);
+				bool IsBackwards(RailPath p) => p.Start.IsEqualApprox(second) && p.End.IsEqualApprox(first);
+
+				var path = splitted.First(p => IsForward(p) || IsBackwards(p));
+				var points = path.Curve.GetBakedPoints();
+
+				if (IsForward(path))
+				{
+					result.AddRange(points);
+				}
+				else if (IsBackwards(path))
+				{
+					points.Reverse();
+					result.AddRange(points);
+				}
+			}
+
+			// return result.Distinct().ToList();
+			return result;
 		}
 
 		private static Dictionary<Edge, double> GetWeightsOfPaths(List<RailPath> splitted, Graph graph)
