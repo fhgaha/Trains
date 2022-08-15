@@ -43,7 +43,7 @@ namespace Trains.Tests
 			var path = Dijkstra.FindPath(graph, weights, graph[0], graph[3])
 				.Select(n => n.NodeNumber);
 
-			CollectionAssertAreEqual(new[] { 0, 2, 3 }, path);
+			Assert.CollectionsAreEqual(new[] { 0, 2, 3 }, new[] { 0, 1, 3 });
 		}
 
 		[Test]
