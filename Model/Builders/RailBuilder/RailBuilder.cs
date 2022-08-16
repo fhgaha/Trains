@@ -13,13 +13,13 @@ namespace Trains.Model.Builders
 
 	public class RailBuilder : Spatial
 	{
+		[Export] private PackedScene railPathScene;
 		private PackedScene railRemoverScene = GD.Load<PackedScene>("res://Scenes/Removers/RailRemover.tscn");
 		private List<Cell> cells;
 		private Events events;
 		private CurveCalculator calculator;
 		private StartSnapper bpStartSnapper;
 		private EndSnapper bpEndSnapper;
-		private PackedScene railPathScene;
 		private Camera camera;
 		private RailContainer railContainer;   //Rails
 		private RailRemover railRemover;
@@ -42,12 +42,11 @@ namespace Trains.Model.Builders
 		//4. a new blueprint will show up with start in the end of previous segment with the end following mouse pos.
 		//	 this time path will be curved.
 		//5. press lmb again to place blueprint road.
-		public void Init(List<Cell> cells, Camera camera, RailContainer railContainer, PackedScene railPathScene)
+		public void Init(List<Cell> cells, Camera camera, RailContainer railContainer)
 		{
 			this.cells = cells;
 			this.railContainer = railContainer;
 			this.camera = camera;
-			this.railPathScene = railPathScene;
 			bpStartSnapper = new StartSnapper();
 			bpEndSnapper = new EndSnapper();
 			calculator = GetNode<CurveCalculator>("Calculator");

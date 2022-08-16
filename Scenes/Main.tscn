@@ -96,6 +96,7 @@ shape = SubResource( 8 )
 
 [node name="RailBuilder" type="Spatial" parent="."]
 script = ExtResource( 5 )
+railPathScene = ExtResource( 12 )
 
 [node name="Calculator" type="Spatial" parent="RailBuilder"]
 script = ExtResource( 7 )
