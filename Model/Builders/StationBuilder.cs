@@ -15,7 +15,6 @@ namespace Trains.Model.Builders
 		private Color yellow = new Color("86e3db6b");
 		private Color red = new Color("86e36b6b");
 		private List<Cell> cells;
-		private RailContainer railContainer;
 		private Events events;
 		private Station blueprint;
 		private Camera camera;
@@ -27,10 +26,9 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
-		public void Init(List<Cell> cells, Camera camera, RailContainer railsContainer)
+		public void Init(List<Cell> cells, Camera camera)
 		{
 			this.cells = cells;
-			this.railContainer = railsContainer;
 			this.camera = camera;
 		}
 
@@ -83,7 +81,7 @@ namespace Trains.Model.Builders
 
 			//for some reason if add path right after instance the path all station paths rotates. 
 			//but if i add it in the end of this method station paths do not rotate.
-			railContainer.AddRail(path);
+			Global.RailContainer.AddRail(path);
 
 			_station.RailroadAlongside = path;
 		}

@@ -44,7 +44,7 @@ namespace Trains.Scripts
 			//init station builder
 			var cells = GetNode<Grid>("Grid").CellList;
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(cells, camera, railContainer);
+			stationBuilder.Init(cells, camera);
 
 			//init rail builder
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
