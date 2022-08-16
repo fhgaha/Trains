@@ -209,6 +209,7 @@ namespace Trains.Model.Builders
 				TranslateAndRedrawBp();
 
 			Global.ActualRailBuilder.UpdateActualRails();
+			Global.StationContainer.UpdateStationConnections();
 		}
 
 		private void InitPath()

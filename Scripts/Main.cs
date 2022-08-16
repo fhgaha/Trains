@@ -36,17 +36,25 @@ namespace Trains.Scripts
 			timer.Start(timeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 
+			var statioinContainer = GetNode<StationContainer>("Stations");
+			var railContainer = GetNode<RailContainer>("Rails");
+
+			Global.StationContainer = statioinContainer;
+			Global.RailContainer = railContainer;
+
 			//init station builder
 			var cells = GetNode<Grid>("Grid").CellList;
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
 
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(cells, camera, GetNode<StationContainer>("Stations"), GetNode<RailContainer>("Rails"));
+			stationBuilder.Init(cells, camera, statioinContainer, railContainer);
+
+			//station container
 
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
-			railBuilder.Init(cells, camera, GetNode<RailContainer>("Rails"), scene);
+			railBuilder.Init(cells, camera, railContainer, scene);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)

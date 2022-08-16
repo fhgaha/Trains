@@ -59,8 +59,10 @@ namespace Trains.Model.Common
 			}
 		}
 
-		public static List<Station> Stations { get; set; }
 		public static ActualRailBuilder ActualRailBuilder = new ActualRailBuilder();
+
+		public static StationContainer StationContainer;
+		public static RailContainer RailContainer;
 
 		private static void PrintPathWithCrossings(List<RailPath> paths)
 		{

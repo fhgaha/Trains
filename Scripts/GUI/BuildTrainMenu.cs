@@ -18,13 +18,13 @@ namespace Trains
 		private Events events;
 		private TextureRect minimapTexture;
 		private Dictionary<TextureButton, Station> btnStationDict;
-		private List<Station> stationsToConnect;
+		private List<Station> selectedStations;
 
 		public override void _Ready()
 		{
 			minimapTexture = GetNode<TextureRect>("MarginContainer/GridContainer/StationSelectionMinimap/TextureRect");
 			btnStationDict = new Dictionary<TextureButton, Station>();
-			stationsToConnect = new List<Station>();
+			selectedStations = new List<Station>();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
@@ -40,10 +40,10 @@ namespace Trains
 
 				//build select buttons
 				const float scaleCoeff = 5f;
-				var stations = GetTree().GetNodesInGroup("Stations").Cast<Station>().ToList();
 
-				foreach (var station in stations)
+				foreach (var station in Global.StationContainer.Stations)
 				{
+					//build station button
 					var btn = selectStationButtonScene.Instance<TextureButton>();
 					btn.RectPosition = station.Translation.ToVec2() * scaleCoeff;
 
@@ -69,7 +69,7 @@ namespace Trains
 			{
 				if (StationIsSelectable(btnStationDict[btn]))
 				{
-					stationsToConnect.Add(btnStationDict[btn]);
+					selectedStations.Add(btnStationDict[btn]);
 					btn.GetNode<Label>("Number").Text = btnNumber.ToString();
 					btnNumber++;
 				}
@@ -80,7 +80,7 @@ namespace Trains
 			}
 			else
 			{
-				stationsToConnect.Remove(btnStationDict[btn]);
+				selectedStations.Remove(btnStationDict[btn]);
 				btn.GetNode<Label>("Number").Text = "";
 				btnNumber--;
 			}
@@ -89,22 +89,23 @@ namespace Trains
 		private bool StationIsSelectable(Station station)
 		{
 			//statioin is selectable if it is only one on map or there are connected stations by road
-			if (stationsToConnect.Count == 0) return true;
-			if (stationsToConnect.Last().IsConnectedWith(station)) return true;
+			if (selectedStations.Count == 0) return true;
+			//station is never connected yet. implement connection.
+			if (selectedStations.Any(s => s.IsConnectedWith(station))) return true;
 			return false;
 		}
 
 		private void onAcceptButtonPressed()
 		{
-			if (stationsToConnect.Count > 0)
-				events.EmitSignal(nameof(Events.StationsAreSelected), stationsToConnect);
+			if (selectedStations.Count > 0)
+				events.EmitSignal(nameof(Events.StationsAreSelected), selectedStations);
 			
 			GD.Print("onAcceptButtonPressed");
 		}
 
 		private void onCancelButtonPressed()
 		{
-			stationsToConnect.Clear();
+			selectedStations.Clear();
 			GD.Print("onCancelButtonPressed");
 		}
 	}

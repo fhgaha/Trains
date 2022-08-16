@@ -65,6 +65,7 @@ namespace Trains.Model.Builders
 			station.Init(blueprint);
 			station.AddToGroup("Stations");
 			stations.AddChild(station);
+			Global.StationContainer.Add(station);
 			
 			_station = station;
 		}

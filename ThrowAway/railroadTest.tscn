@@ -54,7 +54,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 7 )
 curve = SubResource( 6 )
 
 [node name="red" type="PathFollow" parent="RailPath2"]
-transform = Transform( 0.985066, -0.0724727, 0.156173, 0.118861, 0.942502, -0.312347, -0.124557, 0.326246, 0.937041, -1.3428, -0.314402, -0.0567928 )
+transform = Transform( 0.985066, -0.0724728, 0.156173, 0.118861, 0.942502, -0.312347, -0.124557, 0.326246, 0.937041, -1.3428, -0.314402, -0.0567928 )
 offset = 4.11
 rotation_mode = 4
 cubic_interp = false
