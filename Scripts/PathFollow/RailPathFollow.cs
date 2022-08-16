@@ -30,14 +30,18 @@ namespace Trains
 					var firstPoint = r.GlobalTranslation + r.Curve.First();
 					if (firstPoint.IsEqualApprox(train.GlobalTranslation, 0.2f))
 					{
-						GD.Print("firstPoint.IsEqualApprox(train.GlobalTranslation, 0.2f)");
+						GetParent().RemoveChild(this);
+						r.AddChild(this);
+						UnitOffset = 0;
 						break;
 					}
 
 					var lastPoint = r.GlobalTranslation + r.Curve.Last();
 					if (lastPoint.IsEqualApprox(train.GlobalTranslation, 0.2f))
 					{
-						GD.Print("lastPoint.IsEqualApprox(train.GlobalTranslation, 0.2f)");
+						GetParent().RemoveChild(this);
+						r.AddChild(this);
+						UnitOffset = 1;
 						break;
 					}
 				}
