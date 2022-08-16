@@ -10,22 +10,21 @@ namespace Trains
 	{
 		public List<RailPath> Rails { get; private set; } = new List<RailPath>();
 
-		internal void AddRail(RailPath rail)
+		public void AddRail(RailPath rail)
 		{
 			Rails.Add(rail);
 			AddChild(rail);
 			rail.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
 
-		internal void Add(RailPath path)
+		public void Add(RailPath path)
 		{
 			Rails.Add(path);
 		}
 
-		internal void RemovePath(RailPath path)
+		public void Remove(RailPath path)
 		{
 			Rails.Remove(path);
 		}
-
 	}
 }
