@@ -12,10 +12,13 @@ namespace Trains
 	{
 		public int Id { get; set; }
 		public RailPath RailroadAlongside { get; set; }
+		public List<Station> ConnectedStatoins {get; set;}
 		private Cell cell;
 
 		public void Init(Station blueprint)
 		{
+			ConnectedStatoins = new List<Station>();
+
 			RemoveChild(GetNode("Base"));
 			GlobalTransform = blueprint.GlobalTransform;
 			GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = false;
@@ -32,10 +35,12 @@ namespace Trains
 
 		public bool IsConnectedWith(Station station)
 		{
-			var from = RailroadAlongside.Start;
-			var to = station.RailroadAlongside.Start;
-			var path = Dijkstra.FindPath(from, to, Global.ActualRails);
-			return path.Count > 0;
+			// var from = RailroadAlongside.Start;
+			// var to = station.RailroadAlongside.Start;
+			// var path = Dijkstra.FindPath(from, to, Global.ActualRails);
+			// return path.Count > 0;
+
+			return ConnectedStatoins.Contains(station);
 		}
 	}
 }

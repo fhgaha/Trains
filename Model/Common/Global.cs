@@ -44,6 +44,7 @@ namespace Trains.Model.Common
 		public const float DairyMinPrice = 100f;
 		public const float DairyMaxPrice = 300f;
 
+		//
 		public static List<RailPath> CosmeticRails { get; internal set; } = new List<RailPath>();
 
 		private static List<RailPath> actualRails;
@@ -66,5 +67,7 @@ namespace Trains.Model.Common
 				GD.Print("-->");
 			}
 		}
+
+		public static List<Station> Stations { get; set; }
 	}
 }

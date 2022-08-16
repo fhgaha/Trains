@@ -17,6 +17,9 @@ namespace Trains
 		[Export] public List<Vector3> Crossings { get; private set; }
 		public bool IsJoined { get; private set; }
 
+		private CSGPolygon polygon;
+		private Curve3D originalBpCurve;
+
 		public RailPath()
 		{
 			Crossings = new List<Vector3>();
@@ -38,10 +41,6 @@ namespace Trains
 				return (points[1] - points[0]).Normalized();
 			}
 		}
-
-		private CSGPolygon polygon;
-
-		private Curve3D originalBpCurve;
 
 		public override void _Ready()
 		{

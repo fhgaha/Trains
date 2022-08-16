@@ -7,9 +7,9 @@ namespace Trains.Model.Common.GraphRelated
 {
 	public static class Dijkstra
 	{
-		internal static List<Vector3> FindPath(Vector3 from, Vector3 to, List<RailPath> rails)
+		internal static List<Vector3> FindPath(Vector3 from, Vector3 to)
 		{
-			PrintCrossings(rails);
+			PrintCrossings(Global.ActualRails);
 
 			var splitted = Global.ActualRails;
 			if (splitted is null || splitted.Count == 0) return new List<Vector3>();

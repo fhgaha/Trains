@@ -209,6 +209,7 @@ namespace Trains.Model.Builders
 				TranslateAndRedrawBp();
 
 			actualRailBuilder.UpdateActualRails();
+			
 		}
 
 		private void InitPath()
