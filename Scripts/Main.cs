@@ -36,10 +36,8 @@ namespace Trains.Scripts
 			timer.Start(timeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 
-			var railContainer = GetNode<RailContainer>("Rails");
-
 			Global.StationContainer = GetNode<StationContainer>("Stations");
-			Global.RailContainer = railContainer;
+			Global.RailContainer = GetNode<RailContainer>("Rails");
 
 			//init station builder
 			var cells = GetNode<Grid>("Grid").CellList;
@@ -48,7 +46,7 @@ namespace Trains.Scripts
 
 			//init rail builder
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
-			railBuilder.Init(cells, camera, railContainer);
+			railBuilder.Init(cells, camera);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
