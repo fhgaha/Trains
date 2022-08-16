@@ -97,7 +97,6 @@ namespace Trains
 		{
 			//statioin is selectable if it is only one on map or there are connected stations by road
 			if (selectedStations.Count == 0) return true;
-			//station is never connected yet. implement connection.
 			if (selectedStations.Any(s => s.IsConnectedWith(station))) return true;
 			return false;
 		}

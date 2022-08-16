@@ -63,7 +63,7 @@ namespace Trains.Model.Common
 		//containers
 		public static StationContainer StationContainer;
 		public static RailContainer RailContainer;
-		public static RailContainer ActualRailContainer;
+		public static ActualRailBuilder ActualRailContainer;
 
 		private static void PrintPathWithCrossings(List<RailPath> paths)
 		{
