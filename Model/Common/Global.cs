@@ -55,9 +55,13 @@ namespace Trains.Model.Common
 				actualRails = value;
 
 				GD.Print("<--");
-				foreach (var item in value)
+				foreach (var path in value)
 				{
-					GD.Print(item);
+					GD.Print(path);
+					foreach (var cr in path.Crossings)
+					{
+						GD.Print("	" + cr);
+					}
 				}
 				GD.Print("-->");
 			}

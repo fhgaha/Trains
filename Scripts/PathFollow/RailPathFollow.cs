@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Linq;
+using Trains.Model.Common;
 
 namespace Trains
 {
@@ -14,6 +16,32 @@ namespace Trains
 			Offset += goForth
 				? speed * delta
 				: -speed * delta;
+
+			if (ReachedEnd() || ReachedStart())
+			{
+				var otherRails = GetTree().GetNodesInGroup("Rails")
+					.Cast<RailPath>()
+					.Where(r => r != GetParent<RailPath>());
+
+				foreach (var r in otherRails)
+				{
+					var train = GetNode<Spatial>("Train");
+
+					var firstPoint = r.GlobalTranslation + r.Curve.First();
+					if (firstPoint.IsEqualApprox(train.GlobalTranslation, 0.2f))
+					{
+						GD.Print("firstPoint.IsEqualApprox(train.GlobalTranslation, 0.2f)");
+						break;
+					}
+
+					var lastPoint = r.GlobalTranslation + r.Curve.Last();
+					if (lastPoint.IsEqualApprox(train.GlobalTranslation, 0.2f))
+					{
+						GD.Print("lastPoint.IsEqualApprox(train.GlobalTranslation, 0.2f)");
+						break;
+					}
+				}
+			}
 
 			ChangeDirectionIfNeeded();
 		}
