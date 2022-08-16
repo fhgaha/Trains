@@ -55,11 +55,18 @@ namespace Trains
 			}
 			else
 			{
-				Visible = false;
-
-				btnStationDict.Clear();
-				minimapTexture.RemoveAllChildren();
+				Reset();
 			}
+		}
+
+		private void Reset()
+		{
+			Visible = false;
+
+			btnNumber = 1;
+			btnStationDict.Clear();
+			selectedStations.Clear();
+			minimapTexture.RemoveAllChildren();
 		}
 
 		int btnNumber = 1;

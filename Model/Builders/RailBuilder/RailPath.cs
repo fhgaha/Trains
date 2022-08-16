@@ -58,7 +58,7 @@ namespace Trains
 			EnlistCrossing(Start);
 			EnlistCrossing(End);
 
-			Global.CosmeticRails.Add(this);
+			Global.RailContainer.Add(this);
 		}
 
 		public void SetOriginalBpCurve()

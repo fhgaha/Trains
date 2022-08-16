@@ -46,8 +46,6 @@ namespace Trains.Model.Common
 		public const float DairyMaxPrice = 300f;
 
 		//
-		public static List<RailPath> CosmeticRails { get; internal set; } = new List<RailPath>();
-
 		private static List<RailPath> actualRails;
 		public static List<RailPath> ActualRails
 		{
