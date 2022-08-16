@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Trains.Model.Builders;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Common
@@ -54,20 +55,25 @@ namespace Trains.Model.Common
 			set
 			{
 				actualRails = value;
-
-				GD.Print("<--");
-				foreach (var path in value)
-				{
-					GD.Print(path);
-					foreach (var cr in path.Crossings)
-					{
-						GD.Print("	" + cr);
-					}
-				}
-				GD.Print("-->");
+				PrintPathWithCrossings(value);
 			}
 		}
 
 		public static List<Station> Stations { get; set; }
+		public static ActualRailBuilder ActualRailBuilder = new ActualRailBuilder();
+
+		private static void PrintPathWithCrossings(List<RailPath> paths)
+		{
+			GD.Print("<--");
+			for (int i = 0; i < paths.Count; i++)
+			{
+				GD.Print($"{i + 1}. {paths[i]}");
+				foreach (var cr in paths[i].Crossings)
+				{
+					GD.Print("	" + cr);
+				}
+			}
+			GD.Print("-->");
+		}
 	}
 }

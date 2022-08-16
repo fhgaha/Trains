@@ -24,7 +24,7 @@ namespace Trains.Model.Builders
 		private RailContainer railContainer;   //Rails
 		private RailRemover railRemover;
 		private Stack<RailCurve> undoStack = new Stack<RailCurve>();
-		private ActualRailBuilder actualRailBuilder;
+		// private ActualRailBuilder actualRailBuilder;
 
 		//Vars
 		private RailPath blueprint;
@@ -51,7 +51,7 @@ namespace Trains.Model.Builders
 			bpStartSnapper = new StartSnapper();
 			bpEndSnapper = new EndSnapper();
 			calculator = GetNode<CurveCalculator>("Calculator");
-			actualRailBuilder = new ActualRailBuilder();
+			// actualRailBuilder = new ActualRailBuilder();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
@@ -208,8 +208,7 @@ namespace Trains.Model.Builders
 			else
 				TranslateAndRedrawBp();
 
-			actualRailBuilder.UpdateActualRails();
-			
+			Global.ActualRailBuilder.UpdateActualRails();
 		}
 
 		private void InitPath()
