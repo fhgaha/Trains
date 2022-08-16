@@ -184,7 +184,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 
-			bpStartSnapper.TrySnap(mousePos, railContainer.PathList, blueprint);
+			bpStartSnapper.TrySnap(mousePos, railContainer.Rails, blueprint);
 			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd)
 				prevDir = bpStartSnapper.SnappedDir;
 			if (bpStartSnapper.IsSnapped)
@@ -218,7 +218,7 @@ namespace Trains.Model.Builders
 
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
-			railContainer.AddRailPath(currentPath);
+			railContainer.AddRail(currentPath);
 			currentPath.InitOnPlacement(blueprint);
 			prevDir = currentPath.DirFromEnd;
 
@@ -288,7 +288,7 @@ namespace Trains.Model.Builders
 		private void TranslateAndRedrawBp()
 		{
 			blueprint.Translation = blueprint.End;
-			bpStartSnapper.TrySnap(blueprint.Translation, railContainer.PathList, blueprint);
+			bpStartSnapper.TrySnap(blueprint.Translation, railContainer.Rails, blueprint);
 			//redraw before next frame
 			DrawFilledBlueprint();
 		}
@@ -297,7 +297,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
-			bpStartSnapper.TrySnap(mousePos, railContainer.PathList, blueprint);
+			bpStartSnapper.TrySnap(mousePos, railContainer.Rails, blueprint);
 			blueprint.SetColor();
 		}
 
@@ -308,7 +308,7 @@ namespace Trains.Model.Builders
 			if (!mousePosIsInMapBorders) return;
 
 			var points = new List<Vector2>();
-			bpEndSnapper.TrySnap(mousePos, railContainer.PathList, blueprint);
+			bpEndSnapper.TrySnap(mousePos, railContainer.Rails, blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);

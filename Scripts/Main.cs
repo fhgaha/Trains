@@ -36,20 +36,16 @@ namespace Trains.Scripts
 			timer.Start(timeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 
-			var statioinContainer = GetNode<StationContainer>("Stations");
 			var railContainer = GetNode<RailContainer>("Rails");
 
-			Global.StationContainer = statioinContainer;
+			Global.StationContainer = GetNode<StationContainer>("Stations");
 			Global.RailContainer = railContainer;
 
 			//init station builder
 			var cells = GetNode<Grid>("Grid").CellList;
 			var scene = GD.Load<PackedScene>("res://Scenes/Stations/Station.tscn");
-
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(cells, camera, statioinContainer, railContainer);
-
-			//station container
+			stationBuilder.Init(cells, camera, railContainer);
 
 			//init rail builder
 			scene = GD.Load<PackedScene>("res://Scenes/Rails/RailPath.tscn");

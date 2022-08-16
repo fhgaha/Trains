@@ -10,8 +10,6 @@ namespace Trains
 	{
 		public List<Station> Stations { get; private set; } = new List<Station>();
 
-		//make this in station builder class?
-		//keep links to every container in global?
 		public void UpdateStationConnections()
 		{
 			Stations.ForEach(s => s.ConnectedStatoins.Clear());
@@ -33,6 +31,19 @@ namespace Trains
 					}
 				}
 			}
+		}
+
+		public void AddStation(Station station)
+		{
+			AddChild(station);
+			Stations.Add(station);
+		}
+
+		public void RemoveStation(Station station)
+		{
+			var childStation = GetChildren().Cast<Station>().First(s => s == station);
+			childStation.QueueFree();
+			Stations.Remove(station);
 		}
 
 		public void Add(Station station) => Stations.Add(station);

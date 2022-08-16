@@ -10,12 +10,11 @@ namespace Trains.Model.Builders
 {
 	public class StationBuilder : Spatial
 	{
-		private Color yellow = new Color("86e3db6b");
-		private Color red = new Color("86e36b6b");
 		[Export] private readonly PackedScene stationScene;
 		[Export] private readonly PackedScene railPathScene;
+		private Color yellow = new Color("86e3db6b");
+		private Color red = new Color("86e36b6b");
 		private List<Cell> cells;
-		private Spatial stations;
 		private RailContainer railContainer;
 		private Events events;
 		private Station blueprint;
@@ -28,10 +27,9 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
-		public void Init(List<Cell> cells, Camera camera, Spatial stations, RailContainer railsContainer)
+		public void Init(List<Cell> cells, Camera camera, RailContainer railsContainer)
 		{
 			this.cells = cells;
-			this.stations = stations;
 			this.railContainer = railsContainer;
 			this.camera = camera;
 		}
@@ -64,9 +62,8 @@ namespace Trains.Model.Builders
 			var station = stationScene.Instance<Station>();
 			station.Init(blueprint);
 			station.AddToGroup("Stations");
-			stations.AddChild(station);
-			Global.StationContainer.Add(station);
-			
+			Global.StationContainer.AddStation(station);
+
 			_station = station;
 		}
 
@@ -86,7 +83,7 @@ namespace Trains.Model.Builders
 
 			//for some reason if add path right after instance the path all station paths rotates. 
 			//but if i add it in the end of this method station paths do not rotate.
-			railContainer.AddRailPath(path);
+			railContainer.AddRail(path);
 
 			_station.RailroadAlongside = path;
 		}
