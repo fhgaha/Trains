@@ -45,17 +45,10 @@ namespace Trains.Model.Common
 		public const float DairyMinPrice = 100f;
 		public const float DairyMaxPrice = 300f;
 
-		//
-		private static List<RailPath> actualRails;
-		public static List<RailPath> ActualRails
-		{
-			get { return actualRails; }
-			set
-			{
-				actualRails = value;
-				PrintPathWithCrossings(value);
-			}
-		}
+		//shortcuts
+		public static List<RailPath> ActualRails => ActualRailContainer.Rails;
+		public static List<RailPath> Rails => RailContainer.Rails;
+		public static List<Station> Stations => StationContainer.Stations;
 
 		//builders
 		public static ActualRailBuilder ActualRailBuilder = new ActualRailBuilder();
@@ -63,7 +56,7 @@ namespace Trains.Model.Common
 		//containers
 		public static StationContainer StationContainer;
 		public static RailContainer RailContainer;
-		public static ActualRailBuilder ActualRailContainer;
+		public static ActualRailsContainer ActualRailContainer;
 
 		private static void PrintPathWithCrossings(List<RailPath> paths)
 		{

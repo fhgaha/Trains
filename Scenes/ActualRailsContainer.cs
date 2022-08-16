@@ -8,6 +8,17 @@ namespace Trains
 {
 	public class ActualRailsContainer : Spatial
 	{
+		private List<RailPath> rails;
+		public List<RailPath> Rails
+		{
+			get { return rails; }
+			set
+			{
+				rails = value;
+				PrintPathWithCrossings(value);
+			}
+		}
+
 		private Events events;
 
 		public override void _Ready()
@@ -29,6 +40,20 @@ namespace Trains
 
 			
 			
+		}
+
+		private static void PrintPathWithCrossings(List<RailPath> paths)
+		{
+			GD.Print("<--");
+			for (int i = 0; i < paths.Count; i++)
+			{
+				GD.Print($"{i + 1}. {paths[i]}");
+				foreach (var cr in paths[i].Crossings)
+				{
+					GD.Print("	" + cr);
+				}
+			}
+			GD.Print("-->");
 		}
 	}
 }
