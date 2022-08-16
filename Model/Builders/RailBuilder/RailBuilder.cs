@@ -224,6 +224,11 @@ namespace Trains.Model.Builders
 
 			currentPath.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 
+			if (bpStartSnapper.IsSnappedOnSegment)
+			{
+				bpStartSnapper.SnappedPath.EnlistCrossing(bpStartSnapper.SnappedPoint);
+			}
+
 			if (bpEndSnapper.IsSnappedOnSegment)
 			{
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
