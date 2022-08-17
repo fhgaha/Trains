@@ -29,7 +29,7 @@ namespace Trains
 			var dict = new Dictionary<RailPath, List<List<Vector3>>>();
 			var newRails = new List<RailPath>();
 
-			foreach (var c in GetChildren().Cast<Godot.Node>())
+			foreach (var c in GetChildren().Cast<Node>())
 			{
 				c.QueueFree();
 			}
@@ -42,10 +42,14 @@ namespace Trains
 					
 					// newRails.Add(railPath);
 
-					var newRail = new RailPath();
+					// var newRail = new RailPath();
+					// newRails.Add(newRail);
+					// newRail.Curve = railPath.Curve;
+					// newRail.Translation = railPath.Translation;
+
+					var newRail = BuildPath(railPath.Curve.GetBakedPoints().ToList());
+					newRail.Translation = railPath.Translation;
 					newRails.Add(newRail);
-					newRail.Curve = railPath.Curve;
-					newRail.GlobalTranslation = railPath.GlobalTranslation;
 
 					continue;
 				}
@@ -59,10 +63,11 @@ namespace Trains
 		private void SplitRailPath(RailPath railPath, List<Vector3> allCrossings, List<RailPath> newRails)
 		{
 			var points = new List<Vector3>();
+			var pathPoints = railPath.Curve.GetBakedPoints();
 
-			for (int i = 0; i < railPath.Curve.GetBakedPoints().Length; i++)
+			for (int i = 0; i < pathPoints.Length; i++)
 			{
-				var currentPoint = railPath.GlobalTranslation + railPath.Curve.GetBakedPoints()[i];
+				var currentPoint = railPath.GlobalTranslation + pathPoints[i];
 				points.Add(currentPoint);
 
 				if (RailPathHasCrossing(railPath, allCrossings, currentPoint))
@@ -74,7 +79,7 @@ namespace Trains
 					points.Add(lastPoint);
 				}
 
-				bool reachedLastPoint = i == railPath.Curve.GetBakedPoints().Length - 1;
+				bool reachedLastPoint = i == pathPoints.Length - 1;
 
 				if (reachedLastPoint)
 				{

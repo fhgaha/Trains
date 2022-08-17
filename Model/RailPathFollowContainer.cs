@@ -28,13 +28,37 @@ namespace Trains
 			var to = stations[1].RailroadAlongside.Start;
 
 			var rails = Global.ActualRailContainer.Rails;
-			var rail = rails.First(r => r.Curve.GetBakedPoints().Contains(from)
-									 && r.Curve.GetBakedPoints().Contains(to));
-			
-			var pf = new RailPathFollow();
-			rail.AddChild(pf);
-			pf.AddChild(trainScene.Instance());
 
+			GD.Print("<<=RailPathFollowContainer.onStationsAreSelected");
+			GD.PrintS("from: " + from, "to: " + to);
+			foreach (var r in rails)
+			{
+				GD.PrintS(r.Start, r.End);
+			}
+			GD.Print("=>>");
+
+			// var rail = rails.First(r => r.Curve.GetBakedPoints().Contains(from)
+			// 						 && r.Curve.GetBakedPoints().Contains(to));
+
+			// var rail = rails.First(r => r.Start.IsEqualApprox(from)
+			// 						 && r.End.IsEqualApprox(to));
+
+			var vecs = Dijkstra.FindPath(from, to);
+
+			var newPath = new RailPath();
+
+			foreach (var v in vecs)
+			{
+				newPath.Curve.AddPoint(v);
+			}
+
+			newPath.Translation = vecs[0];
+
+			AddChild(newPath);
+			var pf = new RailPathFollow();
+			newPath.AddChild(pf);
+			pf.AddChild(trainScene.Instance());
+			
 		}
 	}
 }

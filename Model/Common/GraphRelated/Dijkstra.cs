@@ -112,7 +112,7 @@ namespace Trains.Model.Common.GraphRelated
 
 		private static Dictionary<Vector3, int> BuildNodeNumbers(List<Vector3> allCrossings)
 		{
-			var nodeNumbers = new Dictionary<Vector3, int>(new MyVector3EqualityComparer());
+			var nodeNumbers = new Dictionary<Vector3, int>(new MyVector3XZEqualityComparer());
 			int index = 0;
 			foreach (var crossing in allCrossings)
 			{
@@ -178,7 +178,7 @@ namespace Trains.Model.Common.GraphRelated
 		}
 	}
 
-	class MyVector3EqualityComparer : IEqualityComparer<Vector3>
+	public class MyVector3XZEqualityComparer : IEqualityComparer<Vector3>
 	{
 		public bool Equals(Vector3 v1, Vector3 v2)
 		{
