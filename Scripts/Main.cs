@@ -39,7 +39,7 @@ namespace Trains.Scripts
 			Global.StationContainer = GetNode<StationContainer>("Stations");
 			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("VisibleRails");
 			Global.SplittedRailContainer = GetNode<SplittedRailsContainer>("SplittedRails");
-			Global.ActualRailsContainer = GetNode<RailPathFollowContainer>("ActualRails");
+			Global.ActualRailsContainer = GetNode<ActualRailsContainer>("ActualRails");
 
 			//init station builder
 			var cells = GetNode<Grid>("Grid").CellList;

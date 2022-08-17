@@ -8,7 +8,7 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains
 {
-	public class RailPathFollowContainer : Spatial
+	public class ActualRailsContainer : Spatial
 	{
 		[Export] private PackedScene trainScene;
 		private List<RailPathFollow> trains;
