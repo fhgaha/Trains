@@ -181,7 +181,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 
-			bpStartSnapper.TrySnap(mousePos, Global.RailContainer.Rails.ToList(), blueprint);
+			bpStartSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd)
 				prevDir = bpStartSnapper.SnappedDir;
 			if (bpStartSnapper.IsSnapped)
@@ -205,7 +205,7 @@ namespace Trains.Model.Builders
 			else
 				TranslateAndRedrawBp();
 
-			Global.ActualRailContainer.UpdateActualRails();
+			Global.SplittedRailContainer.UpdateActualRails();
 			Global.StationContainer.UpdateStationConnections();
 		}
 
@@ -215,7 +215,7 @@ namespace Trains.Model.Builders
 
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
-			Global.RailContainer.AddRail(currentPath);
+			Global.VisibleRailContainer.AddRail(currentPath);
 			currentPath.InitOnPlacement(blueprint);
 			prevDir = currentPath.DirFromEnd;
 
@@ -285,7 +285,7 @@ namespace Trains.Model.Builders
 		private void TranslateAndRedrawBp()
 		{
 			blueprint.Translation = blueprint.End;
-			bpStartSnapper.TrySnap(blueprint.Translation, Global.RailContainer.Rails.ToList(), blueprint);
+			bpStartSnapper.TrySnap(blueprint.Translation, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 			//redraw before next frame
 			DrawFilledBlueprint();
 		}
@@ -294,7 +294,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
-			bpStartSnapper.TrySnap(mousePos, Global.RailContainer.Rails.ToList(), blueprint);
+			bpStartSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 			blueprint.SetColor();
 		}
 
@@ -305,7 +305,7 @@ namespace Trains.Model.Builders
 			if (!mousePosIsInMapBorders) return;
 
 			var points = new List<Vector2>();
-			bpEndSnapper.TrySnap(mousePos, Global.RailContainer.Rails.ToList(), blueprint);
+			bpEndSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);

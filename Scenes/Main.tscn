@@ -10,14 +10,14 @@
 [ext_resource path="res://Model/Builders/RailBuilder/DebugHelper.cs" type="Script" id=8]
 [ext_resource path="res://Model/Builders/StationBuilder.cs" type="Script" id=9]
 [ext_resource path="res://Scenes/Heplers/curvePoint.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Model/Rails/RailContainer.cs" type="Script" id=11]
+[ext_resource path="res://Model/Rails/VisibleRailContainer.cs" type="Script" id=11]
 [ext_resource path="res://Scenes/Rails/RailPath.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Scenes/Stations/Station.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Model/RailPathFollowContainer.cs" type="Script" id=14]
 [ext_resource path="res://Scenes/Trains/Train.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
 [ext_resource path="res://Scenes/Heplers/gridmapHelper.tscn" type="PackedScene" id=17]
-[ext_resource path="res://Model/ActualRailsContainer.cs" type="Script" id=18]
+[ext_resource path="res://Model/SplittedRailsContainer.cs" type="Script" id=18]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -60,7 +60,6 @@ __meta__ = {
 
 [node name="gridmapHelper" parent="Landmarks" instance=ExtResource( 17 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.002, 0 )
-visible = false
 __meta__ = {
 "_edit_lock_": true
 }
@@ -83,6 +82,7 @@ skeleton = NodePath("../../..")
 
 [node name="Floor" type="MeshInstance" parent="Landmarks"]
 transform = Transform( 374.399, 0, 0, 0, 9.24026, 0, 0, 0, 250.17, 372.712, 0, 248.634 )
+visible = false
 mesh = SubResource( 17 )
 skeleton = NodePath("../..")
 
@@ -135,7 +135,7 @@ railPathScene = ExtResource( 12 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.74975e-08, 0 )
 script = ExtResource( 11 )
 
-[node name="ActualRails" type="Spatial" parent="."]
+[node name="SplittedRails" type="Spatial" parent="."]
 script = ExtResource( 18 )
 
 [node name="Trains" type="Spatial" parent="."]

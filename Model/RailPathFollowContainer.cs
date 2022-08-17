@@ -27,7 +27,7 @@ namespace Trains
 			var from = stations[0].RailroadAlongside.Start;
 			var to = stations[1].RailroadAlongside.Start;
 
-			var rails = Global.ActualRailContainer.Rails;
+			var rails = Global.SplittedRailContainer.Rails;
 
 			GD.Print("<<=RailPathFollowContainer.onStationsAreSelected");
 			GD.PrintS("from: " + from, "to: " + to);

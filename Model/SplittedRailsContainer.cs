@@ -5,7 +5,7 @@ using Trains.Model.Common;
 
 namespace Trains
 {
-	public class ActualRailsContainer : Spatial
+	public class SplittedRailsContainer : Spatial
 	{
 		private List<RailPath> rails;
 		public IEnumerable<RailPath> Rails
@@ -20,7 +20,7 @@ namespace Trains
 
 		public void UpdateActualRails()
 		{
-			Global.ActualRailContainer.Rails = SplitRails(Global.RailContainer.Rails.ToList());
+			Global.SplittedRailContainer.Rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
 		}
 
 		private List<RailPath> SplitRails(List<RailPath> rails)
@@ -39,14 +39,6 @@ namespace Trains
 				if (railPath.Crossings.Count <= 2)
 				{
 					//should i add new rail with samee tanslation and curve?
-					
-					// newRails.Add(railPath);
-
-					// var newRail = new RailPath();
-					// newRails.Add(newRail);
-					// newRail.Curve = railPath.Curve;
-					// newRail.Translation = railPath.Translation;
-
 					var newRail = BuildPath(railPath.Curve.GetBakedPoints().ToList());
 					newRail.Translation = railPath.Translation;
 					newRails.Add(newRail);
@@ -126,7 +118,7 @@ namespace Trains
 		{
 			var paths = _paths.ToList();
 
-			GD.Print("<--ActualRailsContainer. New Actual rails:");
+			GD.Print("<--GraphRailsContainer. New Actual rails:");
 			for (int i = 0; i < paths.Count; i++)
 			{
 				GD.Print($"{i + 1}. {paths[i]}");

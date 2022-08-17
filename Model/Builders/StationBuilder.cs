@@ -81,7 +81,7 @@ namespace Trains.Model.Builders
 
 			//for some reason if add path right after instance the path all station paths rotates. 
 			//but if i add it in the end of this method station paths do not rotate.
-			Global.RailContainer.AddRail(path);
+			Global.VisibleRailContainer.AddRail(path);
 
 			_station.RailroadAlongside = path;
 		}

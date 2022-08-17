@@ -6,7 +6,7 @@ using Trains.Model.Builders;
 
 namespace Trains
 {
-	public class RailContainer : Spatial
+	public class VisibleRailContainer : Spatial
 	{
 		private readonly List<RailPath> rails = new List<RailPath>();
 		public IEnumerable<RailPath> Rails { get { foreach (var r in rails) { yield return r; } } }

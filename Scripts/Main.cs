@@ -37,8 +37,8 @@ namespace Trains.Scripts
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 
 			Global.StationContainer = GetNode<StationContainer>("Stations");
-			Global.RailContainer = GetNode<RailContainer>("Rails");
-			Global.ActualRailContainer = GetNode<ActualRailsContainer>("ActualRails");
+			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("Rails");
+			Global.SplittedRailContainer = GetNode<SplittedRailsContainer>("SplittedRails");
 			Global.RailPathFollowContainer = GetNode<RailPathFollowContainer>("Trains");
 
 			//init station builder

@@ -46,9 +46,9 @@ namespace Trains.Model.Common
 		public const float DairyMaxPrice = 300f;
 
 		//containers
-		public static RailContainer RailContainer;
-		public static StationContainer StationContainer;
-		public static ActualRailsContainer ActualRailContainer;
+		public static VisibleRailContainer VisibleRailContainer;
+		public static SplittedRailsContainer SplittedRailContainer;
 		public static RailPathFollowContainer RailPathFollowContainer;
+		public static StationContainer StationContainer;
 	}
 }
