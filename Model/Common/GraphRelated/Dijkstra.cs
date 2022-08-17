@@ -30,7 +30,7 @@ namespace Trains.Model.Common.GraphRelated
 
 			if (turningNodes is null)
 			{
-				GD.Print("path was not found");
+				GD.Print("Dijkstra path was not found");
 				return new List<Vector3>();
 			}
 
@@ -38,7 +38,7 @@ namespace Trains.Model.Common.GraphRelated
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
 				.ToList();
 
-			GD.Print("---found path crossings: ---");
+			GD.Print("---Dijkstra found path crossings: ---");
 			foreach (var item in turningPoints)
 			{
 				GD.Print(new[] { item + ", " });

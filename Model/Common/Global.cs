@@ -52,19 +52,6 @@ namespace Trains.Model.Common
 		public static RailContainer RailContainer;
 		public static StationContainer StationContainer;
 		public static ActualRailsContainer ActualRailContainer;
-
-		private static void PrintPathWithCrossings(List<RailPath> paths)
-		{
-			GD.Print("<--");
-			for (int i = 0; i < paths.Count; i++)
-			{
-				GD.Print($"{i + 1}. {paths[i]}");
-				foreach (var cr in paths[i].Crossings)
-				{
-					GD.Print("	" + cr);
-				}
-			}
-			GD.Print("-->");
-		}
+		public static RailPathFollowContainer RailPathFollowContainer;
 	}
 }
