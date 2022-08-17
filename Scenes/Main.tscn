@@ -131,7 +131,7 @@ script = ExtResource( 9 )
 stationScene = ExtResource( 13 )
 railPathScene = ExtResource( 12 )
 
-[node name="Rails" type="Spatial" parent="."]
+[node name="VisibleRails" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.74975e-08, 0 )
 script = ExtResource( 11 )
 

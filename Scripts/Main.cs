@@ -37,7 +37,7 @@ namespace Trains.Scripts
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 
 			Global.StationContainer = GetNode<StationContainer>("Stations");
-			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("Rails");
+			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("VisibleRails");
 			Global.SplittedRailContainer = GetNode<SplittedRailsContainer>("SplittedRails");
 			Global.RailPathFollowContainer = GetNode<RailPathFollowContainer>("Trains");
 
