@@ -43,10 +43,10 @@ namespace Trains
 					// newRails.Add(railPath);
 
 					var newRail = new RailPath();
+					newRails.Add(newRail);
 					newRail.Curve = railPath.Curve;
 					newRail.GlobalTranslation = railPath.GlobalTranslation;
 
-					newRails.Add(newRail);
 					continue;
 				}
 

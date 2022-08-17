@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://Scenes/Rails/RailPath.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Scenes/Stations/Station.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Model/RailPathFollowContainer.cs" type="Script" id=14]
+[ext_resource path="res://Scenes/Trains/Train.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
 [ext_resource path="res://Scenes/Heplers/gridmapHelper.tscn" type="PackedScene" id=17]
 [ext_resource path="res://Model/ActualRailsContainer.cs" type="Script" id=18]
@@ -139,6 +140,7 @@ script = ExtResource( 18 )
 
 [node name="Trains" type="Spatial" parent="."]
 script = ExtResource( 14 )
+trainScene = ExtResource( 15 )
 
 [node name="Stations" type="Spatial" parent="."]
 script = ExtResource( 16 )
