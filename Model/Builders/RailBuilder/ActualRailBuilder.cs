@@ -23,7 +23,15 @@ namespace Trains.Model.Builders
 			{
 				if (railPath.Crossings.Count <= 2)
 				{
-					newRails.Add(railPath);
+					//should i add new rail with samee tanslation and curve?
+					
+					// newRails.Add(railPath);
+
+					var newRail = new RailPath();
+					newRail.Curve = railPath.Curve;
+					newRail.GlobalTranslation = railPath.GlobalTranslation;
+
+					newRails.Add(newRail);
 					continue;
 				}
 
@@ -88,6 +96,7 @@ namespace Trains.Model.Builders
 			newPath.Curve = RailCurve.GetFrom(newPath.Curve);
 			newPath.EnlistCrossing(newPath.Start);
 			newPath.EnlistCrossing(newPath.End);
+			//shouldnt i enlist mid crossing as well?
 			return newPath;
 		}
 	}

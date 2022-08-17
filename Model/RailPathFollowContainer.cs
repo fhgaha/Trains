@@ -15,19 +15,12 @@ namespace Trains
 		public override void _Ready()
 		{
 			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 			events.Connect(nameof(Events.StationsAreSelected), this, nameof(onStationsAreSelected));
-		}
-
-		private void onMainButtonModeChanged(MainButtonType mode)
-		{
-			//temp
-			//var train = trainScene.Instance<Train>();
 		}
 
 		private void onStationsAreSelected(List<Station> stations)
 		{
-			//create trian that route is between these stations
+			//create path follow with train whose route is between these stations
 
 			
 			

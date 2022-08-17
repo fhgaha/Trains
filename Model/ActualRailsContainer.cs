@@ -16,31 +16,22 @@ namespace Trains
 			set
 			{
 				rails = value.ToList();
+				Build(value);
 				PrintPathWithCrossings(value);
 			}
 		}
 
-		private Events events;
-
-		public override void _Ready()
+		private void Build(IEnumerable<RailPath> rails)
 		{
-			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.StationsAreSelected), this, nameof(onStationsAreSelected));
-		}
-
-		private void onStationsAreSelected(List<Station> stations)
-		{
-			for (int i = 0; i < stations.Count; i++)
+			foreach (var c in GetChildren().Cast<RailPath>())
 			{
-				// Dijkstra.FindPath(
-				// 	stations[i].RailroadAlongside.Start,
-				// 	stations[i + 1].RailroadAlongside.Start,
-				// 	Global.ActualRails)
-				
+				c.QueueFree();
 			}
 
-			
-			
+			foreach (var r in rails)
+			{
+				AddChild(r);
+			}
 		}
 
 		private static void PrintPathWithCrossings(IEnumerable<RailPath> _paths)
