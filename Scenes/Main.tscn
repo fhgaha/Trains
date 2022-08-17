@@ -138,7 +138,7 @@ script = ExtResource( 11 )
 [node name="SplittedRails" type="Spatial" parent="."]
 script = ExtResource( 18 )
 
-[node name="Trains" type="Spatial" parent="."]
+[node name="ActualRails" type="Spatial" parent="."]
 script = ExtResource( 14 )
 trainScene = ExtResource( 15 )
 
