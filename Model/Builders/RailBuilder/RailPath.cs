@@ -57,8 +57,6 @@ namespace Trains
 			Crossings = new List<Vector3>();
 			EnlistCrossing(Start);
 			EnlistCrossing(End);
-
-			Global.RailContainer.Add(this);
 		}
 
 		public void SetOriginalBpCurve()
