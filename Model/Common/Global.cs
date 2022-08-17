@@ -48,7 +48,7 @@ namespace Trains.Model.Common
 		//containers
 		public static VisibleRailContainer VisibleRailContainer;
 		public static SplittedRailsContainer SplittedRailContainer;
-		public static RailPathFollowContainer RailPathFollowContainer;
+		public static RailPathFollowContainer ActualRailsContainer;
 		public static StationContainer StationContainer;
 	}
 }
