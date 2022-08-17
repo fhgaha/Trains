@@ -9,7 +9,7 @@ namespace Trains.Model.Common.GraphRelated
 	{
 		internal static List<Vector3> FindPath(Vector3 from, Vector3 to)
 		{
-			var splitted = Global.ActualRails;
+			var splitted = Global.ActualRailContainer.Rails;
 
 			if (splitted is null || splitted.Count == 0) return new List<Vector3>();
 

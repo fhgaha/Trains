@@ -45,11 +45,6 @@ namespace Trains.Model.Common
 		public const float DairyMinPrice = 100f;
 		public const float DairyMaxPrice = 300f;
 
-		//shortcuts
-		public static List<RailPath> ActualRails => ActualRailContainer.Rails;
-		public static List<RailPath> Rails => RailContainer.Rails;
-		public static List<Station> Stations => StationContainer.Stations;
-
 		//builders
 		public static ActualRailBuilder ActualRailBuilder = new ActualRailBuilder();
 
