@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Trains.Model.Common;
 using Trains.Model.Common.GraphRelated;
 
@@ -9,12 +10,12 @@ namespace Trains
 	public class ActualRailsContainer : Spatial
 	{
 		private List<RailPath> rails;
-		public List<RailPath> Rails
+		public IEnumerable<RailPath> Rails
 		{
-			get { return rails; }
+			get { foreach (var r in rails) { yield return r; } }
 			set
 			{
-				rails = value;
+				rails = value.ToList();
 				PrintPathWithCrossings(value);
 			}
 		}
@@ -42,8 +43,10 @@ namespace Trains
 			
 		}
 
-		private static void PrintPathWithCrossings(List<RailPath> paths)
+		private static void PrintPathWithCrossings(IEnumerable<RailPath> _paths)
 		{
+			var paths = _paths.ToList();
+
 			GD.Print("<--ActualRailsContainer. New Actual rails:");
 			for (int i = 0; i < paths.Count; i++)
 			{

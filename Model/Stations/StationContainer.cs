@@ -8,17 +8,18 @@ namespace Trains
 {
 	public class StationContainer : Spatial
 	{
-		public List<Station> Stations { get; private set; } = new List<Station>();
+		private readonly List<Station> stations = new List<Station>();
+		public IEnumerable<Station> Stations { get { foreach (var s in stations) { yield return s; } } }
 
 		public void UpdateStationConnections()
 		{
-			Stations.ForEach(s => s.ConnectedStatoins.Clear());
+			stations.ForEach(s => s.ConnectedStatoins.Clear());
 
 			var visited = new List<Station>();
 
-			foreach (var s1 in Stations)
+			foreach (var s1 in stations)
 			{
-				foreach (var s2 in Stations.Where(s => s != s1))
+				foreach (var s2 in stations.Where(s => s != s1))
 				{
 					if (visited.Contains(s2)) continue;
 
@@ -38,18 +39,18 @@ namespace Trains
 		public void AddStation(Station station)
 		{
 			AddChild(station);
-			Stations.Add(station);
+			stations.Add(station);
 		}
 
 		public void RemoveStation(Station station)
 		{
 			var childStation = GetChildren().Cast<Station>().First(s => s == station);
 			childStation.QueueFree();
-			Stations.Remove(station);
+			stations.Remove(station);
 		}
 
-		public void Add(Station station) => Stations.Add(station);
+		public void Add(Station station) => stations.Add(station);
 
-		public void Remove(Station station) => Stations.Remove(station);
+		public void Remove(Station station) => stations.Remove(station);
 	}
 }

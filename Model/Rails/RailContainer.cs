@@ -8,23 +8,24 @@ namespace Trains
 {
 	public class RailContainer : Spatial
 	{
-		public List<RailPath> Rails { get; private set; } = new List<RailPath>();
+		private readonly List<RailPath> rails = new List<RailPath>();
+		public IEnumerable<RailPath> Rails { get { foreach (var r in rails) { yield return r; } } }
 
 		public void AddRail(RailPath rail)
 		{
-			Rails.Add(rail);
 			AddChild(rail);
+			rails.Add(rail);
 			rail.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
 		}
 
 		public void Add(RailPath path)
 		{
-			Rails.Add(path);
+			rails.Add(path);
 		}
 
 		public void Remove(RailPath path)
 		{
-			Rails.Remove(path);
+			rails.Remove(path);
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace Trains.Model.Builders
 	{
 		public void UpdateActualRails()
 		{
-			Global.ActualRailContainer.Rails = SplitRails(Global.RailContainer.Rails);
+			Global.ActualRailContainer.Rails = SplitRails(Global.RailContainer.Rails.ToList());
 		}
 
 		private static List<RailPath> SplitRails(List<RailPath> rails)

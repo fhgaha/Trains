@@ -181,7 +181,7 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
 
-			bpStartSnapper.TrySnap(mousePos, Global.RailContainer.Rails, blueprint);
+			bpStartSnapper.TrySnap(mousePos, Global.RailContainer.Rails.ToList(), blueprint);
 			if (bpStartSnapper.IsSnappedOnPathStartOrPathEnd)
 				prevDir = bpStartSnapper.SnappedDir;
 			if (bpStartSnapper.IsSnapped)
@@ -285,7 +285,7 @@ namespace Trains.Model.Builders
 		private void TranslateAndRedrawBp()
 		{
 			blueprint.Translation = blueprint.End;
-			bpStartSnapper.TrySnap(blueprint.Translation, Global.RailContainer.Rails, blueprint);
+			bpStartSnapper.TrySnap(blueprint.Translation, Global.RailContainer.Rails.ToList(), blueprint);
 			//redraw before next frame
 			DrawFilledBlueprint();
 		}
@@ -294,7 +294,7 @@ namespace Trains.Model.Builders
 		{
 			var mousePos = this.GetIntersection(camera);
 			blueprint.Translation = mousePos;
-			bpStartSnapper.TrySnap(mousePos, Global.RailContainer.Rails, blueprint);
+			bpStartSnapper.TrySnap(mousePos, Global.RailContainer.Rails.ToList(), blueprint);
 			blueprint.SetColor();
 		}
 
@@ -305,7 +305,7 @@ namespace Trains.Model.Builders
 			if (!mousePosIsInMapBorders) return;
 
 			var points = new List<Vector2>();
-			bpEndSnapper.TrySnap(mousePos, Global.RailContainer.Rails, blueprint);
+			bpEndSnapper.TrySnap(mousePos, Global.RailContainer.Rails.ToList(), blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
