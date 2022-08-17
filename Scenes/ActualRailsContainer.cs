@@ -44,7 +44,7 @@ namespace Trains
 
 		private static void PrintPathWithCrossings(List<RailPath> paths)
 		{
-			GD.Print("<--");
+			GD.Print("<--ActualRailsContainer. New Actual rails:");
 			for (int i = 0; i < paths.Count; i++)
 			{
 				GD.Print($"{i + 1}. {paths[i]}");

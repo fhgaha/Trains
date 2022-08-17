@@ -10,7 +10,6 @@ namespace Trains.Model.Common.GraphRelated
 		internal static List<Vector3> FindPath(Vector3 from, Vector3 to)
 		{
 			var splitted = Global.ActualRails;
-			PrintCrossings(splitted);
 
 			if (splitted is null || splitted.Count == 0) return new List<Vector3>();
 
@@ -47,14 +46,6 @@ namespace Trains.Model.Common.GraphRelated
 			GD.Print("------");
 
 			var result = BuildFinalPathAsPoints(splitted, turningPoints);
-
-			// GD.Print("<< Result:");
-			// foreach (var item in result)
-			// {
-			// 	GD.Print(item + ", ");
-			// }
-			// GD.PrintRaw(">>");
-
 			return result;
 		}
 
@@ -184,20 +175,6 @@ namespace Trains.Model.Common.GraphRelated
 			}
 			result.Reverse();
 			return result;
-		}
-
-		private static void PrintCrossings(List<RailPath> RailPaths)
-		{
-			if (RailPaths is null || RailPaths.Count == 0) return;
-
-			foreach (var p in RailPaths)
-			{
-				foreach (var vec in p.Crossings)
-				{
-					GD.PrintS(p, vec);
-				}
-			}
-			GD.Print();
 		}
 	}
 
