@@ -16,12 +16,12 @@ namespace Trains
 
 			var visited = new List<Station>();
 
-			foreach (var s1 in Stations.Where(s => !visited.Contains(s)))
+			foreach (var s1 in Stations)
 			{
-				visited.Add(s1);
-
-				foreach (var s2 in Stations.Where(s => !visited.Contains(s)))
+				foreach (var s2 in Stations.Where(s => s != s1))
 				{
+					if (visited.Contains(s1)) continue;
+
 					var path = Dijkstra.FindPath(s1.RailroadAlongside.Start, s2.RailroadAlongside.Start);
 
 					if (path.Count > 0)
@@ -30,6 +30,8 @@ namespace Trains
 						s2.ConnectedStatoins.Add(s1);
 					}
 				}
+
+				visited.Add(s1);
 			}
 		}
 
