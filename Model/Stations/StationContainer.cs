@@ -20,7 +20,7 @@ namespace Trains
 			{
 				foreach (var s2 in Stations.Where(s => s != s1))
 				{
-					if (visited.Contains(s1)) continue;
+					if (visited.Contains(s2)) continue;
 
 					var path = Dijkstra.FindPath(s1.RailroadAlongside.Start, s2.RailroadAlongside.Start);
 
