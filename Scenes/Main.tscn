@@ -60,6 +60,7 @@ __meta__ = {
 
 [node name="gridmapHelper" parent="Landmarks" instance=ExtResource( 17 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.002, 0 )
+visible = false
 __meta__ = {
 "_edit_lock_": true
 }
@@ -82,7 +83,6 @@ skeleton = NodePath("../../..")
 
 [node name="Floor" type="MeshInstance" parent="Landmarks"]
 transform = Transform( 374.399, 0, 0, 0, 9.24026, 0, 0, 0, 250.17, 372.712, 0, 248.634 )
-visible = false
 mesh = SubResource( 17 )
 skeleton = NodePath("../..")
 

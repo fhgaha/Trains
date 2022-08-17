@@ -20,4 +20,5 @@ trainScene = ExtResource( 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.31053, 2.76066, 2.98392 )
 
 [node name="RailPath" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -1.5 )
 curve = SubResource( 1 )

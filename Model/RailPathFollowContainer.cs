@@ -37,14 +37,7 @@ namespace Trains
 			}
 			GD.Print("=>>");
 
-			// var rail = rails.First(r => r.Curve.GetBakedPoints().Contains(from)
-			// 						 && r.Curve.GetBakedPoints().Contains(to));
-
-			// var rail = rails.First(r => r.Start.IsEqualApprox(from)
-			// 						 && r.End.IsEqualApprox(to));
-
 			var vecs = Dijkstra.FindPath(from, to);
-
 			var newPath = new RailPath();
 
 			foreach (var v in vecs)
@@ -52,13 +45,12 @@ namespace Trains
 				newPath.Curve.AddPoint(v);
 			}
 
-			newPath.Translation = vecs[0];
+			newPath.Translation = stations[0].RailroadAlongside.Start;
 
 			AddChild(newPath);
 			var pf = new RailPathFollow();
 			newPath.AddChild(pf);
 			pf.AddChild(trainScene.Instance());
-			
 		}
 	}
 }

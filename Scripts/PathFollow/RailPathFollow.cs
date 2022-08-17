@@ -11,6 +11,12 @@ namespace Trains
 
 		[Export] private bool goForth = true;
 
+		public override void _Ready()
+		{
+			Loop = false;
+			RotationMode = RotationModeEnum.Oriented;
+		}
+
 		public override void _PhysicsProcess(float delta)
 		{
 			Offset += goForth
