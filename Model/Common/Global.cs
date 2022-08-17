@@ -45,9 +45,6 @@ namespace Trains.Model.Common
 		public const float DairyMinPrice = 100f;
 		public const float DairyMaxPrice = 300f;
 
-		//builders
-		public static ActualRailBuilder ActualRailBuilder = new ActualRailBuilder();
-
 		//containers
 		public static RailContainer RailContainer;
 		public static StationContainer StationContainer;

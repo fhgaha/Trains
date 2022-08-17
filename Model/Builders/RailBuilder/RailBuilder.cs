@@ -205,7 +205,7 @@ namespace Trains.Model.Builders
 			else
 				TranslateAndRedrawBp();
 
-			Global.ActualRailBuilder.UpdateActualRails();
+			Global.ActualRailContainer.UpdateActualRails();
 			Global.StationContainer.UpdateStationConnections();
 		}
 
