@@ -6,6 +6,7 @@
 [sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 flags_unshaded = true
+params_cull_mode = 2
 params_use_alpha_scissor = true
 params_alpha_scissor_threshold = 0.93
 albedo_texture = ExtResource( 2 )
