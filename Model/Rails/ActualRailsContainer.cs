@@ -45,12 +45,16 @@ namespace Trains
 				newPath.Curve.AddPoint(v);
 			}
 
-			newPath.Translation = stations[0].RailroadAlongside.Start;
+			newPath.Translation = new Vector3(
+				stations[0].RailroadAlongside.Start.x,
+				stations[0].RailroadAlongside.Start.y,
+				stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
 
 			AddChild(newPath);
 			var pf = new RailPathFollow();
 			newPath.AddChild(pf);
 			pf.AddChild(trainScene.Instance());
+
 		}
 	}
 }
