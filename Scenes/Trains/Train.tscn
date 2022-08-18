@@ -1,21 +1,24 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[sub_resource type="SpatialMaterial" id=4]
-resource_local_to_scene = true
+[ext_resource path="res://Assets/loco/train.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://Assets/loco/train_tex.png" type="Texture" id=2]
 
-[sub_resource type="CubeMesh" id=5]
-resource_local_to_scene = true
-material = SubResource( 4 )
+[sub_resource type="SpatialMaterial" id=3]
+flags_transparent = true
+flags_unshaded = true
+params_use_alpha_scissor = true
+params_alpha_scissor_threshold = 0.93
+albedo_texture = ExtResource( 2 )
 
 [sub_resource type="ConcavePolygonShape" id=2]
 data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
 
 [node name="Train" type="Spatial"]
-transform = Transform( 0.930259, 0, 0, 0, 0.707913, 0, 0, 0, 0.455341, 0, 0, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 0.163968, 0, 0, 0, 0.237193, 0, 0, 0, 1.08449, 0, 0.237, 0 )
-mesh = SubResource( 5 )
+transform = Transform( -0.05, 0, -4.37114e-09, 0, 0.05, 0, 4.37114e-09, 0, -0.05, 0, 0.16, 0 )
+mesh = ExtResource( 1 )
+material/0 = SubResource( 3 )
 
 [node name="StaticBody" type="StaticBody" parent="MeshInstance"]
 
