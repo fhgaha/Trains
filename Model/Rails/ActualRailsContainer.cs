@@ -50,10 +50,10 @@ namespace Trains
 				stations[0].RailroadAlongside.Start.y,
 				stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
 
-			AddChild(newPath);
 			var pf = new RailPathFollow();
-			newPath.AddChild(pf);
 			pf.AddChild(trainScene.Instance());
+			newPath.AddChild(pf);
+			AddChild(newPath);
 
 		}
 	}
