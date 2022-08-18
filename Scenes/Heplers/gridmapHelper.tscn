@@ -1,13 +1,13 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/GridHelper.cs" type="Script" id=1]
-[ext_resource path="res://Assets/img/dark.png" type="Texture" id=2]
+[ext_resource path="res://Assets/img/darkMy.png" type="Texture" id=2]
 
-[sub_resource type="SpatialMaterial" id=1]
+[sub_resource type="SpatialMaterial" id=4]
 albedo_texture = ExtResource( 2 )
 
 [sub_resource type="QuadMesh" id=2]
-material = SubResource( 1 )
+material = SubResource( 4 )
 
 [sub_resource type="MeshLibrary" id=3]
 item/0/name = ""
