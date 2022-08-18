@@ -15,8 +15,8 @@ albedo_color = Color( 0.890196, 0.419608, 0.419608, 0.52549 )
 [sub_resource type="Curve3D" id=13]
 resource_local_to_scene = true
 _data = {
-"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, -0.0109722, 1.95679e-08, 0.449183, 0, 0, 0, 0, 0, 0, -0.0109722, -1.92047e-08, -0.438792 ),
-"tilts": PoolRealArray( 0, 0 )
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, -0.0109722, 1.95679e-08, 0.449183, 0, 0, 0, 0, 0, 0, 0.00232548, -1.16211e-09, 0.00293455, 0, 0, 0, 0, 0, 0, -0.0106994, 2.35849e-09, -0.416934 ),
+"tilts": PoolRealArray( 0, 0, 0 )
 }
 
 [node name="Station" type="Spatial"]
