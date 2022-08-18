@@ -45,9 +45,9 @@ namespace Trains
 		public override void _Ready()
 		{
 			originalBpCurve = Curve;
+			Curve = RailCurve.GetFrom(Curve);
 			if (HasNode("CSGPolygon"))
 				polygon = GetNode<CSGPolygon>("CSGPolygon");
-			Curve = RailCurve.GetFrom(Curve);
 		}
 
 		public void InitOnPlacement(RailPath blueprint)

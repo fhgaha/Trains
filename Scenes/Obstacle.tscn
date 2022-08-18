@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
 [sub_resource type="BoxShape" id=12]
+extents = Vector3( 1, 0.396521, 1 )
 
 [node name="Obstacle" type="StaticBody" groups=["Obstacles"]]
 

@@ -10,7 +10,6 @@ namespace Trains
 {
 	public class Station : Spatial
 	{
-		public int Id { get; set; }
 		public RailPath RailroadAlongside { get; set; }
 		public List<Station> ConnectedStatoins {get; set;}
 		private Cell cell;
@@ -33,14 +32,6 @@ namespace Trains
 		public void DepartTrain() { }
 		public void onTrainArrived() { }
 
-		public bool IsConnectedWith(Station station)
-		{
-			// var from = RailroadAlongside.Start;
-			// var to = station.RailroadAlongside.Start;
-			// var path = Dijkstra.FindPath(from, to, Global.ActualRails);
-			// return path.Count > 0;
-
-			return ConnectedStatoins.Contains(station);
-		}
+		public bool IsConnectedWith(Station station) => ConnectedStatoins.Contains(station);
 	}
 }
