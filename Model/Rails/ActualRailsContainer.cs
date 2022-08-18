@@ -11,6 +11,7 @@ namespace Trains
 	public class ActualRailsContainer : Spatial
 	{
 		[Export] private PackedScene trainScene;
+		[Export] private PackedScene helperScene;
 		private List<RailPathFollow> trains;
 		private Events events;
 
@@ -43,12 +44,17 @@ namespace Trains
 			foreach (var v in vecs)
 			{
 				newPath.Curve.AddPoint(v);
+
+				var helper = helperScene.Instance<MeshInstance>();
+				helper.MaterialOverride = new SpatialMaterial() { AlbedoColor = new Color("8730abf3") };
+				helper.Translation = v;
+				AddChild(helper);
 			}
 
-			newPath.Translation = new Vector3(
-				stations[0].RailroadAlongside.Start.x,
-				stations[0].RailroadAlongside.Start.y,
-				stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
+			// newPath.Translation = new Vector3(
+			// 	stations[0].RailroadAlongside.Start.x,
+			// 	stations[0].RailroadAlongside.Start.y,
+			// 	stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
 
 			var pf = new RailPathFollow();
 			pf.AddChild(trainScene.Instance());

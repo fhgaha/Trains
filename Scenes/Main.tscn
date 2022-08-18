@@ -141,6 +141,7 @@ script = ExtResource( 18 )
 [node name="ActualRails" type="Spatial" parent="."]
 script = ExtResource( 14 )
 trainScene = ExtResource( 15 )
+helperScene = ExtResource( 10 )
 
 [node name="Stations" type="Spatial" parent="."]
 script = ExtResource( 16 )

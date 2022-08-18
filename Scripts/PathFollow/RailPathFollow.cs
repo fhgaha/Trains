@@ -19,9 +19,9 @@ namespace Trains
 
 		public override void _PhysicsProcess(float delta)
 		{
-			Offset += goForth
-				? speed * delta
-				: -speed * delta;
+			// Offset += goForth
+			// 	? speed * delta
+			// 	: -speed * delta;
 
 			if (ReachedEnd() || ReachedStart())
 			{

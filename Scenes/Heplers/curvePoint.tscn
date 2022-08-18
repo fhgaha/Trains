@@ -11,4 +11,3 @@ size = Vector3( 0.05, 1, 0.05 )
 [node name="curvePoint" type="MeshInstance"]
 mesh = SubResource( 10 )
 skeleton = NodePath("../..")
-material/0 = null
