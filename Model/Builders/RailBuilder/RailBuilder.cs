@@ -205,8 +205,7 @@ namespace Trains.Model.Builders
 			else
 				TranslateAndRedrawBp();
 
-			Global.SplittedRailContainer.UpdateActualRails();
-			Global.StationContainer.UpdateStationConnections();
+			Global.UpdateRailData();
 		}
 
 		private void InitPath()

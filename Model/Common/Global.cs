@@ -50,5 +50,11 @@ namespace Trains.Model.Common
 		public static SplittedRailsContainer SplittedRailContainer;
 		public static ActualRailsContainer ActualRailsContainer;
 		public static StationContainer StationContainer;
+
+		public static void UpdateRailData()
+		{
+			SplittedRailContainer.UpdateActualRails();
+			StationContainer.UpdateStationConnections();
+		}
 	}
 }

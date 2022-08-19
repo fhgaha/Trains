@@ -24,7 +24,7 @@ namespace Trains
 		{
 			Rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
 
-			//next method is not required for game logic and used only for displaying rail points
+			//next method is not required for game logic and is used only for displaying rail points
 			Update();
 		}
 

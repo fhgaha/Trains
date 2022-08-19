@@ -33,11 +33,11 @@ namespace Trains
 
 			var vecs = Dijkstra.FindPath(from, to);
 
-			GD.Print("vecs");
-			foreach (var v in vecs)
-			{
-				GD.Print(stations[0].RailroadAlongside.Translation + v);
-			}
+			// GD.Print("vecs");
+			// foreach (var v in vecs)
+			// {
+			// 	GD.Print(stations[0].RailroadAlongside.Translation + v);
+			// }
 
 			var newPath = RailPath.BuildNoMeshRail(railScene, vecs, stations[0].RailroadAlongside.Translation);
 			AddChild(newPath);
