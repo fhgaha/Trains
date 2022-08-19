@@ -77,7 +77,7 @@ namespace Trains.Model.Common.GraphRelated
 				}
 				else if (IsBackwards(path))
 				{
-					//currentPoints.Reverse();
+					currentPoints = currentPoints.Reverse().ToArray();
 
 					foreach (var p in currentPoints)
 					{
