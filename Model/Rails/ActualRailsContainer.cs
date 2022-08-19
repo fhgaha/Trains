@@ -51,10 +51,10 @@ namespace Trains
 			var newPath = pathScene.Instance<RailPath>();
 			newPath.Curve = RailCurve.GetFrom(curve);
 
-			newPath.Translation = new Vector3(
-				stations[0].RailroadAlongside.Start.x,
-				stations[0].RailroadAlongside.Start.y,
-				stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
+			// newPath.Translation = new Vector3(
+			// 	stations[0].RailroadAlongside.Start.x,
+			// 	stations[0].RailroadAlongside.Start.y,
+			// 	stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
 
 			var pf = new RailPathFollow();
 			pf.AddChild(trainScene.Instance());

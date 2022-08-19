@@ -16,19 +16,43 @@ namespace Trains
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
 		[Export] public List<Vector3> Crossings { get; private set; }
 
-		private bool showHelpers;
+		private bool showBakedPoints;
 		[Export]
 		private bool ShowBakedPoints
 		{
-			get => showHelpers;
+			get => showBakedPoints;
 			set
 			{
-				showHelpers = value;
+				showBakedPoints = value;
 				if (helperScene is null) return;
 
 				if (value)
 				{
 					Curve.GetBakedPoints().ToList().ForEach(p => AddHelper(p));
+				}
+				else
+				{
+					GetChildren().Cast<Node>()
+						.Where(n => n.Name.Contains("curvePoint")).ToList()
+						.ForEach(n => n.QueueFree());
+				}
+			}
+		}
+
+		private bool showDefaultPoints;
+		[Export]
+		private bool ShowDefaultPoints
+		{
+			get => showDefaultPoints;
+			set
+			{
+				showDefaultPoints = value;
+				if (helperScene is null) return;
+
+				if (value)
+				{
+					for (int i = 0; i < Curve.GetPointCount(); i++)
+						AddHelper(Curve.GetPointPosition(i));
 				}
 				else
 				{

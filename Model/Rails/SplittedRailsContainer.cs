@@ -5,8 +5,10 @@ using Trains.Model.Common;
 
 namespace Trains
 {
+	//called from Rail Builder every time a rail is placed
 	public class SplittedRailsContainer : Spatial
 	{
+		[Export] private PackedScene railScene;
 		private List<RailPath> rails;
 		public IEnumerable<RailPath> Rails
 		{
@@ -20,7 +22,30 @@ namespace Trains
 
 		public void UpdateActualRails()
 		{
-			Global.SplittedRailContainer.Rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
+			Rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
+
+			//next method is not required for game logic and used only for displaying rail points
+			Update();
+		}
+
+		private void Update()
+		{
+			GetChildren().Cast<Node>().ToList().ForEach(n => n.QueueFree());
+
+			foreach (var r in rails)
+			{
+				var newPath = railScene.Instance<RailPath>();
+				var curve = new Curve3D();
+
+				foreach (var p in r.Curve.GetBakedPoints())
+				{
+					curve.AddPoint(p);
+				}
+
+				newPath.Curve = RailCurve.GetFrom(curve);
+				newPath.Translation = r.Translation;
+				AddChild(newPath);
+			}
 		}
 
 		private List<RailPath> SplitRails(List<RailPath> rails)

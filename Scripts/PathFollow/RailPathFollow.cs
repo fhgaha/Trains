@@ -19,10 +19,16 @@ namespace Trains
 
 		public override void _PhysicsProcess(float delta)
 		{
-			// Offset += goForth
-			// 	? speed * delta
-			// 	: -speed * delta;
+			Offset += goForth
+				? speed * delta
+				: -speed * delta;
 
+			// JumpToOtherRailIfNecessary();
+			ChangeDirectionIfNecessary();
+		}
+
+		private void JumpToOtherRailIfNecessary()
+		{
 			if (ReachedEnd() || ReachedStart())
 			{
 				var otherRails = GetTree().GetNodesInGroup("Rails")
@@ -52,11 +58,9 @@ namespace Trains
 					}
 				}
 			}
-
-			ChangeDirectionIfNeeded();
 		}
 
-		private void ChangeDirectionIfNeeded()
+		private void ChangeDirectionIfNecessary()
 		{
 			if (ReachedEnd())
 			{
