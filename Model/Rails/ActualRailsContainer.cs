@@ -39,8 +39,6 @@ namespace Trains
 			GD.Print("=>>");
 
 			var vecs = Dijkstra.FindPath(from, to);
-			// var newPath = new RailPath();
-
 			var curve = new Curve3D();
 
 			foreach (var v in vecs)
@@ -50,11 +48,7 @@ namespace Trains
 
 			var newPath = pathScene.Instance<RailPath>();
 			newPath.Curve = RailCurve.GetFrom(curve);
-
-			// newPath.Translation = new Vector3(
-			// 	stations[0].RailroadAlongside.Start.x,
-			// 	stations[0].RailroadAlongside.Start.y,
-			// 	stations[0].RailroadAlongside.Start.z + stations[0].RailroadAlongside.GetPolygonWidth());//newPath.GetPolygonWidth());
+			newPath.Translation = stations[0].RailroadAlongside.Translation;
 
 			var pf = new RailPathFollow();
 			pf.AddChild(trainScene.Instance());
