@@ -142,7 +142,7 @@ railScene = ExtResource( 19 )
 
 [node name="ActualRails" type="Spatial" parent="."]
 script = ExtResource( 14 )
-pathScene = ExtResource( 19 )
+railScene = ExtResource( 19 )
 trainScene = ExtResource( 15 )
 
 [node name="Stations" type="Spatial" parent="."]

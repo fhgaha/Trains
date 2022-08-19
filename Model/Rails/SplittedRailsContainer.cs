@@ -28,26 +28,6 @@ namespace Trains
 			Update();
 		}
 
-		private void Update()
-		{
-			GetChildren().Cast<Node>().ToList().ForEach(n => n.QueueFree());
-
-			foreach (var r in rails)
-			{
-				var newPath = railScene.Instance<RailPath>();
-				var curve = new Curve3D();
-
-				foreach (var p in r.Curve.GetBakedPoints())
-				{
-					curve.AddPoint(p);
-				}
-
-				newPath.Curve = RailCurve.GetFrom(curve);
-				newPath.Translation = r.Translation;
-				AddChild(newPath);
-			}
-		}
-
 		private List<RailPath> SplitRails(List<RailPath> rails)
 		{
 			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
@@ -153,6 +133,17 @@ namespace Trains
 				}
 			}
 			GD.Print("-->");
+		}
+
+		private void Update()
+		{
+			GetChildren().Cast<Node>().ToList().ForEach(n => n.QueueFree());
+
+			foreach (var r in rails)
+			{
+				var newPath = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), r.Translation);
+				AddChild(newPath);
+			}
 		}
 	}
 }

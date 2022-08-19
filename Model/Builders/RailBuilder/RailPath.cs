@@ -133,8 +133,7 @@ namespace Trains
 		{
 			return GetSegments()
 				.Where(s => s.First != Start && s.First != End
-						 && s.Second != Start && s.Second != End)
-				.ToList();
+						 && s.Second != Start && s.Second != End).ToList();
 		}
 
 		public float GetPolygonWidth()
@@ -175,6 +174,21 @@ namespace Trains
 			helper.MaterialOverride = new SpatialMaterial() { AlbedoColor = new Color("8730abf3") };
 			helper.Translation = position;
 			AddChild(helper);
+		}
+
+		public static RailPath BuildNoMeshRail(PackedScene scene, IEnumerable<Vector3> points, Vector3 translation)
+		{
+			var newPath = scene.Instance<RailPath>();
+			var curve = new Curve3D();
+
+			foreach (var v in points)
+			{
+				curve.AddPoint(v);
+			}
+
+			newPath.Curve = RailCurve.GetFrom(curve);
+			newPath.Translation = translation;
+			return newPath;
 		}
 	}
 }
