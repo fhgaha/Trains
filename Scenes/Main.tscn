@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Model/Grids/Grid.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Camera/MainCameraController.tscn" type="PackedScene" id=2]
@@ -18,6 +18,7 @@
 [ext_resource path="res://Model/Stations/StationContainer.cs" type="Script" id=16]
 [ext_resource path="res://Scenes/Heplers/gridmapHelper.tscn" type="PackedScene" id=17]
 [ext_resource path="res://Model/Rails/SplittedRailsContainer.cs" type="Script" id=18]
+[ext_resource path="res://Scenes/Rails/RailPathNoMesh.tscn" type="PackedScene" id=19]
 
 [sub_resource type="CubeMesh" id=9]
 
@@ -140,6 +141,7 @@ script = ExtResource( 18 )
 
 [node name="ActualRails" type="Spatial" parent="."]
 script = ExtResource( 14 )
+pathScene = ExtResource( 19 )
 trainScene = ExtResource( 15 )
 helperScene = ExtResource( 10 )
 

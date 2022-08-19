@@ -10,6 +10,7 @@ namespace Trains
 {
 	public class ActualRailsContainer : Spatial
 	{
+		[Export] private PackedScene pathScene;
 		[Export] private PackedScene trainScene;
 		[Export] private PackedScene helperScene;
 		private List<RailPathFollow> trains;
@@ -39,13 +40,18 @@ namespace Trains
 			GD.Print("=>>");
 
 			var vecs = Dijkstra.FindPath(from, to);
-			var newPath = new RailPath();
+			// var newPath = new RailPath();
+
+			var curve = new Curve3D();
 
 			foreach (var v in vecs)
 			{
-				newPath.Curve.AddPoint(v);
+				curve.AddPoint(v);
 				AddHelper(stations[0].RailroadAlongside.Start +v);
 			}
+
+			var newPath = pathScene.Instance<RailPath>();
+			newPath.Curve = RailCurve.GetFrom(curve);
 
 			newPath.Translation = new Vector3(
 				stations[0].RailroadAlongside.Start.x,
@@ -55,8 +61,8 @@ namespace Trains
 			var pf = new RailPathFollow();
 			pf.AddChild(trainScene.Instance());
 			newPath.AddChild(pf);
+			newPath.Owner = this;
 			AddChild(newPath);
-
 		}
 
 		private void AddHelper(Vector3 position)
