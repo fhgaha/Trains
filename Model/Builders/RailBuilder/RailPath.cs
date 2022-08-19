@@ -15,11 +15,11 @@ namespace Trains
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
 		[Export] public List<Vector3> Crossings { get; private set; }
-		[Export] private bool ShowHelpers 
-		{
-			get => ShowHelpers; 
-			set => ShowHelpers = value;
-		}
+		// [Export] private bool ShowHelpers 
+		// {
+		// 	get => ShowHelpers; 
+		// 	set => ShowHelpers = value;
+		// }
 		public bool IsJoined { get; private set; }
 
 		private CSGPolygon polygon;
