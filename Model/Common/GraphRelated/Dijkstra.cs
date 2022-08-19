@@ -64,9 +64,7 @@ namespace Trains.Model.Common.GraphRelated
 
 				var path = splitted.First(p => IsForward(p) || IsBackwards(p));
 				var currentPoints = path.Curve.GetBakedPoints();
-
-				 var origin = result.Count == 0 ? first : second;
-				// var origin = Vector3.Zero;
+				var origin = result.Count == 0 ? first : second;
 
 				if (IsForward(path))
 				{
@@ -90,7 +88,6 @@ namespace Trains.Model.Common.GraphRelated
 			{
 				result[i] -= turningPoints[0];
 			}
-
 
 			return result;
 		}

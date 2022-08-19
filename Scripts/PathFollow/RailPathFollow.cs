@@ -8,13 +8,14 @@ namespace Trains
 	public class RailPathFollow : PathFollow
 	{
 		[Export] private float speed = 2;
-
 		[Export] private bool goForth = true;
+		private Spatial train;
 
 		public override void _Ready()
 		{
 			Loop = false;
 			RotationMode = RotationModeEnum.Oriented;
+			train = GetNode<Spatial>("Train");
 		}
 
 		public override void _PhysicsProcess(float delta)
@@ -65,10 +66,12 @@ namespace Trains
 			if (ReachedEnd())
 			{
 				goForth = false;
+				train.Rotate(Vector3.Up, Mathf.Pi);
 			}
 			else if (ReachedStart())
 			{
 				goForth = true;
+				train.Rotate(Vector3.Up, Mathf.Pi);
 			}
 		}
 
