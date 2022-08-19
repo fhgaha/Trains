@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Model/Builders/RailBuilder/RailPath.cs" type="Script" id=1]
+[ext_resource path="res://Scenes/Heplers/curvePoint.tscn" type="PackedScene" id=2]
 
 [sub_resource type="Curve3D" id=1]
 resource_local_to_scene = true
@@ -14,3 +15,4 @@ curve = SubResource( 1 )
 script = ExtResource( 1 )
 BpColor = Color( 1, 0.917647, 0.027451, 1 )
 NotAllowedColor = Color( 1, 0.054902, 0.054902, 1 )
+helperScene = ExtResource( 2 )

@@ -12,7 +12,6 @@ namespace Trains
 	{
 		[Export] private PackedScene pathScene;
 		[Export] private PackedScene trainScene;
-		[Export] private PackedScene helperScene;
 		private List<RailPathFollow> trains;
 		private Events events;
 
@@ -47,7 +46,6 @@ namespace Trains
 			foreach (var v in vecs)
 			{
 				curve.AddPoint(v);
-				AddHelper(stations[0].RailroadAlongside.Start +v);
 			}
 
 			var newPath = pathScene.Instance<RailPath>();
@@ -61,16 +59,7 @@ namespace Trains
 			var pf = new RailPathFollow();
 			pf.AddChild(trainScene.Instance());
 			newPath.AddChild(pf);
-			newPath.Owner = this;
 			AddChild(newPath);
-		}
-
-		private void AddHelper(Vector3 position)
-		{
-			var helper = helperScene.Instance<MeshInstance>();
-			helper.MaterialOverride = new SpatialMaterial() { AlbedoColor = new Color("8730abf3") };
-			helper.Translation = position;
-			AddChild(helper);
 		}
 	}
 }

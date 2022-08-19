@@ -15,11 +15,32 @@ namespace Trains
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
 		[Export] public List<Vector3> Crossings { get; private set; }
-		// [Export] private bool ShowHelpers 
-		// {
-		// 	get => ShowHelpers; 
-		// 	set => ShowHelpers = value;
-		// }
+
+		private bool showHelpers;
+		[Export]
+		private bool ShowBakedPoints
+		{
+			get => showHelpers;
+			set
+			{
+				showHelpers = value;
+				if (helperScene is null) return;
+
+				if (value)
+				{
+					Curve.GetBakedPoints().ToList().ForEach(p => AddHelper(p));
+				}
+				else
+				{
+					GetChildren().Cast<Node>()
+						.Where(n => n.Name.Contains("curvePoint")).ToList()
+						.ForEach(n => n.QueueFree());
+				}
+			}
+		}
+
+		[Export] private PackedScene helperScene;
+
 		public bool IsJoined { get; private set; }
 
 		private CSGPolygon polygon;
@@ -116,16 +137,20 @@ namespace Trains
 			{
 				Crossings.Add(point);
 			}
-			
-			// GD.Print("!!!!!!!!!!!!!");
-			// GD.Print(System.Environment.StackTrace);
-			// GD.Print("!!!!!!!!!!!!!");
 		}
 
 		public void UpdateCrossing(Vector3 oldValue, Vector3 newValue)
 		{
 			Crossings.Remove(oldValue);
 			EnlistCrossing(newValue);
+		}
+
+		private void AddHelper(Vector3 position)
+		{
+			var helper = helperScene.Instance<MeshInstance>();
+			helper.MaterialOverride = new SpatialMaterial() { AlbedoColor = new Color("8730abf3") };
+			helper.Translation = position;
+			AddChild(helper);
 		}
 	}
 }
