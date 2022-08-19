@@ -51,6 +51,7 @@ namespace Trains.Model.Common.GraphRelated
 
 		private static List<Vector3> BuildFinalPathAsPoints(List<RailPath> splitted, List<Vector3> turningPoints)
 		{
+			//this has problem
 			var result = new List<Vector3>();
 
 			for (int i = 0; i < turningPoints.Count - 1; i++)
@@ -58,24 +59,39 @@ namespace Trains.Model.Common.GraphRelated
 				var first = turningPoints[i];
 				var second = turningPoints[i + 1];
 
-				bool IsForward(RailPath p) => p.Start.IsEqualApprox(first) && p.End.IsEqualApprox(second);
-				bool IsBackwards(RailPath p) => p.Start.IsEqualApprox(second) && p.End.IsEqualApprox(first);
+				bool IsForward(RailPath pth) => pth.Start.IsEqualApprox(first) && pth.End.IsEqualApprox(second);
+				bool IsBackwards(RailPath pth) => pth.Start.IsEqualApprox(second) && pth.End.IsEqualApprox(first);
 
 				var path = splitted.First(p => IsForward(p) || IsBackwards(p));
-				var points = path.Curve.GetBakedPoints();
+				var currentPoints = path.Curve.GetBakedPoints();
+
+				 var origin = result.Count == 0 ? first : second;
+				// var origin = Vector3.Zero;
 
 				if (IsForward(path))
 				{
-					result.AddRange(points);
+					foreach (var p in currentPoints)
+					{
+						result.Add(origin + p);
+					}
 				}
 				else if (IsBackwards(path))
 				{
-					points.Reverse();
-					result.AddRange(points);
+					//currentPoints.Reverse();
+
+					foreach (var p in currentPoints)
+					{
+						result.Add(origin + p);
+					}
 				}
 			}
 
-			// return result.Distinct().ToList();
+			for (int i = 0; i < result.Count; i++)
+			{
+				result[i] -= turningPoints[0];
+			}
+
+
 			return result;
 		}
 

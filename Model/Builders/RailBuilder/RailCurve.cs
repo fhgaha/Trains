@@ -12,7 +12,7 @@ namespace Trains
 
 		public RailCurve()
 		{
-			BakeInterval = 1f;
+			BakeInterval = 0.2f;
 		}
 
 		public static RailCurve GetFrom(Path path)

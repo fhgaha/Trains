@@ -32,6 +32,13 @@ namespace Trains
 			PrintSplitedRails(from, to, rails);
 
 			var vecs = Dijkstra.FindPath(from, to);
+
+			GD.Print("vecs");
+			foreach (var v in vecs)
+			{
+				GD.Print(stations[0].RailroadAlongside.Translation + v);
+			}
+
 			var newPath = RailPath.BuildNoMeshRail(railScene, vecs, stations[0].RailroadAlongside.Translation);
 			AddChild(newPath);
 
@@ -42,7 +49,7 @@ namespace Trains
 
 		private static void PrintSplitedRails(Vector3 from, Vector3 to, IEnumerable<RailPath> rails)
 		{
-			GD.Print("<<=RailPathFollowContainer.onStationsAreSelected");
+			GD.Print("<<=ActualRailsContainer.BuildRailConnecting");
 			GD.PrintS("from: " + from, "to: " + to);
 			foreach (var r in rails)
 			{
