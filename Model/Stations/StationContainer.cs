@@ -23,7 +23,8 @@ namespace Trains
 				{
 					if (visited.Contains(s2)) continue;
 
-					var path = Dijkstra.FindPath(s1.RailroadAlongside.Start, s2.RailroadAlongside.Start);
+					// var path = Dijkstra.FindPath(s1.RailroadAlongside.Start, s2.RailroadAlongside.Start);
+					var path = Dijkstra.FindPath(s1.Dock, s2.Dock);
 
 					if (path.Count > 0)
 					{

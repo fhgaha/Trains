@@ -31,8 +31,6 @@ namespace Trains
 		private List<RailPath> SplitRails(List<RailPath> rails)
 		{
 			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
-			Global.StationContainer.Stations.ToList().ForEach(s => allCrossings.Add(s.Dock));
-			var dict = new Dictionary<RailPath, List<List<Vector3>>>();
 			var newRails = new List<RailPath>();
 
 			foreach (var c in GetChildren().Cast<Node>())
@@ -91,8 +89,8 @@ namespace Trains
 		private static bool RailPathHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
 		{
 			return allCrossings.Any(c => currentPoint.IsEqualApprox(c))
-								&& !currentPoint.IsEqualApprox(railPath.Start)
-								&& !currentPoint.IsEqualApprox(railPath.End);
+				&& !currentPoint.IsEqualApprox(railPath.Start)
+				&& !currentPoint.IsEqualApprox(railPath.End);
 		}
 
 		private void MakeNewPathAndUpdateNewRails(List<RailPath> newRails, List<Vector3> points)

@@ -21,6 +21,7 @@ namespace Trains
 				//set dock
 				var railPoints = RailroadAlongside.Curve.GetBakedPoints();
 				Dock = RailroadAlongside.Translation + railPoints[railPoints.Length / 2];
+				RailroadAlongside.EnlistCrossing(Dock);
 			}
 		}
 
