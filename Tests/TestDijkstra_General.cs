@@ -14,8 +14,7 @@ namespace Trains.Tests
 	[Post(nameof(RunAfterTestMethod))]
 	[End(nameof(RunAfterTestClass))]
 
-	//[Title("TestDijkstra")]
-	public class TestDijkstra : WAT.Test
+	public class TestDijkstra_General : WAT.Test
 	{
 		//Developers may target a method with the [Start] attribute to execute code before any test method is run
 		public void RunBeforeTestClass()

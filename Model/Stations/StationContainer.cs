@@ -30,6 +30,10 @@ namespace Trains
 						s1.ConnectedStatoins.Add(s2);
 						s2.ConnectedStatoins.Add(s1);
 					}
+					else
+					{
+						GD.PrintS("Station connection failed: ", s1, "could not find path to", s2);
+					}
 				}
 
 				visited.Add(s1);
