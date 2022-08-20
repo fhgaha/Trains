@@ -10,10 +10,27 @@ namespace Trains
 {
 	public class Station : Spatial
 	{
+		[Export]
+		public RailPath RailroadAlongside
+		{
+			get => railroadAlongside;
+			set //set in StationBuilder.PlaceRailPath()
+			{
+				railroadAlongside = value;
+
+				//set dock
+				var railPoints = RailroadAlongside.Curve.GetBakedPoints();
+				Dock = RailroadAlongside.Translation + railPoints[railPoints.Length / 2];
+			}
+		}
+
 		[Export] public Vector3 Dock { get; set; }
-		[Export] public RailPath RailroadAlongside { get; set; }
+
 		[Export] public List<Station> ConnectedStatoins { get; set; }
+
+		private RailPath railroadAlongside;
 		private Cell cell;
+
 
 		public void Init(Station blueprint)
 		{
@@ -27,8 +44,8 @@ namespace Trains
 			RailroadAlongside = railPath;
 			RemoveChild(railPath);
 
-			var railPoints = RailroadAlongside.Curve.GetBakedPoints();
-			Dock = RailroadAlongside.Start + railPoints[railPoints.Length / 2];
+
+
 		}
 
 		public void LoadTrain() { }
