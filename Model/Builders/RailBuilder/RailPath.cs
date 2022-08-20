@@ -190,7 +190,9 @@ namespace Trains
 				curve.AddPoint(v);
 			}
 
-			newPath.Curve = RailCurve.GetFrom(curve);
+			var railCurve = RailCurve.GetFrom(curve);
+			railCurve.Origin = translation;
+			newPath.Curve = railCurve;
 			newPath.Translation = translation;
 			return newPath;
 		}

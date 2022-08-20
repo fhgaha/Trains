@@ -126,7 +126,7 @@ namespace Trains.Model.Builders
 			blueprint = stationScene.Instance<Station>();
 			blueprint.GetNode<CollisionShape>("Obstacle/CollisionShape").Disabled = true;
 			var bpPath = blueprint.GetNode<RailPath>("RailPath");
-			bpPath.Curve = RailCurve.GetFrom(bpPath.Curve);
+			bpPath.Curve = RailCurve.GetFrom(bpPath);
 			AddChild(blueprint);
 			blueprint.Name = "blueprint";
 		}
