@@ -15,7 +15,6 @@ namespace Trains
 		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
 		//Do not use setter! It is only for editor.
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
-		[Export] public Vector3 Dock { get; set; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
 		[Export] public List<Vector3> Crossings { get; private set; } = new List<Vector3>();
 
@@ -95,7 +94,6 @@ namespace Trains
 		{
 			originalBpCurve = Curve;
 			Curve = RailCurve.GetFrom(Curve);
-			Dock = Curve.GetBakedPoints()[Curve.GetBakedPoints().Length / 2];
 
 			if (HasNode("CSGPolygon"))
 				polygon = GetNode<CSGPolygon>("CSGPolygon");

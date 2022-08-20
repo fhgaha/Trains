@@ -31,6 +31,7 @@ namespace Trains
 		private List<RailPath> SplitRails(List<RailPath> rails)
 		{
 			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
+			Global.StationContainer.Stations.ToList().ForEach(s => allCrossings.Add(s.Dock));
 			var dict = new Dictionary<RailPath, List<List<Vector3>>>();
 			var newRails = new List<RailPath>();
 

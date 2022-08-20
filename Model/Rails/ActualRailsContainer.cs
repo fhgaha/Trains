@@ -25,8 +25,8 @@ namespace Trains
 
 		private void BuildRailConnecting(List<Station> stations)
 		{
-			var from = stations[0].RailroadAlongside.Start;
-			var to = stations[1].RailroadAlongside.Start;
+			var from = stations[0].Dock;
+			var to = stations[1].Dock;
 			var rails = Global.SplittedRailContainer.Rails;
 
 			PrintSplitedRails(from, to, rails);
