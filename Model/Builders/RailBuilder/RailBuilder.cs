@@ -112,7 +112,8 @@ namespace Trains.Model.Builders
 				return;
 
 			var curveToDelete = undoStack.Pop();
-			var curve = RailCurve.GetFrom(currentPath);
+			// var curve = RailCurve.GetFrom(currentPath);
+			var curve = (RailCurve)currentPath.Curve;
 			curve.RemoveEdgeCurve(curveToDelete);
 
 			if (undoStack.Count == 0)

@@ -28,7 +28,7 @@ namespace Trains
 
 			for (int i = 0; i < curve.GetPointCount(); i++)
 				newCurve.AddPoint(curve.GetPointPosition(i));
-			newCurve.Origin = curve.GetPointPosition(0);
+			//newCurve.Origin = curve.GetPointPosition(0);
 
 			return newCurve;
 		}
@@ -61,17 +61,20 @@ namespace Trains
 		{
 			var ctdFirst = curveToDelete.First() + curveToDelete.Origin;
 			var ctdLast = curveToDelete.Last() + curveToDelete.Origin;
-			var oldFirst = this.First() + Origin;
-			var oldLast = this.Last() + Origin;
+			var thisFirst = this.First() + this.Origin;
+			var thisLast = this.Last() + this.Origin;
 
 			var accuracy = 1.5f;
 			var pointsToDeleteAmount = curveToDelete.GetPointCount();
 
-			//PrintCurveIntersectionInfo(curveToDelete, accuracy);
+			PrintCurveIntersectionInfo(curveToDelete, accuracy);
 
-			if (AreCurvePointsEqual(oldLast, ctdLast, accuracy))
+			var thisLastEqualsCtdLast = AreCurvePointsEqual(thisLast, ctdLast, accuracy);
+			var thisFirstEqualsCtdLast = AreCurvePointsEqual(thisFirst, ctdLast, accuracy);
+
+			if (thisLastEqualsCtdLast)
 				RemovePointsFromEnd(pointsToDeleteAmount);
-			else if (AreCurvePointsEqual(oldFirst, ctdLast, accuracy))
+			else if (thisFirstEqualsCtdLast)
 				RemovePointsFromStart(pointsToDeleteAmount);
 		}
 
@@ -101,19 +104,19 @@ namespace Trains
 		{
 			var ctdFirst = curveIntesected.First() + curveIntesected.Origin;
 			var ctdLast = curveIntesected.Last() + curveIntesected.Origin;
-			var oldFirst = this.First() + Origin;
-			var oldLast = this.Last() + Origin;
+			var thisFirst = this.First() + Origin;
+			var thisLast = this.Last() + Origin;
 
 			GD.Print("ctdFirst: " + ctdFirst);
 			GD.Print("ctdLast: " + ctdLast);
-			GD.Print("oldFirst: " + oldFirst);
-			GD.Print("oldLast: " + oldLast);
+			GD.Print("thisFirst: " + thisFirst);
+			GD.Print("thisLast: " + thisLast);
 			GD.Print();
 
-			GD.Print("ctdFirst.IsEqualApsprox(oldFirst): ", ctdFirst.IsEqualApprox(oldFirst, accuracy));
-			GD.Print("ctdFirst.IsEqualApprox(oldLast): " + ctdFirst.IsEqualApprox(oldLast, accuracy));
-			GD.Print("ctdLast.IsEqualApprox(oldFirst): " + ctdLast.IsEqualApprox(oldFirst, accuracy));
-			GD.Print("ctdLast.IsEqualApprox(oldLast): " + ctdLast.IsEqualApprox(oldLast, accuracy));
+			GD.Print("ctdFirst.IsEqualApsprox(thisFirst): ", ctdFirst.IsEqualApprox(thisFirst, accuracy));
+			GD.Print("ctdFirst.IsEqualApprox(thisLast): " + ctdFirst.IsEqualApprox(thisLast, accuracy));
+			GD.Print("ctdLast.IsEqualApprox(thisFirst): " + ctdLast.IsEqualApprox(thisFirst, accuracy));
+			GD.Print("ctdLast.IsEqualApprox(thisLast): " + ctdLast.IsEqualApprox(thisLast, accuracy));
 			GD.Print();
 		}
 
@@ -144,7 +147,5 @@ namespace Trains
 				SetPointPosition(i, newPos);
 			}
 		}
-
-		
 	}
 }

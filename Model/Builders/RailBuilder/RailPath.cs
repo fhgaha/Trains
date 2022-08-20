@@ -105,7 +105,9 @@ namespace Trains
 		public void InitOnPlacement(RailPath blueprint)
 		{
 			GlobalTransform = blueprint.GlobalTransform;
-			Curve = RailCurve.GetFrom(blueprint.Curve);
+			var curve = RailCurve.GetFrom(blueprint.Curve);
+			curve.Origin = blueprint.Translation;
+			Curve = curve;
 
 			Crossings = new List<Vector3>();
 			EnlistCrossing(Start);
