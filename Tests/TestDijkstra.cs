@@ -103,8 +103,8 @@ namespace Trains.Tests
 			var graph = Graph.MakeGraph(
 				0, 1,
 				1, 2,
-				4, 1,	//order is wrong
-				3, 2	//order is wrong
+				4, 1,   //order is wrong
+				3, 2    //order is wrong
 			);
 			var weights = new Dictionary<Edge, double>
 			{

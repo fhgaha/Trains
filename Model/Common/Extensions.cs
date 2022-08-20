@@ -111,6 +111,14 @@ namespace Trains.Model.Common
 			return points;
 		}
 
+		public static void PrintPoints(this Curve3D curve)
+		{
+			for (int i = 0; i < curve.GetPointCount(); i++)
+			{
+				GD.Print(curve.GetPointPosition(i));
+			}
+		}
+
 		//Spatial
 		public static Vector3 GetIntersection(this Spatial spatial, Camera camera)
 		{

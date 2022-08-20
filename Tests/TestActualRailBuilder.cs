@@ -43,25 +43,25 @@ namespace Trains.Tests
 		[Test]
 		public void foo2()
 		{
-			var paths = new List<RailPath>();
+			// var paths = new List<RailPath>();
 
-			var bp = new RailPath();
-			bp.GlobalTransform = new Transform
-			(
-				new Vector3(1, 0, 0),
-				new Vector3(0, 1, 0),
-				new Vector3(0, 0, 1),
-				new Vector3(1, 0, 0)
-			);
-			AddChild(bp);
+			// var bp = new RailPath();
+			// bp.GlobalTransform = new Transform
+			// (
+			// 	new Vector3(1, 0, 0),
+			// 	new Vector3(0, 1, 0),
+			// 	new Vector3(0, 0, 1),
+			// 	new Vector3(1, 0, 0)
+			// );
+			// AddChild(bp);
 
-			for (int i = 0; i < 10; i++)
-			{
-				bp.Curve.AddPoint(new Vector3(i, 0, 0));
-			}
+			// for (int i = 0; i < 10; i++)
+			// {
+			// 	bp.Curve.AddPoint(new Vector3(i, 0, 0));
+			// }
 
-			var path1 = new RailPath();
-			path1.InitOnPlacement(bp);
+			// var path1 = new RailPath();
+			// path1.InitOnPlacement(bp);
 
 
 

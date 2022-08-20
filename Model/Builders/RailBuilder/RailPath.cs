@@ -11,7 +11,9 @@ namespace Trains
 	{
 		[Export] public readonly Color BpColor;
 		[Export] public readonly Color NotAllowedColor;
+		//Do not use setter! It is only for editor.
 		[Export] public Vector3 Start { get => Translation + Curve.First(); set => Start = value; }
+		//Do not use setter! It is only for editor.
 		[Export] public Vector3 End { get => Translation + Curve.Last(); set => End = value; }
 		[Export] public Vector3[] Points { get => Curve.ToArray(); set => Points = value; }
 		[Export] public List<Vector3> Crossings { get; private set; }

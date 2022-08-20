@@ -29,18 +29,18 @@ namespace Trains.Tests
 			calculator = new CurveCalculator();
 		}
 
-		[Test]
-		public void CalculateCenter()
-		{
-			var methodInfo = typeof(CurveCalculator).GetMethod(
-				"CalculateCenter", BindingFlags.NonPublic | BindingFlags.Instance);
-			Vector2 CalculateCenter(bool centerIsOnRight, Vector2 start)
-		  		=> (Vector2)methodInfo.Invoke(calculator, new object[] { centerIsOnRight, start });
+		// [Test]
+		// public void CalculateCenter()
+		// {
+		// 	var methodInfo = typeof(CurveCalculator).GetMethod(
+		// 		"CalculateCenter", BindingFlags.NonPublic | BindingFlags.Instance);
+		// 	Vector2 CalculateCenter(bool centerIsOnRight, Vector2 start)
+		//   		=> (Vector2)methodInfo.Invoke(calculator, new object[] { centerIsOnRight, start });
 
-			//in this case prevDir is always zero
+		// 	//in this case prevDir is always zero
 
-			Assert.IsEqual(Vector2.Right, CalculateCenter(centerIsOnRight: true, start: Vector2.Down));
-		}
+		// 	Assert.IsEqual(Vector2.Right, CalculateCenter(centerIsOnRight: true, start: Vector2.Down));
+		// }
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
 		public void RunAfterTestMethod()

@@ -59,9 +59,6 @@ namespace Trains.Model.Common.GraphRelated
 				var first = turningPoints[i];
 				var second = turningPoints[i + 1];
 
-				bool IsForward(RailPath pth) => pth.Start.IsEqualApprox(first) && pth.End.IsEqualApprox(second);
-				bool IsBackwards(RailPath pth) => pth.Start.IsEqualApprox(second) && pth.End.IsEqualApprox(first);
-
 				var path = splitted.First(p => IsForward(p) || IsBackwards(p));
 				var currentPoints = path.Curve.GetBakedPoints();
 				var origin = result.Count == 0 ? Vector3.Zero : second - turningPoints[0];
@@ -82,6 +79,9 @@ namespace Trains.Model.Common.GraphRelated
 						result.Add(origin + p);
 					}
 				}
+
+				bool IsForward(RailPath pth) => pth.Start.IsEqualApprox(first) && pth.End.IsEqualApprox(second);
+				bool IsBackwards(RailPath pth) => pth.Start.IsEqualApprox(second) && pth.End.IsEqualApprox(first);
 			}
 
 			return result;
