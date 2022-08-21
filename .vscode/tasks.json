@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"label": "build",
-			"command": "C:/ProgramsNoInstallRequired/Godot_v3.4.4-stable_mono_win32/Godot_v3.4.4-stable_mono_win32.exe\r",
+			"command": "C:/ProgramsNoInstallRequired/Godot_v3.5-stable_mono_win32/Godot_v3.5-stable_mono_win32.exe\r",
 			"type": "process",
 			"args": [
 				"--build-solutions",
@@ -11,6 +11,30 @@
 				"${workspaceRoot}",
 				"--no-window",
 				"-q"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/Trains.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"run",
+				"--project",
+				"${workspaceFolder}/Trains.csproj"
 			],
 			"problemMatcher": "$msCompile"
 		}

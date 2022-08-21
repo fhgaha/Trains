@@ -15,7 +15,7 @@ namespace Trains
 			set
 			{
 				rails = value.ToList();
-				PrintPathWithCrossings(value);
+				//PrintPathWithCrossings(value);
 			}
 		}
 
@@ -26,26 +26,29 @@ namespace Trains
 			this.RemoveAllChildren();
 			rails.ForEach(r => AddChild(r));
 
-			PrintPathWithCrossings(rails);
+			//PrintPathWithCrossings(rails);
 		}
 
 		private void SplitRails(IEnumerable<RailPath> inputRails)
 		{
 			var allCrossings = inputRails.SelectMany(r => r.Crossings).ToList();
-			rails = new List<RailPath>();
+			var newRails = new List<RailPath>();
 
 			foreach (var r in inputRails)
 			{
 				if (r.Crossings.Count <= 2)
 				{
 					var newRail = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), Vector3.Zero); //rail.Translation);
-					rails.Add(newRail);
+					PrintStartEnd(newRail);
+					newRails.Add(newRail);
 
 					continue;
 				}
 
-				SplitRailPath(r, allCrossings, rails);
+				SplitRailPath(r, allCrossings, newRails);
 			}
+
+			rails = newRails;
 		}
 
 		private void SplitRailPath(RailPath inputRail, List<Vector3> allCrossings, List<RailPath> newRails)
@@ -60,7 +63,8 @@ namespace Trains
 
 				if (RailHasCrossing(inputRail, allCrossings, currentPoint))
 				{
-					MakeNewRailAndUpdateNewRails(newRails, points);
+					var newPath = BuildNewPath(points);
+					newRails.Add(newPath);
 
 					var lastPoint = points.Last();
 					points.Clear();
@@ -71,10 +75,18 @@ namespace Trains
 
 				if (reachedLastPoint)
 				{
-					MakeNewRailAndUpdateNewRails(newRails, points);
+					var newPath = BuildNewPath(points);
+					newRails.Add(newPath);
 					points.Clear();
 				}
 			}
+		}
+
+		private RailPath BuildNewPath(List<Vector3> points)
+		{
+			var newPath = RailPath.BuildNoMeshRail(railScene, points, Vector3.Zero);
+			PrintStartEnd(newPath);
+			return newPath;
 		}
 
 		private static bool RailHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
@@ -84,17 +96,16 @@ namespace Trains
 				&& !currentPoint.IsEqualApprox(railPath.End);
 		}
 
-		private void MakeNewRailAndUpdateNewRails(List<RailPath> newRails, List<Vector3> points)
+		private void PrintStartEnd(RailPath rail)
 		{
-			var newPath = RailPath.BuildNoMeshRail(railScene, points, Vector3.Zero);
-			newRails.Add(newPath);
+			GD.PrintS("new splitted:", rail.Start + ",", rail.End);
 		}
 
 		private static void PrintPathWithCrossings(IEnumerable<RailPath> _paths)
 		{
 			var paths = _paths.ToList();
 
-			GD.Print("<--GraphRailsContainer. New Actual rails:");
+			GD.Print("<--SplittedRailsContainer. New Actual rails:");
 			for (int i = 0; i < paths.Count; i++)
 			{
 				GD.Print($"{i + 1}. {paths[i]}");
