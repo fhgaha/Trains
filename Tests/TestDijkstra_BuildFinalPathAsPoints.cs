@@ -90,8 +90,12 @@ namespace Trains.Tests
 			var result = BuildFinalPathAsPoints(splitted, turningPoints);
 
 			Assert.IsTrue(new Vector3(-0.01097202f, 1.95679E-08f, 0.449183f).IsEqualApprox(result.First()));
-			Assert.IsTrue(new Vector3(2.017419f, 3.671378E-09f, -1.145922f).IsEqualApprox(result[result.Count / 2]));
-			Assert.IsTrue(new Vector3(4.989028f, 1.95679E-08f, -1.550817f).IsEqualApprox(result.Last()));
+			Assert.IsTrue(new Vector3(-2.982581f, 3.671378E-09f, 0.8540775f).IsEqualApprox(result[result.Count / 2]));
+			Assert.IsTrue(new Vector3(-0.01097202f, 1.95679E-08f, 0.449183f).IsEqualApprox(result.Last()));
+
+			// Assert.IsEqual(Vector3.Zero, result.First());
+			// Assert.IsEqual(Vector3.Zero, result[result.Count / 2]);
+			// Assert.IsEqual(Vector3.Zero,result.Last());
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
