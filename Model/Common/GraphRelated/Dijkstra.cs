@@ -15,9 +15,9 @@ namespace Trains.Model.Common.GraphRelated
 
 			var allCrossings = splitted.SelectMany(p => new[] { p.Start, p.End }).ToList();
 			var nodeNumbers = BuildNodeNumbers(allCrossings);
-			var allCrossingsAsIntegers = ParseVectorsToNodeNumbers(allCrossings, nodeNumbers);
+			var edgesAsIntegers = ParseVectorsToNodeNumbers(allCrossings, nodeNumbers);
 
-			var graph = Graph.MakeGraph(allCrossingsAsIntegers);
+			var graph = Graph.MakeGraph(edgesAsIntegers);
 			var weights = GetWeightsOfPaths(splitted, graph);
 
 			int startNodeNumber = nodeNumbers[from];
@@ -112,7 +112,7 @@ namespace Trains.Model.Common.GraphRelated
 
 		private static Dictionary<Vector3, int> BuildNodeNumbers(List<Vector3> allCrossings)
 		{
-			var nodeNumbers = new Dictionary<Vector3, int>(new MyVector3XZEqualityComparer());
+			var nodeNumbers = new Dictionary<Vector3, int>(new Vector3IgnoreYComparer());
 			int index = 0;
 			foreach (var crossing in allCrossings)
 			{
@@ -175,20 +175,6 @@ namespace Trains.Model.Common.GraphRelated
 			}
 			result.Reverse();
 			return result;
-		}
-	}
-
-	public class MyVector3XZEqualityComparer : IEqualityComparer<Vector3>
-	{
-		public bool Equals(Vector3 v1, Vector3 v2)
-		{
-			//ignore y
-			return v1.x == v2.x && v1.z == v2.z;
-		}
-
-		public int GetHashCode(Vector3 v)
-		{
-			return 0;
 		}
 	}
 }
