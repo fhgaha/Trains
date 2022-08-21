@@ -72,7 +72,6 @@ namespace Trains
 				if (reachedLastPoint)
 				{
 					MakeNewRailAndUpdateNewRails(newRails, points);
-
 					points.Clear();
 				}
 			}
