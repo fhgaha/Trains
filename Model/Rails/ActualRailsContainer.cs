@@ -20,7 +20,16 @@ namespace Trains
 
 		private void onStationsAreSelected(List<Station> stations)
 		{
-			BuildRailConnecting(stations);
+			try
+			{
+				BuildRailConnecting(stations);
+			}
+			catch (System.ObjectDisposedException e)
+			{
+				GD.Print(e);
+				Global.SplittedRailContainer.UpdateRails();
+				onStationsAreSelected(stations);
+			}
 		}
 
 		private void BuildRailConnecting(List<Station> stations)

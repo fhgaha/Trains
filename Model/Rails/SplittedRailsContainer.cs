@@ -20,12 +20,12 @@ namespace Trains
 			}
 		}
 
-		public void UpdateActualRails()
+		public void UpdateRails()
 		{
 			Rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
 
 			//next method is not required for game logic and is used only for displaying rail points
-			Update();
+			UpdateInstances();
 		}
 
 		private List<RailPath> SplitRails(List<RailPath> rails)
@@ -134,7 +134,7 @@ namespace Trains
 			GD.Print("-->");
 		}
 
-		private void Update()
+		private void UpdateInstances()
 		{
 			GetChildren().Cast<Node>().ToList().ForEach(n => n.QueueFree());
 

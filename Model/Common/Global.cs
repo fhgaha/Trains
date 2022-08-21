@@ -53,7 +53,7 @@ namespace Trains.Model.Common
 
 		public static void UpdateRailData()
 		{
-			SplittedRailContainer.UpdateActualRails();
+			SplittedRailContainer.UpdateRails();
 			StationContainer.UpdateStationConnections();
 		}
 	}
