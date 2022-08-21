@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Trains.Model.Builders;
-using Trains.Model.Common;
 using Trains.Model.Common.GraphRelated;
 
 namespace Trains.Tests
@@ -17,14 +15,10 @@ namespace Trains.Tests
 	public class TestDijkstra_General : WAT.Test
 	{
 		//Developers may target a method with the [Start] attribute to execute code before any test method is run
-		public void RunBeforeTestClass()
-		{
-		}
+		public void RunBeforeTestClass() { }
 
 		// Developers may target a method with the [Pre] attribute to execute code before each test method is run;
-		public void RunBeforeTestMethod()
-		{
-		}
+		public void RunBeforeTestMethod() { }
 
 		[Test]
 		public void FindPathNodeOverloadSimple()
@@ -137,13 +131,9 @@ namespace Trains.Tests
 		// }
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
-		public void RunAfterTestMethod()
-		{
-		}
+		public void RunAfterTestMethod() { }
 
 		// Developers may target a method with the [End] attribute to execute after all tests method have run
-		public void RunAfterTestClass()
-		{
-		}
+		public void RunAfterTestClass() { }
 	}
 }
