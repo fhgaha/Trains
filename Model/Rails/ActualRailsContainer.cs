@@ -27,19 +27,8 @@ namespace Trains
 		{
 			var from = stations[0].Dock;
 			var to = stations[1].Dock;
-			var rails = Global.SplittedRailContainer.Rails;
-
-			PrintSplitedRails(from, to, rails);
-
 			var vecs = Dijkstra.FindPath(from, to);
-
-			// GD.Print("vecs");
-			// foreach (var v in vecs)
-			// {
-			// 	GD.Print(stations[0].RailroadAlongside.Translation + v);
-			// }
-
-			var newPath = RailPath.BuildNoMeshRail(railScene, vecs, stations[0].RailroadAlongside.Translation);
+			var newPath = RailPath.BuildNoMeshRail(railScene, vecs, Vector3.Zero);// stations[0].RailroadAlongside.Translation);
 			AddChild(newPath);
 
 			var pf = new RailPathFollow();

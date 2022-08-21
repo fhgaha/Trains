@@ -51,7 +51,6 @@ namespace Trains.Model.Common.GraphRelated
 
 		private static List<Vector3> BuildFinalPathAsPoints(List<RailPath> splitted, List<Vector3> turningPoints)
 		{
-			//this has problem
 			var result = new List<Vector3>();
 
 			for (int i = 0; i < turningPoints.Count - 1; i++)
@@ -65,19 +64,12 @@ namespace Trains.Model.Common.GraphRelated
 
 				if (IsForward(path))
 				{
-					foreach (var p in currentPoints)
-					{
-						result.Add(origin + p);
-					}
+					result.AddRange(currentPoints);
 				}
 				else if (IsBackwards(path))
 				{
 					currentPoints = currentPoints.Reverse().ToArray();
-
-					foreach (var p in currentPoints)
-					{
-						result.Add(origin + p);
-					}
+					result.AddRange(currentPoints);
 				}
 
 				bool IsForward(RailPath pth) => pth.Start.IsEqualApprox(first) && pth.End.IsEqualApprox(second);
@@ -190,15 +182,8 @@ namespace Trains.Model.Common.GraphRelated
 	{
 		public bool Equals(Vector3 v1, Vector3 v2)
 		{
-			if (v2 == null && v1 == null)
-				return true;
-			else if (v1 == null || v2 == null)
-				return false;
 			//ignore y
-			else if (v1.x == v2.x && v1.z == v2.z)
-				return true;
-			else
-				return false;
+			return v1.x == v2.x && v1.z == v2.z;
 		}
 
 		public int GetHashCode(Vector3 v)
