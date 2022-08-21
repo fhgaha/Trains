@@ -5,11 +5,10 @@ using Trains.Model.Common;
 
 namespace Trains
 {
-	//called from Rail Builder every time a rail is placed
 	public class SplittedRailsContainer : Spatial
 	{
 		[Export] private PackedScene railScene;
-		private List<RailPath> rails;
+		private List<RailPath> rails = new List<RailPath>();
 		public IEnumerable<RailPath> Rails
 		{
 			get { foreach (var r in rails) { yield return r; } }
@@ -20,12 +19,12 @@ namespace Trains
 			}
 		}
 
+		//clean this mess. too many build rail variations
 		public void UpdateRails()
 		{
-			Rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
-
-			//next method is not required for game logic and is used only for displaying rail points
-			UpdateInstances();
+			var rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
+			PrintPathWithCrossings(rails);
+			UpdateInstancesAndRails(rails);
 		}
 
 		private List<RailPath> SplitRails(List<RailPath> rails)
@@ -134,14 +133,16 @@ namespace Trains
 			GD.Print("-->");
 		}
 
-		private void UpdateInstances()
+		private void UpdateInstancesAndRails(List<RailPath> rails)
 		{
 			GetChildren().Cast<Node>().ToList().ForEach(n => n.QueueFree());
+			this.rails.Clear();
 
 			foreach (var r in rails)
 			{
 				var newPath = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), r.Translation);
 				AddChild(newPath);
+				this.rails.Add(newPath);
 			}
 		}
 	}
