@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Trains.Model.Common;
 using Trains.Model.Common.GraphRelated;
 
 namespace Trains.Tests
@@ -111,24 +112,6 @@ namespace Trains.Tests
 
 			Assert.Throws(() => throw new TargetInvocationException(new NullReferenceException()));
 		}
-
-		// [Test]
-		// public void FindPathVectorsOverloadApproved1()
-		// {
-		// 	Vector3 from = new Vector3(3f, 0f, 1.399969f);
-		// 	Vector3 to = new Vector3(7f, 0f, 8.399969f);
-		// 	Global.SplittedRailContainer = new SplittedRailsContainer();
-		// 	Global.SplittedRailContainer.Rails = new List<RailPath>
-		// 	{
-		// 		RailPath.BuildNoMeshRail()
-		// 	}
-
-		// 	var path = Dijkstra.FindPath(from, to);
-
-		// 	Assert.IsFalse(path is null);
-		// 	Assert.IsTrue(path.Count > 0, $"path.Count is {path.Count}");
-		// 	Assert.CollectionsAreEqual(new[] { 0, 1, 2, 3 }, path.Select(n => n.NodeNumber));
-		// }
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
 		public void RunAfterTestMethod() { }

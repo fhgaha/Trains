@@ -28,7 +28,7 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void BuildFinalPathAsPoints1()
+		public void Simple1()
 		{
 			var path1 = new RailPath { Curve = new RailCurve() };
 			path1.Curve.AddPoint(new Vector3(0, 0, 0));
@@ -59,7 +59,7 @@ namespace Trains.Tests
 		}
 
 		[Test]
-		public void BuildFinalPathAsPointsApproved1()
+		public void Approved1()
 		{
 			var path1 = new RailPath { Curve = new RailCurve() };
 			path1.Translation = new Vector3(2.987319f, 0f, 4.471903f);
