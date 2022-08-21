@@ -22,31 +22,80 @@ namespace Trains.Tests
 		public void RunBeforeTestMethod() { }
 
 		[Test]
-		public void Simple1()
+		public void SimpleXGrows()
 		{
 			Vector3 from = new Vector3(0f, 0f, 0f);
 			Vector3 to = new Vector3(2f, 0f, 0f);
 
-			var path1 = new RailPath { Curve = new RailCurve() };
-			path1.Translation = new Vector3(0f, 0f, 0f);
-			path1.Curve.AddPoint(new Vector3(0f, 0f, 0f));
-			path1.Curve.AddPoint(new Vector3(1f, 0f, 0f));
+			var path1 = BuildSimplePath(Vector3.Zero, new Vector3(0f, 0f, 0f), new Vector3(1f, 0f, 0f));
+			var path2 = BuildSimplePath(Vector3.Zero, new Vector3(1f, 0f, 0f), new Vector3(2f, 0f, 0f));
 
-			var path2 = new RailPath { Curve = new RailCurve() };
-			path2.Translation = new Vector3(0f, 0f, 0f);
-			path2.Curve.AddPoint(new Vector3(1f, 0f, 0f));
-			path2.Curve.AddPoint(new Vector3(2f, 0f, 0f));
+			Global.SplittedRailContainer = new SplittedRailsContainer
+			{
+				Rails = new List<RailPath> { path1, path2 }
+			};
 
-			Global.SplittedRailContainer = new SplittedRailsContainer();
-			Global.SplittedRailContainer.Rails = new List<RailPath> { path1, path2 };
+			var result = Dijkstra.FindPath(from, to);
+			int expectedAmount = Convert.ToInt32((1 / path1.Curve.BakeInterval + 1) * to.x);
+			CompareSimple(from, to, expectedAmount, result);
+		}
+
+		[Test]
+		//does not find a path for y cause uses Vector3IgnoreYComparer
+		public void SimpleDoesntFindPathForY()
+		{
+			Vector3 from = new Vector3(0f, 0f, 0f);
+			Vector3 to = new Vector3(0f, 2f, 0f);
+
+			var path1 = BuildSimplePath(Vector3.Zero, new Vector3(0f, 0f, 0f), new Vector3(0f, 1f, 0f));
+			var path2 = BuildSimplePath(Vector3.Zero, new Vector3(0f, 1f, 0f), new Vector3(0f, 2f, 0f));
+
+			Global.SplittedRailContainer = new SplittedRailsContainer
+			{
+				Rails = new List<RailPath> { path1, path2 }
+			};
 
 			var result = Dijkstra.FindPath(from, to);
 
 			Assert.IsFalse(result is null);
+			Assert.IsTrue(result.Count == 0);
+		}
+
+		[Test]
+		public void SimpleZGrows()
+		{
+			Vector3 from = new Vector3(0f, 0f, 0f);
+			Vector3 to = new Vector3(0f, 0f, 2f);
+
+			var path1 = BuildSimplePath(Vector3.Zero, new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 1f));
+			var path2 = BuildSimplePath(Vector3.Zero, new Vector3(0f, 0f, 1f), new Vector3(0f, 0f, 2f));
+
+			Global.SplittedRailContainer = new SplittedRailsContainer
+			{
+				Rails = new List<RailPath> { path1, path2 }
+			};
+
+			var result = Dijkstra.FindPath(from, to);
+			int expectedAmount = Convert.ToInt32((1 / path1.Curve.BakeInterval + 1) * to.z);
+			CompareSimple(from, to, expectedAmount, result);
+		}
+
+		private static RailPath BuildSimplePath(Vector3 translation, Vector3 first, Vector3 second)
+		{
+			var path2 = new RailPath { Curve = new RailCurve() };
+			path2.Translation = translation;
+			path2.Curve.AddPoint(first);
+			path2.Curve.AddPoint(second);
+			return path2;
+		}
+
+		private void CompareSimple(Vector3 from, Vector3 to, int expectedAmount, List<Vector3> result)
+		{
+			Assert.IsFalse(result is null);
 			Assert.IsTrue(result.Count > 0);
 			Assert.IsEqual(from, result.First());
 			Assert.IsEqual(to, result.Last());
-			//Assert.CollectionsAreEqual(new[] { 0, 1, 2, 3 }, path.Select(n => n.NodeNumber));
+			Assert.IsEqual(expectedAmount, result.Count);
 		}
 
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
