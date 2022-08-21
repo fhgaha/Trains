@@ -19,102 +19,76 @@ namespace Trains
 			}
 		}
 
-		//clean this mess. too many build rail variations
 		public void UpdateRails()
 		{
-			var rails = SplitRails(Global.VisibleRailContainer.Rails.ToList());
+			SplitRails(Global.VisibleRailContainer.Rails);
+
+			this.RemoveAllChildren();
+			rails.ForEach(r => AddChild(r));
+
 			PrintPathWithCrossings(rails);
-			UpdateInstancesAndRails(rails);
 		}
 
-		private List<RailPath> SplitRails(List<RailPath> rails)
+		private void SplitRails(IEnumerable<RailPath> inputRails)
 		{
-			var allCrossings = rails.SelectMany(r => r.Crossings).ToList();
-			var newRails = new List<RailPath>();
+			var allCrossings = inputRails.SelectMany(r => r.Crossings).ToList();
+			rails = new List<RailPath>();
 
-			foreach (var c in GetChildren().Cast<Node>())
+			foreach (var r in inputRails)
 			{
-				c.QueueFree();
-			}
-
-			foreach (var railPath in rails)
-			{
-				if (railPath.Crossings.Count <= 2)
+				if (r.Crossings.Count <= 2)
 				{
-					//should i add new rail with samee tanslation and curve?
-					var newRail = BuildPath(railPath.Curve.GetBakedPoints().ToList());
-					newRail.Translation = railPath.Translation;
-					newRails.Add(newRail);
+					var newRail = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), Vector3.Zero); //rail.Translation);
+					rails.Add(newRail);
 
 					continue;
 				}
 
-				SplitRailPath(railPath, allCrossings, newRails);
+				SplitRailPath(r, allCrossings, rails);
 			}
-
-			return newRails;
 		}
 
-		private void SplitRailPath(RailPath railPath, List<Vector3> allCrossings, List<RailPath> newRails)
+		private void SplitRailPath(RailPath inputRail, List<Vector3> allCrossings, List<RailPath> newRails)
 		{
 			var points = new List<Vector3>();
-			var pathPoints = railPath.Curve.GetBakedPoints();
+			var railPoints = inputRail.Curve.GetBakedPoints();
 
-			for (int i = 0; i < pathPoints.Length; i++)
+			for (int i = 0; i < railPoints.Length; i++)
 			{
-				var currentPoint = railPath.GlobalTranslation + pathPoints[i];
+				var currentPoint = inputRail.GlobalTranslation + railPoints[i];
 				points.Add(currentPoint);
 
-				if (RailPathHasCrossing(railPath, allCrossings, currentPoint))
+				if (RailHasCrossing(inputRail, allCrossings, currentPoint))
 				{
-					MakeNewPathAndUpdateNewRails(newRails, points);
+					MakeNewRailAndUpdateNewRails(newRails, points);
 
 					var lastPoint = points.Last();
 					points.Clear();
 					points.Add(lastPoint);
 				}
 
-				bool reachedLastPoint = i == pathPoints.Length - 1;
+				bool reachedLastPoint = i == railPoints.Length - 1;
 
 				if (reachedLastPoint)
 				{
-					MakeNewPathAndUpdateNewRails(newRails, points);
+					MakeNewRailAndUpdateNewRails(newRails, points);
 
 					points.Clear();
 				}
 			}
 		}
 
-		private static bool RailPathHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
+		private static bool RailHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
 		{
 			return allCrossings.Any(c => currentPoint.IsEqualApprox(c))
 				&& !currentPoint.IsEqualApprox(railPath.Start)
 				&& !currentPoint.IsEqualApprox(railPath.End);
 		}
 
-		private void MakeNewPathAndUpdateNewRails(List<RailPath> newRails, List<Vector3> points)
+		private void MakeNewRailAndUpdateNewRails(List<RailPath> newRails, List<Vector3> points)
 		{
-			var newPath = BuildPath(points);
+			var newPath = RailPath.BuildNoMeshRail(railScene, points, Vector3.Zero);
 			newRails.Add(newPath);
-			AddChild(newPath);
-		}
-
-		private static RailPath BuildPath(List<Vector3> points)
-		{
-			var newPath = new RailPath();
-
-			for (int i = 0; i < points.Count; i++)
-			{
-				//addpoint is wrong points are baked?
-				newPath.Curve.AddPoint(points[i]);
-			}
-
-			newPath.Curve = RailCurve.GetFrom(newPath.Curve);
-			newPath.EnlistCrossing(newPath.Start);
-			newPath.EnlistCrossing(newPath.End);
-			//shouldnt i enlist mid crossing as well?
-
-			return newPath;
 		}
 
 		private static void PrintPathWithCrossings(IEnumerable<RailPath> _paths)
@@ -131,19 +105,6 @@ namespace Trains
 				}
 			}
 			GD.Print("-->");
-		}
-
-		private void UpdateInstancesAndRails(List<RailPath> rails)
-		{
-			GetChildren().Cast<Node>().ToList().ForEach(n => n.QueueFree());
-			this.rails.Clear();
-
-			foreach (var r in rails)
-			{
-				var newPath = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), r.Translation);
-				AddChild(newPath);
-				this.rails.Add(newPath);
-			}
 		}
 	}
 }
