@@ -20,8 +20,11 @@ namespace Trains.Model.Common.GraphRelated
 			var graph = Graph.MakeGraph(edgesAsIntegers);
 			var weights = GetWeightsOfPaths(splitted, graph);
 
-			int startNodeNumber = nodeNumbers[from];
-			int endNodeNumber = nodeNumbers[to];
+			Vector3 fromKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(from, 0.1f));
+			Vector3 toKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(to, 0.1f));
+
+			int startNodeNumber = nodeNumbers[fromKey];
+			int endNodeNumber = nodeNumbers[toKey];
 
 			Node start = graph[startNodeNumber];
 			Node end = graph[endNodeNumber];

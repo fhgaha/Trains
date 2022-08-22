@@ -98,9 +98,12 @@ namespace Trains
 
 			foreach (var c in allCrossings)
 			{
-				if (currentPoint.IsEqualApprox(c)
-					&& !currentPoint.IsEqualApprox(railPath.Start)
-					&& !currentPoint.IsEqualApprox(railPath.End))
+				var _delta = railPath.Curve.BakeInterval / 2;
+				var pointIsCrossing = currentPoint.IsEqualApprox(c, _delta)
+								  && !currentPoint.IsEqualApprox(railPath.Start, _delta)
+								  && !currentPoint.IsEqualApprox(railPath.End, _delta);
+
+				if (pointIsCrossing)
 				{
 					return true;
 				}
