@@ -198,6 +198,12 @@ namespace Trains.Model.Builders
 			else
 				AddNewCurveToCurrentPath();
 
+			// for (int i = 0; i < currentPath.Curve.GetBakedPoints().Length; i++)
+			// {
+			// 	GD.Print(currentPath.Curve.GetBakedPoints()[i]);
+			// }
+			// GD.Print("-----");
+
 			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 			undoStack.Push(RailCurve.GetFrom(blueprint));
 

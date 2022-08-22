@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"label": "build",
-			"command": "C:/ProgramsNoInstallRequired/Godot_v3.5-stable_mono_win32/Godot_v3.5-stable_mono_win32.exe\r",
+			"command": "C:/ProgramsNoInstallRequired/Godot_v3.5-stable_mono_win32/Godot_v3.5-stable_mono_win32.exe",
 			"type": "process",
 			"args": [
 				"--build-solutions",

@@ -5,6 +5,7 @@ using Trains.Model.Common;
 
 namespace Trains
 {
+	//dock is enlisted to path crossing when station is placed
 	public class SplittedRailsContainer : Spatial
 	{
 		[Export] private PackedScene railScene;
@@ -91,9 +92,21 @@ namespace Trains
 
 		private static bool RailHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
 		{
-			return allCrossings.Any(c => currentPoint.IsEqualApprox(c))
-				&& !currentPoint.IsEqualApprox(railPath.Start)
-				&& !currentPoint.IsEqualApprox(railPath.End);
+			// return allCrossings.Any(c => currentPoint.IsEqualApprox(c))
+			// 	&& !currentPoint.IsEqualApprox(railPath.Start)
+			// 	&& !currentPoint.IsEqualApprox(railPath.End);
+
+			foreach (var c in allCrossings)
+			{
+				if (currentPoint.IsEqualApprox(c)
+					&& !currentPoint.IsEqualApprox(railPath.Start)
+					&& !currentPoint.IsEqualApprox(railPath.End))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private void PrintStartEnd(RailPath rail)
