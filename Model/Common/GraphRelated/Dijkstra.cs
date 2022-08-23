@@ -84,10 +84,29 @@ namespace Trains.Model.Common.GraphRelated
 
 		private static Dictionary<Edge, double> GetWeightsOfPaths(List<RailPath> splitted, Graph graph)
 		{
+			// var allWeights = splitted.Select(s => Tuple.Create(s, s.Curve.GetBakedLength()));
+			// var notAllWeights = new Dictionary<RailPath, double>();
+
+			// foreach (var t1 in allWeights)
+			// {
+			// 	foreach (var t2 in allWeights)
+			// 	{
+			// 		if (t1.Item1 == t2.Item1)
+			// 		{
+			// 			notAllWeights[t1.Item1] = (float)Mathf.Min(t1.Item2, t2.Item2);
+			// 		}
+			// 		else if (!notAllWeights.ContainsKey(t1.Item1))
+			// 		{
+			// 			notAllWeights.Add(t1.Item1, t1.Item2);
+			// 		}
+			// 	}
+			// }
+
 			var weights = new Dictionary<Edge, double>();
 			var edges = graph.Edges.ToList();
 			for (int i = 0; i < edges.Count; i++)
 			{
+				//if weight less rewrite
 				weights[edges[i]] = splitted[i].Curve.GetBakedLength();
 			}
 
