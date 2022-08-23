@@ -16,7 +16,6 @@ namespace Trains.Model.Common.GraphRelated
 			var allCrossings = splitted.SelectMany(p => new[] { p.Start, p.End }).ToList();
 			var nodeNumbers = BuildNodeNumbers(allCrossings);
 			var edgesAsIntegers = ParseVectorsToNodeNumbers(allCrossings, nodeNumbers);
-
 			var graph = Graph.MakeGraph(edgesAsIntegers);
 			var weights = GetWeightsOfPaths(splitted, graph, nodeNumbers);
 
@@ -58,25 +57,29 @@ namespace Trains.Model.Common.GraphRelated
 
 			for (int i = 0; i < turningPoints.Count - 1; i++)
 			{
-				var first = turningPoints[i];
-				var second = turningPoints[i + 1];
+				var firstTurn = turningPoints[i];
+				var secondTurn = turningPoints[i + 1];
 
-				var path = splitted.First(p => IsForward(p) || IsBackwards(p));
+				//var path = splitted.FindAll(p => ShouldGoForward(p) || ShouldGoBackwards(p))
+					// .OrderBy(p => p.Curve.GetBakedLength())
+					// .First();
+
+				var path = splitted.First(p => ShouldGoForward(p) || ShouldGoBackwards(p));
 				var currentPoints = path.Curve.GetBakedPoints();
-				var origin = result.Count == 0 ? Vector3.Zero : second - turningPoints[0];
+				var origin = result.Count == 0 ? Vector3.Zero : secondTurn - turningPoints[0];
 
-				if (IsForward(path))
+				if (ShouldGoForward(path))
 				{
 					result.AddRange(currentPoints);
 				}
-				else if (IsBackwards(path))
+				else if (ShouldGoBackwards(path))
 				{
 					currentPoints = currentPoints.Reverse().ToArray();
 					result.AddRange(currentPoints);
 				}
 
-				bool IsForward(RailPath pth) => pth.Start.IsEqualApprox(first) && pth.End.IsEqualApprox(second);
-				bool IsBackwards(RailPath pth) => pth.Start.IsEqualApprox(second) && pth.End.IsEqualApprox(first);
+				bool ShouldGoForward(RailPath p) => p.Start.IsEqualApprox(firstTurn) && p.End.IsEqualApprox(secondTurn);
+				bool ShouldGoBackwards(RailPath p) => p.Start.IsEqualApprox(secondTurn) && p.End.IsEqualApprox(firstTurn);
 			}
 
 			return result;
@@ -87,46 +90,48 @@ namespace Trains.Model.Common.GraphRelated
 			Graph graph,
 			Dictionary<Vector3, int> nodeNumbers)
 		{
-			// var newEdges = new List<Edge>();
-			// var edges = graph.Edges.ToList();
-
-			// foreach (var rail in splitted)
-			// {
-			// 	var startKey = nodeNumbers.Keys.ToList().Find(k => k.IsEqualApprox(rail.Start, 0.11f));
-			// 	var endKey = nodeNumbers.Keys.ToList().Find(k => k.IsEqualApprox(rail.End, 0.11f));
-
-			// 	Node startNode = default, endNode = default;
-
-			// 	if (startKey != default)
-			// 	{
-			// 		startNode = graph.Nodes.FirstOrDefault(n => n.NodeNumber == nodeNumbers[startKey]);
-			// 	}
-
-			// 	if (endKey != default)
-			// 	{
-			// 		endNode = graph.Nodes.FirstOrDefault(n => n.NodeNumber == nodeNumbers[endKey]);
-			// 	}
-
-			// 	//compare 
-			// 	if (startNode != default && endNode != default
-			// 		&& edges.Find(e => (e.From == startNode && e.To == endNode)
-			// 						|| (e.From == endNode && e.To == startNode))
-			// 		is Edge edge && edge != default)
-			// 	{
-
-			// 	}
-			// }
-
-
-			var weights = new Dictionary<Edge, double>();
+			var splittedDistincted = new List<RailPath>();
 			var edges = graph.Edges.ToList();
+
 			for (int i = 0; i < edges.Count; i++)
 			{
-				//if weight less rewrite
-				weights[edges[i]] = splitted[i].Curve.GetBakedLength();
+				Vector3 from = nodeNumbers.Keys.First(k => nodeNumbers[k] == edges[i].From.NodeNumber);
+				Vector3 to = nodeNumbers.Keys.First(k => nodeNumbers[k] == edges[i].To.NodeNumber);
+
+				var rail = splitted.First(s => s.Start.IsEqualApprox(from) && s.End.IsEqualApprox(to));
+
+				if (!splittedDistincted.Contains(rail))
+				{
+					splittedDistincted.Add(rail);
+				}
+				else
+				{
+					var index = splittedDistincted.FindIndex(s => s == rail);
+
+					if (rail.Curve.GetBakedLength() < splittedDistincted[index].Curve.GetBakedLength())
+					{
+						splittedDistincted[index] = rail;
+					}
+				}
 			}
 
-			return weights;
+			var newWeights = new Dictionary<Edge, double>();
+			for (int i = 0; i < edges.Count; i++)
+			{
+				newWeights[edges[i]] = splittedDistincted[i].Curve.GetBakedLength();
+			}
+
+			return newWeights;
+
+			// var weights = new Dictionary<Edge, double>();
+			// var edges = graph.Edges.ToList();
+			// for (int i = 0; i < edges.Count; i++)
+			// {
+			//if weight less rewrite
+			// 	weights[edges[i]] = splitted[i].Curve.GetBakedLength();
+			// }
+
+			// return weights;
 		}
 
 		private static int[] ParseVectorsToNodeNumbers(
