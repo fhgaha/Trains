@@ -113,6 +113,25 @@ namespace Trains.Tests
 			Assert.Throws(() => throw new TargetInvocationException(new NullReferenceException()));
 		}
 
+		[Test]
+		public void FindPathNodeOverload3()
+		{
+			var graph = new Graph(5);
+			var weights = new Dictionary<Edge, double>
+			{
+				[graph.Connect(0, 1)] = 1,
+				[graph.Connect(1, 2)] = 1,
+				[graph.Connect(0, 3)] = 1,
+				[graph.Connect(3, 4)] = 1
+			};
+
+			var path = Dijkstra.FindPath(graph, weights, graph[1], graph[3])
+				.Select(n => n.NodeNumber);
+
+			Assert.IsTrue(path != null);
+			// Assert.CollectionsAreEqual(new[] { 1, 0, 3 }, path);
+		}
+
 		// Developers may target a method with the [Post] attribute to execute code after each test method is run
 		public void RunAfterTestMethod() { }
 

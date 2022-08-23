@@ -106,13 +106,13 @@ namespace Trains
 			if (selectedStations.Count > 0)
 				events.EmitSignal(nameof(Events.StationsAreSelected), selectedStations);
 			
-			GD.Print("onAcceptButtonPressed");
+			// GD.Print("onAcceptButtonPressed");
 		}
 
 		private void onCancelButtonPressed()
 		{
 			selectedStations.Clear();
-			GD.Print("onCancelButtonPressed");
+			// GD.Print("onCancelButtonPressed");
 		}
 	}
 }

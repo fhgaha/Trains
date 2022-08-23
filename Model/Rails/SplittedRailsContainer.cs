@@ -39,7 +39,7 @@ namespace Trains
 			{
 				if (r.Crossings.Count <= 2)
 				{
-					var newRail = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), Vector3.Zero); //rail.Translation);
+					var newRail = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), r.Translation);
 					PrintStartEnd(newRail);
 					newRails.Add(newRail);
 
@@ -76,6 +76,8 @@ namespace Trains
 
 				if (reachedLastPoint)
 				{
+					GD.PrintS("last point: ", currentPoint);
+
 					var newPath = BuildNewPath(points);
 					newRails.Add(newPath);
 					points.Clear();
@@ -86,19 +88,15 @@ namespace Trains
 		private RailPath BuildNewPath(List<Vector3> points)
 		{
 			var newPath = RailPath.BuildNoMeshRail(railScene, points, Vector3.Zero);
-			PrintStartEnd(newPath);
+			//PrintStartEnd(newPath);
 			return newPath;
 		}
 
 		private static bool RailHasCrossing(RailPath railPath, List<Vector3> allCrossings, Vector3 currentPoint)
 		{
-			// return allCrossings.Any(c => currentPoint.IsEqualApprox(c))
-			// 	&& !currentPoint.IsEqualApprox(railPath.Start)
-			// 	&& !currentPoint.IsEqualApprox(railPath.End);
-
+			var _delta = railPath.Curve.BakeInterval / 2f;
 			foreach (var c in allCrossings)
 			{
-				var _delta = railPath.Curve.BakeInterval / 2;
 				var pointIsCrossing = currentPoint.IsEqualApprox(c, _delta)
 								  && !currentPoint.IsEqualApprox(railPath.Start, _delta)
 								  && !currentPoint.IsEqualApprox(railPath.End, _delta);

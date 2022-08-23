@@ -20,8 +20,8 @@ namespace Trains.Model.Common.GraphRelated
 			var graph = Graph.MakeGraph(edgesAsIntegers);
 			var weights = GetWeightsOfPaths(splitted, graph);
 
-			Vector3 fromKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(from, 0.1f));
-			Vector3 toKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(to, 0.1f));
+			Vector3 fromKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(from, 0.11f));
+			Vector3 toKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(to, 0.11f));
 
 			int startNodeNumber = nodeNumbers[fromKey];
 			int endNodeNumber = nodeNumbers[toKey];
@@ -42,11 +42,11 @@ namespace Trains.Model.Common.GraphRelated
 				.ToList();
 
 			GD.Print("---Dijkstra found path crossings: ---");
-			foreach (var item in turningPoints)
-			{
-				GD.Print(new[] { item + ", " });
-			}
-			GD.Print("------");
+			// foreach (var item in turningPoints)
+			// {
+			// 	GD.Print(new[] { item + ", " });
+			// }
+			// GD.Print("------");
 
 			var result = BuildFinalPathAsPoints(splitted, turningPoints);
 			return result;
@@ -157,7 +157,7 @@ namespace Trains.Model.Common.GraphRelated
 				if (toOpen == null) return null;
 				if (toOpen == end) break;
 
-				foreach (var e in toOpen.IncidentEdges.Where(z => z.From == toOpen))
+				foreach (var e in toOpen.IncidentEdges)//.Where(z => z.From == toOpen || z.To == toOpen))
 				{
 					var currentPrice = track[toOpen].Price + weights[e];
 					var nextNode = e.OtherNode(toOpen);
