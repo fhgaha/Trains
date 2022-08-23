@@ -18,7 +18,7 @@ namespace Trains.Model.Common.GraphRelated
 			var edgesAsIntegers = ParseVectorsToNodeNumbers(allCrossings, nodeNumbers);
 
 			var graph = Graph.MakeGraph(edgesAsIntegers);
-			var weights = GetWeightsOfPaths(splitted, graph);
+			var weights = GetWeightsOfPaths(splitted, graph, nodeNumbers);
 
 			Vector3 fromKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(from, 0.11f));
 			Vector3 toKey = nodeNumbers.Keys.ToList().First(k => k.IsEqualApprox(to, 0.11f));
@@ -82,25 +82,41 @@ namespace Trains.Model.Common.GraphRelated
 			return result;
 		}
 
-		private static Dictionary<Edge, double> GetWeightsOfPaths(List<RailPath> splitted, Graph graph)
+		private static Dictionary<Edge, double> GetWeightsOfPaths(
+			List<RailPath> splitted,
+			Graph graph,
+			Dictionary<Vector3, int> nodeNumbers)
 		{
-			// var allWeights = splitted.Select(s => Tuple.Create(s, s.Curve.GetBakedLength()));
-			// var notAllWeights = new Dictionary<RailPath, double>();
+			// var newEdges = new List<Edge>();
+			// var edges = graph.Edges.ToList();
 
-			// foreach (var t1 in allWeights)
+			// foreach (var rail in splitted)
 			// {
-			// 	foreach (var t2 in allWeights)
+			// 	var startKey = nodeNumbers.Keys.ToList().Find(k => k.IsEqualApprox(rail.Start, 0.11f));
+			// 	var endKey = nodeNumbers.Keys.ToList().Find(k => k.IsEqualApprox(rail.End, 0.11f));
+
+			// 	Node startNode = default, endNode = default;
+
+			// 	if (startKey != default)
 			// 	{
-			// 		if (t1.Item1 == t2.Item1)
-			// 		{
-			// 			notAllWeights[t1.Item1] = (float)Mathf.Min(t1.Item2, t2.Item2);
-			// 		}
-			// 		else if (!notAllWeights.ContainsKey(t1.Item1))
-			// 		{
-			// 			notAllWeights.Add(t1.Item1, t1.Item2);
-			// 		}
+			// 		startNode = graph.Nodes.FirstOrDefault(n => n.NodeNumber == nodeNumbers[startKey]);
+			// 	}
+
+			// 	if (endKey != default)
+			// 	{
+			// 		endNode = graph.Nodes.FirstOrDefault(n => n.NodeNumber == nodeNumbers[endKey]);
+			// 	}
+
+			// 	//compare 
+			// 	if (startNode != default && endNode != default
+			// 		&& edges.Find(e => (e.From == startNode && e.To == endNode)
+			// 						|| (e.From == endNode && e.To == startNode))
+			// 		is Edge edge && edge != default)
+			// 	{
+
 			// 	}
 			// }
+
 
 			var weights = new Dictionary<Edge, double>();
 			var edges = graph.Edges.ToList();
