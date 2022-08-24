@@ -90,48 +90,44 @@ namespace Trains.Model.Common.GraphRelated
 			Graph graph,
 			Dictionary<Vector3, int> nodeNumbers)
 		{
-			var splittedDistincted = new List<RailPath>();
 			var edges = graph.Edges.ToList();
+			var splittedNoLongerDuplicates = new List<RailPath>();
+			var weights = new Dictionary<Edge, double>();
 
 			for (int i = 0; i < edges.Count; i++)
 			{
-				Vector3 from = nodeNumbers.Keys.First(k => nodeNumbers[k] == edges[i].From.NodeNumber);
-				Vector3 to = nodeNumbers.Keys.First(k => nodeNumbers[k] == edges[i].To.NodeNumber);
+				RailPath rail = FindRailByEdge(splitted, nodeNumbers, edges[i]);
 
-				var rail = splitted.First(s => s.Start.IsEqualApprox(from) && s.End.IsEqualApprox(to));
-
-				if (!splittedDistincted.Contains(rail))
+				if (!splittedNoLongerDuplicates.Contains(rail))
 				{
-					splittedDistincted.Add(rail);
+					splittedNoLongerDuplicates.Add(rail);
+					weights[edges[i]] = rail.Curve.GetBakedLength();
 				}
 				else
 				{
-					var index = splittedDistincted.FindIndex(s => s == rail);
+					var index = splittedNoLongerDuplicates.FindIndex(s => s == rail);
 
-					if (rail.Curve.GetBakedLength() < splittedDistincted[index].Curve.GetBakedLength())
+					if (rail.Curve.GetBakedLength() < splittedNoLongerDuplicates[index].Curve.GetBakedLength())
 					{
-						splittedDistincted[index] = rail;
+						splittedNoLongerDuplicates[index] = rail;
+						weights[edges[i]] = rail.Curve.GetBakedLength();
 					}
 				}
 			}
 
-			var newWeights = new Dictionary<Edge, double>();
-			for (int i = 0; i < edges.Count; i++)
-			{
-				newWeights[edges[i]] = splittedDistincted[i].Curve.GetBakedLength();
-			}
+			return weights;
+		}
 
-			return newWeights;
+		private static RailPath FindRailByEdge(
+			List<RailPath> splitted, Dictionary<Vector3, int> nodeNumbers, Edge edge)
+		{
+			Vector3 from = nodeNumbers.Keys.First(k => nodeNumbers[k] == edge.From.NodeNumber);
+			Vector3 to = nodeNumbers.Keys.First(k => nodeNumbers[k] == edge.To.NodeNumber);
 
-			// var weights = new Dictionary<Edge, double>();
-			// var edges = graph.Edges.ToList();
-			// for (int i = 0; i < edges.Count; i++)
-			// {
-			//if weight less rewrite
-			// 	weights[edges[i]] = splitted[i].Curve.GetBakedLength();
-			// }
-
-			// return weights;
+			var rail = splitted.First(
+				s => (s.Start.IsEqualApprox(from) && s.End.IsEqualApprox(to))
+				|| (s.Start.IsEqualApprox(to) && s.End.IsEqualApprox(from)));
+			return rail;
 		}
 
 		private static int[] ParseVectorsToNodeNumbers(
