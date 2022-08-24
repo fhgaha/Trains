@@ -60,11 +60,11 @@ namespace Trains.Model.Common.GraphRelated
 				var firstTurn = turningPoints[i];
 				var secondTurn = turningPoints[i + 1];
 
-				//var path = splitted.FindAll(p => ShouldGoForward(p) || ShouldGoBackwards(p))
-					// .OrderBy(p => p.Curve.GetBakedLength())
-					// .First();
+				var path = splitted.FindAll(p => ShouldGoForward(p) || ShouldGoBackwards(p))
+					.OrderBy(p => p.Curve.GetBakedLength())
+					.First();
 
-				var path = splitted.First(p => ShouldGoForward(p) || ShouldGoBackwards(p));
+				// var path = splitted.First(p => ShouldGoForward(p) || ShouldGoBackwards(p));
 				var currentPoints = path.Curve.GetBakedPoints();
 				var origin = result.Count == 0 ? Vector3.Zero : secondTurn - turningPoints[0];
 

@@ -39,7 +39,8 @@ namespace Trains
 			{
 				if (r.Crossings.Count <= 2)
 				{
-					var newRail = RailPath.BuildNoMeshRail(railScene, r.Curve.GetBakedPoints(), r.Translation);
+					var pointsGlobal = r.Curve.GetBakedPoints().Select(p => r.Translation + p);
+					var newRail = RailPath.BuildNoMeshRail(railScene, pointsGlobal, Vector3.Zero);
 					PrintStartEnd(newRail);
 					newRails.Add(newRail);
 
