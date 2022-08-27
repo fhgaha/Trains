@@ -175,7 +175,8 @@ namespace Trains.Model.Builders
 			this.tangent.Translation = tangent.ToVec3();
 		}
 
-		public List<Vector2> CalculateCurvePointsWithSnappedEnd(Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
+		public List<Vector2> CalculateCurvePointsWithSnappedEnd(
+			Vector2 start, Vector2 end, Vector2 startDir, Vector2 finishDir)
 		{
 			var paths = dubinsPathGenerator.GetAllDubinsPaths(
 				startPos: start.ToVec3(),

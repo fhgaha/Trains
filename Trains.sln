@@ -1,12 +1,18 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trains", "Trains.csproj", "{EA604606-C7D4-469E-80EA-B7CD8BFBE487}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trains", "Trains.csproj", "{EA604606-C7D4-469E-80EA-B7CD8BFBE487}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainsXUnitTests", "..\TrainsXUnitTests\TrainsXUnitTests.csproj", "{CBCB1309-0EF2-44CB-B35D-164F3707D269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-	Debug|Any CPU = Debug|Any CPU
-	ExportDebug|Any CPU = ExportDebug|Any CPU
-	ExportRelease|Any CPU = ExportRelease|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EA604606-C7D4-469E-80EA-B7CD8BFBE487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -15,5 +21,21 @@ Global
 		{EA604606-C7D4-469E-80EA-B7CD8BFBE487}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{EA604606-C7D4-469E-80EA-B7CD8BFBE487}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{EA604606-C7D4-469E-80EA-B7CD8BFBE487}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{EA604606-C7D4-469E-80EA-B7CD8BFBE487}.Release|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{EA604606-C7D4-469E-80EA-B7CD8BFBE487}.Release|Any CPU.Build.0 = ExportRelease|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBCB1309-0EF2-44CB-B35D-164F3707D269}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFE15A57-DE45-4D6F-93B0-F16F10C7DB6B}
 	EndGlobalSection
 EndGlobal

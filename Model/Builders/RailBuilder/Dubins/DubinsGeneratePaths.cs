@@ -28,12 +28,16 @@ namespace Trains
         List<OneDubinsPath> pathDataList = new List<OneDubinsPath>();
 
         //Get all valid Dubins paths sorted from shortest to longest
-        public List<OneDubinsPath> GetAllDubinsPaths(Vector3 startPos, float startHeading, Vector3 goalPos, float goalHeading)
+        public List<OneDubinsPath> GetAllDubinsPaths(
+            Vector3 startPos, float startHeading, Vector3 goalPos, float goalHeading)
         {
             this.startPos = startPos;
             this.goalPos = goalPos;
             this.startHeading = startHeading;
             this.goalHeading = goalHeading;
+
+            var startHeadingDeg = startHeading * 180 / Mathf.Pi;
+            var goalHeadingDeg = goalHeading * 180 / Mathf.Pi;
 
             //Reset the list with all Dubins paths
             pathDataList.Clear();
