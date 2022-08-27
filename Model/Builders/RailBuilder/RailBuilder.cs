@@ -309,34 +309,33 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 			if (!mousePosIsInMapBorders) return;
-
-			var points = new List<Vector2>();
-			bpEndSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
+            bpEndSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
+            
+			List<Vector2> points;
+            if (!bpEndSnapper.IsSnapped)
+            {
+                points = calculator.CalculateCurvePoints
+                (
+                    start: blueprint.Translation.ToVec2(),
+                    end: mousePos.ToVec2(),
+                    prevDir: prevDir.ToVec2()
+                );
+            }
+            else
+            {
+                points = calculator.CalculateCurvePointsWithSnappedEnd
+                (
+                    start: blueprint.Translation.ToVec2(),
+                    end: bpEndSnapper.SnappedPoint.ToVec2(),
+                    startDir: prevDir.ToVec2(),
+                    finishDir: bpEndSnapper.SnappedDir.ToVec2().Rotated(Pi)
+                );
+            }
 
-			if (!bpEndSnapper.IsSnapped)
-			{
-				points = calculator.CalculateCurvePoints
-				(
-					start: blueprint.Translation.ToVec2(),
-					end: mousePos.ToVec2(),
-					prevDir: prevDir.ToVec2()
-				);
-			}
-			else
-			{
-				points = calculator.CalculateCurvePointsWithSnappedEnd
-				(
-					start: blueprint.Translation.ToVec2(),
-					end: bpEndSnapper.SnappedPoint.ToVec2(),
-					startDir: prevDir.ToVec2(),
-					finishDir: bpEndSnapper.SnappedDir.ToVec2().Rotated(Pi)
-				);
-			}
-
-			BuildBlueprintCurve(points);
+            BuildBlueprintCurve(points);
 		}
 
 		private void BuildBlueprintCurve(List<Vector2> points)

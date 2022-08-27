@@ -3,7 +3,7 @@ using System;
 
 namespace Trains.Model.Builders
 {
-	public abstract class Snapper : Node
+	public abstract class Snapper 
 	{
 		protected const float snapDistance = 0.5f;
 
