@@ -95,7 +95,7 @@ namespace Trains.Model.Builders
 				return endToStart;
 		}
 
-		private void RotateBlueprint(RailPath blueprint, Vector3 direction)
+		private void RotateBlueprint(IRailPath blueprint, Vector3 direction)
 		{
 			blueprint.Curve = RailCurve.GetSimpleCurve(Vector3.Zero, direction);
 		}
