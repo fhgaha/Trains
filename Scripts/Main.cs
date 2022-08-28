@@ -36,8 +36,8 @@ namespace Trains.Scripts
 			timer.Start(timeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			grid = GetNode<Grid>("Grid");
-			mover = new ProductMigrationManager();
-			mover.Init(grid.Cells);
+			mover = new ProductMigrationManager(grid.Cells);
+			// mover.Init(grid.Cells);
 
 			Global.StationContainer = GetNode<StationContainer>("Stations");
 			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("VisibleRails");

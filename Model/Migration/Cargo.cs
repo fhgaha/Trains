@@ -41,10 +41,22 @@ namespace Trains.Model.Migration
 		}
 
 		//get neighbours, move to closest cell to target
-		private static Cell GetNextCell(Cell from, Cell destination, Cell[,] cells) =>
-			from.GetNeighbours(cells)
-				.OrderBy(c => Cell.GetDistance(c, destination))
+		private static Cell GetNextCell(Cell from, Cell destination, Cell[,] cells)
+		{
+			return from.GetNeighbours(cells)
+				.OrderBy(c => Cell.GetDistanceSquared(c, destination))
 				.First();
+		}
+
+		// private static Cell GetNextCellMostValuableBased(Cell from, Cell destination, Cell[,] cells)
+		// {
+		// 	var profitable
+
+		// 	foreach (var c in cells)
+		// 	{
+				
+		// 	}
+		// }
 
 		public override bool Equals(object obj)
 		{

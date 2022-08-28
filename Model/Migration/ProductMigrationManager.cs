@@ -10,11 +10,17 @@ namespace Trains.Model.Migration
 {
 	public class ProductMigrationManager
 	{
+		private const float MaxAmountCoeff = 1.5f;
 		private Cell[,] cells;
 		private readonly List<Cargo> cargos = new List<Cargo>();
 		private readonly RandomNumberGenerator rnd = new RandomNumberGenerator();
 
-		public void Init(Cell[,] cells)
+		// public void Init(Cell[,] cells)
+		// {
+		// 	this.cells = cells;
+		// }
+
+		public ProductMigrationManager(Cell[,] cells)
 		{
 			this.cells = cells;
 		}
@@ -63,7 +69,6 @@ namespace Trains.Model.Migration
 			if (destination is null) return;
 			if (product.Amount <= 0) return;
 
-			const float MaxAmountCoeff = 1.5f;
 			rnd.Randomize();
 			float amount = rnd.Randf() * MaxAmountCoeff;
 			amount = Mathf.Clamp(amount, 0, product.Amount);
@@ -83,7 +88,7 @@ namespace Trains.Model.Migration
 			{
 				if (c.Building?.StockProductType != product.ProductType) continue;
 
-				var distance = Cell.GetDistance(start, c);
+				var distance = Cell.GetDistanceSquared(start, c);
 				var travelCost = distance * Global.TransportationCost;
 				var profitEstimation = c.GetProduct(product.ProductType).Price - travelCost;
 				destinationCostMap.Add(c, profitEstimation);

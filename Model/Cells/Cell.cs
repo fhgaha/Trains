@@ -34,6 +34,9 @@ namespace Trains.Model.Cells
 		public static float GetDistance(Cell first, Cell second)
 		=> (float)Math.Sqrt(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
 
+		public static float GetDistanceSquared(Cell first, Cell second)
+		=> (float)(Math.Pow(first.Row - second.Row, 2) + Math.Pow(first.Col - second.Col, 2));
+
 		internal void CargoArrived(Cargo cargo, ProductType productType, float amount, Cell[,] cells)
 		{
 			Product product = GetProduct(productType);

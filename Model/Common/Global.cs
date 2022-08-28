@@ -1,7 +1,3 @@
-using Godot;
-using System;
-using System.Collections.Generic;
-using Trains.Model.Builders;
 using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Common
@@ -16,20 +12,20 @@ namespace Trains.Model.Common
 		/// <summary>
 		///product travel cost
 		/// </summary>
-		public const float TransportationCost = 0.1f; //0.01f * Product.Price
+		public static float TransportationCost = 0.1f; //0.01f * Product.Price
 
 		/// <summary>
 		///amount above which product is ready to move
 		/// </summary>
-		public const float MoveTreshold = 1f;
+		public static float MoveTreshold = 1f;
 
 		/// <summary>
 		///the amount that moves per tick between cells 
 		/// </summary>
-		public const float TransportationAmount = 0.2f;
+		public static float TransportationAmount = 0.2f;
 
 		//decreasing amount per tick
-		public const float PriceDecay = 0.1f;
+		public static float PriceDecay = 0.1f;
 
 		public static ProductType? CurrentDisplayProductMode = null;
 		public static MainButtonType MainButtonMode = MainButtonType.None;
