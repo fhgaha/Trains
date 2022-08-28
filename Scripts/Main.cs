@@ -14,6 +14,7 @@ namespace Trains.Scripts
 		private Events events;
 		private Camera camera;
 		private ProductMigrationManager mover;
+		private Grid grid;
 
 		private StationBuilder stationBuilder;
 		private RailBuilder railBuilder;
@@ -30,11 +31,13 @@ namespace Trains.Scripts
 
 			events = GetNode<Events>("/root/Events");
 
-			mover = new ProductMigrationManager();
 			timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
 			timer.Start(timeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
+			grid = GetNode<Grid>("Grid");
+			mover = new ProductMigrationManager();
+			mover.Init(grid.Cells);
 
 			Global.StationContainer = GetNode<StationContainer>("Stations");
 			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("VisibleRails");
@@ -42,13 +45,12 @@ namespace Trains.Scripts
 			Global.ActualRailsContainer = GetNode<ActualRailsContainer>("ActualRails");
 
 			//init station builder
-			var cells = GetNode<Grid>("Grid").CellList;
 			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(cells, camera);
+			stationBuilder.Init(grid.CellList, camera);
 
 			//init rail builder
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
-			railBuilder.Init(cells, camera);
+			railBuilder.Init(grid.CellList, camera);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -68,8 +70,7 @@ namespace Trains.Scripts
 			events.EmitSignal(nameof(Events.Tick));
 
 			//for each source find cell with best price, move products there
-			var grid = GetNode<Grid>("Grid");
-			mover.MoveProducts(grid.Cells);
+			mover.MoveProducts();
 		}
 
 		private static void FloatDisplayDotsInsteadOfCommas()
