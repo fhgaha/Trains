@@ -7,21 +7,7 @@ namespace Trains
 {
 	public class GlobalAutoload : Node
 	{
-		[Export]
-		private float transportationCost
-		{
-			get
-			{
-				GD.Print(Global.TransportationCost);
-				return Global.TransportationCost;
-			}
-
-			set
-			{
-				Global.TransportationCost = value;
-				GD.Print(Global.TransportationCost);
-			}
-		}
+		[Export] private float transportationCost { get => Global.TransportationCost; set => Global.TransportationCost = value; }
 		[Export] private float moveTreshold { get => Global.MoveTreshold; set => Global.MoveTreshold = value; }
 		[Export] private float transportationAmount { get => Global.TransportationAmount; set => Global.TransportationAmount = value; }
 		[Export] private float priceDecay { get => Global.PriceDecay; set => Global.PriceDecay = value; }
@@ -34,10 +20,26 @@ namespace Trains
 			}
 			set
 			{
-				transportationCost = default;
+				transportationCost = transportationCostDefault;
+				moveTreshold = moveTresholdDefault;
+				transportationAmount = transportationAmountDefault;
+				priceDecay = priceDecayDefault;
 			}
 		}
 
 		private bool reset;
+
+		private float transportationCostDefault;
+		private float moveTresholdDefault;
+		private float transportationAmountDefault;
+		private float priceDecayDefault;
+
+		public override void _Ready()
+		{
+			transportationCostDefault = Global.TransportationCost;
+			moveTresholdDefault = Global.MoveTreshold;
+			transportationAmountDefault = Global.TransportationAmount;
+			priceDecayDefault = Global.PriceDecay;
+		}
 	}
 }
