@@ -23,17 +23,31 @@ namespace Trains.Model.Migration
 		{
 			//if cell has source of a product and cells has stock for the same product
 			//build cargos from source cell product amount and ship them to the stock
-			foreach (Cell cell in cells)
-			foreach (Product product in cell.ProductList)
-				BuildCargo(cell, product);
+			BuildCargoes();
 
-			//remove the cargos that have reached their destination
+			foreach (Cargo cargo in cargos)
+				cargo.Move(cells);
+
+			RemoveCargoesReachedDestination();
+		}
+
+		private void BuildCargoes()
+		{
+			foreach (Cell cell in cells)
+			{
+				foreach (Product product in cell.ProductList)
+					BuildCargo(cell, product);
+			}
+		}
+
+		private void RemoveCargoesReachedDestination()
+		{
 			var cargosToRemove = new List<Cargo>();
+
 			foreach (Cargo cargo in cargos)
 			{
-				cargo.Move(cells);
 				if (cargo.CurrentCell != cargo.Destination) continue;
-				//have reached destination
+
 				cargo.Unload(cells);
 				cargosToRemove.Add(cargo);
 			}
