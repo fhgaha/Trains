@@ -15,7 +15,7 @@ namespace Trains.Model.Migration
 		public Cell Destination { get; set; }
 		private static int newIdAddition = 1;
 
-		public void Load(Cell start, ProductType productType, float amount, Cell destination)
+		public void Init(Cell start, ProductType productType, float amount, Cell destination)
 		{
 			Id = newIdAddition;
 			newIdAddition++;
@@ -24,7 +24,7 @@ namespace Trains.Model.Migration
 			CurrentCell = start;
 			Destination = destination;
 
-			CurrentCell.GetProduct(ProductType).Amount -= this.Amount;
+			//CurrentCell.GetProduct(ProductType).Amount -= this.Amount;
 		}
 
 		public void Move(Cell[,] cells)

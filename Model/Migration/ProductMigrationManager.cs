@@ -10,7 +10,6 @@ namespace Trains.Model.Migration
 {
 	public class ProductMigrationManager
 	{
-		private const float MaxAmountCoeff = 1.5f;
 		private Cell[,] cells;
 		private readonly List<Cargo> cargos = new List<Cargo>();
 		private readonly RandomNumberGenerator rnd = new RandomNumberGenerator();
@@ -70,13 +69,14 @@ namespace Trains.Model.Migration
 			if (product.Amount <= 0) return;
 
 			rnd.Randomize();
-			float amount = rnd.Randf() * MaxAmountCoeff;
+			float amount = rnd.Randf() * Global.MaxProductAmount;
 			amount = Mathf.Clamp(amount, 0, product.Amount);
 			if (amount == 0) return;
-			product.Amount -= amount;
+			if (amount < Global.MinProductAmount) return;
+			//product.Amount -= amount;
 
 			Cargo cargo = new Cargo();
-			cargo.Load(cell, product.ProductType, amount, destination);
+			cargo.Init(cell, product.ProductType, amount, destination);
 			cargos.Add(cargo);
 		}
 

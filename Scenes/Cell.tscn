@@ -19,7 +19,7 @@ resource_local_to_scene = true
 [sub_resource type="ViewportTexture" id=4]
 viewport_path = NodePath("Info/Viewport")
 
-[node name="Cell" type="Spatial"]
+[node name="Cell" type="Spatial" groups=["Cell"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.5 )
 script = ExtResource( 1 )
 

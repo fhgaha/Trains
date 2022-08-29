@@ -17,7 +17,9 @@ namespace Trains.Model.Common
 		/// <summary>
 		///amount above which product is ready to move
 		/// </summary>
-		public static float MoveTreshold = 1f;
+		public static float MinProductAmount = 1f;
+
+		public static float MaxProductAmount = 1.5f;
 
 		/// <summary>
 		///the amount that moves per tick between cells 

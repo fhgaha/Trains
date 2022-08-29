@@ -3,7 +3,7 @@ using Godot;
 
 namespace Trains.Scripts.CellScene
 {
-	[Tool]
+	// [Tool]
 	public class MeshInstanceScript : MeshInstance
 	{
 		//hue represents as fraction of degrees
@@ -17,7 +17,7 @@ namespace Trains.Scripts.CellScene
 			var color = material.AlbedoColor;
 			float h, s, v;
 			color.ToHsv(out h, out s, out v);
-			var maxProductPrice = 100f;	
+			const float maxProductPrice = 100f;
 			h = maxHueValue_green * price / maxProductPrice;
 			h = Mathf.Clamp(h, 0, maxHueValue_green);
 			this.color = Color.FromHsv(h, s, v);

@@ -64,14 +64,7 @@ namespace Trains.Model.Grids
 		private void onMainButtonModeChanged(MainButtonType mode)
 		{
 			//other button is pressed
-			if (mode == MainButtonType.ShowProductMap)
-			{
-				Visible = true;
-			}
-			else
-			{
-				Visible = false;
-			}
+			Visible = mode == MainButtonType.ShowProductMap;
 		}
 
 		public void onSpecificProductButtonPressed(ProductType productType)
