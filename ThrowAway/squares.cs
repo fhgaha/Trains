@@ -4,6 +4,8 @@ using System;
 public class squares : MultiMeshInstance
 {
 	private Random rnd;
+	private const int width = 256;
+	private const int height = 256;
 
 	public override void _Ready()
 	{
@@ -20,22 +22,27 @@ public class squares : MultiMeshInstance
 			TransformFormat = MultiMesh.TransformFormatEnum.Transform3d,
 			ColorFormat = MultiMesh.ColorFormatEnum.Color8bit,
 			CustomDataFormat = MultiMesh.CustomDataFormatEnum.None,
-			InstanceCount = 65536,
+			InstanceCount = width*height,
 			VisibleInstanceCount = -1,
 			Mesh = plane
 		};
 
 		int instancesCount = 0;
 
-		for (int i = 0; i < 256; i++)
+		for (int x = 0; x < width; x++)
 		{
-			for (int j = 0; j < 256; j++)
+			for (int z = 0; z < height; z++)
 			{
-				Multimesh.SetInstanceTransform(instancesCount, new Transform(Basis.Identity, new Vector3(i, 0, j)));
+				Multimesh.SetInstanceTransform(instancesCount, new Transform(Basis.Identity, new Vector3(x, 0, z)));
 				var color = new Color((float)rnd.NextDouble(), (float)rnd.NextDouble(), (float)rnd.NextDouble());
 				Multimesh.SetInstanceColor(instancesCount, color);
 				instancesCount++;
 			}
 		}
+
+		//later colors can be set like that
+		Multimesh.SetInstanceColor(0, Colors.Purple);
+		Multimesh.SetInstanceColor(1, Colors.Purple);
+		Multimesh.SetInstanceColor(2, Colors.Purple);
 	}
 }
