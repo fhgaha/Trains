@@ -9,7 +9,7 @@ namespace Trains.Scripts
 	public class Main : Spatial
 	{
 		private const float timeSec = 0.1f;
-		private PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
+		private readonly PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
 		private Timer timer;
 		private Events events;
 		private Camera camera;

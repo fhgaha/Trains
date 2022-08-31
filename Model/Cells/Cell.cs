@@ -40,7 +40,7 @@ namespace Trains.Model.Cells
 		internal void CargoArrived(Cargo cargo, ProductType productType, float amount, Cell[,] cells)
 		{
 			Product product = GetProduct(productType);
-			product.Amount += amount;
+			//product.Amount += amount;
 			//price change
 			//product.Price -= 1 / product.Amount;
 			//delta price should be (newPrice - oldPrice) * 0.25

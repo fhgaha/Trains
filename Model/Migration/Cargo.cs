@@ -27,12 +27,20 @@ namespace Trains.Model.Migration
 			//CurrentCell.GetProduct(ProductType).Amount -= this.Amount;
 		}
 
+		private int moveCallsCount = 0;
 		public void Move(Cell[,] cells)
 		{
-			NextCell = GetNextCell(CurrentCell, Destination, cells);
-			CurrentCell.GetProduct(ProductType).Amount -= this.Amount;
-			CurrentCell = NextCell;
-			CurrentCell.GetProduct(ProductType).Amount += this.Amount;
+			moveCallsCount++;
+
+			if (moveCallsCount == 5)
+			{
+				moveCallsCount = 0;
+
+				NextCell = GetNextCell(CurrentCell, Destination, cells);
+				CurrentCell.GetProduct(ProductType).Amount -= this.Amount;
+				CurrentCell = NextCell;
+				CurrentCell.GetProduct(ProductType).Amount += this.Amount;
+			}
 		}
 
 		public void Unload(Cell[,] cells)
@@ -54,7 +62,7 @@ namespace Trains.Model.Migration
 
 		// 	foreach (var c in cells)
 		// 	{
-				
+
 		// 	}
 		// }
 

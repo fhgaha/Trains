@@ -61,12 +61,13 @@ namespace Trains.Model.Migration
 
 		public void BuildCargo(Cell cell, Product product)
 		{
+			if (product.Amount <= 0) return;
+
 			//if cell has source and other cell has stock build cargo and ship it
 			if (cell.Building?.SourceProductType != product.ProductType) return;
 
 			Cell destination = GetProfitableCell(product, cell);
 			if (destination is null) return;
-			if (product.Amount <= 0) return;
 
 			rnd.Randomize();
 			float amount = rnd.Randf() * Global.MaxProductAmount;

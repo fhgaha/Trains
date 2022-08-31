@@ -36,7 +36,7 @@ namespace Trains.Model.Cells.Buildings
 			}
 		}
 
-		private float sourceDeltaAmount = 0.5f;
+		private float sourceDeltaAmount = 0.02f;
 		private float stockDeltaAmount = 0.5f;
 
 		internal void InitSource(Product product, float startAmount)
@@ -57,7 +57,7 @@ namespace Trains.Model.Cells.Buildings
 		public void SetTriangleUpBar()
 		{
 			var bar = GetNode<Sprite3D>("TriangleUpBar/Sprite3D");
-			var scaleYValue = SourceDeltaAmount * 0.8f;
+			var scaleYValue = SourceDeltaAmount * 3f;
 			bar.Scale = new Vector3(1, scaleYValue, 1);
 		}
 

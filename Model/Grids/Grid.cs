@@ -10,8 +10,8 @@ namespace Trains.Model.Grids
 {
 	public class Grid : Spatial
 	{
-		public int CellsRowsAmount { get; set; } = 10;
-		public int CellsColsAmount { get; set; } = 10;
+		public int CellsRowsAmount { get; set; } = 16;
+		public int CellsColsAmount { get; set; } = 16;
 		public Cell[,] Cells;
 		public List<Cell> CellList { get; private set; }
 		readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
@@ -27,8 +27,10 @@ namespace Trains.Model.Grids
 			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
 			CellList = new List<Cell>();
 			for (int i = 0; i < Cells.GetLength(0); i++)
+			{
 				for (int j = 0; j < Cells.GetLength(1); j++)
 					CellList.Add(Cells[i, j]);
+			}
 
 			AddBuildings();
 
