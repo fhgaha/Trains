@@ -3,13 +3,13 @@ using System;
 
 public class squares : MultiMeshInstance
 {
-	private Random rnd;
-	private const int width = 256;
-	private const int height = 256;
+	private Random _rnd;
+	private const int Width = 256;
+	private const int Height = 256;
 
 	public override void _Ready()
 	{
-		rnd = new Random();
+		_rnd = new Random();
 
 		var plane = new PlaneMesh
 		{
@@ -22,21 +22,19 @@ public class squares : MultiMeshInstance
 			TransformFormat = MultiMesh.TransformFormatEnum.Transform3d,
 			ColorFormat = MultiMesh.ColorFormatEnum.Color8bit,
 			CustomDataFormat = MultiMesh.CustomDataFormatEnum.None,
-			InstanceCount = width*height,
+			InstanceCount = Width * Height,
 			VisibleInstanceCount = -1,
 			Mesh = plane
 		};
 
-		int instancesCount = 0;
-
-		for (int x = 0; x < width; x++)
+		for (int z = 0; z < Height; z++)
 		{
-			for (int z = 0; z < height; z++)
+			for (int x = 0; x < Width; x++)
 			{
-				Multimesh.SetInstanceTransform(instancesCount, new Transform(Basis.Identity, new Vector3(x, 0, z)));
-				var color = new Color((float)rnd.NextDouble(), (float)rnd.NextDouble(), (float)rnd.NextDouble());
-				Multimesh.SetInstanceColor(instancesCount, color);
-				instancesCount++;
+				var index = x + (z * Height);
+				Multimesh.SetInstanceTransform(index, new Transform(Basis.Identity, new Vector3(x, 0, z)));
+				var color = new Color((float)_rnd.NextDouble(), (float)_rnd.NextDouble(), (float)_rnd.NextDouble());
+				Multimesh.SetInstanceColor(index, color);
 			}
 		}
 

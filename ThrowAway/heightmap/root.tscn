@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://ThrowAway/heightmap/terrain.cs" type="Script" id=2]
+[ext_resource path="res://ThrowAway/heightmap/heightmap.exr" type="Texture" id=3]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type spatial;
+
+uniform sampler2D _a;
+uniform sampler2D heightmap;
+uniform float height_ratio = 1.0f;
+
+void fragment()
+{
+	ALBEDO = texture(_a, UV).rgb;
+}
+
+void vertex()
+{
+	VERTEX.y += texture(heightmap, UV).r * height_ratio;
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
+shader_param/height_ratio = 1.369
+shader_param/_a = ExtResource( 1 )
+shader_param/heightmap = ExtResource( 3 )
+
+[sub_resource type="PlaneMesh" id=1]
+subdivide_width = 50
+subdivide_depth = 50
+
+[node name="root" type="Spatial"]
+
+[node name="terrain" type="MeshInstance" parent="."]
+material_override = SubResource( 3 )
+mesh = SubResource( 1 )
+script = ExtResource( 2 )
+
+[node name="StaticBody" type="StaticBody" parent="terrain"]
+
+[node name="CollisionShape" type="CollisionShape" parent="terrain/StaticBody"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.557314, 2.01533 )

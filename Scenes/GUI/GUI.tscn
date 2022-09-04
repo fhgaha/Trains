@@ -5,7 +5,7 @@
 [ext_resource path="res://Scenes/GUI/CellToolTip.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Fonts/Merriweather/Merriweather-Bold.tres" type="DynamicFont" id=4]
 [ext_resource path="res://Scenes/GUI/MainButtons/MainButton.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scripts/GUI/DebugInfo/DebugInfo.cs" type="Script" id=6]
+[ext_resource path="res://Scenes/GUI/DebugInfo.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scripts/GUI/MapAndButtons.cs" type="Script" id=7]
 [ext_resource path="res://Scripts/GUI/BuildRail/BuildRailMenu.cs" type="Script" id=8]
 [ext_resource path="res://Scripts/GUI/MainPanel.cs" type="Script" id=9]
@@ -26,22 +26,7 @@ __meta__ = {
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="DebugInfo" type="VBoxContainer" parent="CanvasLayer"]
-margin_right = 40.0
-margin_bottom = 40.0
-mouse_filter = 2
-script = ExtResource( 6 )
-
-[node name="FPSCounter" type="Label" parent="CanvasLayer/DebugInfo"]
-margin_right = 75.0
-margin_bottom = 14.0
-text = "FPS: 100"
-
-[node name="mousePos" type="Label" parent="CanvasLayer/DebugInfo"]
-margin_top = 18.0
-margin_right = 75.0
-margin_bottom = 32.0
-text = "mousePos: "
+[node name="DebugInfo" parent="CanvasLayer" instance=ExtResource( 6 )]
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 visible = false

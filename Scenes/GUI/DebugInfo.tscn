@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/GUI/DebugInfo/DebugInfo.cs" type="Script" id=1]
+
+[node name="DebugInfo" type="VBoxContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
+script = ExtResource( 1 )
+
+[node name="FPSCounter" type="Label" parent="."]
+margin_right = 75.0
+margin_bottom = 14.0
+text = "FPS: 100"
+
+[node name="mousePos" type="Label" parent="."]
+margin_top = 18.0
+margin_right = 75.0
+margin_bottom = 32.0
+text = "mousePos: "
