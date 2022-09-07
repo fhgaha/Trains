@@ -14,7 +14,7 @@ namespace Trains.Model.Generators
 	public class CellGenerator : Node
 	{
 		//generate cells, smothify, return to Grid.cs and generate db
-		internal static Cell[,] Generate(Grid grid, int rows, int cols, PackedScene cellScene)
+		internal static Cell[,] Generate(Spatial grid, int rows, int cols, PackedScene cellScene)
 		{
 			var noises = new Dictionary<ProductType, OpenSimplexNoise>
 			{

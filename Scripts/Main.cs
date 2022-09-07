@@ -14,7 +14,7 @@ namespace Trains.Scripts
 		private Events events;
 		private Camera camera;
 		private ProductMigrationManager mover;
-		private Grid grid;
+		private IGrid grid;
 
 		private StationBuilder stationBuilder;
 		private RailBuilder railBuilder;
@@ -35,9 +35,8 @@ namespace Trains.Scripts
 			timer.Connect("timeout", this, nameof(onTimeout));
 			timer.Start(TimeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
-			grid = GetNode<Grid>("Grid");
-			mover = new ProductMigrationManager(grid.Cells);
-			// mover.Init(grid.Cells);
+			grid = GetNode<GridMm>("Grid");
+			//mover = new ProductMigrationManager(grid.Cells);
 
 			Global.StationContainer = GetNode<StationContainer>("Stations");
 			Global.VisibleRailContainer = GetNode<VisibleRailContainer>("VisibleRails");
@@ -70,7 +69,7 @@ namespace Trains.Scripts
 			events.EmitSignal(nameof(Events.Tick));
 
 			//for each source find cell with best price, move products there
-			mover.MoveProducts();
+			//mover.MoveProducts();
 		}
 
 		private static void FloatDisplayDotsInsteadOfCommas()

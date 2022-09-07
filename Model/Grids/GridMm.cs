@@ -8,10 +8,12 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Grids
 {
-    public class Grid : Spatial, IGrid
+    public class GridMm : Spatial, IGrid
     {
-        public int CellsRowsAmount { get; set; } = 10;
-        public int CellsColsAmount { get; set; } = 10;
+        public int CellsRowsAmount { get; set; } = 256;
+        public int CellsColsAmount { get; set; } = 256;
+        private Random _rnd;
+        private MultiMeshInstance multiMeshInstance = new MultiMeshInstance();
         public Cell[,] Cells { get; private set; }
         public List<Cell> CellList { get; private set; }
         readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
@@ -24,16 +26,52 @@ namespace Trains.Model.Grids
 
         public override void _Ready()
         {
-            Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
-            FillCellList();
-            AddBuildings();
+            AddMultimeshInstance();
+
+            //Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
+            //FillCellList();
+            //AddBuildings();
 
             events = GetNode<Events>("/root/Events");
-            events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
-            events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
-            events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
+            //events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
+            //events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
+            //events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
             Visible = false;
+        }
+
+        private void AddMultimeshInstance()
+        {
+            _rnd = new Random();
+            multiMeshInstance = new MultiMeshInstance();
+
+            var plane = new PlaneMesh
+            {
+                Size = new Vector2(1, 1),
+                Material = new SpatialMaterial { VertexColorUseAsAlbedo = true }
+            };
+
+            multiMeshInstance.Multimesh = new MultiMesh
+            {
+                TransformFormat = MultiMesh.TransformFormatEnum.Transform3d,
+                ColorFormat = MultiMesh.ColorFormatEnum.Color8bit,
+                CustomDataFormat = MultiMesh.CustomDataFormatEnum.None,
+                InstanceCount = CellsRowsAmount * CellsColsAmount,
+                VisibleInstanceCount = -1,
+                Mesh = plane
+            };
+
+            for (int z = 0; z < CellsColsAmount; z++)
+            for (int x = 0; x < CellsRowsAmount; x++)
+            {
+                var index = x + (z * CellsColsAmount);
+                multiMeshInstance.Multimesh
+                    .SetInstanceTransform(index, new Transform(Basis.Identity, new Vector3(x, 0, z)));
+                var color = new Color((float) _rnd.NextDouble(), (float) _rnd.NextDouble(), (float) _rnd.NextDouble());
+                multiMeshInstance.Multimesh.SetInstanceColor(index, color);
+            }
+
+            AddChild(multiMeshInstance);
         }
 
         private void FillCellList()

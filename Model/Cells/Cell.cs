@@ -261,37 +261,37 @@ namespace Trains.Model.Cells
 		{
 			//updated grows all the time
 			//price always go down
-			List<Cell> updated = new List<Cell>();
-			updated.Add(this);
-			int depth = 5;
-			deltaPrice *= 1f;
-			var neighbours = GetNeighbours(cells);
+			//List<Cell> updated = new List<Cell>();
+			//updated.Add(this);
+			//int depth = 5;
+			//deltaPrice *= 1f;
+			//var neighbours = GetNeighbours(cells);
 
-			foreach (Cell n in neighbours)
-			{
-				if (updated.Contains(n)) continue;
-				n.GetProduct(productType).Price += deltaPrice;
-				updated.Add(n);
-			}
+			//foreach (Cell n in neighbours)
+			//{
+			//	if (updated.Contains(n)) continue;
+			//	n.GetProduct(productType).Price += deltaPrice;
+			//	updated.Add(n);
+			//}
 
-			while (depth > 0)
-			{
-				depth--;
-				deltaPrice *= 0.5f;
-				var nextNeighbours = new List<Cell>();
-				foreach (Cell n in neighbours)
-				{
-					var nNeighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
-					nextNeighbours.AddRange(nNeighbours.Where(_n => !nextNeighbours.Contains(_n)));
-				}
+			//while (depth > 0)
+			//{
+			//	depth--;
+			//	deltaPrice *= 0.5f;
+			//	var nextNeighbours = new List<Cell>();
+			//	foreach (Cell n in neighbours)
+			//	{
+			//		var nNeighbours = n.GetNeighbours(cells).Where(c => !updated.Contains(c));
+			//		nextNeighbours.AddRange(nNeighbours.Where(_n => !nextNeighbours.Contains(_n)));
+			//	}
 
-				foreach (Cell n in nextNeighbours)
-				{
-					n.GetProduct(productType).Price += deltaPrice;
-					updated.Add(n);
-				}
-				neighbours = nextNeighbours;
-			}
+			//	foreach (Cell n in nextNeighbours)
+			//	{
+			//		n.GetProduct(productType).Price += deltaPrice;
+			//		updated.Add(n);
+			//	}
+			//	neighbours = nextNeighbours;
+			//}
 		}
 
 		private void onPriceChanged(Product sender, float value)
