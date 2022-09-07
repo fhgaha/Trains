@@ -85,6 +85,37 @@ namespace Trains.Model.Cells
 			staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
 		}
 
+		public void InitNoInstancing(int row, int col)
+		{
+			//events = GetNode<Events>("/root/Events");
+			//events.Connect(nameof(Events.Tick), this, nameof(onTick));
+
+			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
+			Id = row + "_" + col;
+			Row = row; Col = col;
+
+			ProductList = new List<Product>();
+
+			//GetNode<Info>("Info").SetId(Id);
+
+			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
+			{
+				Product product = new Product(type, -1);
+				ProductList.Add(product);
+				product.Price = 30f;
+
+				//connect product button to product
+				//var amountBar = GetNode<ProductAmountBar>("Amount");
+				//product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
+				//product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
+				//events.Connect(nameof(Events.Tick), product, nameof(Product.onTick));
+			}
+
+			//var staticBody = GetNode<StaticBody>("MeshInstance/StaticBody");
+			//staticBody.Connect("mouse_entered", this, nameof(onMouseEntered));
+			//staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
+		}
+
 		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
 		{
 			Type noiseType = GetNoiseType(productType);

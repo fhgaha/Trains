@@ -6,6 +6,6 @@ namespace Trains.Model.Grids
     public interface IGrid
     {
         List<Cell> CellList { get; }
-        Cell[,] Cells { get;  }
+        Cell[,] Cells { get; }
     }
 }

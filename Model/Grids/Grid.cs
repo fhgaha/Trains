@@ -40,10 +40,8 @@ namespace Trains.Model.Grids
         {
             CellList = new List<Cell>();
             for (int i = 0; i < Cells.GetLength(0); i++)
-            {
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                    CellList.Add(Cells[i, j]);
-            }
+            for (int j = 0; j < Cells.GetLength(1); j++)
+                CellList.Add(Cells[i, j]);
         }
 
         private void AddBuildings()
@@ -83,8 +81,8 @@ namespace Trains.Model.Grids
         private void DisplayProductDataAll(ProductType productType)
         {
             for (int i = 0; i < Cells.GetLength(0); i++)
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                    Cells[i, j].DisplayProductData(productType);
+            for (int j = 0; j < Cells.GetLength(1); j++)
+                Cells[i, j].DisplayProductData(productType);
         }
 
         private void onAllProductsButtonPressed()
@@ -97,8 +95,8 @@ namespace Trains.Model.Grids
         private void HideProductDataAll()
         {
             for (int i = 0; i < Cells.GetLength(0); i++)
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                    Cells[i, j].DisplayProductDataAllProductsMode();
+            for (int j = 0; j < Cells.GetLength(1); j++)
+                Cells[i, j].DisplayProductDataAllProductsMode();
         }
     }
 }

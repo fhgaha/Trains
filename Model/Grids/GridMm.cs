@@ -8,135 +8,102 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Grids
 {
-    public class GridMm : Spatial, IGrid
-    {
-        public int CellsRowsAmount { get; set; } = 256;
-        public int CellsColsAmount { get; set; } = 256;
-        private Random _rnd;
-        private MultiMeshInstance multiMeshInstance = new MultiMeshInstance();
-        public Cell[,] Cells { get; private set; }
-        public List<Cell> CellList { get; private set; }
-        readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
-        readonly PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
-        // PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
-        // PackedScene stock = GD.Load<PackedScene>("res://Scenes/Buildings/Stock.tscn");
-        private Events events;
+	public class GridMm : Spatial, IGrid
+	{
+		public int CellsRowsAmount { get; set; } = 64;
+		public int CellsColsAmount { get; set; } = 64;
 
-        //set cell size in editor: Cell/MeshInstance/Mesh/Size
+		public MultiMeshInstance MultiMeshInstance { get; } = new MultiMeshInstance();
+		public Cell[,] Cells { get; private set; }
+		public List<Cell> CellList { get; private set; }
+		readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
+		readonly PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
+		// PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
+		// PackedScene stock = GD.Load<PackedScene>("res://Scenes/Buildings/Stock.tscn");
+		private Events events;
 
-        public override void _Ready()
-        {
-            AddMultimeshInstance();
+		//set cell size in editor: Cell/MeshInstance/Mesh/Size
 
-            //Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
-            //FillCellList();
-            //AddBuildings();
+		public override void _Ready()
+		{
+			Cells = new Cell[CellsRowsAmount, CellsRowsAmount];
+			CellList = new List<Cell>();
+			CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount);
+			AddChild(MultiMeshInstance);
+			//FillCellList();
+			//AddBuildings();
 
-            events = GetNode<Events>("/root/Events");
-            //events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
-            //events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
-            //events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
+			events = GetNode<Events>("/root/Events");
+			//events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
+			//events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
+			//events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
-            Visible = false;
-        }
+			//Visible = false;
+		}
 
-        private void AddMultimeshInstance()
-        {
-            _rnd = new Random();
-            multiMeshInstance = new MultiMeshInstance();
 
-            var plane = new PlaneMesh
-            {
-                Size = new Vector2(1, 1),
-                Material = new SpatialMaterial { VertexColorUseAsAlbedo = true }
-            };
 
-            multiMeshInstance.Multimesh = new MultiMesh
-            {
-                TransformFormat = MultiMesh.TransformFormatEnum.Transform3d,
-                ColorFormat = MultiMesh.ColorFormatEnum.Color8bit,
-                CustomDataFormat = MultiMesh.CustomDataFormatEnum.None,
-                InstanceCount = CellsRowsAmount * CellsColsAmount,
-                VisibleInstanceCount = -1,
-                Mesh = plane
-            };
+		private void FillCellList()
+		{
+			CellList = new List<Cell>();
+			for (int i = 0; i < Cells.GetLength(0); i++)
+			for (int j = 0; j < Cells.GetLength(1); j++)
+				CellList.Add(Cells[i, j]);
+		}
 
-            for (int z = 0; z < CellsColsAmount; z++)
-            for (int x = 0; x < CellsRowsAmount; x++)
-            {
-                var index = x + (z * CellsColsAmount);
-                multiMeshInstance.Multimesh
-                    .SetInstanceTransform(index, new Transform(Basis.Identity, new Vector3(x, 0, z)));
-                var color = new Color((float) _rnd.NextDouble(), (float) _rnd.NextDouble(), (float) _rnd.NextDouble());
-                multiMeshInstance.Multimesh.SetInstanceColor(index, color);
-            }
+		private void AddBuildings()
+		{
+			//sources
+			Cells[0, 0].AddBuilding(BuildingType.Source, building, ProductType.Lumber, 20f);
+			Cells[3, 8].AddBuilding(BuildingType.Source, building, ProductType.Lumber, 5f);
+			Cells[3, 3].AddBuilding(BuildingType.Source, building, ProductType.Grain, 5f);
+			Cells[0, 4].AddBuilding(BuildingType.Source, building, ProductType.Grain, 5f);
+			Cells[1, 2].AddBuilding(BuildingType.Source, building, ProductType.Grain, 5f);
+			Cells[6, 1].AddBuilding(BuildingType.Source, building, ProductType.Dairy, 5f);
+			Cells[9, 3].AddBuilding(BuildingType.Source, building, ProductType.Dairy, 5f);
 
-            AddChild(multiMeshInstance);
-        }
+			//stocks
+			Cells[5, 5].AddBuilding(BuildingType.Stock, building, ProductType.Lumber, 0f);
+			Cells[8, 4].AddBuilding(BuildingType.Stock, building, ProductType.Lumber, 0f);
+			Cells[7, 5].AddBuilding(BuildingType.Stock, building, ProductType.Grain, 0f);
+			Cells[0, 6].AddBuilding(BuildingType.Stock, building, ProductType.Dairy, 0f);
 
-        private void FillCellList()
-        {
-            CellList = new List<Cell>();
-            for (int i = 0; i < Cells.GetLength(0); i++)
-            {
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                    CellList.Add(Cells[i, j]);
-            }
-        }
+			//both
 
-        private void AddBuildings()
-        {
-            //sources
-            Cells[0, 0].AddBuilding(BuildingType.Source, building, ProductType.Lumber, 20f);
-            Cells[3, 8].AddBuilding(BuildingType.Source, building, ProductType.Lumber, 5f);
-            Cells[3, 3].AddBuilding(BuildingType.Source, building, ProductType.Grain, 5f);
-            Cells[0, 4].AddBuilding(BuildingType.Source, building, ProductType.Grain, 5f);
-            Cells[1, 2].AddBuilding(BuildingType.Source, building, ProductType.Grain, 5f);
-            Cells[6, 1].AddBuilding(BuildingType.Source, building, ProductType.Dairy, 5f);
-            Cells[9, 3].AddBuilding(BuildingType.Source, building, ProductType.Dairy, 5f);
+		}
 
-            //stocks
-            Cells[5, 5].AddBuilding(BuildingType.Stock, building, ProductType.Lumber, 0f);
-            Cells[8, 4].AddBuilding(BuildingType.Stock, building, ProductType.Lumber, 0f);
-            Cells[7, 5].AddBuilding(BuildingType.Stock, building, ProductType.Grain, 0f);
-            Cells[0, 6].AddBuilding(BuildingType.Stock, building, ProductType.Dairy, 0f);
+		private void onMainButtonModeChanged(MainButtonType mode)
+		{
+			//other button is pressed
+			Visible = mode == MainButtonType.ShowProductMap;
+		}
 
-            //both
+		private void onSpecificProductButtonPressed(ProductType productType)
+		{
+			Global.CurrentDisplayProductMode = productType;
+			DisplayProductDataAll(productType);
+		}
 
-        }
+		//show amount, prices, colors for selecte product
+		private void DisplayProductDataAll(ProductType productType)
+		{
+			for (int i = 0; i < Cells.GetLength(0); i++)
+				for (int j = 0; j < Cells.GetLength(1); j++)
+					Cells[i, j].DisplayProductData(productType);
+		}
 
-        private void onMainButtonModeChanged(MainButtonType mode)
-        {
-            //other button is pressed
-            Visible = mode == MainButtonType.ShowProductMap;
-        }
+		private void onAllProductsButtonPressed()
+		{
+			Global.CurrentDisplayProductMode = null;
+			HideProductDataAll();
+		}
 
-        private void onSpecificProductButtonPressed(ProductType productType)
-        {
-            Global.CurrentDisplayProductMode = productType;
-            DisplayProductDataAll(productType);
-        }
-
-        //show amount, prices, colors for selecte product
-        private void DisplayProductDataAll(ProductType productType)
-        {
-            for (int i = 0; i < Cells.GetLength(0); i++)
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                    Cells[i, j].DisplayProductData(productType);
-        }
-
-        private void onAllProductsButtonPressed()
-        {
-            Global.CurrentDisplayProductMode = null;
-            HideProductDataAll();
-        }
-
-        //should show sum amount of all products and no color, no prices
-        private void HideProductDataAll()
-        {
-            for (int i = 0; i < Cells.GetLength(0); i++)
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                    Cells[i, j].DisplayProductDataAllProductsMode();
-        }
-    }
+		//should show sum amount of all products and no color, no prices
+		private void HideProductDataAll()
+		{
+			for (int i = 0; i < Cells.GetLength(0); i++)
+				for (int j = 0; j < Cells.GetLength(1); j++)
+					Cells[i, j].DisplayProductDataAllProductsMode();
+		}
+	}
 }
