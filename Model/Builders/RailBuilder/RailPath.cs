@@ -7,13 +7,7 @@ using Trains.Model.Common;
 
 namespace Trains
 {
-    public interface IRailPath
-    {
-        Vector3 Translation { get; set; }
-        Curve3D Curve { get; set; }
-    }
-
-    public class RailPath : Path, IRailPath
+    public class RailPath : Path
     {
         [Export] public readonly Color BpColor;
         [Export] public readonly Color NotAllowedColor;

@@ -18,8 +18,6 @@ namespace Trains.Model.Builders
 			&& SnappedMidSegment != default;
 		public bool IsSnapped => IsSnappedOnPathStartOrPathEnd || IsSnappedOnSegment;
 
-		public StartSnapper() : base() { }
-
 		public void TrySnap(Vector3 mousePos, List<RailPath> pathList, RailPath blueprint)
 		{
 			foreach (RailPath path in pathList)
@@ -46,8 +44,6 @@ namespace Trains.Model.Builders
 				}
 				else if (TrySnapOnMidSegment(path, mousePos) is CurveSegment segment)
 				{
-					if (segment is null) continue;
-
 					blueprint.Translation = segment.First;
 					SetVars(default, default, path, segment);
 					return;
@@ -70,14 +66,10 @@ namespace Trains.Model.Builders
 			if (segments.Count < 2) return null;
 
 			for (int i = 1; i < segments.Count; i++)
-			{
-				if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
-				{
-					return segments[i];
-				}
-			}
+                if (IsCursorOn(segments[i].First, segments[i].Second, mousePos))
+                    return segments[i];
 
-			return null;
+            return null;
 		}
 
 		public Vector3 GetBpStartSnappedSegmentToCursorDirection(Vector3 mousePos)
@@ -89,13 +81,10 @@ namespace Trains.Model.Builders
 			var startToCursor = (mousePos - SnappedMidSegment.First).Normalized();
 			var segmentAndCursorAreOneDirectional = startToEnd.Dot(startToCursor) > 0;
 
-			if (segmentAndCursorAreOneDirectional)
-				return startToEnd;
-			else
-				return endToStart;
+			return segmentAndCursorAreOneDirectional ? startToEnd : endToStart;
 		}
 
-		private void RotateBlueprint(IRailPath blueprint, Vector3 direction)
+		private void RotateBlueprint(RailPath blueprint, Vector3 direction)
 		{
 			blueprint.Curve = RailCurve.GetSimpleCurve(Vector3.Zero, direction);
 		}

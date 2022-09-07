@@ -10,8 +10,8 @@ namespace Trains.Model.Grids
 {
 	public class Grid : Spatial
 	{
-		public int CellsRowsAmount { get; set; } = 16;
-		public int CellsColsAmount { get; set; } = 16;
+		public int CellsRowsAmount { get; set; } = 10;
+		public int CellsColsAmount { get; set; } = 10;
 		public Cell[,] Cells;
 		public List<Cell> CellList { get; private set; }
 		readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
@@ -23,26 +23,30 @@ namespace Trains.Model.Grids
 		//set cell size in editor: Cell/MeshInstance/Mesh/Size
 
 		public override void _Ready()
-		{
-			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
-			CellList = new List<Cell>();
-			for (int i = 0; i < Cells.GetLength(0); i++)
-			{
-				for (int j = 0; j < Cells.GetLength(1); j++)
-					CellList.Add(Cells[i, j]);
-			}
+        {
+            Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
+            FillCellList();
+            AddBuildings();
 
-			AddBuildings();
+            events = GetNode<Events>("/root/Events");
+            events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
+            events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
+            events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
-			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
-			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
-			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
+            Visible = false;
+        }
 
-			Visible = false;
-		}
+        private void FillCellList()
+        {
+            CellList = new List<Cell>();
+            for (int i = 0; i < Cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < Cells.GetLength(1); j++)
+                    CellList.Add(Cells[i, j]);
+            }
+        }
 
-		private void AddBuildings()
+        private void AddBuildings()
 		{
 			//sources
 			Cells[0, 0].AddBuilding(BuildingType.Source, building, ProductType.Lumber, 20f);

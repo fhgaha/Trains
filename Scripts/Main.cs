@@ -8,7 +8,7 @@ namespace Trains.Scripts
 {
 	public class Main : Spatial
 	{
-		private const float timeSec = 0.1f;
+		private const float TimeSec = 0.1f;
 		private readonly PackedScene consoleScene = GD.Load<PackedScene>("res://Scenes/GUI/Cosnole/Console.tscn");
 		private Timer timer;
 		private Events events;
@@ -33,7 +33,7 @@ namespace Trains.Scripts
 
 			timer = GetNode<Timer>("MainTimer");
 			timer.Connect("timeout", this, nameof(onTimeout));
-			timer.Start(timeSec);
+			timer.Start(TimeSec);
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			grid = GetNode<Grid>("Grid");
 			mover = new ProductMigrationManager(grid.Cells);
