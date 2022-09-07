@@ -61,6 +61,7 @@ __meta__ = {
 
 [node name="gridmapHelper" parent="Landmarks" instance=ExtResource( 17 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.002, 0 )
+visible = false
 __meta__ = {
 "_edit_lock_": true
 }

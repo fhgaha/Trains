@@ -13,7 +13,7 @@ namespace Trains.Model.Grids
 		public int CellsRowsAmount { get; set; } = 64;
 		public int CellsColsAmount { get; set; } = 64;
 
-		public MultiMeshInstance MultiMeshInstance { get; } = new MultiMeshInstance();
+		public MultiMeshInstance MultiMeshInstance { get; private set; } 
 		public Cell[,] Cells { get; private set; }
 		public List<Cell> CellList { get; private set; }
 		readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
@@ -26,11 +26,12 @@ namespace Trains.Model.Grids
 
 		public override void _Ready()
 		{
+			MultiMeshInstance = new MultiMeshInstance();
 			Cells = new Cell[CellsRowsAmount, CellsRowsAmount];
 			CellList = new List<Cell>();
 			CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount);
 			AddChild(MultiMeshInstance);
-			//FillCellList();
+			
 			//AddBuildings();
 
 			events = GetNode<Events>("/root/Events");

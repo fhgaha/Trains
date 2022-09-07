@@ -51,7 +51,8 @@ namespace Trains.Model.Generators
 			var plane = new PlaneMesh
 			{
 				Size = new Vector2(1, 1),
-				Material = new SpatialMaterial { VertexColorUseAsAlbedo = true }
+				Material = new SpatialMaterial { VertexColorUseAsAlbedo = true },
+                CenterOffset = new Vector3(0.5f, 0f, 0.5f)
 			};
 
 			grid.MultiMeshInstance.Multimesh = new MultiMesh
@@ -83,6 +84,12 @@ namespace Trains.Model.Generators
 				grid.Cells[z, x] = cell;
 				grid.CellList.Add(cell);
 			}
-		}
+
+			//plane collision shape
+            StaticBody staticBody = new StaticBody();
+            CollisionShape collisionShape = new CollisionShape { Shape = new PlaneShape() };
+            staticBody.AddChild(collisionShape);
+            grid.MultiMeshInstance.AddChild(staticBody);
+        }
 	}
 }
