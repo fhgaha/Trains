@@ -9,39 +9,39 @@ using static Trains.Model.Common.Enums;
 namespace Trains.Model.Generators
 {
     public class CellGenerator
-	{
-		//generate cells, smothify, return to Grid.cs and generate db
-		internal static Cell[,] Generate(Grid grid, int rows, int cols, PackedScene cellScene)
-		{
-			var noises = new Dictionary<ProductType, OpenSimplexNoise>
-			{
-				[ProductType.Lumber] = new LumberNoise(),
-				[ProductType.Grain] = new GrainNoise(),
-				[ProductType.Dairy] = new DairyNoise()
-			};
+    {
+        //generate cells, smothify, return to Grid.cs and generate db
+        internal static Cell[,] Generate(Grid grid, int rows, int cols, PackedScene cellScene)
+        {
+            var noises = new Dictionary<ProductType, OpenSimplexNoise>
+            {
+                [ProductType.Lumber] = new LumberNoise(),
+                [ProductType.Grain] = new GrainNoise(),
+                [ProductType.Dairy] = new DairyNoise()
+            };
 
-			Cell[,] cells = new Cell[rows, cols];
+            Cell[,] cells = new Cell[rows, cols];
 
-			for (int i = 0; i < rows; i++)
-			for (int j = 0; j < cols; j++)
-				GenerateCellForGrid(grid, cellScene, noises, cells, i, j);
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    GenerateCellForGrid(grid, cellScene, noises, cells, i, j);
 
-			Cell.Cells = cells;
+            Cell.Cells = cells;
 
-			return cells;
-		}
+            return cells;
+        }
 
-		private static void GenerateCellForGrid(Spatial grid, PackedScene cellScene, Dictionary<ProductType, OpenSimplexNoise> noises, Cell[,] cells, int i, int j)
-		{
-			var cell = cellScene.Instance<Cell>();
-			grid.AddChild(cell);
-			cell.Init(i, j, noises);
-			cell.Name = "Cell_" + cell.Id; //unique name in tree
-			cell.Translate(new Vector3(i * Cell.Size, 0, j * Cell.Size));
-			cells[i, j] = cell;
-		}
+        private static void GenerateCellForGrid(Spatial grid, PackedScene cellScene, Dictionary<ProductType, OpenSimplexNoise> noises, Cell[,] cells, int i, int j)
+        {
+            var cell = cellScene.Instance<Cell>();
+            grid.AddChild(cell);
+            cell.Init(i, j, noises);
+            cell.Name = "Cell_" + cell.Id; //unique name in tree
+            cell.Translate(new Vector3(i * Cell.Size, 0, j * Cell.Size));
+            cells[i, j] = cell;
+        }
 
-		public static void Generate(GridMm grid, int CellsRowsAmount, int CellsColsAmount)
+        public static void Generate(GridMm grid, int CellsRowsAmount, int CellsColsAmount)
         {
             Random _rnd = new Random();
 
@@ -82,13 +82,17 @@ namespace Trains.Model.Generators
                 grid.CellList.Add(cell);
             }
 
-            AddPlaneCollider(grid);
-        }
-
-        private static void AddPlaneCollider(GridMm grid)
-        {
+            //add plane with collider
             StaticBody staticBody = new StaticBody();
-            CollisionShape collisionShape = new CollisionShape { Shape = new PlaneShape() };
+            var offsetX = (float)CellsRowsAmount / 2;
+            var offsetZ = (float)CellsColsAmount / 2;
+            CollisionShape collisionShape = new CollisionShape
+            {
+                Shape = new BoxShape { Extents = new Vector3(offsetX, 0.2f, offsetZ) },
+                Translation = new Vector3(offsetX, -0.2f, offsetZ)
+            };
+
+            //transform
             staticBody.AddChild(collisionShape);
             grid.MultiMeshInstance.AddChild(staticBody);
         }
