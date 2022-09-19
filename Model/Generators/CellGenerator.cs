@@ -37,7 +37,7 @@ namespace Trains.Model.Generators
 			grid.AddChild(cell);
 			cell.Init(i, j, noises);
 			cell.Name = "Cell_" + cell.Id; //unique name in tree
-			cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
+			cell.Translate(new Vector3(i * Cell.Size, 0, j * Cell.Size));
 			cells[i, j] = cell;
 		}
 
