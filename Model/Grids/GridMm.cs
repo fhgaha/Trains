@@ -30,19 +30,20 @@ namespace Trains.Model.Grids
 			Cells = new Cell[CellsRowsAmount, CellsRowsAmount];
 			CellList = new List<Cell>();
 			CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount);
-			AddChild(MultiMeshInstance);
-			
-			//AddBuildings();
 
-			events = GetNode<Events>("/root/Events");
+            //CellList.ForEach(c => GD.PrintS(c.Row, c.Col));
+
+			AddChild(MultiMeshInstance);
+
+            AddBuildings();
+
+            events = GetNode<Events>("/root/Events");
 			//events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 			//events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			//events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
 			//Visible = false;
 		}
-
-
 
 		private void FillCellList()
 		{
@@ -89,8 +90,8 @@ namespace Trains.Model.Grids
 		private void DisplayProductDataAll(ProductType productType)
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
-				for (int j = 0; j < Cells.GetLength(1); j++)
-					Cells[i, j].DisplayProductData(productType);
+			for (int j = 0; j < Cells.GetLength(1); j++)
+				Cells[i, j].DisplayProductData(productType);
 		}
 
 		private void onAllProductsButtonPressed()
@@ -103,8 +104,8 @@ namespace Trains.Model.Grids
 		private void HideProductDataAll()
 		{
 			for (int i = 0; i < Cells.GetLength(0); i++)
-				for (int j = 0; j < Cells.GetLength(1); j++)
-					Cells[i, j].DisplayProductDataAllProductsMode();
+			for (int j = 0; j < Cells.GetLength(1); j++)
+				Cells[i, j].DisplayProductDataAllProductsMode();
 		}
 	}
 }

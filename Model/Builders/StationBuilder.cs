@@ -18,7 +18,7 @@ namespace Trains.Model.Builders
 		private Events events;
 		private Station blueprint;
 		private Camera camera;
-		private bool canBuild = false;
+		private bool canBuild;
 
 		public override void _Ready()
 		{
@@ -35,7 +35,8 @@ namespace Trains.Model.Builders
 		public override void _PhysicsProcess(float delta)
 		{
 			if (Global.MainButtonMode == MainButtonType.BuildStation)
-				UpdateBlueprint();
+				//UpdateBlueprint();
+				UpdateBlueprintForMm();
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -93,6 +94,7 @@ namespace Trains.Model.Builders
 			//set blueprint position
 			var pos = this.GetIntersection(camera);
 			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
+            GD.Print(closestCell);
 			blueprint.Translation = closestCell.Translation;
 
 			//set base color
@@ -103,16 +105,32 @@ namespace Trains.Model.Builders
 			baseMaterial.AlbedoColor = canBuild ? yellow : red;
 		}
 
+        private void UpdateBlueprintForMm()
+        {
+            if (blueprint is null) return;
+
+            //set blueprint position
+            var pos = this.GetIntersection(camera);
+			var closestCell = cells
+                .OrderBy(c => Math.Abs(c.Row + 1 - pos.x))
+                .ThenBy(c => Math.Abs(c.Col + 1 - pos.z))
+                .First();
+            blueprint.Translation = new Vector3(closestCell.Row + 1, 0f, closestCell.Col + 1);
+
+            //set base color
+            var area = blueprint.GetNode<Area>("Base/Area");
+            var bodies = area.GetOverlappingBodies().Cast<Node>().Where(b => b.IsInGroup("Obstacles"));
+            var baseMaterial = (SpatialMaterial)blueprint.GetNode<MeshInstance>("Base").GetSurfaceMaterial(0);
+            canBuild = !bodies.Any();
+            baseMaterial.AlbedoColor = canBuild ? yellow : red;
+}
+
 		private void onMainButtonModeChanged(MainButtonType mode)
 		{
 			if (mode == MainButtonType.BuildStation)
-			{
-				InitEmptyBlueprint();
-			}
-			else
-			{
+                InitEmptyBlueprint();
+            else
 				ResetBlueprint();
-			}
 		}
 
 		private void ResetBlueprint()

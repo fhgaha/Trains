@@ -31,10 +31,8 @@ namespace Trains.Scripts
 
 			events = GetNode<Events>("/root/Events");
 
-			timer = GetNode<Timer>("MainTimer");
-			timer.Connect("timeout", this, nameof(onTimeout));
-			timer.Start(TimeSec);
-			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
+			SetUpTimer();
+            camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			grid = GetNode<GridMm>("Grid");
 			//mover = new ProductMigrationManager(grid.Cells);
 
@@ -52,7 +50,14 @@ namespace Trains.Scripts
 			railBuilder.Init(grid.CellList, camera);
 		}
 
-		public override void _UnhandledInput(InputEvent @event)
+        private void SetUpTimer()
+        {
+            timer = GetNode<Timer>("MainTimer");
+            timer.Connect("timeout", this, nameof(onTimeout));
+            timer.Start(TimeSec);
+        }
+
+        public override void _UnhandledInput(InputEvent @event)
 		{
 			//open console
 			if (@event.IsActionPressed("toggle_console"))
