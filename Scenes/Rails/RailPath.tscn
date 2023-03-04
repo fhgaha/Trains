@@ -13,6 +13,8 @@ _data = {
 [node name="RailPath" type="Path" groups=["Rails"]]
 curve = SubResource( 1 )
 script = ExtResource( 1 )
+ShowBakedPoints = true
+ShowDefaultPoints = true
 BpColor = Color( 1, 0.917647, 0.027451, 1 )
 NotAllowedColor = Color( 1, 0.054902, 0.054902, 1 )
 

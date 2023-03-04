@@ -58,7 +58,7 @@ namespace Trains.Model.Common
 
 		public override void _Ready()
 		{
-			GD.Print("Events is ready");
+			// GD.Print("Events is ready");
 		}
 	}
 }

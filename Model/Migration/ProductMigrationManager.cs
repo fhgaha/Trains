@@ -21,11 +21,15 @@ namespace Trains.Model.Migration
 
 		public ProductMigrationManager(Cell[,] cells)
 		{
+			// return;
+
 			this.cells = cells;
 		}
 
 		public void MoveProducts()
 		{
+			// return;
+
 			//if cell has source of a product and cells has stock for the same product
 			//build cargos from source cell product amount and ship them to the stock
 			BuildCargoes();
@@ -38,6 +42,8 @@ namespace Trains.Model.Migration
 
 		private void BuildCargoes()
 		{
+			// return;
+
 			foreach (Cell cell in cells)
 			{
 				foreach (Product product in cell.ProductList)
@@ -47,6 +53,8 @@ namespace Trains.Model.Migration
 
 		private void RemoveCargoesReachedDestination()
 		{
+			// return;
+
 			var cargosToRemove = new List<Cargo>();
 
 			foreach (Cargo cargo in cargos)
@@ -61,6 +69,8 @@ namespace Trains.Model.Migration
 
 		public void BuildCargo(Cell cell, Product product)
 		{
+			// return;
+
 			if (product.Amount <= 0) return;
 
 			//if cell has source and other cell has stock build cargo and ship it
@@ -83,6 +93,8 @@ namespace Trains.Model.Migration
 
 		private Cell GetProfitableCell(Product product, Cell start)
 		{
+			// return null;
+
 			Dictionary<Cell, float> destinationCostMap = new Dictionary<Cell, float>();
 
 			foreach (Cell c in cells)
@@ -94,8 +106,7 @@ namespace Trains.Model.Migration
 				var profitEstimation = c.GetProduct(product.ProductType).Price - travelCost;
 				destinationCostMap.Add(c, profitEstimation);
 			}
-			var bestPiceCandidate = destinationCostMap.OrderByDescending(dc => dc.Value).First().Key;
-			return bestPiceCandidate;
+			return destinationCostMap.OrderByDescending(dc => dc.Value).First().Key;
 		}
 	}
 }

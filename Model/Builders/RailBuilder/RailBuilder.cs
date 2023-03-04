@@ -9,10 +9,10 @@ using static Godot.Mathf;
 
 namespace Trains.Model.Builders
 {
-	enum State { None, SelectStart, SelectEnd }
-
 	public class RailBuilder : Spatial
 	{
+		enum State { None, SelectStart, SelectEnd }
+
 		[Export] private PackedScene railPathScene;
 		private PackedScene railRemoverScene = GD.Load<PackedScene>("res://Scenes/Removers/RailRemover.tscn");
 		private List<Cell> cells;
@@ -73,20 +73,20 @@ namespace Trains.Model.Builders
 			}
 		}
 
-		private void ResetStateBlueprintPrevDir()
-		{
-			state = State.None;
-			blueprint?.QueueFree();
-			blueprint = null;
-			prevDir = Vector3.Zero;
-		}
-
 		private void InitStateAndBlueprint()
 		{
 			state = State.SelectStart;
 			blueprint = railPathScene.Instance<RailPath>();
 			AddChild(blueprint);
 			blueprint.Name = "blueprint";
+		}
+
+		private void ResetStateBlueprintPrevDir()
+		{
+			state = State.None;
+			blueprint?.QueueFree();
+			blueprint = null;
+			prevDir = Vector3.Zero;
 		}
 
 		private void onStartNewRoadPressed()
@@ -124,7 +124,6 @@ namespace Trains.Model.Builders
 		{
 			if (railRemover is null)
 			{
-				// GD.Print("onRemoveRailPressed");
 				ResetStateBlueprintPrevDir();
 				railRemover = railRemoverScene.Instance<RailRemover>();
 				AddChild(railRemover);
@@ -309,33 +308,33 @@ namespace Trains.Model.Builders
 			var mousePos = this.GetIntersection(camera);
 			var mousePosIsInMapBorders = mousePos != Vector3.Zero;
 			if (!mousePosIsInMapBorders) return;
-            bpEndSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
+			bpEndSnapper.TrySnap(mousePos, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 
 			if (bpStartSnapper.IsSnappedOnSegment)
 				prevDir = bpStartSnapper.GetBpStartSnappedSegmentToCursorDirection(mousePos);
-            
-			List<Vector2> points;
-            if (!bpEndSnapper.IsSnapped)
-            {
-                points = calculator.CalculateCurvePoints
-                (
-                    start: blueprint.Translation.ToVec2(),
-                    end: mousePos.ToVec2(),
-                    prevDir: prevDir.ToVec2()
-                );
-            }
-            else
-            {
-                points = calculator.CalculateCurvePointsWithSnappedEnd
-                (
-                    start: blueprint.Translation.ToVec2(),
-                    end: bpEndSnapper.SnappedPoint.ToVec2(),
-                    startDir: prevDir.ToVec2(),
-                    finishDir: bpEndSnapper.SnappedDir.ToVec2().Rotated(Pi)
-                );
-            }
 
-            BuildBlueprintCurve(points);
+			List<Vector2> points;
+			if (!bpEndSnapper.IsSnapped)
+			{
+				points = calculator.CalculateCurvePoints
+				(
+					start: blueprint.Translation.ToVec2(),
+					end: mousePos.ToVec2(),
+					prevDir: prevDir.ToVec2()
+				);
+			}
+			else
+			{
+				points = calculator.CalculateCurvePointsWithSnappedEnd
+				(
+					start: blueprint.Translation.ToVec2(),
+					end: bpEndSnapper.SnappedPoint.ToVec2(),
+					startDir: prevDir.ToVec2(),
+					finishDir: bpEndSnapper.SnappedDir.ToVec2().Rotated(Pi)
+				);
+			}
+
+			BuildBlueprintCurve(points);
 		}
 
 		private void BuildBlueprintCurve(List<Vector2> points)

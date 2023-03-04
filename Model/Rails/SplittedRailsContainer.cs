@@ -41,7 +41,7 @@ namespace Trains
 				{
 					var pointsGlobal = r.Curve.GetBakedPoints().Select(p => r.Translation + p);
 					var newRail = RailPath.BuildNoMeshRail(railScene, pointsGlobal, Vector3.Zero);
-					PrintStartEnd(newRail);
+					if (Global.DebugMode) PrintStartEnd(newRail);
 					newRails.Add(newRail);
 
 					continue;
@@ -77,7 +77,7 @@ namespace Trains
 
 				if (reachedLastPoint)
 				{
-					GD.PrintS("last point: ", currentPoint);
+					// if (Global.DebugMode) GD.PrintS("last point: ", currentPoint);
 
 					var newPath = BuildNewPath(points);
 					newRails.Add(newPath);

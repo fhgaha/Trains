@@ -7,6 +7,8 @@ namespace Trains.Model.Common.GraphRelated
 {
 	public static class Dijkstra
 	{
+		private readonly static bool shouldPrint = false;
+
 		internal static List<Vector3> FindPath(Vector3 from, Vector3 to)
 		{
 			var splitted = Global.SplittedRailContainer.Rails.ToList();
@@ -32,7 +34,7 @@ namespace Trains.Model.Common.GraphRelated
 
 			if (turningNodes is null)
 			{
-				GD.Print("Dijkstra path was not found");
+				if (shouldPrint) GD.Print("Dijkstra path was not found");
 				return new List<Vector3>();
 			}
 
@@ -40,12 +42,15 @@ namespace Trains.Model.Common.GraphRelated
 				.Select(i => nodeNumbers.First(kv => kv.Value == i).Key)
 				.ToList();
 
-			GD.Print("---Dijkstra found path crossings: ---");
-			// foreach (var item in turningPoints)
-			// {
-			// 	GD.Print(new[] { item + ", " });
-			// }
-			// GD.Print("------");
+			if (shouldPrint)
+			{
+				GD.Print("---Dijkstra found path crossings: ---");
+				foreach (var item in turningPoints)
+				{
+					GD.Print(new[] { item + ", " });
+				}
+				GD.Print("------");
+			}
 
 			var result = BuildFinalPathAsPoints(splitted, turningPoints);
 			return result;

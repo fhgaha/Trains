@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Trains.Model.Common;
 using Trains.Model.Common.GraphRelated;
 
 namespace Trains
@@ -9,6 +10,8 @@ namespace Trains
 	public class StationContainer : Spatial
 	{
 		private readonly List<Station> stations = new List<Station>();
+		private readonly bool shouldPrint = false;
+
 		public IEnumerable<Station> Stations { get { foreach (var s in stations) { yield return s; } } }
 
 		public void UpdateStationConnections()
@@ -31,7 +34,7 @@ namespace Trains
 						s1.ConnectedStatoins.Add(s2);
 						s2.ConnectedStatoins.Add(s1);
 					}
-					else
+					else if (shouldPrint)
 					{
 						GD.PrintS("Station connection failed: ", s1, "could not find path to", s2);
 					}

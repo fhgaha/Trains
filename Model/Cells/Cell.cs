@@ -85,7 +85,10 @@ namespace Trains.Model.Cells
 			staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
 		}
 
-		private static float GetPriceFromNoise(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises, ProductType productType)
+		private static float GetPriceFromNoise(
+			int row, int col, 
+			Dictionary<ProductType, OpenSimplexNoise> noises, 
+			ProductType productType)
 		{
 			Type noiseType = GetNoiseType(productType);
 			var noise = noises[productType];

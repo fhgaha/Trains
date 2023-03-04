@@ -67,7 +67,7 @@ namespace Trains
 			var accuracy = 1.5f;
 			var pointsToDeleteAmount = curveToDelete.GetPointCount();
 
-			PrintCurveIntersectionInfo(curveToDelete, accuracy);
+			//PrintCurveIntersectionInfo(curveToDelete, accuracy);
 
 			var thisLastEqualsCtdLast = AreCurvePointsEqual(thisLast, ctdLast, accuracy);
 			var thisFirstEqualsCtdLast = AreCurvePointsEqual(thisFirst, ctdLast, accuracy);

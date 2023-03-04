@@ -6,26 +6,18 @@ namespace Trains.Model.Common
 	{
 		public enum ProductType
 		{
-			Lumber,
-			Grain,
-			Dairy
+			Lumber, Grain, Dairy
 		}
 
 		public enum BuildingType
 		{
-			Source,
-			Stock,
-			Both
+			Source, Stock, Both
 		}
 
 		//GUI
 		public enum MainButtonType
 		{
-			None,
-			BuildRail,
-			BuildStation,
-			BuildTrain,
-			ShowProductMap
+			None, BuildRail, BuildStation, BuildTrain, ShowProductMap
 		}
 	}
 }

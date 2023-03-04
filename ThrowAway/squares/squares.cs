@@ -4,8 +4,8 @@ using System;
 public class squares : MultiMeshInstance
 {
 	private Random _rnd;
-	private const int Width = 256;
-	private const int Height = 256;
+	private const int Width = 128;
+	private const int Height = 128;
 
 	public override void _Ready()
 	{
@@ -28,7 +28,6 @@ public class squares : MultiMeshInstance
 		};
 
 		for (int z = 0; z < Height; z++)
-		{
 			for (int x = 0; x < Width; x++)
 			{
 				var index = x + (z * Height);
@@ -36,7 +35,6 @@ public class squares : MultiMeshInstance
 				var color = new Color((float)_rnd.NextDouble(), (float)_rnd.NextDouble(), (float)_rnd.NextDouble());
 				Multimesh.SetInstanceColor(index, color);
 			}
-		}
 
 		//later colors can be set like that
 		Multimesh.SetInstanceColor(0, Colors.Purple);
