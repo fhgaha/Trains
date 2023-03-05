@@ -3,6 +3,7 @@ using Trains.Model.Builders;
 using Trains.Model.Common;
 using Trains.Model.Grids;
 using Trains.Model.Migration;
+using Trains.Scripts.GUI;
 
 namespace Trains.Scripts
 {
@@ -51,6 +52,8 @@ namespace Trains.Scripts
 			//init rail builder
 			railBuilder = GetNode<RailBuilder>("RailBuilder");
 			railBuilder.Init(grid.CellList, camera);
+
+			GetNode<DebugInfo>("GUI/CanvasLayer/DebugInfo").Init(grid, camera);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
