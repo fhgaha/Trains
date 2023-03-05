@@ -47,3 +47,6 @@ margin_bottom = 40.0
 [node name="CanvasLayer" type="CanvasLayer" parent="Control"]
 
 [node name="DebugInfo" parent="Control/CanvasLayer" instance=ExtResource( 2 )]
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
