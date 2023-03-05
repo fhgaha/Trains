@@ -51,6 +51,15 @@ namespace Trains.Scripts
 			// railBuilder.Init(grid.CellList, camera);
 
 			GetNode<DebugInfo>("GUI/CanvasLayer/DebugInfo").Init(grid, camera);
+			SetUpFloorSize();
+		}
+
+		private void SetUpFloorSize()
+		{
+			var floor = GetNode<MeshInstance>("Landmarks/Floor");
+			//why x/2 and z/2?
+			floor.Scale = new Vector3(grid.CellsRowsAmount / 2, 0, grid.CellsColsAmount / 2);
+			floor.Translation = new Vector3(grid.CellsRowsAmount / 2, 0, grid.CellsColsAmount / 2);
 		}
 
 		private void SetUpTimer()

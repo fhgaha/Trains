@@ -11,7 +11,7 @@ namespace Trains.Model.Grids
 	public class Grid : MultiMeshInstance
 	{
 		public int CellsRowsAmount { get; set; } = 20;
-		public int CellsColsAmount { get; set; } = 20;
+		public int CellsColsAmount { get; set; } = 30;
 		public CellNoScene[,] Cells;
 		public List<CellNoScene> CellList { get; private set; }
 		// private readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
@@ -22,31 +22,30 @@ namespace Trains.Model.Grids
 
 		//set cell size in editor: Cell/MeshInstance/Mesh/Size
 
-		private Random _rnd;
+		private readonly Random rnd = new Random();
 
 		public override void _Ready()
 		{
 			Cells = CellGenerator.GenerateNoCellScenes(CellsRowsAmount, CellsColsAmount);
-			// FillCellList();
+			FillCellList();
 			//AddBuildings();
+			SetUpMultimesh();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
-			// Visible = false;
+			Visible = false;
+		}
 
-			//////////////////////////////////////
-			//added from squares.cs
-			//////////////////////////////////////
-
-			_rnd = new Random();
-
-			var plane = new PlaneMesh
+		private void SetUpMultimesh()
+		{
+			var onePlane = new PlaneMesh
 			{
 				Size = new Vector2(1, 1),
-				Material = new SpatialMaterial { VertexColorUseAsAlbedo = true }
+				Material = new SpatialMaterial { VertexColorUseAsAlbedo = true },
+				CenterOffset = new Vector3(0.5f, 0, 0.5f)
 			};
 
 			Multimesh = new MultiMesh
@@ -56,31 +55,31 @@ namespace Trains.Model.Grids
 				CustomDataFormat = MultiMesh.CustomDataFormatEnum.None,
 				InstanceCount = CellsColsAmount * CellsColsAmount,
 				VisibleInstanceCount = -1,
-				Mesh = plane
+				Mesh = onePlane
 			};
 
 			for (int z = 0; z < CellsColsAmount; z++)
-				for (int x = 0; x < CellsColsAmount; x++)
+				for (int x = 0; x < CellsRowsAmount; x++)
 				{
 					var index = x + (z * CellsColsAmount);
 					Multimesh.SetInstanceTransform(index, new Transform(Basis.Identity, new Vector3(x, 0, z)));
-					var color = new Color((float)_rnd.NextDouble(), (float)_rnd.NextDouble(), (float)_rnd.NextDouble());
+					var color = new Color((float)rnd.NextDouble(), (float)rnd.NextDouble(), (float)rnd.NextDouble());
 					Multimesh.SetInstanceColor(index, color);
 				}
 
 			//later colors can be set like that
-			Multimesh.SetInstanceColor(0, Colors.Purple);
-			Multimesh.SetInstanceColor(1, Colors.Purple);
-			Multimesh.SetInstanceColor(2, Colors.Purple);
+			// Multimesh.SetInstanceColor(0, Colors.Purple);
+			// Multimesh.SetInstanceColor(1, Colors.Purple);
+			// Multimesh.SetInstanceColor(2, Colors.Purple);
 		}
 
-		// private void FillCellList()
-		// {
-		// 	CellList = new List<Cell>();
-		// 	for (int i = 0; i < Cells.GetLength(0); i++)
-		// 		for (int j = 0; j < Cells.GetLength(1); j++)
-		// 			CellList.Add(Cells[i, j]);
-		// }
+		private void FillCellList()
+		{
+			CellList = new List<CellNoScene>();
+			for (int i = 0; i < Cells.GetLength(0); i++)
+				for (int j = 0; j < Cells.GetLength(1); j++)
+					CellList.Add(Cells[i, j]);
+		}
 
 		private void AddBuildings()
 		{

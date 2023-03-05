@@ -27,6 +27,7 @@ namespace Trains.Model.Common
 
 		//Emitted when Build station button was pressed.
 		[Signal] public delegate void MainButtonPressed(MainButtonType buttonType);
+
 		[Signal] public delegate void MainButtonModeChanged(MainButtonType mode);
 
 		// Emitted when AllProducts button is pressed. 
