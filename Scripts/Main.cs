@@ -1,9 +1,11 @@
+using System;
 using Godot;
 using Trains.Model.Builders;
 using Trains.Model.Common;
 using Trains.Model.Grids;
 using Trains.Model.Migration;
 using Trains.Scripts.GUI;
+using static Trains.Model.Common.Enums;
 
 namespace Trains.Scripts
 {
@@ -30,7 +32,6 @@ namespace Trains.Scripts
 		{
 			FloatDisplayDotsInsteadOfCommas();
 
-			events = GetNode<Events>("/root/Events");
 			SetUpTimer();
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			grid = GetNode<Grid>("Grid");
@@ -52,6 +53,9 @@ namespace Trains.Scripts
 
 			GetNode<DebugInfo>("GUI/CanvasLayer/DebugInfo").Init(grid, camera);
 			SetUpFloorSize();
+
+			events = GetNode<Events>("/root/Events");
+			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
 		private void SetUpFloorSize()
@@ -87,6 +91,11 @@ namespace Trains.Scripts
 
 			//for each source find cell with best price, move products there
 			// mover.MoveProducts();
+		}
+
+		private void onMainButtonModeChanged(MainButtonType mode)
+		{
+			GetNode<MeshInstance>("Landmarks/Floor").Visible = mode != MainButtonType.ShowProductMap;
 		}
 
 		private static void FloatDisplayDotsInsteadOfCommas()
