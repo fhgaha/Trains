@@ -26,7 +26,6 @@ namespace Trains.Model.Generators
 			Cell[,] cells = new Cell[rows, cols];
 
 			for (int i = 0; i < rows; i++)
-			{
 				for (int j = 0; j < cols; j++)
 				{
 					var cell = cellScene.Instance<Cell>();
@@ -36,10 +35,32 @@ namespace Trains.Model.Generators
 					cell.Translate(new Vector3(i * cell.Size, 0, j * cell.Size));
 					cells[i, j] = cell;
 				}
-			}
 
 			Cell.Cells = cells;
 
+			return cells;
+		}
+
+		internal static CellNoScene[,] GenerateNoCellScenes(int rows, int cols)
+		{
+			var noises = new Dictionary<ProductType, OpenSimplexNoise>
+			{
+				[ProductType.Lumber] = new LumberNoise(),
+				[ProductType.Grain] = new GrainNoise(),
+				[ProductType.Dairy] = new DairyNoise()
+			};
+
+			CellNoScene[,] cells = new CellNoScene[rows, cols];
+
+			for (int i = 0; i < rows; i++)
+				for (int j = 0; j < cols; j++)
+				{
+					var cell = new CellNoScene();
+					cell.Init(i, j, noises);
+					cells[i, j] = cell;
+				}
+
+			CellNoScene.Cells = cells;
 			return cells;
 		}
 	}

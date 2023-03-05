@@ -31,13 +31,10 @@ namespace Trains.Scripts
 			FloatDisplayDotsInsteadOfCommas();
 
 			events = GetNode<Events>("/root/Events");
-
-			timer = GetNode<Timer>("MainTimer");
-			timer.Connect("timeout", this, nameof(onTimeout));
-			timer.Start(TimeSec);
+			SetUpTimer();
 			camera = GetNode<Camera>("MainCameraController/Elevation/Camera");
 			grid = GetNode<Grid>("Grid");
-			mover = new ProductMigrationManager(grid.Cells);
+			// mover = new ProductMigrationManager(grid.Cells);
 			// mover.Init(grid.Cells);
 
 			Global.StationContainer = GetNode<StationContainer>("Stations");
@@ -46,14 +43,21 @@ namespace Trains.Scripts
 			Global.ActualRailsContainer = GetNode<ActualRailsContainer>("ActualRails");
 
 			//init station builder
-			stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			stationBuilder.Init(grid.CellList, camera);
+			// stationBuilder = GetNode<StationBuilder>("StationBuilder");
+			// stationBuilder.Init(grid.CellList, camera);
 
 			//init rail builder
-			railBuilder = GetNode<RailBuilder>("RailBuilder");
-			railBuilder.Init(grid.CellList, camera);
+			// railBuilder = GetNode<RailBuilder>("RailBuilder");
+			// railBuilder.Init(grid.CellList, camera);
 
 			GetNode<DebugInfo>("GUI/CanvasLayer/DebugInfo").Init(grid, camera);
+		}
+
+		private void SetUpTimer()
+		{
+			timer = GetNode<Timer>("MainTimer");
+			timer.Connect("timeout", this, nameof(onTimeout));
+			timer.Start(TimeSec);
 		}
 
 		public override void _UnhandledInput(InputEvent @event)
@@ -73,7 +77,7 @@ namespace Trains.Scripts
 			events.EmitSignal(nameof(Events.Tick));
 
 			//for each source find cell with best price, move products there
-			mover.MoveProducts();
+			// mover.MoveProducts();
 		}
 
 		private static void FloatDisplayDotsInsteadOfCommas()

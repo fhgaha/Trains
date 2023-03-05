@@ -47,10 +47,10 @@ namespace Trains.Model.Products
 		private float price;
 		private float amount;
 
-		public Product(ProductType type, float price)
+		public Product(ProductType type, float price = -1)
 		{
 			ProductType = type;
-			this.Price = price;
+			Price = price;
 		}
 
 		public void onTick()

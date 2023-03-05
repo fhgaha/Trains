@@ -8,41 +8,79 @@ using static Trains.Model.Common.Enums;
 
 namespace Trains.Model.Grids
 {
-	public class Grid : Spatial
+	public class Grid : MultiMeshInstance
 	{
 		public int CellsRowsAmount { get; set; } = 20;
 		public int CellsColsAmount { get; set; } = 20;
-		public Cell[,] Cells;
-		public List<Cell> CellList { get; private set; }
-		readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
-		readonly PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
+		public CellNoScene[,] Cells;
+		public List<CellNoScene> CellList { get; private set; }
+		// private readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
+		private readonly PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
 		// PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
 		// PackedScene stock = GD.Load<PackedScene>("res://Scenes/Buildings/Stock.tscn");
 		private Events events;
 
 		//set cell size in editor: Cell/MeshInstance/Mesh/Size
 
+		private Random _rnd;
+
 		public override void _Ready()
 		{
-			Cells = CellGenerator.Generate(this, CellsRowsAmount, CellsColsAmount, cellScene);
-			FillCellList();
-			AddBuildings();
+			Cells = CellGenerator.GenerateNoCellScenes(CellsRowsAmount, CellsColsAmount);
+			// FillCellList();
+			//AddBuildings();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 			events.Connect(nameof(Events.SpecificProductButtonPressed), this, nameof(onSpecificProductButtonPressed));
 			events.Connect(nameof(Events.AllProductButtonPressed), this, nameof(onAllProductsButtonPressed));
 
-			Visible = false;
+			// Visible = false;
+
+			//////////////////////////////////////
+			//added from squares.cs
+			//////////////////////////////////////
+
+			_rnd = new Random();
+
+			var plane = new PlaneMesh
+			{
+				Size = new Vector2(1, 1),
+				Material = new SpatialMaterial { VertexColorUseAsAlbedo = true }
+			};
+
+			Multimesh = new MultiMesh
+			{
+				TransformFormat = MultiMesh.TransformFormatEnum.Transform3d,
+				ColorFormat = MultiMesh.ColorFormatEnum.Color8bit,
+				CustomDataFormat = MultiMesh.CustomDataFormatEnum.None,
+				InstanceCount = CellsColsAmount * CellsColsAmount,
+				VisibleInstanceCount = -1,
+				Mesh = plane
+			};
+
+			for (int z = 0; z < CellsColsAmount; z++)
+				for (int x = 0; x < CellsColsAmount; x++)
+				{
+					var index = x + (z * CellsColsAmount);
+					Multimesh.SetInstanceTransform(index, new Transform(Basis.Identity, new Vector3(x, 0, z)));
+					var color = new Color((float)_rnd.NextDouble(), (float)_rnd.NextDouble(), (float)_rnd.NextDouble());
+					Multimesh.SetInstanceColor(index, color);
+				}
+
+			//later colors can be set like that
+			Multimesh.SetInstanceColor(0, Colors.Purple);
+			Multimesh.SetInstanceColor(1, Colors.Purple);
+			Multimesh.SetInstanceColor(2, Colors.Purple);
 		}
 
-		private void FillCellList()
-		{
-			CellList = new List<Cell>();
-			for (int i = 0; i < Cells.GetLength(0); i++)
-				for (int j = 0; j < Cells.GetLength(1); j++)
-					CellList.Add(Cells[i, j]);
-		}
+		// private void FillCellList()
+		// {
+		// 	CellList = new List<Cell>();
+		// 	for (int i = 0; i < Cells.GetLength(0); i++)
+		// 		for (int j = 0; j < Cells.GetLength(1); j++)
+		// 			CellList.Add(Cells[i, j]);
+		// }
 
 		private void AddBuildings()
 		{
