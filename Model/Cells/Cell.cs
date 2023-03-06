@@ -1,10 +1,9 @@
+using static Trains.Model.Common.Enums;
 using Godot;
 using System;
 using Trains.Model.Products;
-using static Trains.Model.Common.Enums;
 using System.Collections.Generic;
 using Trains.Model.Generators.Noises;
-using Trains.Scripts.CellScene;
 using Trains.Model.Cells.Buildings;
 using System.Linq;
 using Trains.Model.Migration;
@@ -12,14 +11,13 @@ using Trains.Model.Common;
 
 namespace Trains.Model.Cells
 {
-	[Tool]
-	public class Cell : Spatial
+	public class Cell
 	{
 		public static Cell[,] Cells { get; set; }
-		[Export] public string Id { get; set; }
+		public string Id { get; set; }
 		public int Row { get; private set; }
 		public int Col { get; private set; }
-		public Node Products { get; set; }
+		// public Node Products { get; set; }
 		public List<Product> ProductList { get; set; }
 		public Building Building { get; set; }
 
@@ -54,40 +52,39 @@ namespace Trains.Model.Cells
 
 		public void Init(int row, int col, Dictionary<ProductType, OpenSimplexNoise> noises)
 		{
-			events = GetNode<Events>("/root/Events");
-			events.Connect(nameof(Events.Tick), this, nameof(onTick));
+			// events = GetNode<Events>("/root/Events");
+			// events.Connect(nameof(Events.Tick), this, nameof(onTick));
 
 			if (!string.IsNullOrEmpty(Id)) throw new ArgumentException("You allowed to set Id only once");
 			Id = row + "_" + col;
 			Row = row; Col = col;
 
-			Products = new Node();
+			// Products = new Node();
 			ProductList = new List<Product>();
 
-			GetNode<Info>("Info").SetId(Id);
+			// GetNode<Info>("Info").SetId(Id);
 
 			foreach (ProductType type in Enum.GetValues(typeof(ProductType)))
 			{
-				Product product = new Product(type, -1);
-				Products.AddChild(product);
+				Product product = new Product(type, 30f);
+				// Products.AddChild(product);
 				ProductList.Add(product);
-				product.Price = 30f;
 
 				//connect product button to product
-				var amountBar = GetNode<ProductAmountBar>("Amount");
-				product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
-				product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
-				events.Connect(nameof(Events.Tick), product, nameof(Product.onTick));
+				// var amountBar = GetNode<ProductAmountBar>("Amount");
+				// product.Connect(nameof(Product.AmountChanged), amountBar, nameof(ProductAmountBar.DisplayValue));
+				// product.Connect(nameof(Product.PriceChanged), this, nameof(onPriceChanged));
+				// events.Connect(nameof(Events.Tick), product, nameof(Product.onTick));
 			}
 
-			var staticBody = GetNode<StaticBody>("MeshInstance/StaticBody");
-			staticBody.Connect("mouse_entered", this, nameof(onMouseEntered));
-			staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
+			// var staticBody = GetNode<StaticBody>("MeshInstance/StaticBody");
+			// staticBody.Connect("mouse_entered", this, nameof(onMouseEntered));
+			// staticBody.Connect("mouse_exited", this, nameof(onMouseExited));
 		}
 
 		private static float GetPriceFromNoise(
-			int row, int col, 
-			Dictionary<ProductType, OpenSimplexNoise> noises, 
+			int row, int col,
+			Dictionary<ProductType, OpenSimplexNoise> noises,
 			ProductType productType)
 		{
 			Type noiseType = GetNoiseType(productType);
@@ -114,13 +111,13 @@ namespace Trains.Model.Cells
 			//show price, color and amount for selected product
 			Product product = GetProduct(productType);
 
-			var info = GetNode<Info>("Info");
-			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
-			var amountBar = GetNode<ProductAmountBar>("Amount");
+			// var info = GetNode<Info>("Info");
+			// var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+			// var amountBar = GetNode<ProductAmountBar>("Amount");
 
-			mesh.Visible = true;
-			amountBar.ActiveProductType = product.ProductType;
-			amountBar.DisplayValue(product.ProductType, product.Amount);
+			// mesh.Visible = true;
+			// amountBar.ActiveProductType = product.ProductType;
+			// amountBar.DisplayValue(product.ProductType, product.Amount);
 
 			//to call PriceChanged signal with no value change
 			product.Price += 0f;
@@ -136,18 +133,18 @@ namespace Trains.Model.Cells
 
 		internal void DisplayProductDataAllProductsMode()
 		{
-			var info = GetNode<Info>("Info");
-			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
-			var amountBar = GetNode<ProductAmountBar>("Amount");
+			// var info = GetNode<Info>("Info");
+			// var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+			// var amountBar = GetNode<ProductAmountBar>("Amount");
 
 			//display sum of all products amounts
 			var someProduct = ProductList.First();
 			var amountSum = ProductList.Sum(p => p.Amount);
-			amountBar.ActiveProductType = someProduct.ProductType;
-			amountBar.DisplayValue(someProduct.ProductType, amountSum);
+			// amountBar.ActiveProductType = someProduct.ProductType;
+			// amountBar.DisplayValue(someProduct.ProductType, amountSum);
 
 			//set default color
-			((SpatialMaterial)mesh.GetSurfaceMaterial(0)).AlbedoColor = new Color("0ed00f");
+			// ((SpatialMaterial)mesh.GetSurfaceMaterial(0)).AlbedoColor = new Color("0ed00f");
 			Building?.HideSourceData();
 			Building?.HideStockData();
 		}
@@ -183,8 +180,8 @@ namespace Trains.Model.Cells
 			}
 
 			Building = building;
-			AddChild(building);
-			MoveChild(building, 0);
+			// AddChild(building);
+			// MoveChild(building, 0);
 			building.Translate(new Vector3(-0.03f, 0, 0));
 		}
 
@@ -192,8 +189,10 @@ namespace Trains.Model.Cells
 		public void AddBuilding(BuildingType buildingType, PackedScene scene,
 			ProductType productType, float startAmount)
 		{
-			if (!(Building is null)) throw new ArgumentException("Building field is taken. Two buildings in the same cell is not allowed");
-			if (buildingType == BuildingType.Both) throw new ArgumentException("buildingType should not be \"both\"");
+			if (Building != null)
+				throw new ArgumentException("Building field is taken. Two buildings in the same cell is not allowed");
+			if (buildingType == BuildingType.Both)
+				throw new ArgumentException("buildingType should not be \"both\"");
 
 			var building = scene.Instance<Building>();
 			var product = GetProduct(productType);
@@ -203,8 +202,8 @@ namespace Trains.Model.Cells
 				case BuildingType.Stock: building.InitStock(product, startAmount); break;
 			}
 			Building = building;
-			AddChild(building);
-			MoveChild(building, 0);
+			// AddChild(building);
+			// MoveChild(building, 0);
 			building.Translate(new Vector3(-0.03f, 0, 0));
 		}
 
@@ -232,7 +231,7 @@ namespace Trains.Model.Cells
 		////////////////////////////////////////
 		public void onTick()
 		{
-			UpdateAmountAndPrice();
+			// UpdateAmountAndPrice();
 		}
 
 		//increase amount of source product, decrease amount of stock product
@@ -246,7 +245,7 @@ namespace Trains.Model.Cells
 				product.Amount += Building.SourceDeltaAmount;
 				product.Price -= Global.PriceDecay;
 
-				UpdateNearbyPrices(product.ProductType, Cells, -Global.PriceDecay * 0.5f);
+				// UpdateNearbyPrices(product.ProductType, Cells, -Global.PriceDecay * 0.5f);
 			}
 
 			if (Building.IsStock)
@@ -256,7 +255,7 @@ namespace Trains.Model.Cells
 				//product.Amount -= Building.StockDeltaAmount;
 				product.Price += Global.PriceDecay;
 
-				UpdateNearbyPrices(product.ProductType, Cells, Global.PriceDecay * 0.5f);
+				// UpdateNearbyPrices(product.ProductType, Cells, Global.PriceDecay * 0.5f);
 			}
 		}
 
@@ -265,7 +264,7 @@ namespace Trains.Model.Cells
 			//updated grows all the time
 			//price always go down
 			List<Cell> updated = new List<Cell>();
-			updated.Add(this);
+			// updated.Add(this);
 			int depth = 5;
 			deltaPrice *= 1f;
 			var neighbours = GetNeighbours(cells);
@@ -302,10 +301,10 @@ namespace Trains.Model.Cells
 			//if mode is the same as sender producttype change color, info
 			if (Global.CurrentDisplayProductMode != sender.ProductType) return;
 
-			var info = GetNode<Info>("Info");
-			var mesh = GetNode<MeshInstanceScript>("MeshInstance");
-			info.SetPriceText(value);
-			mesh.SetColor(value);
+			// var info = GetNode<Info>("Info");
+			// var mesh = GetNode<MeshInstanceScript>("MeshInstance");
+			// info.SetPriceText(value);
+			// mesh.SetColor(value);
 		}
 
 		private void onMouseEntered()

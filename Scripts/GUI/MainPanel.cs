@@ -17,12 +17,12 @@ namespace Trains
 
 		private void onMouseEntered()
 		{
-			events.EmitSignal(nameof(Events.MainGUIPanelMouseEntered));
+			events.EmitSignal(nameof(Events.MainGuiPanelMouseEntered));
 		}
 
 		private void onMouseExited()
 		{
-			events.EmitSignal(nameof(Events.MainGUIPanelMouseExited));
+			events.EmitSignal(nameof(Events.MainGuiPanelMouseExited));
 		}
 	}
 }

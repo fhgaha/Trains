@@ -12,8 +12,8 @@ namespace Trains.Model.Grids
 	{
 		public int CellsRowsAmount { get; set; } = 20;
 		public int CellsColsAmount { get; set; } = 30;
-		public CellNoScene[,] Cells;
-		public List<CellNoScene> CellList { get; private set; }
+		public Cell[,] Cells;
+		public List<Cell> CellList { get; private set; }
 		// private readonly PackedScene cellScene = GD.Load<PackedScene>("res://Scenes/Cell.tscn");
 		private readonly PackedScene building = GD.Load<PackedScene>("res://Scenes/Buildings/Building.tscn");
 		// PackedScene source = GD.Load<PackedScene>("res://Scenes/Buildings/Source.tscn");
@@ -75,7 +75,7 @@ namespace Trains.Model.Grids
 
 		private void FillCellList()
 		{
-			CellList = new List<CellNoScene>();
+			CellList = new List<Cell>();
 			for (int i = 0; i < Cells.GetLength(0); i++)
 				for (int j = 0; j < Cells.GetLength(1); j++)
 					CellList.Add(Cells[i, j]);

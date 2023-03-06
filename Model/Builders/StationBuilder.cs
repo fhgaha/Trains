@@ -92,8 +92,8 @@ namespace Trains.Model.Builders
 
 			//set blueprint position
 			var pos = this.GetIntersection(camera);
-			var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
-			blueprint.Translation = closestCell.Translation;
+			// var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
+			// blueprint.Translation = closestCell.Translation;
 
 			//set base color
 			var area = blueprint.GetNode<Area>("Base/Area");

@@ -48,22 +48,27 @@ namespace Trains.Scripts
 			// stationBuilder.Init(grid.CellList, camera);
 
 			//init rail builder
-			// railBuilder = GetNode<RailBuilder>("RailBuilder");
-			// railBuilder.Init(grid.CellList, camera);
+			railBuilder = GetNode<RailBuilder>("RailBuilder");
+			railBuilder.Init(grid.CellList, camera);
 
 			GetNode<DebugInfo>("GUI/CanvasLayer/DebugInfo").Init(grid, camera);
-			SetUpFloorSize();
+			SetUpFloor();
 
 			events = GetNode<Events>("/root/Events");
 			events.Connect(nameof(Events.MainButtonModeChanged), this, nameof(onMainButtonModeChanged));
 		}
 
-		private void SetUpFloorSize()
+		private void SetUpFloor()
 		{
 			var floor = GetNode<MeshInstance>("Landmarks/Floor");
 			//why x/2 and z/2?
 			floor.Scale = new Vector3(grid.CellsRowsAmount / 2, 0, grid.CellsColsAmount / 2);
 			floor.Translation = new Vector3(grid.CellsRowsAmount / 2, 0, grid.CellsColsAmount / 2);
+
+			GetNode<CollisionShape>("Landmarks/Floor/StaticBody/CollisionShape").Shape = new BoxShape
+			{
+				Extents = new Vector3(grid.CellsRowsAmount, 0.01f, grid.CellsColsAmount)
+			};
 		}
 
 		private void SetUpTimer()
@@ -94,9 +99,7 @@ namespace Trains.Scripts
 		}
 
 		private void onMainButtonModeChanged(MainButtonType mode)
-		{
-			GetNode<MeshInstance>("Landmarks/Floor").Visible = mode != MainButtonType.ShowProductMap;
-		}
+		=> GetNode<MeshInstance>("Landmarks/Floor").Visible = mode != MainButtonType.ShowProductMap;
 
 		private static void FloatDisplayDotsInsteadOfCommas()
 		{

@@ -51,9 +51,9 @@ namespace Trains.Model.Common
 		[Signal] public delegate void UndoRailPressed();
 		[Signal] public delegate void RemoveRailPressed();
 
-		[Signal] public delegate void MainGUIPanelMouseEntered();
+		[Signal] public delegate void MainGuiPanelMouseEntered();
 
-		[Signal] public delegate void MainGUIPanelMouseExited();
+		[Signal] public delegate void MainGuiPanelMouseExited();
 
 		[Signal] public delegate void StationsAreSelected(List<Station> selectedStations);
 

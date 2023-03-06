@@ -55,8 +55,8 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
 			events.Connect(nameof(Events.RemoveRailPressed), this, nameof(onRemoveRailPressed));
-			events.Connect(nameof(Events.MainGUIPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
-			events.Connect(nameof(Events.MainGUIPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
+			events.Connect(nameof(Events.MainGuiPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
+			events.Connect(nameof(Events.MainGuiPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
 		}
 
 		private void onMainButtonModeChanged(MainButtonType mode)
