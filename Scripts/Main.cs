@@ -44,8 +44,8 @@ namespace Trains.Scripts
 			Global.ActualRailsContainer = GetNode<ActualRailsContainer>("ActualRails");
 
 			//init station builder
-			// stationBuilder = GetNode<StationBuilder>("StationBuilder");
-			// stationBuilder.Init(grid.CellList, camera);
+			stationBuilder = GetNode<StationBuilder>("StationBuilder");
+			stationBuilder.Init(grid.CellList, camera);
 
 			//init rail builder
 			railBuilder = GetNode<RailBuilder>("RailBuilder");

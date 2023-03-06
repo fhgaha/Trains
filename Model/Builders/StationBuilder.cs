@@ -42,7 +42,7 @@ namespace Trains.Model.Builders
 		{
 			if (@event is InputEventMouseButton ev && ev.IsActionPressed("lmb"))
 			{
-				if (!(blueprint is null) && canBuild)
+				if (blueprint != null && canBuild)
 				{
 					PlaceStation();
 					PlaceRailPath();
@@ -92,8 +92,8 @@ namespace Trains.Model.Builders
 
 			//set blueprint position
 			var pos = this.GetIntersection(camera);
-			// var closestCell = cells.OrderBy(c => c.Translation.DistanceSquaredTo(pos)).First();
-			// blueprint.Translation = closestCell.Translation;
+			pos = new Vector3(Mathf.Floor(pos.x) + 0.5f, 0, Mathf.Floor(pos.z) + 0.5f);
+			blueprint.Translation = pos;
 
 			//set base color
 			var area = blueprint.GetNode<Area>("Base/Area");
@@ -106,13 +106,9 @@ namespace Trains.Model.Builders
 		private void onMainButtonModeChanged(MainButtonType mode)
 		{
 			if (mode == MainButtonType.BuildStation)
-			{
 				InitEmptyBlueprint();
-			}
 			else
-			{
 				ResetBlueprint();
-			}
 		}
 
 		private void ResetBlueprint()
