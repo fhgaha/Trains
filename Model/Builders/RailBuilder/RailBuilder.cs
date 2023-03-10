@@ -55,8 +55,8 @@ namespace Trains.Model.Builders
 			events.Connect(nameof(Events.StartNewRoadPressed), this, nameof(onStartNewRoadPressed));
 			events.Connect(nameof(Events.UndoRailPressed), this, nameof(onUndoRailPressed));
 			events.Connect(nameof(Events.RemoveRailPressed), this, nameof(onRemoveRailPressed));
-			events.Connect(nameof(Events.MainGuiPanelMouseEntered), this, nameof(onMainGUIPanelMouseEntered));
-			events.Connect(nameof(Events.MainGuiPanelMouseExited), this, nameof(onMainGUIPanelMouseExited));
+			events.Connect(nameof(Events.MainGuiPanelMouseEntered), this, nameof(onMainGuiPanelMouseEntered));
+			events.Connect(nameof(Events.MainGuiPanelMouseExited), this, nameof(onMainGuiPanelMouseExited));
 		}
 
 		private void onMainButtonModeChanged(MainButtonType mode)
@@ -64,13 +64,9 @@ namespace Trains.Model.Builders
 			RemoveRailRemoverIfExists();
 
 			if (mode == MainButtonType.BuildRail)
-			{
 				InitStateAndBlueprint();
-			}
 			else
-			{
 				ResetStateBlueprintPrevDir();
-			}
 		}
 
 		private void InitStateAndBlueprint()
@@ -149,7 +145,7 @@ namespace Trains.Model.Builders
 						ProcessSelectedStart();
 						break;
 					case State.SelectEnd:
-						PlaceObject();
+						PlacePath();
 						break;
 				}
 			}
@@ -190,10 +186,10 @@ namespace Trains.Model.Builders
 			state = State.SelectEnd;
 		}
 
-		public void PlaceObject()
+		public void PlacePath()
 		{
 			if (bpStartSnapper.IsSnappedOnSegment || !AreWeContinuingPath)
-				InitPath();
+				PlaceFirstPartOfPath();
 			else
 				AddNewCurveToCurrentPath();
 
@@ -203,7 +199,7 @@ namespace Trains.Model.Builders
 			// }
 			// GD.Print("-----");
 
-			GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
+			// GetNode<DebugHelper>("DebugHelper").SetPath(currentPath);
 			undoStack.Push(RailCurve.GetFrom(blueprint));
 
 			if (currentPath.CanBeJoined(bpStartSnapper, bpEndSnapper))
@@ -212,29 +208,29 @@ namespace Trains.Model.Builders
 				TranslateAndRedrawBp();
 
 			Global.UpdateRailData();
+
+			// currentPath.Points.ToList().ForEach(p => GD.Print(p));
 		}
 
-		private void InitPath()
+		private void PlaceFirstPartOfPath()
 		{
 			if (blueprint.Curve.GetPointCount() < 2) return;
 
 			//blueprint.Duplicate() does not work for some reason. I use blueprint.Instance() instead.
 			currentPath = railPathScene.Instance<RailPath>();
-			Global.VisibleRailContainer.AddRail(currentPath);
 			currentPath.InitOnPlacement(blueprint);
 			prevDir = currentPath.DirFromEnd;
+			Global.VisibleRailContainer.AddRail(currentPath);
 
-			currentPath.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+			//GD.Print(currentPath.GetChild(0).Name);
+			// currentPath.GetNode<MeshInstance>("MeshInstanceConvertedFromCsg").UseCollision = true;
+			// GetTree().Paused = true;
 
 			if (bpStartSnapper.IsSnappedOnSegment)
-			{
 				bpStartSnapper.SnappedPath.EnlistCrossing(bpStartSnapper.SnappedPoint);
-			}
 
 			if (bpEndSnapper.IsSnappedOnSegment)
-			{
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
-			}
 
 			//i dont know why but without this mid snapping logic of bpStartSnpper breaks
 			bpStartSnapper.Reset();
@@ -249,36 +245,54 @@ namespace Trains.Model.Builders
 
 			if (curveToAdd.GetPointCount() == 0) return;
 
-			var oldCrossings = currentPath.Crossings;
-
 			if (blueprint.Start.IsEqualApprox(currentPath.Start))
 			{
-				var oldValue = currentPath.Start;
-				railCurve.PrependCurve(pathOriginToBpOrigin, curveToAdd);
-				prevDir = currentPath.DirFromStart;
-
-				currentPath.UpdateCrossing(oldValue, currentPath.Start);
+				Prepend(pathOriginToBpOrigin, curveToAdd, railCurve);
 			}
 			else if (blueprint.Start.IsEqualApprox(currentPath.End))
 			{
-				var oldValue = currentPath.End;
-				railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
-				prevDir = currentPath.DirFromEnd;
-
-				currentPath.UpdateCrossing(oldValue, currentPath.End);
+				Append(pathOriginToBpOrigin, curveToAdd, railCurve);
 			}
+
+			// GD.Print(currentPath.Points);
 
 			if (bpEndSnapper.IsSnappedOnSegment)
-			{
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
-			}
+			// GD.Print(currentPath.Points);
+		}
 
-			//i assume all crossings after appending curve will be shifted so i need to update them too
-			// for (int i = 0; i < oldCrossings.Count; i++)
-			// {
-			// 	var newCr = currentPath.GlobalTranslation + currentPath.Curve.GetClosestPoint(oldCrossings[i]);
-			// 	currentPath.UpdateCrossing(oldCrossings[i], newCr);
-			// }
+		private void Prepend(Vector3 pathOriginToBpOrigin, RailCurve curveToAdd, RailCurve railCurve)
+		{
+
+			var oldValue = currentPath.Start;
+			railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
+			// GD.Print(currentPath.Points);
+			prevDir = currentPath.DirFromStart;
+
+			//do i pass two same arguments?
+			currentPath.UpdateCrossing(oldValue, currentPath.Start);
+			// GD.Print(currentPath);
+			// currentPath.UpdateMeshInstance(currentPath);
+		}
+
+		private void Append(Vector3 pathOriginToBpOrigin, RailCurve curveToAdd, RailCurve railCurve)
+		{
+			var oldValue = currentPath.End;
+
+			// currentPath.Points.Print();
+			// GD.Print("--------");
+			railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
+			// currentPath.Points.Print();
+			// GD.Print("==========");
+
+			Global.VisibleRailContainer.UpdateMeshInstanceOf(currentPath);
+
+			prevDir = currentPath.DirFromEnd;
+
+			//do i pass two same arguments?
+			currentPath.UpdateCrossing(oldValue, currentPath.End);
+			// GD.Print(currentPath);
+			// currentPath.UpdateMeshInstance(currentPath);
 		}
 
 		private void JoinCurrentPath()
@@ -293,6 +307,7 @@ namespace Trains.Model.Builders
 			bpStartSnapper.TrySnap(blueprint.Translation, Global.VisibleRailContainer.Rails.ToList(), blueprint);
 			//redraw before next frame
 			DrawFilledBlueprint();
+			// currentPath.UpdateMeshInstance(currentPath);
 		}
 
 		private void DrawEmptyBlueprint()
@@ -356,13 +371,13 @@ namespace Trains.Model.Builders
 			blueprint.Curve = curve;
 		}
 
-		private void onMainGUIPanelMouseEntered()
+		private void onMainGuiPanelMouseEntered()
 		{
 			if (blueprint is null) return;
 			blueprint.Visible = false;
 		}
 
-		private void onMainGUIPanelMouseExited()
+		private void onMainGuiPanelMouseExited()
 		{
 			if (blueprint is null) return;
 			blueprint.Visible = true;

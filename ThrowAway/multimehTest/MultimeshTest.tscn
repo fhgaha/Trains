@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/Rails/RailPath.tscn" type="PackedScene" id=1]
+
+[sub_resource type="Curve3D" id=1]
+resource_local_to_scene = true
+_data = {
+"points": PoolVector3Array( 0, 0, 0, 0, 0, 0, -0.00513136, 8.92331e-09, 0.205159, 0, 0, 0, 0, 0, 0, -0.00513136, -0.00102601, -0.238828 ),
+"tilts": PoolRealArray( 0, 0 )
+}
+
+[sub_resource type="MultiMesh" id=2]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="RailPath" parent="." instance=ExtResource( 1 )]
+curve = SubResource( 1 )
+
+[node name="MultiMeshInstance" type="MultiMeshInstance" parent="."]
+multimesh = SubResource( 2 )

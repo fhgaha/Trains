@@ -82,14 +82,13 @@ mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
 
 [node name="Floor" type="MeshInstance" parent="Landmarks"]
-transform = Transform( 374, 0, 0, 0, 9.24, 0, 0, 0, 250, 374, 0, 250 )
+transform = Transform( 20, 0, 0, 0, 0, 0, 0, 0, 20, 20, 0, 20 )
 mesh = SubResource( 17 )
 skeleton = NodePath("../..")
 
 [node name="StaticBody" type="StaticBody" parent="Landmarks/Floor"]
 
 [node name="CollisionShape" type="CollisionShape" parent="Landmarks/Floor/StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.95578e-08, -4.82192e-08, 4.74975e-08 )
 shape = SubResource( 19 )
 
 [node name="RailBuilder" type="Spatial" parent="."]

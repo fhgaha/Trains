@@ -41,20 +41,21 @@ namespace Trains
 			return curve;
 		}
 
-		public void PrependCurve(Vector3 origin, Curve3D curve)
+		public RailCurve PrependCurve(Vector3 origin, Curve3D curve)
 		{
-			PlaceCurveOnMap(origin, curve, _atPosition: 0);
+			return PlaceCurveOnMap(origin, curve, _atPosition: 0);
 		}
 
-		public void AppendCurve(Vector3 origin, Curve3D curve)
+		public RailCurve AppendCurve(Vector3 origin, Curve3D curve)
 		{
-			PlaceCurveOnMap(origin, curve);
+			return PlaceCurveOnMap(origin, curve);
 		}
 
-		private void PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
+		private RailCurve PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
 		{
 			for (int i = 0; i < curve.GetPointCount(); i++)
 				AddPoint(origin + curve.GetPointPosition(i), atPosition: _atPosition);
+			return (RailCurve)curve;
 		}
 
 		public void RemoveEdgeCurve(RailCurve curveToDelete)

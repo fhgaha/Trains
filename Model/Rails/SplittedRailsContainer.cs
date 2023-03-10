@@ -41,7 +41,7 @@ namespace Trains
 				{
 					var pointsGlobal = r.Curve.GetBakedPoints().Select(p => r.Translation + p);
 					var newRail = RailPath.BuildNoMeshRail(railScene, pointsGlobal, Vector3.Zero);
-					if (Global.DebugMode) PrintStartEnd(newRail);
+					//PrintStartEnd(newRail);
 					newRails.Add(newRail);
 
 					continue;
@@ -111,10 +111,7 @@ namespace Trains
 			return false;
 		}
 
-		private void PrintStartEnd(RailPath rail)
-		{
-			GD.PrintS("new splitted:", rail.Start + ",", rail.End);
-		}
+		private void PrintStartEnd(RailPath rail) => GD.PrintS("new splitted:", rail.Start + ",", rail.End);
 
 		private static void PrintPathWithCrossings(IEnumerable<RailPath> _paths)
 		{

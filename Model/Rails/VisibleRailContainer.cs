@@ -9,13 +9,21 @@ namespace Trains
 	public class VisibleRailContainer : Spatial
 	{
 		private readonly List<RailPath> rails = new List<RailPath>();
-		public IEnumerable<RailPath> Rails { get { foreach (var r in rails) { yield return r; } } }
+		public IEnumerable<RailPath> Rails
+		{
+			get
+			{
+				foreach (var r in rails)
+					yield return r;
+			}
+		}
 
 		public void AddRail(RailPath rail)
 		{
 			AddChild(rail);
 			rails.Add(rail);
-			rail.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+			// rail.GetNode<CSGPolygon>("CSGPolygon").UseCollision = true;
+			rail.ConvertCsgToMeshInstance();
 		}
 
 		public void Add(RailPath path)
@@ -26,6 +34,16 @@ namespace Trains
 		public void Remove(RailPath path)
 		{
 			rails.Remove(path);
+		}
+
+		public void UpdateMeshInstanceOf(RailPath path)
+		{
+			foreach (var c in path.GetChildren())
+			{
+				GD.Print(c);
+			}
+
+			path.UpdateMeshInstance();
 		}
 	}
 }

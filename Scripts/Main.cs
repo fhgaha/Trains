@@ -65,10 +65,10 @@ namespace Trains.Scripts
 			floor.Scale = new Vector3(grid.CellsRowsAmount / 2, 0, grid.CellsColsAmount / 2);
 			floor.Translation = new Vector3(grid.CellsRowsAmount / 2, 0, grid.CellsColsAmount / 2);
 
-			GetNode<CollisionShape>("Landmarks/Floor/StaticBody/CollisionShape").Shape = new BoxShape
-			{
-				Extents = new Vector3(grid.CellsRowsAmount, 0.01f, grid.CellsColsAmount)
-			};
+			// GetNode<CollisionShape>("Landmarks/Floor/StaticBody/CollisionShape").Shape = new BoxShape
+			// {
+			// 	Extents = new Vector3(grid.CellsRowsAmount, 0.01f, grid.CellsColsAmount)
+			// };
 		}
 
 		private void SetUpTimer()

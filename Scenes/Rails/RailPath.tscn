@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Model/Builders/RailBuilder/RailPath.cs" type="Script" id=1]
-[ext_resource path="res://Assets/Rail/track.material" type="Material" id=3]
+[ext_resource path="res://Assets/Rail/Rails0014_1_350.jpg" type="Texture" id=2]
+[ext_resource path="res://Scenes/Rails/RailCsg/RailCsg.tscn" type="PackedScene" id=3]
 
 [sub_resource type="Curve3D" id=1]
 resource_local_to_scene = true
@@ -10,6 +11,15 @@ _data = {
 "tilts": PoolRealArray( 0, 0 )
 }
 
+[sub_resource type="SpatialMaterial" id=2]
+resource_local_to_scene = true
+resource_name = "track"
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 1, 2.554, 1 )
+uv1_offset = Vector3( 0, 0.024, 0 )
+
 [node name="RailPath" type="Path" groups=["Rails"]]
 curve = SubResource( 1 )
 script = ExtResource( 1 )
@@ -17,21 +27,7 @@ ShowBakedPoints = true
 ShowDefaultPoints = true
 BpColor = Color( 1, 0.917647, 0.027451, 1 )
 NotAllowedColor = Color( 1, 0.054902, 0.054902, 1 )
+railCsg = ExtResource( 3 )
 
-[node name="CSGPolygon" type="CSGPolygon" parent="."]
-polygon = PoolVector2Array( -0.25, 0, -0.2, 0.04, 0.2, 0.04, 0.25, 0 )
-mode = 2
-path_node = NodePath("..")
-path_interval_type = 0
-path_interval = 1.0
-path_simplify_angle = 0.0
-path_rotation = 1
-path_local = true
-path_continuous_u = true
-path_u_distance = 1.0
-path_joined = false
-material = ExtResource( 3 )
-
-[node name="Area" type="Area" parent="CSGPolygon"]
-
-[node name="CollisionPolygon" type="CollisionPolygon" parent="CSGPolygon/Area"]
+[node name="CSGPolygon" parent="." instance=ExtResource( 3 )]
+material = SubResource( 2 )

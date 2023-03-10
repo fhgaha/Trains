@@ -11,7 +11,7 @@ using Trains.Model.Common;
 
 namespace Trains.Model.Cells
 {
-	public class Cell
+	public class Cell : Godot.Object
 	{
 		public static Cell[,] Cells { get; set; }
 		public string Id { get; set; }

@@ -131,12 +131,23 @@ namespace Trains.Model.Common
 
 			if (intersection.Count == 0)
 			{
-				GD.Print("camera ray did not collide with an object.");
+				// GD.Print("camera ray did not collide with an object.");
 				return Vector3.Zero;
 			}
 
 			var pos = (Vector3)intersection["position"];
 			return pos;
+		}
+
+		//Array
+		public static void Print(this Array array, string prefix = "")
+		{
+			var output = prefix == string.Empty ? string.Empty : prefix + ' ';
+			foreach (var e in array)
+			{
+				output += e.ToString() + ' ';
+			}
+			GD.Print(output);
 		}
 	}
 }
