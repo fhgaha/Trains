@@ -1,0 +1,6 @@
+D:\MyProjects\Godot Projects\Trains\Stub\bin\Debug\StubProj.dll
+D:\MyProjects\Godot Projects\Trains\Stub\bin\Debug\StubProj.pdb
+D:\MyProjects\Godot Projects\Trains\Stub\obj\Debug\Stub.csproj.AssemblyReference.cache
+D:\MyProjects\Godot Projects\Trains\Stub\obj\Debug\Stub.csproj.CoreCompileInputs.cache
+D:\MyProjects\Godot Projects\Trains\Stub\obj\Debug\StubProj.dll
+D:\MyProjects\Godot Projects\Trains\Stub\obj\Debug\StubProj.pdb

@@ -190,7 +190,7 @@ namespace Trains.Model.Builders
 		{
 			if (bpStartSnapper.IsSnappedOnSegment || !AreWeContinuingPath)
 				PlaceFirstPartOfPath();
-			else
+			else if (currentPath != null)
 				AddNewCurveToCurrentPath();
 
 			// for (int i = 0; i < currentPath.Curve.GetBakedPoints().Length; i++)
@@ -222,10 +222,6 @@ namespace Trains.Model.Builders
 			prevDir = currentPath.DirFromEnd;
 			Global.VisibleRailContainer.AddRail(currentPath);
 
-			//GD.Print(currentPath.GetChild(0).Name);
-			// currentPath.GetNode<MeshInstance>("MeshInstanceConvertedFromCsg").UseCollision = true;
-			// GetTree().Paused = true;
-
 			if (bpStartSnapper.IsSnappedOnSegment)
 				bpStartSnapper.SnappedPath.EnlistCrossing(bpStartSnapper.SnappedPoint);
 
@@ -254,45 +250,31 @@ namespace Trains.Model.Builders
 				Append(pathOriginToBpOrigin, curveToAdd, railCurve);
 			}
 
-			// GD.Print(currentPath.Points);
-
 			if (bpEndSnapper.IsSnappedOnSegment)
 				bpEndSnapper.SnappedPath.EnlistCrossing(bpEndSnapper.SnappedPoint);
-			// GD.Print(currentPath.Points);
 		}
 
 		private void Prepend(Vector3 pathOriginToBpOrigin, RailCurve curveToAdd, RailCurve railCurve)
 		{
-
 			var oldValue = currentPath.Start;
 			railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
-			// GD.Print(currentPath.Points);
-			prevDir = currentPath.DirFromStart;
+			prevDir = currentPath.DirFromEnd;
+
+			Global.VisibleRailContainer.UpdateMeshInstanceOf(currentPath);
 
 			//do i pass two same arguments?
 			currentPath.UpdateCrossing(oldValue, currentPath.Start);
-			// GD.Print(currentPath);
-			// currentPath.UpdateMeshInstance(currentPath);
 		}
 
 		private void Append(Vector3 pathOriginToBpOrigin, RailCurve curveToAdd, RailCurve railCurve)
 		{
 			var oldValue = currentPath.End;
-
-			// currentPath.Points.Print();
-			// GD.Print("--------");
 			railCurve.AppendCurve(pathOriginToBpOrigin, curveToAdd);
-			// currentPath.Points.Print();
-			// GD.Print("==========");
-
 			Global.VisibleRailContainer.UpdateMeshInstanceOf(currentPath);
-
 			prevDir = currentPath.DirFromEnd;
 
 			//do i pass two same arguments?
 			currentPath.UpdateCrossing(oldValue, currentPath.End);
-			// GD.Print(currentPath);
-			// currentPath.UpdateMeshInstance(currentPath);
 		}
 
 		private void JoinCurrentPath()

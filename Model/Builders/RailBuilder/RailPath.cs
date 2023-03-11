@@ -234,8 +234,8 @@ namespace Trains
 			var oldMeshInstanceNode = GetNode<MeshInstance>("MeshInstanceConvertedFromCsg");
 			RemoveChild(oldMeshInstanceNode);
 			oldMeshInstanceNode.QueueFree();
-			var rCsg = railCsg.Instance<CSGPolygon>();
-			AddChild(rCsg);
+			var csg = railCsg.Instance<CSGPolygon>();
+			AddChild(csg);
 			ConvertCsgToMeshInstance();
 		}
 	}

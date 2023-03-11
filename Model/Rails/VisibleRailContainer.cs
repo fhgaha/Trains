@@ -38,11 +38,6 @@ namespace Trains
 
 		public void UpdateMeshInstanceOf(RailPath path)
 		{
-			foreach (var c in path.GetChildren())
-			{
-				GD.Print(c);
-			}
-
 			path.UpdateMeshInstance();
 		}
 	}

@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Trains.Model.Common;
 
 namespace Trains
@@ -43,18 +44,29 @@ namespace Trains
 
 		public RailCurve PrependCurve(Vector3 origin, Curve3D curve)
 		{
-			return PlaceCurveOnMap(origin, curve, _atPosition: 0);
+			// return PlaceCurveOnMap(origin, curve, _atPosition: 0);
+			return PlaceCurveOnMapParallel(origin, curve, _atPosition: 0);
 		}
 
 		public RailCurve AppendCurve(Vector3 origin, Curve3D curve)
 		{
-			return PlaceCurveOnMap(origin, curve);
+			// return PlaceCurveOnMap(origin, curve);
+			return PlaceCurveOnMapParallel(origin, curve);
 		}
 
 		private RailCurve PlaceCurveOnMap(Vector3 origin, Curve3D curve, int _atPosition = -1)
 		{
 			for (int i = 0; i < curve.GetPointCount(); i++)
 				AddPoint(origin + curve.GetPointPosition(i), atPosition: _atPosition);
+			return (RailCurve)curve;
+		}
+
+		private RailCurve PlaceCurveOnMapParallel(Vector3 origin, Curve3D curve, int _atPosition = -1)
+		{
+			Parallel.ForEach(curve.ToArray(), (p, state, index) =>
+			{
+				AddPoint(origin + curve.GetPointPosition((int)index), atPosition: _atPosition);
+			});
 			return (RailCurve)curve;
 		}
 

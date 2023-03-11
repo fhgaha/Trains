@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Trains": {
+      "commandName": "Project",
+      "commandLineArgs": "-e --path D:\\MyProjects\\Godot Projects\\Trains"
+    }
+  }
+}

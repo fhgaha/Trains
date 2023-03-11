@@ -45,8 +45,7 @@ namespace Trains
 			RailroadAlongside = railPath;
 			RemoveChild(railPath);
 
-
-
+			RailroadAlongside.ConvertCsgToMeshInstance();
 		}
 
 		public void LoadTrain() { }
